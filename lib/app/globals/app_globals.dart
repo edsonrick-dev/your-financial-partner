@@ -1,0 +1,3 @@
+import '../../data/app_database.dart';
+
+late AppDatabase database;

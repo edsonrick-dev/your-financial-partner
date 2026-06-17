@@ -1,0 +1,48 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
+
+class CashflowPlannerPageShifter extends GetView<FinancialPlannerController> {
+  const CashflowPlannerPageShifter({
+    super.key,
+    required this.title,
+    required this.index,
+  });
+  final String title;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+    return Obx(() {
+      final isSelected = controller.selectedTabIndex.value == index;
+      return GestureDetector(
+        onTap: () {
+          controller.selectTab(index);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: isSelected
+                ? colorScheme.primary
+                : colorScheme.inversePrimary,
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(
+              color: isSelected ? Colors.transparent : colorScheme.primary,
+              width: 0.5,
+            ),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Text(
+            title,
+            style: TextStyle(
+              color: isSelected
+                  ? colorScheme.inversePrimary
+                  : colorScheme.primary,
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}

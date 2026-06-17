@@ -1,0 +1,1 @@
+enum EntityType { person, organization }
