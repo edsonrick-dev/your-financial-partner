@@ -1,4 +1,3 @@
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
@@ -7,6 +6,7 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/models/cashflow_plan_model.dart';
+import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
 import 'package:getx_drift_app/features/financial_planner/cashflow_planner/cashflow_planner_screen.dart';
@@ -44,111 +44,30 @@ class FinancialPlannerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    final plans = [
-      CashFlowPlan(
-        id: 1,
-        name: 'Salary',
-        planType: CashflowPlanType.income,
-        frequency: FrequencyType.monthly,
-        amount: 30000,
-      ),
+    amountController.addListener(refreshPreview);
 
-      CashFlowPlan(
-        id: 2,
-        name: 'Food',
-        planType: CashflowPlanType.expense,
-        expenseMode: ExpenseMode.budget,
-        frequency: FrequencyType.weekly,
-        amount: 2000,
-      ),
+    for (final controller in dailyAmountControllers) {
+      controller.addListener(refreshPreview);
+    }
+    for (final controller in monthlyAmountControllers) {
+      controller.addListener(refreshPreview);
+    }
 
-      CashFlowPlan(
-        id: 3,
-        name: 'Emergency Fund',
-        planType: CashflowPlanType.savingsInvestment,
-        frequency: FrequencyType.monthly,
-        amount: 5000,
-      ),
-
-      CashFlowPlan(
-        id: 4,
-        name: 'Internet',
-        planType: CashflowPlanType.expense,
-        expenseMode: ExpenseMode.bill,
-        frequency: FrequencyType.monthly,
-        amount: 1699,
-      ),
-
-      CashFlowPlan(
-        id: 5,
-        name: '13th Month',
-        planType: CashflowPlanType.income,
-        frequency: FrequencyType.annual,
-        amount: 30000,
-        monthMask: 1 << 11, // December
-      ),
-    ];
-
-    // loadProjection();
-
-    ever(projections, (items) {
-      for (final projection in items) {
-        debugPrint(
-          '${projection.month.month}'
-          'Income=${projection.income}'
-          'Expense=${projection.expenses}'
-          'Savings=${projection.savings}',
-        );
-      }
-    });
-
-    projections.value = CashFlowProjectionService().buildYearProjection(
-      year: 2026,
-      plans: plans,
-    );
+    ever(selectedFrequency, (_) => refreshPreview());
+    ever(selectedSplitMode, (_) => refreshPreview());
+    ever(selectedMonthPattern, (_) => refreshPreview());
   }
 
   final financialPlannerPages = <FinancialPlannerPage>[
     FinancialPlannerPage(title: 'Cashflow', page: CashflowPlannerScreen()),
   ];
 
-  final selectedCashfLowPlanType = Rxn<CashflowPlanType>();
+  final selectedCashflowPlanType = Rxn<CashflowPlanType>();
   final selectedCategory = Rxn<CashflowCategoriesTableData>();
-  Future<void> selectCashflowPlanType() async {
-    final result = await AppSheets.selectCashflowPlanType();
-
-    if (result == null) return;
-
-    if (selectedCashfLowPlanType.value != result) {
-      selectedCategory.value = null;
-    }
-
-    selectedCashfLowPlanType.value = result;
-  }
-
-  Future<void> selectCategory(TransactionType transactionType) async {
-    final result = await AppSheets.selection.selectCategory(
-      transactionType,
-      selectedCategory: selectedCategory.value,
-    );
-    if (result == null) return;
-
-    selectedCategory.value = result;
-  }
 
   final selectedExpenseType = ExpenseMode.budget.obs;
 
   final selectedFrequency = Rxn<FrequencyType>();
-
-  Future<void> selectFrequency() async {
-    final result = await AppSheets.selectFrequency();
-
-    if (result == null) return;
-
-    selectedFrequency.value = result;
-    selectedSplitMode.value = SplitMode.equal;
-    selectedMonthPattern.value = null;
-  }
 
   final RxBool isBill = false.obs;
   Rx<DateTime> selectedDate = DateTime.now().obs;
@@ -176,8 +95,10 @@ class FinancialPlannerController extends GetxController {
     (_) => TextEditingController(),
   ).obs;
   final monthlyAmountFocusNode = List.generate(12, (_) => FocusNode()).obs;
-
   final selectedMonthPattern = Rxn<MonthPattern>();
+
+  final customAmountControllers = <TextEditingController>[].obs;
+  final customAmountFocusNode = <FocusNode>[].obs;
 
   Future<void> selectMonthPattern() async {
     final frequency = selectedFrequency.value;
@@ -188,33 +109,165 @@ class FinancialPlannerController extends GetxController {
     if (result == null) return;
 
     selectedMonthPattern.value = result;
+
+    customAmountControllers.assignAll(
+      List.generate(result.months.length, (_) => TextEditingController()),
+    );
+    for (final controller in customAmountControllers) {
+      controller.addListener(refreshPreview);
+    }
+    customAmountFocusNode.assignAll(
+      List.generate(result.months.length, (_) => FocusNode()),
+    );
   }
+}
+
+extension SelectFunctions on FinancialPlannerController {
+  Future<void> selectCashflowPlanType() async {
+    final result = await AppSheets.selectCashflowPlanType();
+
+    if (result == null) return;
+
+    if (selectedCashflowPlanType.value != result) {
+      selectedCashflowPlanType.value = result;
+      selectedCategory.value = null;
+      selectedFrequency.value = null;
+    }
+  }
+
+  Future<void> selectCategory(TransactionType transactionType) async {
+    final result = await AppSheets.selection.selectCategory(
+      transactionType,
+      selectedCategory: selectedCategory.value,
+    );
+    if (result == null) return;
+
+    selectedCategory.value = result;
+  }
+
+  Future<void> selectFrequency() async {
+    final result = await AppSheets.selectFrequency();
+
+    if (result == null) return;
+
+    selectedFrequency.value = result;
+    selectedSplitMode.value = SplitMode.equal;
+    selectedMonthPattern.value = null;
+    customAmountControllers.clear();
+    customAmountFocusNode.clear();
+  }
+}
+
+extension MonthlyProjectionFunctions on FinancialPlannerController {
+  void refreshPreview() {
+    final frequency = selectedFrequency.value;
+
+    if (frequency == null) {
+      projections.clear();
+      return;
+    }
+    if (selectedCashflowPlanType.value == null ||
+        selectedFrequency.value == null) {
+      projections.clear();
+      return;
+    }
+
+    final plan = buildDraftPlan();
+
+    projections.value = CashFlowProjectionService().buildYearProjection(
+      year: DateTime.now().year,
+      plans: [plan],
+    );
+    for (final month in projections) {
+      debugPrint('${month.month.fullName} : ${month.allocated}');
+    }
+    for (var month = 1; month <= 12; month++) {
+      debugPrint(
+        'Month $month Mondays: '
+        '${countWeekdayInMonth(2026, month, DateTime.monday)}',
+      );
+    }
+  }
+
+  double get previewAnnualAmount =>
+      projections.fold(0, (sum, e) => sum + e.allocated);
+  List<double> get previewMonthlyAmounts =>
+      projections.map((e) => e.allocated).toList();
+  CashFlowPlan buildDraftPlan() {
+    final isCustom = selectedSplitMode.value == SplitMode.custom;
+
+    return CashFlowPlan(
+      id: -1,
+      name: 'Preview',
+      planType: selectedCashflowPlanType.value!,
+      frequency: selectedFrequency.value!,
+
+      amount: isCustom ? null : (double.tryParse(amountController.text) ?? 0),
+
+      customAmounts: isCustom ? buildCustomAmounts() : null,
+
+      monthMask: selectedMonthPattern.value?.monthMask,
+    );
+  }
+
+  int countWeekdayInMonth(int year, int month, int weekday) {
+    int count = 0;
+
+    final daysInMonth = DateTime(year, month + 1, 0).day;
+
+    for (int day = 1; day <= daysInMonth; day++) {
+      if (DateTime(year, month, day).weekday == weekday) {
+        count++;
+      }
+    }
+
+    return count;
+  }
+
+  List<double>? buildCustomAmounts() {
+    if (selectedSplitMode.value != SplitMode.custom) {
+      return null;
+    }
+
+    switch (selectedFrequency.value) {
+      case FrequencyType.daily:
+        return dailyAmountControllers
+            .map((e) => double.tryParse(e.text) ?? 0)
+            .toList();
+
+      case FrequencyType.monthly:
+        return monthlyAmountControllers
+            .map((e) => double.tryParse(e.text) ?? 0)
+            .toList();
+
+      case FrequencyType.quarterly:
+      case FrequencyType.semiAnnual:
+        return customAmountControllers
+            .map((e) => double.tryParse(e.text) ?? 0)
+            .toList();
+
+      default:
+        return null;
+    }
+  }
+
+  double get previewMonthlyAverage => previewAnnualAmount / 12;
 }
 
 class DailyDistributionFields extends GetView<FinancialPlannerController> {
   const DailyDistributionFields({super.key});
-
-  static const weekdays = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Column(
       spacing: 12,
       children: List.generate(
-        weekdays.length,
+        AppDays.values.length,
         (index) => AppTextField(
-          focusNode: controller.dailyAmountFocusNode[index],
-          label: weekdays[index],
+          label: AppDays.values[index].fullName,
           hintText: 0.toCurrency(),
           controller: controller.dailyAmountControllers[index],
+          focusNode: controller.dailyAmountFocusNode[index],
           // keyboardType: TextInputType.number,
         ),
       ),
@@ -225,35 +278,42 @@ class DailyDistributionFields extends GetView<FinancialPlannerController> {
 class MonthlyDistributionFields extends GetView<FinancialPlannerController> {
   const MonthlyDistributionFields({super.key});
 
-  static const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Column(
       spacing: 12,
-      children: List.generate(
-        months.length,
-        (index) => AppTextField(
-          focusNode: controller.monthlyAmountFocusNode[index],
-          label: months[index],
+      children: List.generate(AppMonth.values.length, (index) {
+        final month = AppMonth.values[index];
+        return AppTextField(
+          label: month.fullName,
           hintText: 0.toCurrency(),
           controller: controller.monthlyAmountControllers[index],
+          focusNode: controller.monthlyAmountFocusNode[index],
           // keyboardType: TextInputType.number,
-        ),
-      ),
+        );
+      }),
+    );
+  }
+}
+
+class CustomDistributionFields extends GetView<FinancialPlannerController> {
+  const CustomDistributionFields({super.key, required this.pattern});
+
+  final MonthPattern pattern;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 12,
+      children: List.generate(pattern.months.length, (index) {
+        final month = pattern.months[index];
+        return AppTextField(
+          label: month.fullName,
+          hintText: 0.toCurrency(),
+          controller: controller.customAmountControllers[index],
+          focusNode: controller.customAmountFocusNode[index],
+          // keyboardType: TextInputType.number,
+        );
+      }),
     );
   }
 }

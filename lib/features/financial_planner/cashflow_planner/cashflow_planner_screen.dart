@@ -118,7 +118,7 @@ class CashflowPlannerScreen extends GetView<FinancialPlannerController> {
 
                 return Card(
                   child: ListTile(
-                    title: Text(DateFormat.MMMM().format(item.month)),
+                    title: Text(item.month.fullName),
                     subtitle: Text(
                       'Income: ${item.income}'
                       '\nAllocated: ${item.allocated}'

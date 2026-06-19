@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,7 @@ import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
+import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/earn_transaction_sheet.dart';
@@ -21,8 +23,8 @@ class CreateCashFlowPlanSheet extends GetView<FinancialPlannerController> {
 
   @override
   Widget build(BuildContext context) {
+    final columnSpacing = 12.0;
     final colorScheme = context.colors;
-
     return FractionallySizedBox(
       heightFactor: AppSheetHeight.full,
       child: GestureDetector(
@@ -40,31 +42,7 @@ class CreateCashFlowPlanSheet extends GetView<FinancialPlannerController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ///Header
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(38),
-                    bottom: Radius.circular(20),
-                  ),
-                  // color: colorScheme.primary,
-                ),
-                child: Column(
-                  children: [
-                    ///Grabber
-                    AppGrabber(),
-
-                    ///Toolbar
-                    AppToolbar(
-                      title: 'Create Cash Flow Plan',
-                      trailingOnPressed: () {},
-                      leadingOnPressed: () {
-                        Get.back();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              _SheetHeader(),
 
               Expanded(
                 child: SingleChildScrollView(
@@ -74,345 +52,58 @@ class CreateCashFlowPlanSheet extends GetView<FinancialPlannerController> {
                       vertical: 16,
                     ),
                     child: Column(
-                      spacing: 12,
+                      spacing: columnSpacing,
                       children: [
-                        Obx(
-                          () => AppDropdownField(
-                            label: 'Cash Flow Plan Type',
-                            value: controller
-                                .selectedCashfLowPlanType
-                                .value
-                                ?.label,
+                        _SelectCashFlowPlanType(controller: controller),
 
-                            iconKey:
-                                controller
-                                    .selectedCashfLowPlanType
-                                    .value
-                                    ?.iconKey ??
-                                'category',
-                            hint: 'Select type',
-                            onTap: () {
-                              controller.selectCashflowPlanType();
-                            },
-                          ),
-                        ),
-                        Obx(() {
-                          final planType =
-                              controller.selectedCashfLowPlanType.value;
-
-                          final showCategory =
-                              planType == CashflowPlanType.income ||
-                              planType == CashflowPlanType.expense;
-
-                          if (!showCategory) {
-                            return const SizedBox.shrink();
-                          }
-
-                          return AppDropdownField(
-                            label: 'Category',
-                            iconKey:
-                                controller.selectedCategory.value?.icon ??
-                                'category',
-                            value: controller.selectedCategory.value?.name,
-                            hint: 'Select category',
-                            onTap: () {
-                              if (planType == null) return;
-
-                              controller.selectCategory(
-                                planType == CashflowPlanType.income
-                                    ? TransactionType.earn
-                                    : TransactionType.spend,
-                              );
-                            },
-                          );
-                        }),
+                        _SelectCashflowCategory(controller: controller),
 
                         Obx(() {
+                          final frequency = controller.selectedFrequency.value;
                           final category = controller.selectedCategory.value;
 
                           if (category == null) {
                             return const SizedBox.shrink();
                           }
-                          return AppDropdownField(
-                            showIcon: false,
-                            label: 'Frequency',
-                            hint: 'Select frequency',
-                            value: controller.selectedFrequency.value?.label,
-                            onTap: controller.selectFrequency,
-                          );
-                        }),
-
-                        Obx(() {
-                          final frequency = controller.selectedFrequency.value;
-
-                          if (frequency == null ||
-                              !frequency.requiresMonthPattern) {
-                            return const SizedBox.shrink();
-                          }
-
-                          return AppDropdownField(
-                            label: frequency.patternLabel,
-                            value: frequency == FrequencyType.annual
-                                ? controller.selectedMonthPattern.value
-                                      ?.fullLabel()
-                                : controller.selectedMonthPattern.value?.label,
-                            onTap: controller.selectMonthPattern,
-                          );
-                        }),
-                        Obx(() {
-                          final frequency = controller.selectedFrequency.value;
-                          final pattern = controller.selectedMonthPattern.value;
-                          final canConfigureBudget =
-                              frequency != null &&
-                              (!frequency.requiresMonthPattern ||
-                                  pattern != null);
-                          if (!canConfigureBudget) {
-                            return const SizedBox.shrink();
-                          }
-                          return Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: colorScheme.appInfoSoft,
-                              border: Border.all(color: colorScheme.appInfo),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              spacing: 12,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            spacing: 4,
-                                            children: [
-                                              Icon(
-                                                PhosphorIconsRegular
-                                                    .arrowsSplit,
-                                                color: colorScheme.appInfo,
-                                              ),
-                                              Text(
-                                                'Budget Distribution',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: colorScheme.appInfo,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                if (frequency.isCustomizable)
-                                  Row(
-                                    spacing: 2,
-                                    children: [
-                                      BudgetDistributionPicker(
-                                        label: 'Equal',
-                                        type: SplitMode.equal,
-                                      ),
-                                      BudgetDistributionPicker(
-                                        label: 'Custom',
-                                        type: SplitMode.custom,
-                                      ),
-                                    ],
-                                  ),
-                                Obx(() {
-                                  if (controller.selectedSplitMode.value !=
-                                      SplitMode.custom) {
-                                    return AppTextField(
-                                      label:
-                                          '${controller.selectedFrequency.value?.label} Budget',
-                                      hintText: 0.toCurrency(),
-                                      focusNode: controller.amountFocusNode,
-                                      controller: controller.amountController,
-                                    );
-                                  }
-                                  switch (controller.selectedFrequency.value) {
-                                    case FrequencyType.daily:
-                                      return DailyDistributionFields();
-                                    case FrequencyType.monthly:
-                                      return MonthlyDistributionFields();
-                                    default:
-                                      return const SizedBox.shrink();
-                                  }
-                                }),
-                                Column(spacing: 12, children: [
-                                 
-                                ],
+                          return Column(
+                            spacing: columnSpacing,
+                            children: [
+                              AppDropdownField(
+                                label: 'Frequency',
+                                iconKey: 'caretDown',
+                                hint: 'Select frequency',
+                                value:
+                                    controller.selectedFrequency.value?.label,
+                                onTap: controller.selectFrequency,
                               ),
-                              ],
-                            ),
+
+                              if (frequency != null &&
+                                  frequency.requiresMonthPattern)
+                                AppDropdownField(
+                                  label: frequency.patternLabel,
+                                  iconKey: 'caretDown',
+                                  value:
+                                      frequency == FrequencyType.annual ||
+                                          frequency == FrequencyType.semiAnnual
+                                      ? controller.selectedMonthPattern.value
+                                            ?.fullLabel()
+                                      : controller
+                                            .selectedMonthPattern
+                                            .value
+                                            ?.label,
+                                  onTap: controller.selectMonthPattern,
+                                ),
+                            ],
                           );
                         }),
+
+                        _BudgetDistribution(controller: controller),
+
                         if (controller.selectedFrequency.value != null)
-                          Obx(
-                            () => AnimatedContainer(
-                              duration: Duration(milliseconds: 180),
-                              width: double.infinity,
-                              padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: colorScheme.appInfoSoft,
-                                border: Border.all(color: colorScheme.appInfo),
-                                borderRadius: BorderRadius.circular(
-                                  controller.isBill.value == true ? 24 : 12,
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              spacing: 4,
-                                              children: [
-                                                Icon(
-                                                  PhosphorIconsRegular.receipt,
-                                                  color: colorScheme.appInfo,
-                                                ),
-                                                Text(
-                                                  'Make Recurring Bill',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: colorScheme.appInfo,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      CupertinoSwitch(
-                                        value: controller.isBill.value,
-                                        onChanged: (value) {
-                                          controller.isBill.value = value;
-                                        },
-                                      ),
-                                    ],
-                                  ),
-
-                                  if (controller.isBill.value)
-                                    Column(
-                                      spacing: 12,
-                                      children: [
-                                        Obx(
-                                          () => AppDropdownField(
-                                            label: 'Due Date',
-
-                                            iconKey: 'calendar',
-
-                                            value: controller.formattedDate,
-
-                                            hint: 'Select date',
-
-                                            onTap: () {
-                                              AppDatePicker.show(
-                                                context: context,
-
-                                                initialDate: controller
-                                                    .selectedDate
-                                                    .value,
-
-                                                onChanged: controller.setDate,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        Obx(
-                                          () => AppDropdownField(
-                                            label: 'Statement Date (optional)',
-
-                                            iconKey: 'calendar',
-
-                                            value: controller.formattedDate,
-
-                                            hint: 'Select date',
-
-                                            onTap: () {
-                                              AppDatePicker.show(
-                                                context: context,
-
-                                                initialDate: controller
-                                                    .selectedDate
-                                                    .value,
-
-                                                onChanged: controller.setDate,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                ],
-                              ),
-                            ),
+                          _MakeRecurringBill(
+                            colorScheme: colorScheme,
+                            controller: controller,
                           ),
-                        // AppFieldContainer(
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       Text(
-                        //         'Expense Type',
-                        //         style: TextStyle(
-                        //           fontSize: 13,
-                        //           fontWeight: FontWeight.w500,
-
-                        //           height: 16 / 13,
-
-                        //           color: colorScheme.appText,
-                        //         ),
-                        //       ),
-                        //       Container(
-                        //         decoration: BoxDecoration(
-                        //           border: Border.all(
-                        //             color: colorScheme.appBorder,
-                        //           ),
-                        //           borderRadius: BorderRadius.circular(12),
-                        //         ),
-                        //         padding: EdgeInsets.all(4),
-                        //         child: Row(
-                        //           spacing: 2,
-                        //           children: [
-                        //             BudgetDistributionPicker(
-                        //               iconKey: 'coins',
-                        //               label: 'Budget',
-                        //               type: ExpenseMode.budget,
-                        //             ),
-                        //             BudgetDistributionPicker(
-                        //               iconKey: 'coins',
-                        //               label: 'Obligation (Bill)',
-                        //               type: ExpenseMode.bill,
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //       Text(
-                        //         'Everyday spending',
-                        //         style: TextStyle(
-                        //           fontSize: 12,
-                        //           fontWeight: FontWeight.w500,
-                        //           height: 16 / 12,
-                        //           color: colorScheme.appTextMuted,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        //   onTap: () {},
-                        // ),
-                        if (controller.selectedCategory.value?.name == null)
-                          Column(),
                       ],
                     ),
                   ),
@@ -421,6 +112,405 @@ class CreateCashFlowPlanSheet extends GetView<FinancialPlannerController> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _MakeRecurringBill extends StatelessWidget {
+  const _MakeRecurringBill({
+    required this.colorScheme,
+    required this.controller,
+  });
+
+  final ColorScheme colorScheme;
+  final FinancialPlannerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => AnimatedContainer(
+        duration: Duration(milliseconds: 180),
+        width: double.infinity,
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: colorScheme.appInfoSoft,
+          border: Border.all(color: colorScheme.appInfo),
+          borderRadius: BorderRadius.circular(
+            controller.isBill.value == true ? 24 : 12,
+          ),
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        spacing: 4,
+                        children: [
+                          Icon(
+                            PhosphorIconsRegular.receipt,
+                            color: colorScheme.appInfo,
+                          ),
+                          Text(
+                            'Make Recurring Bill',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: colorScheme.appInfo,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                CupertinoSwitch(
+                  value: controller.isBill.value,
+                  onChanged: (value) {
+                    controller.isBill.value = value;
+                  },
+                ),
+              ],
+            ),
+
+            if (controller.isBill.value)
+              Column(
+                spacing: 12,
+                children: [
+                  Obx(
+                    () => AppDropdownField(
+                      label: 'Due Date',
+
+                      iconKey: 'calendar',
+
+                      value: controller.formattedDate,
+
+                      hint: 'Select date',
+
+                      onTap: () {
+                        AppDatePicker.show(
+                          context: context,
+
+                          initialDate: controller.selectedDate.value,
+
+                          onChanged: controller.setDate,
+                        );
+                      },
+                    ),
+                  ),
+                  Obx(
+                    () => AppDropdownField(
+                      label: 'Statement Date (optional)',
+
+                      iconKey: 'calendar',
+
+                      value: controller.formattedDate,
+
+                      hint: 'Select date',
+
+                      onTap: () {
+                        AppDatePicker.show(
+                          context: context,
+
+                          initialDate: controller.selectedDate.value,
+
+                          onChanged: controller.setDate,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BudgetDistribution extends StatelessWidget {
+  const _BudgetDistribution({required this.controller});
+
+  final FinancialPlannerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+    return Obx(() {
+      final frequency = controller.selectedFrequency.value;
+      final pattern = controller.selectedMonthPattern.value;
+      final canConfigureBudget =
+          frequency != null &&
+          (!frequency.requiresMonthPattern || pattern != null);
+      if (!canConfigureBudget) {
+        return const SizedBox.shrink();
+      }
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: colorScheme.appInfoSoft,
+          border: Border.all(color: colorScheme.appInfo),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          spacing: 12,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        spacing: 4,
+                        children: [
+                          Icon(
+                            PhosphorIconsRegular.arrowsSplit,
+                            color: colorScheme.appInfo,
+                          ),
+                          Text(
+                            'Budget Distribution',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: colorScheme.appInfo,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (frequency.isCustomizable)
+              Row(
+                spacing: 2,
+                children: [
+                  BudgetDistributionPicker(
+                    label: 'Equal',
+                    type: SplitMode.equal,
+                  ),
+                  BudgetDistributionPicker(
+                    label: 'Custom',
+                    type: SplitMode.custom,
+                  ),
+                ],
+              ),
+            Obx(() {
+              if (controller.selectedSplitMode.value != SplitMode.custom) {
+                return AppTextField(
+                  label: '${controller.selectedFrequency.value?.label} Budget',
+                  hintText: 0.toCurrency(),
+                  focusNode: controller.amountFocusNode,
+                  controller: controller.amountController,
+                );
+              }
+              switch (frequency) {
+                case FrequencyType.daily:
+                  return DailyDistributionFields();
+                case FrequencyType.monthly:
+                  return MonthlyDistributionFields();
+
+                case FrequencyType.quarterly:
+                case FrequencyType.semiAnnual:
+                  if (pattern == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return CustomDistributionFields(pattern: pattern);
+                default:
+                  return const SizedBox.shrink();
+              }
+            }),
+            // Obx(() {
+            //   return Column(
+            //     children: controller.projections.map((projection) {
+            //       return Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Text(projection.month.fullName),
+            //           Text(projection.allocated.toCurrency()),
+            //         ],
+            //       );
+            //     }).toList(),
+            //   );
+            // }),
+            Obx(() {
+              return SizedBox(
+                height: 140,
+                child: BarChart(
+                  BarChartData(
+                    gridData: FlGridData(show: false),
+                    borderData: FlBorderData(
+                      show: true,
+                      border: Border.all(color: colorScheme.appInfo),
+                    ),
+                    titlesData: FlTitlesData(
+                      topTitles: AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      rightTitles: AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: false,
+                          reservedSize: 40,
+                        ),
+                      ),
+
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          getTitlesWidget: (value, meta) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                AppMonth.values[value.toInt()].fullName
+                                    .trim()[0],
+                                style: const TextStyle(fontSize: 10),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    barGroups: controller.projections.asMap().entries.map((
+                      entry,
+                    ) {
+                      return BarChartGroupData(
+                        x: entry.key,
+                        barRods: [BarChartRodData(toY: entry.value.allocated)],
+                      );
+                    }).toList(),
+                  ),
+                ),
+              );
+            }),
+            Obx(() {
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Annual Total',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        controller.previewAnnualAmount.toCurrency(),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Monthly Average'),
+                      Text((controller.previewAnnualAmount / 12).toCurrency()),
+                    ],
+                  ),
+                ],
+              );
+            }),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class _SelectCashflowCategory extends StatelessWidget {
+  const _SelectCashflowCategory({required this.controller});
+
+  final FinancialPlannerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final planType = controller.selectedCashflowPlanType.value;
+
+      final showCategory =
+          planType == CashflowPlanType.income ||
+          planType == CashflowPlanType.expense;
+
+      if (!showCategory) {
+        return const SizedBox.shrink();
+      }
+
+      return AppDropdownField(
+        label: 'Category',
+        iconKey: controller.selectedCategory.value?.icon ?? 'category',
+        value: controller.selectedCategory.value?.name,
+        hint: 'Select category',
+        onTap: () {
+          if (planType == null) return;
+
+          controller.selectCategory(
+            planType == CashflowPlanType.income
+                ? TransactionType.earn
+                : TransactionType.spend,
+          );
+        },
+      );
+    });
+  }
+}
+
+class _SelectCashFlowPlanType extends StatelessWidget {
+  const _SelectCashFlowPlanType({required this.controller});
+
+  final FinancialPlannerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => AppDropdownField(
+        label: 'Cash Flow Plan Type',
+        value: controller.selectedCashflowPlanType.value?.label,
+
+        iconKey: 'caretDown',
+        hint: 'Select type',
+        onTap: () {
+          controller.selectCashflowPlanType();
+        },
+      ),
+    );
+  }
+}
+
+class _SheetHeader extends StatelessWidget {
+  const _SheetHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(38),
+          bottom: Radius.circular(20),
+        ),
+        // color: colorScheme.primary,
+      ),
+      child: Column(
+        children: [
+          ///Grabber
+          AppGrabber(),
+
+          ///Toolbar
+          AppToolbar(
+            title: 'Create Cash Flow Plan',
+            trailingOnPressed: () {},
+            leadingOnPressed: () {
+              Get.back();
+            },
+          ),
+        ],
       ),
     );
   }

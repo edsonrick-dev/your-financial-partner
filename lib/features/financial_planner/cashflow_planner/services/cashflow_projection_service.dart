@@ -1,12 +1,13 @@
 import 'package:getx_drift_app/data/models/cashflow_plan_model.dart';
 import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
+import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/features/financial_planner/cashflow_planner/services/occurrence_generators/annual_occurrence_generator.dart';
 import 'package:getx_drift_app/features/financial_planner/cashflow_planner/services/occurrence_generators/daily_occurrence_generator.dart';
 import 'package:getx_drift_app/features/financial_planner/cashflow_planner/services/occurrence_generators/monthly_occurrence_generator.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
 
 class MonthlyProjection {
-  final DateTime month;
+  final AppMonth month;
 
   double income;
   double expenses;
@@ -110,7 +111,7 @@ class CashFlowProjectionService {
   }) {
     final projections = List.generate(
       12,
-      (index) => MonthlyProjection(month: DateTime(year, index + 1)),
+      (index) => MonthlyProjection(month: AppMonth.values[index]),
     );
 
     for (final plan in plans) {

@@ -81,6 +81,16 @@ class _CategoryIcons {
       group: IconGroup.others,
     ),
     AppCategoryIcon(
+      key: 'caretDown',
+      icon: PhosphorIconsRegular.caretDown,
+      group: IconGroup.others,
+    ),
+    AppCategoryIcon(
+      key: 'stack',
+      icon: PhosphorIconsRegular.stack,
+      group: IconGroup.others,
+    ),
+    AppCategoryIcon(
       key: 'calendar',
       icon: PhosphorIconsRegular.calendarBlank,
       group: IconGroup.others,
