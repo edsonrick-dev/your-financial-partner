@@ -8,11 +8,14 @@ class AppFieldContainer extends StatelessWidget {
   final String? value;
   final VoidCallback onTap;
   final double trailingPadding;
+
+  final double padding;
   const AppFieldContainer({
     super.key,
     required this.child,
     required this.onTap,
     this.trailingPadding = 4,
+    this.padding = 12,
     this.state,
     this.value,
   });
@@ -45,8 +48,8 @@ class AppFieldContainer extends StatelessWidget {
               onTap: onTap,
               child: Container(
                 padding: EdgeInsets.only(
-                  top: 8,
-                  bottom: 8,
+                  top: 12,
+                  bottom: 12,
                   left: 12,
                   right: trailingPadding,
                 ),

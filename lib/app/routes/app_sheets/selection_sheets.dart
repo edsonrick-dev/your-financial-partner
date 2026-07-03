@@ -4,6 +4,7 @@ import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_category_sheet.dart';
+import 'package:getx_drift_app/features/sheets/selection_sheets/select_day_of_month.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_cycles_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_other_transactions.dart';
@@ -59,11 +60,17 @@ class SelectionSheets {
   Future<EntitiesTableData?> selectTransactionParticipant({
     List<int> excludedPersonIds = const [],
   }) async {
-    return await Get.bottomSheet<EntitiesTableData>(
+    Get.put(CreateEntityController());
+
+    final result = await Get.bottomSheet<EntitiesTableData>(
       SelectPersonSheet(excludedPersonIds: excludedPersonIds),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
+
+    // Get.delete<CreateEntityController>();
+
+    return result;
   }
 
   Future<void> selectOtherTransaction() {
@@ -79,6 +86,13 @@ class SelectionSheets {
       const SelectFrequencySheet(),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+    );
+  }
+
+  Future<int?> selectDayOfMonth({int? selectedDAy}) {
+    return Get.bottomSheet<int>(
+      SelectDayOfMonthSheet(selectedDay: selectedDAy),
+      isScrollControlled: true,
     );
   }
 }

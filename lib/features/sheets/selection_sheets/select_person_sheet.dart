@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
-import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/features/widgets/cards/person_card.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_toolbar.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
@@ -13,7 +11,7 @@ import 'package:getx_drift_app/data/enums/entity_type_enum.dart';
 
 import 'package:drift/drift.dart' as d;
 
-class SelectPersonSheet extends StatelessWidget {
+class SelectPersonSheet extends GetView<CreateEntityController> {
   final EntitiesTableData? selectedPerson;
   final List<int> excludedPersonIds;
   const SelectPersonSheet({
@@ -24,104 +22,57 @@ class SelectPersonSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    Get.put(CreateEntityController());
-    return FractionallySizedBox(
-      heightFactor: AppSheetHeight.semiFull,
-      child: Container(
-        // constraints: BoxConstraints(maxHeight: Get.height * 0.75, minHeight: 200),
-        decoration: BoxDecoration(
-          color: colorScheme.surface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(38)),
+    return AppSheet(
+      title: 'Choose Person',
+      child: StreamBuilder(
+        stream: database.entitiesDao.watchEntitiesByType(
+          EntityType.person.name,
         ),
-
-        child: SafeArea(
-          bottom: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 8,
-            children: [
-              /// Header
-              Column(
-                children: [
-                  AppGrabber(),
-                  AppToolbar(title: 'Choose Person'),
-                ],
-              ),
-              Flexible(
-                child: PersonsList(
-                  selectedPerson: selectedPerson,
-                  excludedPersonIds: excludedPersonIds,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Column(
+              children: [
+                const Text('No Person Found'),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: AddPersonButton(),
                 ),
-              ),
-
-              // const SizedBox(height: 12),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PersonsList extends GetView<CreateEntityController> {
-  final EntitiesTableData? selectedPerson;
-
-  final List<int> excludedPersonIds;
-
-  const PersonsList({
-    super.key,
-    this.selectedPerson,
-    this.excludedPersonIds = const [],
-  });
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: database.entitiesDao.watchEntitiesByType(EntityType.person.name),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Column(
-            children: [
-              const Text('No Person Found'),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: AddPersonButton(),
-              ),
-            ],
-          );
-        }
-
-        final persons = (snapshot.data ?? [])
-            .where((person) => !excludedPersonIds.contains(person.id))
-            .toList();
-
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: persons.length + 1,
-          itemBuilder: (context, index) {
-            if (index == persons.length) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 36),
-                child: AddPersonButton(),
-              );
-            }
-
-            final person = persons[index];
-            final isSelected = selectedPerson?.id == person.id;
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-
-              child: PersonCard(
-                person: person,
-                isSelected: isSelected,
-                onTap: () {
-                  Get.back(result: person);
-                },
-              ),
+              ],
             );
-          },
-        );
-      },
+          }
+
+          final persons = (snapshot.data ?? [])
+              .where((person) => !excludedPersonIds.contains(person.id))
+              .toList();
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: persons.length + 1,
+            itemBuilder: (context, index) {
+              if (index == persons.length) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 36),
+                  child: AddPersonButton(),
+                );
+              }
+
+              final person = persons[index];
+              final isSelected = selectedPerson?.id == person.id;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+
+                child: PersonCard(
+                  person: person,
+                  isSelected: isSelected,
+                  onTap: () {
+                    Get.back(result: person);
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
@@ -158,6 +109,11 @@ class CreateEntityController extends GetxController {
   final FocusNode nameFocusNode = FocusNode();
   void expandButton() {
     buttonState.value = AddButtonState.expanded;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (isClosed) return;
+
+      nameFocusNode.requestFocus();
+    });
   }
 
   void collapseButton() {
@@ -197,6 +153,7 @@ class CreateEntityController extends GetxController {
   @override
   void onClose() {
     nameController.dispose();
+    nameFocusNode.dispose();
 
     super.onClose();
   }

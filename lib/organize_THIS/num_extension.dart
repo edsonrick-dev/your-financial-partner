@@ -24,7 +24,8 @@ extension DoubleCurrencyExt on num {
   ///
   /// useSmallK: true => K starts at 10,000; false => K starts at 100,000
   /// compactDecimalDigits: number of decimals for compact units (e.g. 1 => 1.2M)
-  String compactCurrency({
+  String toCompactCurrency({
+    double kThreshold = 1000,
     bool useSmallK = true,
     int compactDecimalDigits = 1, // controls decimals in 102.3K
     String symbol = '₱',
@@ -35,7 +36,7 @@ extension DoubleCurrencyExt on num {
     final double absValue = abs().toDouble();
     final bool isNegative = this < 0;
 
-    final double kThreshold = useSmallK ? 10_000 : 100_000;
+    // final double kThreshold = useSmallK ? 10_000 : 100_000;
 
     // Use full currency if below threshold
     if (absValue < kThreshold) {

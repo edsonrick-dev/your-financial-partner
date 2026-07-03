@@ -4,14 +4,13 @@ import 'package:getx_drift_app/core/constants/app_border_radius.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home_initial/widget/transaction_button.dart';
-import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/features/widgets/cards/bills_card.dart';
-import 'package:getx_drift_app/features/widgets/cards/budget_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
+import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
+import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -19,52 +18,16 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     return Scaffold(
-      // backgroundColor: Colors.transparent,
-      // appBar: AppBar(
-      //   title: const Text(''),
-      //   centerTitle: false,
-      //   // actions: [
-      //   //   IconButton(
-      //   //     onPressed: () {
-      //   //       AppSheets.endDrawer.openHomeMenu();
-      //   //     },
-      //   //     icon: Icon(Icons.menu, size: 24),
-      //   //   ),
-      //   // ],
-      // ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             spacing: 12,
             children: [
-              // Container(
-              //   padding: EdgeInsets.all(12),
-              //   width: double.infinity,
-              //   decoration: BoxDecoration(
-              //     color: colorScheme.appOnSurface,
-              //     border: Border.all(color: colorScheme.appBorder),
-              //   ),
-              //   child: Column(
-              //     children: [
-              //       Text(
-              //         'Primary Text',
-              //         style: TextStyle(color: colorScheme.appText, fontSize: 24),
-              //       ),
-              //       Text(
-              //         'Secondary Text',
-              //         style: TextStyle(
-              //           color: colorScheme.appTextMuted,
-              //           fontSize: 24,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               AppSection(
                 child: Column(
                   children: [
                     ///Save
-                    FundSummaryCard(controller: controller),
+                    FundSummaryCard(),
                     SizedBox(height: AppScale.x3),
                     Container(
                       decoration: BoxDecoration(
@@ -115,47 +78,142 @@ class HomeView extends GetView<HomeController> {
                   ],
                 ),
               ),
-              AppAdsSection(),
 
               AppSection(
-                sectionTitle: 'Budgets',
-                trailingType: SectionTrailingType.textButton,
-                trailingText: 'View all',
-                onTrailingPressed: () {
-                  Get.toNamed(Routes.TRANSACTION);
-                },
-                // showTrailing: true,
-                child: Column(
-                  spacing: 12,
-                  children: [
-                    BudgetCard(
-                      title: 'Food',
-                      iconKey: 'bowlFood',
-                      consumption: 250,
-                      budget: 400,
-                    ),
-                  ],
+                sectionTitle: 'My Cashflow',
+                child: AppFieldContainer(
+                  trailingPadding: 12,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text('This Month'),
+                          Spacer(),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              // color: colorScheme.appInfoSoft,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: colorScheme.appBorder),
+                            ),
+                            child: Row(
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  PhosphorIconsRegular.calendarBlank,
+                                  size: 12,
+                                ),
+                                SizedBox(width: 2),
+                                Text(
+                                  'June 2026',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                SizedBox(width: 4),
+                                Icon(PhosphorIconsRegular.caretDown, size: 12),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 16),
+
+                      IntrinsicHeight(
+                        child: Obx(() {
+                          return StreamBuilder<MonthlyCashFlowSummary>(
+                            stream: controller.monthlySummaryStream,
+                            builder: (context, snapshot) {
+                              final summary =
+                                  snapshot.data ??
+                                  const MonthlyCashFlowSummary(
+                                    income: 0,
+                                    expenses: 0,
+                                    savings: 0,
+                                  );
+
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    child: CashFlowSummaryCard(
+                                      amount: summary.income,
+                                      title: 'Income',
+                                      color: colorScheme.appInflow,
+                                    ),
+                                  ),
+
+                                  VerticalDivider(color: colorScheme.appBorder),
+                                  Expanded(
+                                    child: CashFlowSummaryCard(
+                                      amount: summary.expenses,
+                                      title: 'Expenses',
+                                      color: colorScheme.appOutflow,
+                                    ),
+                                  ),
+                                  VerticalDivider(color: colorScheme.appBorder),
+                                  Expanded(
+                                    child: CashFlowSummaryCard(
+                                      amount: summary.savings,
+                                      title: 'Savings',
+                                      color: colorScheme.appAccent,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+                  onTap: () {},
                 ),
               ),
-              AppSection(
-                sectionTitle: 'Bills',
-                trailingType: SectionTrailingType.textButton,
-                trailingText: 'View all',
-                onTrailingPressed: () {
-                  Get.toNamed(Routes.TRANSACTION);
-                },
-                // showTrailing: true,
-                child: Column(
-                  spacing: 12,
-                  children: [
-                    BillsCard(
-                      iconKey: 'internet',
-                      billName: 'Internet Home Fiber',
-                      billType: 'Internet Bill',
-                      dueDate: DateTime(2026, 6, 4),
-                      amountDue: 6000,
-                    ),
-                  ],
+              // AppAdsSection(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: colorScheme.appOnSurface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: colorScheme.appBorder),
+                  ),
+                  constraints: BoxConstraints(minHeight: 44),
+                  child: Column(
+                    children: [
+                      //TITLE
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 12.0,
+                          right: 12,
+                          top: 12,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(PhosphorIconsRegular.caretDown, size: 20),
+                            Text('My Cash Flow'),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(24),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [Icon(PhosphorIconsRegular.acorn)],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -166,119 +224,120 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
-class AppAdsSection extends StatelessWidget {
-  const AppAdsSection({super.key});
+class CashFlowSummaryCard extends StatelessWidget {
+  const CashFlowSummaryCard({
+    super.key,
+    required this.title,
+    required this.amount,
+    required this.color,
+  });
+
+  final String title;
+  final double amount;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: Column(
-        spacing: 8,
-        children: [
-          Container(
-            width: double.infinity,
-
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-
-              gradient: LinearGradient(
-                colors: [const Color(0xFF141C29), const Color(0xFF1E293B)],
+    final colorScheme = context.colors;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Stack(
+            //   alignment: Alignment.center,
+            //   children: [
+            //     // Icon(
+            //     //   PhosphorIconsRegular.arrowUp,
+            //     //   color: colorScheme.appInflow,
+            //     //   size: 16,
+            //     // ),
+            //     Opacity(
+            //       opacity: 1,
+            //       // opacity: AppOpacity.snackBarIcon,
+            //       child: Container(
+            //         width: 8,
+            //         height: 8,
+            //         decoration: BoxDecoration(
+            //           shape: BoxShape.circle,
+            //           color: color,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // SizedBox(width: 4),
+            Text(
+              title,
+              style: TextStyle(
+                height: 12 / 12,
+                fontSize: 12,
+                color: color,
+                fontWeight: FontWeight.w600,
               ),
             ),
-
-            padding: const EdgeInsets.all(20),
-
-            child: Row(
-              spacing: 12,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-
-                    children: [
-                      Text(
-                        'Reduce Monthly Expenses',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-
-                      const SizedBox(height: 8),
-                      Text(
-                        'Track subscriptions and discover recurring charges.',
-                        style: TextStyle(
-                          color: Colors.white.withAlpha(180),
-                          fontSize: 13,
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-
-                        child: const Text(
-                          'Analyze Now',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Icon(
-                  Icons.insights,
-                  color: Colors.white.withAlpha(220),
-                  size: 64,
-                ),
-              ],
+          ],
+        ),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            amount.toCompactCurrency(),
+            maxLines: 1,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: colorScheme.appText,
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 2,
-            children: [
-              Container(
-                height: 4,
-                width: 12,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Container(
-                height: 4,
-                width: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Container(
-                height: 4,
-                width: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
+
+
+// AppSection(
+//   sectionTitle: 'Budgets',
+//   trailingType: SectionTrailingType.textButton,
+//   trailingText: 'View all',
+//   onTrailingPressed: () {
+//     Get.toNamed(Routes.TRANSACTION);
+//   },
+//   // showTrailing: true,
+//   child: Column(
+//     spacing: 12,
+//     children: [
+//       BudgetCard(
+//         title: 'Food',
+//         iconKey: 'bowlFood',
+//         consumption: 250,
+//         budget: 400,
+//       ),
+//     ],
+//   ),
+// ),
+
+
+// AppSection(
+//   sectionTitle: 'Bills',
+//   trailingType: SectionTrailingType.textButton,
+//   trailingText: 'View all',
+//   onTrailingPressed: () {
+//     Get.toNamed(Routes.TRANSACTION);
+//   },
+//   child: Column(
+//     spacing: 12,
+//     children: [
+//       BillsCard(
+//         iconKey: 'internet',
+//         billName: 'Internet Home Fiber',
+//         billType: 'Internet Bill',
+//         dueDate: DateTime(2026, 6, 4),
+//         amountDue: 6000,
+//       ),
+//     ],
+//   ),
+// ),

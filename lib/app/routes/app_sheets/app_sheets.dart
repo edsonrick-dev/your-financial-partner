@@ -8,8 +8,8 @@ import 'package:getx_drift_app/features/balances/views/people_balances_view.dart
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/selection_sheets.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/transaction_sheets.dart';
-import 'package:getx_drift_app/features/sheets/create_sheets/create_cash_flow_plan_sheet.dart';
-import 'package:getx_drift_app/features/sheets/create_sheets/select_cashflow_plan_type.dart';
+import 'package:getx_drift_app/features/sheets/create_sheets/create_cash_flow_plan/create_cash_flow_plan_sheet.dart';
+import 'package:getx_drift_app/features/sheets/selection_sheets/select_cashflow_plan_type.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_sheet.dart';
 
 import 'package:getx_drift_app/features/widgets/cards/category_card.dart';

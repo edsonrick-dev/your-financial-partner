@@ -34,9 +34,7 @@ class SelectCategorySheet extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: colorScheme.surface,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppBorderRadius.sheet),
-          ),
+          borderRadius: AppBorderRadius.sheetTop,
         ),
 
         child: SafeArea(

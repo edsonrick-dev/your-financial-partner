@@ -120,7 +120,7 @@ class CreateAccountController extends GetxController {
         name: name,
         icon: selectedIconKey.value,
         accountType: type.name,
-        accountGroup: type.group.name,
+        // accountGroup: type.group.name,
       ),
     );
 

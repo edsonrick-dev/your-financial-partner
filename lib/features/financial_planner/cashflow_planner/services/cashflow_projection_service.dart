@@ -6,6 +6,13 @@ import 'package:getx_drift_app/features/financial_planner/cashflow_planner/servi
 import 'package:getx_drift_app/features/financial_planner/cashflow_planner/services/occurrence_generators/monthly_occurrence_generator.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
 
+class PlanProjection {
+  final AppMonth month;
+  final double amount;
+
+  const PlanProjection({required this.month, required this.amount});
+}
+
 class MonthlyProjection {
   final AppMonth month;
 
@@ -25,6 +32,22 @@ class MonthlyProjection {
   double get allocated => expenses + debtRepayment + savings;
 
   double get surplus => income - allocated;
+
+  double amount(CashflowPlanType type) {
+    switch (type) {
+      case CashflowPlanType.income:
+        return income;
+
+      case CashflowPlanType.expense:
+        return expenses;
+
+      case CashflowPlanType.debtRepayment:
+        return debtRepayment;
+
+      case CashflowPlanType.savingsInvestment:
+        return savings;
+    }
+  }
 }
 
 class Occurrence {
@@ -104,6 +127,7 @@ abstract class OccurrenceGenerator {
 //     }
 //   }
 // }
+
 class CashFlowProjectionService {
   List<MonthlyProjection> buildYearProjection({
     required int year,
@@ -127,6 +151,32 @@ class CashFlowProjectionService {
     }
 
     return projections;
+  }
+
+  List<PlanProjection> buildPlanPreview({
+    required int year,
+    required CashFlowPlan plan,
+  }) {
+    final occurences = OccurrenceFactory.getGenerator(
+      plan.frequency,
+    ).generate(plan: plan, year: year);
+
+    final amounts = List<double>.filled(12, 0);
+
+    for (final occurence in occurences) {
+      final monthIndex = occurence.date.month - 1;
+      amounts[monthIndex] += occurence.amount;
+    }
+    // final projections = List.generate(
+    //   12,
+    //   (index) =>
+    //       PlanProjection(month: AppMonth.values[index], amount: amounts[index]),
+    // );
+    return List.generate(
+      12,
+      (index) =>
+          PlanProjection(month: AppMonth.values[index], amount: amounts[index]),
+    );
   }
 
   void _applyOccurrence(

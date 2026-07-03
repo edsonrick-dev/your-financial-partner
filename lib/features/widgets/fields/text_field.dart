@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 
 class AppTextField extends StatelessWidget {
@@ -27,6 +28,7 @@ class AppTextField extends StatelessWidget {
         children: [
           Text('$label ${optional ? '(Optional)' : ''}'),
           TextField(
+            inputFormatters: [LengthLimitingTextInputFormatter(12)],
             controller: controller,
             focusNode: focusNode,
 

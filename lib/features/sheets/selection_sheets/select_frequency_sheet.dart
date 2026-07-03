@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/constants/app_border_radius.dart';
 import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
@@ -20,7 +21,7 @@ class SelectFrequencySheet extends StatelessWidget {
 
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(38)),
+        borderRadius: AppBorderRadius.sheetTop,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

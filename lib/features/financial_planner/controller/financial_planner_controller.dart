@@ -9,9 +9,11 @@ import 'package:getx_drift_app/data/models/cashflow_plan_model.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
-import 'package:getx_drift_app/features/financial_planner/cashflow_planner/cashflow_planner_screen.dart';
+import 'package:getx_drift_app/features/accounts/views/accounts_view.dart';
+import 'package:getx_drift_app/features/balances/views/people_balances_view.dart';
 import 'package:getx_drift_app/features/financial_planner/cashflow_planner/services/cashflow_projection_service.dart';
 import 'package:getx_drift_app/features/financial_planner/models/financial_planner_page_model.dart';
+import 'package:getx_drift_app/features/sheets/selection_sheets/select_day_of_month.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import 'package:intl/intl.dart';
@@ -19,10 +21,15 @@ import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 
 class FinancialPlannerController extends GetxController {
   final selectedTabIndex = 0.obs;
+
+  final dueDay = RxnInt();
+  final statementDay = RxnInt();
+  final dueMonth = RxnInt();
   void selectTab(int index) {
     selectedTabIndex.value = index;
   }
 
+  final previewProjections = <PlanProjection>[].obs;
   final projections = <MonthlyProjection>[].obs;
   final amountController = TextEditingController();
   final amountFocusNode = FocusNode();
@@ -59,7 +66,11 @@ class FinancialPlannerController extends GetxController {
   }
 
   final financialPlannerPages = <FinancialPlannerPage>[
-    FinancialPlannerPage(title: 'Cashflow', page: CashflowPlannerScreen()),
+    FinancialPlannerPage(title: 'Accounts', page: AccountsView()),
+    FinancialPlannerPage(
+      title: 'Personal Balances',
+      page: PeopleBalancesView(),
+    ),
   ];
 
   final selectedCashflowPlanType = Rxn<CashflowPlanType>();
@@ -68,6 +79,11 @@ class FinancialPlannerController extends GetxController {
   final selectedExpenseType = ExpenseMode.budget.obs;
 
   final selectedFrequency = Rxn<FrequencyType>();
+  String? get formattedDueDay {
+    final day = dueDay.value;
+    if (day == null) return null;
+    return '${ordinal(day)} day of the month';
+  }
 
   final RxBool isBill = false.obs;
   Rx<DateTime> selectedDate = DateTime.now().obs;
@@ -135,6 +151,13 @@ extension SelectFunctions on FinancialPlannerController {
     }
   }
 
+  Future<void> selectDayOfMonth() async {
+    final result = await AppSheets.selection.selectDayOfMonth();
+
+    if (result == null) return;
+    dueDay.value = result;
+  }
+
   Future<void> selectCategory(TransactionType transactionType) async {
     final result = await AppSheets.selection.selectCategory(
       transactionType,
@@ -150,9 +173,31 @@ extension SelectFunctions on FinancialPlannerController {
 
     if (result == null) return;
 
-    selectedFrequency.value = result;
-    selectedSplitMode.value = SplitMode.equal;
-    selectedMonthPattern.value = null;
+    if (selectedFrequency.value != result) {
+      selectedFrequency.value = result;
+      selectedSplitMode.value = SplitMode.equal;
+      selectedMonthPattern.value = null;
+
+      previewProjections.clear();
+      amountController.clear();
+      clearDistributionFields();
+      refreshPreview();
+    }
+  }
+}
+
+extension BudgetDistributionFunctions on FinancialPlannerController {
+  void clearDistributionFields() {
+    for (final controller in dailyAmountControllers) {
+      controller.clear();
+    }
+    for (final controller in monthlyAmountControllers) {
+      controller.clear();
+    }
+    for (final controller in customAmountControllers) {
+      controller.clear();
+    }
+
     customAmountControllers.clear();
     customAmountFocusNode.clear();
   }
@@ -163,36 +208,40 @@ extension MonthlyProjectionFunctions on FinancialPlannerController {
     final frequency = selectedFrequency.value;
 
     if (frequency == null) {
-      projections.clear();
+      previewProjections.clear();
       return;
     }
     if (selectedCashflowPlanType.value == null ||
         selectedFrequency.value == null) {
-      projections.clear();
+      previewProjections.clear();
       return;
     }
-
+    if (selectedFrequency.value!.requiresMonthPattern &&
+        selectedMonthPattern.value == null) {
+      previewProjections.clear();
+      return;
+    }
     final plan = buildDraftPlan();
 
-    projections.value = CashFlowProjectionService().buildYearProjection(
+    previewProjections.value = CashFlowProjectionService().buildPlanPreview(
       year: DateTime.now().year,
-      plans: [plan],
+      plan: plan,
     );
-    for (final month in projections) {
-      debugPrint('${month.month.fullName} : ${month.allocated}');
-    }
-    for (var month = 1; month <= 12; month++) {
-      debugPrint(
-        'Month $month Mondays: '
-        '${countWeekdayInMonth(2026, month, DateTime.monday)}',
-      );
-    }
+    // for (final month in projections) {
+    //   debugPrint('${month.month.fullName} : ${month.allocated}');
+    // }
+    // for (var month = 1; month <= 12; month++) {
+    //   debugPrint(
+    //     'Month $month Mondays: '
+    //     '${countWeekdayInMonth(2026, month, DateTime.monday)}',
+    //   );
+    // }
   }
 
   double get previewAnnualAmount =>
-      projections.fold(0, (sum, e) => sum + e.allocated);
+      previewProjections.fold(0, (sum, e) => sum + e.amount);
   List<double> get previewMonthlyAmounts =>
-      projections.map((e) => e.allocated).toList();
+      previewProjections.map((e) => e.amount).toList();
   CashFlowPlan buildDraftPlan() {
     final isCustom = selectedSplitMode.value == SplitMode.custom;
 

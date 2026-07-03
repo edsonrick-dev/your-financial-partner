@@ -74,6 +74,19 @@ extension FrequencyTypeExtension on FrequencyType {
     }
   }
 
+  bool get canBeBill {
+    switch (this) {
+      case FrequencyType.monthly:
+      case FrequencyType.quarterly:
+      case FrequencyType.semiAnnual:
+      case FrequencyType.annual:
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
   String get patternLabel {
     switch (this) {
       case FrequencyType.quarterly:

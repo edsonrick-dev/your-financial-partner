@@ -5,6 +5,7 @@ import 'package:getx_drift_app/features/home/views/home_view.dart';
 import 'package:getx_drift_app/features/main_shell/views/main_shell_view.dart';
 import 'package:getx_drift_app/features/personal_balance/binding/personal_balance_binding.dart';
 import 'package:getx_drift_app/features/personal_balance/screen/personal_balance_details_page.dart';
+import 'package:getx_drift_app/features/settings/pages/preferences_page.dart';
 import '../../features/home/bindings/home_binding.dart';
 import '../../features/root/bindings/root_binding.dart';
 import '../../features/root/views/root_view.dart';
@@ -16,6 +17,7 @@ import 'app_routes.dart';
 
 class AppPages {
   static final pages = [
+    GetPage(name: Routes.preferences, page: () => const PreferencesPage()),
     GetPage(
       name: Routes.PERSONALBALANCE,
       page: () => const PersonalBalanceDetailsPage(),

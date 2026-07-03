@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,8 +5,8 @@ import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
-import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/cashflow_planner/charts/preview_monthly_projection_chart.dart';
 import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/earn_transaction_sheet.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
@@ -30,19 +29,43 @@ class CreateCashFlowPlanSheet extends GetView<FinancialPlannerController> {
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          FocusScope.of(context).unfocus();
+          FocusManager.instance.primaryFocus?.unfocus();
         },
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.vertical(top: Radius.circular(38)),
-            color: Colors.white,
+            color: colorScheme.surface,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ///Header
-              _SheetHeader(),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(38),
+                    bottom: Radius.circular(20),
+                  ),
+                  // color: colorScheme.primary,
+                ),
+                child: Column(
+                  children: [
+                    ///Grabber
+                    AppGrabber(),
+
+                    ///Toolbar
+                    AppToolbar(
+                      title: 'Create Cash Flow Plan',
+                      trailingOnPressed: () {},
+                      leadingOnPressed: () {
+                        Get.back();
+                      },
+                    ),
+                  ],
+                ),
+              ),
 
               Expanded(
                 child: SingleChildScrollView(
@@ -54,7 +77,21 @@ class CreateCashFlowPlanSheet extends GetView<FinancialPlannerController> {
                     child: Column(
                       spacing: columnSpacing,
                       children: [
-                        _SelectCashFlowPlanType(controller: controller),
+                        //PLAN TYPE PICKER
+                        Obx(
+                          () => AppDropdownField(
+                            label: 'Plan Type',
+                            value: controller
+                                .selectedCashflowPlanType
+                                .value
+                                ?.label,
+                            iconKey: 'caretDown',
+                            hint: 'Select type',
+                            onTap: () {
+                              controller.selectCashflowPlanType();
+                            },
+                          ),
+                        ),
 
                         _SelectCashflowCategory(controller: controller),
 
@@ -99,11 +136,10 @@ class CreateCashFlowPlanSheet extends GetView<FinancialPlannerController> {
 
                         _BudgetDistribution(controller: controller),
 
-                        if (controller.selectedFrequency.value != null)
-                          _MakeRecurringBill(
-                            colorScheme: colorScheme,
-                            controller: controller,
-                          ),
+                        _MakeRecurringBill(
+                          colorScheme: colorScheme,
+                          controller: controller,
+                        ),
                       ],
                     ),
                   ),
@@ -128,8 +164,17 @@ class _MakeRecurringBill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => AnimatedContainer(
+    return Obx(() {
+      final frequency = controller.selectedFrequency.value;
+      final pattern = controller.selectedMonthPattern.value;
+      final canBeBill =
+          frequency != null &&
+          frequency.canBeBill &&
+          (!frequency.requiresMonthPattern || pattern != null);
+      if (!canBeBill) {
+        return const SizedBox.shrink();
+      }
+      return AnimatedContainer(
         duration: Duration(milliseconds: 180),
         width: double.infinity,
         padding: EdgeInsets.all(12),
@@ -141,6 +186,7 @@ class _MakeRecurringBill extends StatelessWidget {
           ),
         ),
         child: Column(
+          spacing: 12,
           children: [
             Row(
               children: [
@@ -186,24 +232,16 @@ class _MakeRecurringBill extends StatelessWidget {
 
                       iconKey: 'calendar',
 
-                      value: controller.formattedDate,
+                      value: controller.formattedDueDay,
 
                       hint: 'Select date',
 
-                      onTap: () {
-                        AppDatePicker.show(
-                          context: context,
-
-                          initialDate: controller.selectedDate.value,
-
-                          onChanged: controller.setDate,
-                        );
-                      },
+                      onTap: controller.selectDayOfMonth,
                     ),
                   ),
                   Obx(
                     () => AppDropdownField(
-                      label: 'Statement Date (optional)',
+                      label: 'Billing Date (optional)',
 
                       iconKey: 'calendar',
 
@@ -226,8 +264,8 @@ class _MakeRecurringBill extends StatelessWidget {
               ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
@@ -248,176 +286,138 @@ class _BudgetDistribution extends StatelessWidget {
       if (!canConfigureBudget) {
         return const SizedBox.shrink();
       }
-      return Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: colorScheme.appInfoSoft,
-          border: Border.all(color: colorScheme.appInfo),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          spacing: 12,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        spacing: 4,
-                        children: [
-                          Icon(
-                            PhosphorIconsRegular.arrowsSplit,
-                            color: colorScheme.appInfo,
-                          ),
-                          Text(
-                            'Budget Distribution',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
+      return GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: colorScheme.appInfoSoft,
+            border: Border.all(color: colorScheme.appInfo),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            spacing: 12,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          spacing: 4,
+                          children: [
+                            Icon(
+                              PhosphorIconsRegular.arrowsSplit,
                               color: colorScheme.appInfo,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            if (frequency.isCustomizable)
-              Row(
-                spacing: 2,
-                children: [
-                  BudgetDistributionPicker(
-                    label: 'Equal',
-                    type: SplitMode.equal,
-                  ),
-                  BudgetDistributionPicker(
-                    label: 'Custom',
-                    type: SplitMode.custom,
+                            Text(
+                              'Budget Distribution',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: colorScheme.appInfo,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            Obx(() {
-              if (controller.selectedSplitMode.value != SplitMode.custom) {
-                return AppTextField(
-                  label: '${controller.selectedFrequency.value?.label} Budget',
-                  hintText: 0.toCurrency(),
-                  focusNode: controller.amountFocusNode,
-                  controller: controller.amountController,
-                );
-              }
-              switch (frequency) {
-                case FrequencyType.daily:
-                  return DailyDistributionFields();
-                case FrequencyType.monthly:
-                  return MonthlyDistributionFields();
-
-                case FrequencyType.quarterly:
-                case FrequencyType.semiAnnual:
-                  if (pattern == null) {
-                    return const SizedBox.shrink();
-                  }
-                  return CustomDistributionFields(pattern: pattern);
-                default:
-                  return const SizedBox.shrink();
-              }
-            }),
-            // Obx(() {
-            //   return Column(
-            //     children: controller.projections.map((projection) {
-            //       return Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Text(projection.month.fullName),
-            //           Text(projection.allocated.toCurrency()),
-            //         ],
-            //       );
-            //     }).toList(),
-            //   );
-            // }),
-            Obx(() {
-              return SizedBox(
-                height: 140,
-                child: BarChart(
-                  BarChartData(
-                    gridData: FlGridData(show: false),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.all(color: colorScheme.appInfo),
+              if (frequency.isCustomizable)
+                Row(
+                  spacing: 2,
+                  children: [
+                    BudgetDistributionPicker(
+                      label: 'Equal',
+                      type: SplitMode.equal,
                     ),
-                    titlesData: FlTitlesData(
-                      topTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      rightTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: false,
-                          reservedSize: 40,
-                        ),
-                      ),
-
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          getTitlesWidget: (value, meta) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Text(
-                                AppMonth.values[value.toInt()].fullName
-                                    .trim()[0],
-                                style: const TextStyle(fontSize: 10),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                    BudgetDistributionPicker(
+                      label: 'Custom',
+                      type: SplitMode.custom,
                     ),
-                    barGroups: controller.projections.asMap().entries.map((
-                      entry,
-                    ) {
-                      return BarChartGroupData(
-                        x: entry.key,
-                        barRods: [BarChartRodData(toY: entry.value.allocated)],
-                      );
-                    }).toList(),
-                  ),
+                  ],
                 ),
-              );
-            }),
-            Obx(() {
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Annual Total',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        controller.previewAnnualAmount.toCurrency(),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Monthly Average'),
-                      Text((controller.previewAnnualAmount / 12).toCurrency()),
-                    ],
-                  ),
-                ],
-              );
-            }),
-          ],
+              Obx(() {
+                if (controller.selectedSplitMode.value != SplitMode.custom) {
+                  return AppTextField(
+                    label:
+                        '${controller.selectedFrequency.value?.label} Budget',
+                    hintText: 0.toCurrency(),
+                    focusNode: controller.amountFocusNode,
+                    controller: controller.amountController,
+                  );
+                }
+                switch (frequency) {
+                  case FrequencyType.daily:
+                    return DailyDistributionFields();
+                  case FrequencyType.monthly:
+                    return MonthlyDistributionFields();
+
+                  case FrequencyType.quarterly:
+                  case FrequencyType.semiAnnual:
+                    if (pattern == null) {
+                      return const SizedBox.shrink();
+                    }
+                    return CustomDistributionFields(pattern: pattern);
+                  default:
+                    return const SizedBox.shrink();
+                }
+              }),
+
+              PreviewMonthlyProjectionChart(),
+              Obx(() {
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Text('Monthly Average'),
+                        const Spacer(),
+
+                        Expanded(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              (controller.previewAnnualAmount / 12)
+                                  .toCurrency(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          'Annual Total',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const Spacer(),
+                        Expanded(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              controller.previewAnnualAmount.toCurrency(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }),
+            ],
+          ),
         ),
       );
     });
@@ -458,61 +458,6 @@ class _SelectCashflowCategory extends StatelessWidget {
         },
       );
     });
-  }
-}
-
-class _SelectCashFlowPlanType extends StatelessWidget {
-  const _SelectCashFlowPlanType({required this.controller});
-
-  final FinancialPlannerController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(
-      () => AppDropdownField(
-        label: 'Cash Flow Plan Type',
-        value: controller.selectedCashflowPlanType.value?.label,
-
-        iconKey: 'caretDown',
-        hint: 'Select type',
-        onTap: () {
-          controller.selectCashflowPlanType();
-        },
-      ),
-    );
-  }
-}
-
-class _SheetHeader extends StatelessWidget {
-  const _SheetHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(38),
-          bottom: Radius.circular(20),
-        ),
-        // color: colorScheme.primary,
-      ),
-      child: Column(
-        children: [
-          ///Grabber
-          AppGrabber(),
-
-          ///Toolbar
-          AppToolbar(
-            title: 'Create Cash Flow Plan',
-            trailingOnPressed: () {},
-            leadingOnPressed: () {
-              Get.back();
-            },
-          ),
-        ],
-      ),
-    );
   }
 }
 

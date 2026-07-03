@@ -6,7 +6,9 @@ import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
 import 'package:getx_drift_app/data/tables/transaction_participants_table.dart';
 import 'package:getx_drift_app/data/tables/financial_obligations_table.dart';
+import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:intl/intl.dart';
+import 'package:getx_drift_app/data/enums/transaction_type.dart';
 
 import 'package:drift/drift.dart';
 part 'transactions_dao.g.dart';
@@ -59,6 +61,55 @@ part 'transactions_dao.g.dart';
 class TransactionsDao extends DatabaseAccessor<AppDatabase>
     with _$TransactionsDaoMixin {
   TransactionsDao(super.db);
+
+  Stream<MonthlyCashFlowSummary> watchMonthlySummary({
+    required DateTime month,
+  }) {
+    final start = DateTime(month.year, month.month, 1);
+    final end = DateTime(month.year, month.month + 1, 1);
+
+    final query = select(transactionsTable)
+      ..where(
+        (t) =>
+            t.date.isBiggerOrEqualValue(start) & t.date.isSmallerThanValue(end),
+      );
+
+    return query.watch().map((transactions) {
+      double income = 0;
+      double expenses = 0;
+      double savings = 0;
+
+      for (final tx in transactions) {
+        switch (tx.type) {
+          case TransactionType.earn:
+            income += tx.amount;
+            break;
+
+          case TransactionType.spend:
+            expenses += tx.amount;
+            break;
+
+          case TransactionType.transfer:
+            // ignore
+            break;
+
+          case TransactionType.give:
+            // ignore
+            break;
+
+          case TransactionType.receive:
+            // ignore
+            break;
+        }
+      }
+
+      return MonthlyCashFlowSummary(
+        income: income,
+        expenses: expenses,
+        savings: savings,
+      );
+    });
+  }
 
   /// =============================================================================
   /// TRANSACTION PERSISTENCE
@@ -220,83 +271,76 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
         ]);
 
     return query.watch().asyncMap((rows) async {
-      try {
-        return Future.wait(
-          rows.map((row) async {
-            final transaction = row.readTable(transactionsTable);
+      return Future.wait(
+        rows.map((row) async {
+          final transaction = row.readTable(transactionsTable);
 
-            final category = row.readTableOrNull(cashflowCategoriesTable);
+          final category = row.readTableOrNull(cashflowCategoriesTable);
 
-            final account = row.readTable(accountsTable);
+          final account = row.readTable(accountsTable);
 
-            final participants = await getParticipantsWithEntities(
-              transaction.id,
+          final participants = await getParticipantsWithEntities(
+            transaction.id,
+          );
+
+          TransactionParticipantWithEntity? myParticipant;
+
+          try {
+            myParticipant = participants.firstWhere(
+              (participant) => participant.entity.id == 1,
             );
+          } catch (_) {
+            myParticipant = null;
+          }
 
-            TransactionParticipantWithEntity? myParticipant;
+          final myShare = myParticipant != null
+              ? myParticipant.participant.allocatedAmount
+              : transaction.amount;
 
-            try {
-              myParticipant = participants.firstWhere(
-                (participant) => participant.entity.id == 1,
-              );
-            } catch (_) {
-              myParticipant = null;
-            }
+          final receivableAmount = participants
+              .where((participant) => participant.entity.id != 1)
+              .fold<double>(0, (sum, participant) {
+                return sum + participant.participant.allocatedAmount;
+              });
+          final obligations = await (select(
+            financialObligationsTable,
+          )..where((tbl) => tbl.transactionId.equals(transaction.id))).get();
 
-            final myShare = myParticipant != null
-                ? myParticipant.participant.allocatedAmount
-                : transaction.amount;
+          debugPrint(
+            'Transaction ${transaction.id}: ${obligations.length} obligations',
+          );
+          // final obligation =
+          //     await (select(
+          //           financialObligationsTable,
+          //         )..where((tbl) => tbl.transactionId.equals(transaction.id)))
+          //         .getSingleOrNull();
+          return TransactionWithDetails(
+            transaction: transaction,
 
-            final receivableAmount = participants
-                .where((participant) => participant.entity.id != 1)
-                .fold<double>(0, (sum, participant) {
-                  return sum + participant.participant.allocatedAmount;
-                });
-            final obligations = await (select(
-              financialObligationsTable,
-            )..where((tbl) => tbl.transactionId.equals(transaction.id))).get();
+            category: category,
 
-            debugPrint(
-              'Transaction ${transaction.id}: ${obligations.length} obligations',
-            );
-            // final obligation =
-            //     await (select(
-            //           financialObligationsTable,
-            //         )..where((tbl) => tbl.transactionId.equals(transaction.id)))
-            //         .getSingleOrNull();
-            return TransactionWithDetails(
-              transaction: transaction,
+            account: account,
 
-              category: category,
+            linkedAccount: row.readTableOrNull(linkedAccounts),
 
-              account: account,
+            participants: participants,
+            // obligationType: obligation?.type,
+            obligations: obligations,
+            obligationType: obligations.isNotEmpty
+                ? obligations.first.type
+                : null,
+            splitSummary: SplitExpenseSummary(
+              totalPaid: transaction.amount,
 
-              linkedAccount: row.readTableOrNull(linkedAccounts),
+              myShare: myShare,
 
-              participants: participants,
-              // obligationType: obligation?.type,
-              obligations: obligations,
-              obligationType: obligations.isNotEmpty
-                  ? obligations.first.type
-                  : null,
-              splitSummary: SplitExpenseSummary(
-                totalPaid: transaction.amount,
+              receivableAmount: receivableAmount,
 
-                myShare: myShare,
-
-                receivableAmount: receivableAmount,
-
-                isSharedExpense: participants.length > 1,
-              ),
-            );
-          }).toList(),
-        );
-      } catch (e, stack) {
-        print(e);
-        print(stack);
-
-        rethrow;
-      }
+              isSharedExpense: participants.length > 1,
+            ),
+          );
+        }).toList(),
+      );
     });
   }
 

@@ -388,17 +388,6 @@ class $AccountsTableTable extends AccountsTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _accountGroupMeta = const VerificationMeta(
-    'accountGroup',
-  );
-  @override
-  late final GeneratedColumn<String> accountGroup = GeneratedColumn<String>(
-    'account_group',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   static const VerificationMeta _accountTypeMeta = const VerificationMeta(
     'accountType',
   );
@@ -442,7 +431,6 @@ class $AccountsTableTable extends AccountsTable
     id,
     name,
     icon,
-    accountGroup,
     accountType,
     currentValue,
     isSystem,
@@ -477,17 +465,6 @@ class $AccountsTableTable extends AccountsTable
       );
     } else if (isInserting) {
       context.missing(_iconMeta);
-    }
-    if (data.containsKey('account_group')) {
-      context.handle(
-        _accountGroupMeta,
-        accountGroup.isAcceptableOrUnknown(
-          data['account_group']!,
-          _accountGroupMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_accountGroupMeta);
     }
     if (data.containsKey('account_type')) {
       context.handle(
@@ -536,10 +513,6 @@ class $AccountsTableTable extends AccountsTable
         DriftSqlType.string,
         data['${effectivePrefix}icon'],
       )!,
-      accountGroup: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}account_group'],
-      )!,
       accountType: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}account_type'],
@@ -566,7 +539,6 @@ class AccountsTableData extends DataClass
   final int id;
   final String name;
   final String icon;
-  final String accountGroup;
   final String accountType;
   final double currentValue;
   final bool isSystem;
@@ -574,7 +546,6 @@ class AccountsTableData extends DataClass
     required this.id,
     required this.name,
     required this.icon,
-    required this.accountGroup,
     required this.accountType,
     required this.currentValue,
     required this.isSystem,
@@ -585,7 +556,6 @@ class AccountsTableData extends DataClass
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     map['icon'] = Variable<String>(icon);
-    map['account_group'] = Variable<String>(accountGroup);
     map['account_type'] = Variable<String>(accountType);
     map['current_value'] = Variable<double>(currentValue);
     map['is_system'] = Variable<bool>(isSystem);
@@ -597,7 +567,6 @@ class AccountsTableData extends DataClass
       id: Value(id),
       name: Value(name),
       icon: Value(icon),
-      accountGroup: Value(accountGroup),
       accountType: Value(accountType),
       currentValue: Value(currentValue),
       isSystem: Value(isSystem),
@@ -613,7 +582,6 @@ class AccountsTableData extends DataClass
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       icon: serializer.fromJson<String>(json['icon']),
-      accountGroup: serializer.fromJson<String>(json['accountGroup']),
       accountType: serializer.fromJson<String>(json['accountType']),
       currentValue: serializer.fromJson<double>(json['currentValue']),
       isSystem: serializer.fromJson<bool>(json['isSystem']),
@@ -626,7 +594,6 @@ class AccountsTableData extends DataClass
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'icon': serializer.toJson<String>(icon),
-      'accountGroup': serializer.toJson<String>(accountGroup),
       'accountType': serializer.toJson<String>(accountType),
       'currentValue': serializer.toJson<double>(currentValue),
       'isSystem': serializer.toJson<bool>(isSystem),
@@ -637,7 +604,6 @@ class AccountsTableData extends DataClass
     int? id,
     String? name,
     String? icon,
-    String? accountGroup,
     String? accountType,
     double? currentValue,
     bool? isSystem,
@@ -645,7 +611,6 @@ class AccountsTableData extends DataClass
     id: id ?? this.id,
     name: name ?? this.name,
     icon: icon ?? this.icon,
-    accountGroup: accountGroup ?? this.accountGroup,
     accountType: accountType ?? this.accountType,
     currentValue: currentValue ?? this.currentValue,
     isSystem: isSystem ?? this.isSystem,
@@ -655,9 +620,6 @@ class AccountsTableData extends DataClass
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       icon: data.icon.present ? data.icon.value : this.icon,
-      accountGroup: data.accountGroup.present
-          ? data.accountGroup.value
-          : this.accountGroup,
       accountType: data.accountType.present
           ? data.accountType.value
           : this.accountType,
@@ -674,7 +636,6 @@ class AccountsTableData extends DataClass
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('icon: $icon, ')
-          ..write('accountGroup: $accountGroup, ')
           ..write('accountType: $accountType, ')
           ..write('currentValue: $currentValue, ')
           ..write('isSystem: $isSystem')
@@ -683,15 +644,8 @@ class AccountsTableData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    name,
-    icon,
-    accountGroup,
-    accountType,
-    currentValue,
-    isSystem,
-  );
+  int get hashCode =>
+      Object.hash(id, name, icon, accountType, currentValue, isSystem);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -699,7 +653,6 @@ class AccountsTableData extends DataClass
           other.id == this.id &&
           other.name == this.name &&
           other.icon == this.icon &&
-          other.accountGroup == this.accountGroup &&
           other.accountType == this.accountType &&
           other.currentValue == this.currentValue &&
           other.isSystem == this.isSystem);
@@ -709,7 +662,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
   final Value<int> id;
   final Value<String> name;
   final Value<String> icon;
-  final Value<String> accountGroup;
   final Value<String> accountType;
   final Value<double> currentValue;
   final Value<bool> isSystem;
@@ -717,7 +669,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.icon = const Value.absent(),
-    this.accountGroup = const Value.absent(),
     this.accountType = const Value.absent(),
     this.currentValue = const Value.absent(),
     this.isSystem = const Value.absent(),
@@ -726,19 +677,16 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     this.id = const Value.absent(),
     required String name,
     required String icon,
-    required String accountGroup,
     required String accountType,
     this.currentValue = const Value.absent(),
     this.isSystem = const Value.absent(),
   }) : name = Value(name),
        icon = Value(icon),
-       accountGroup = Value(accountGroup),
        accountType = Value(accountType);
   static Insertable<AccountsTableData> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? icon,
-    Expression<String>? accountGroup,
     Expression<String>? accountType,
     Expression<double>? currentValue,
     Expression<bool>? isSystem,
@@ -747,7 +695,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (icon != null) 'icon': icon,
-      if (accountGroup != null) 'account_group': accountGroup,
       if (accountType != null) 'account_type': accountType,
       if (currentValue != null) 'current_value': currentValue,
       if (isSystem != null) 'is_system': isSystem,
@@ -758,7 +705,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     Value<int>? id,
     Value<String>? name,
     Value<String>? icon,
-    Value<String>? accountGroup,
     Value<String>? accountType,
     Value<double>? currentValue,
     Value<bool>? isSystem,
@@ -767,7 +713,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
       id: id ?? this.id,
       name: name ?? this.name,
       icon: icon ?? this.icon,
-      accountGroup: accountGroup ?? this.accountGroup,
       accountType: accountType ?? this.accountType,
       currentValue: currentValue ?? this.currentValue,
       isSystem: isSystem ?? this.isSystem,
@@ -785,9 +730,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     }
     if (icon.present) {
       map['icon'] = Variable<String>(icon.value);
-    }
-    if (accountGroup.present) {
-      map['account_group'] = Variable<String>(accountGroup.value);
     }
     if (accountType.present) {
       map['account_type'] = Variable<String>(accountType.value);
@@ -807,7 +749,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('icon: $icon, ')
-          ..write('accountGroup: $accountGroup, ')
           ..write('accountType: $accountType, ')
           ..write('currentValue: $currentValue, ')
           ..write('isSystem: $isSystem')
@@ -4568,7 +4509,6 @@ typedef $$AccountsTableTableCreateCompanionBuilder =
       Value<int> id,
       required String name,
       required String icon,
-      required String accountGroup,
       required String accountType,
       Value<double> currentValue,
       Value<bool> isSystem,
@@ -4578,7 +4518,6 @@ typedef $$AccountsTableTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> name,
       Value<String> icon,
-      Value<String> accountGroup,
       Value<String> accountType,
       Value<double> currentValue,
       Value<bool> isSystem,
@@ -4605,11 +4544,6 @@ class $$AccountsTableTableFilterComposer
 
   ColumnFilters<String> get icon => $composableBuilder(
     column: $table.icon,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get accountGroup => $composableBuilder(
-    column: $table.accountGroup,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4653,11 +4587,6 @@ class $$AccountsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get accountGroup => $composableBuilder(
-    column: $table.accountGroup,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get accountType => $composableBuilder(
     column: $table.accountType,
     builder: (column) => ColumnOrderings(column),
@@ -4691,11 +4620,6 @@ class $$AccountsTableTableAnnotationComposer
 
   GeneratedColumn<String> get icon =>
       $composableBuilder(column: $table.icon, builder: (column) => column);
-
-  GeneratedColumn<String> get accountGroup => $composableBuilder(
-    column: $table.accountGroup,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<String> get accountType => $composableBuilder(
     column: $table.accountType,
@@ -4749,7 +4673,6 @@ class $$AccountsTableTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> icon = const Value.absent(),
-                Value<String> accountGroup = const Value.absent(),
                 Value<String> accountType = const Value.absent(),
                 Value<double> currentValue = const Value.absent(),
                 Value<bool> isSystem = const Value.absent(),
@@ -4757,7 +4680,6 @@ class $$AccountsTableTableTableManager
                 id: id,
                 name: name,
                 icon: icon,
-                accountGroup: accountGroup,
                 accountType: accountType,
                 currentValue: currentValue,
                 isSystem: isSystem,
@@ -4767,7 +4689,6 @@ class $$AccountsTableTableTableManager
                 Value<int> id = const Value.absent(),
                 required String name,
                 required String icon,
-                required String accountGroup,
                 required String accountType,
                 Value<double> currentValue = const Value.absent(),
                 Value<bool> isSystem = const Value.absent(),
@@ -4775,7 +4696,6 @@ class $$AccountsTableTableTableManager
                 id: id,
                 name: name,
                 icon: icon,
-                accountGroup: accountGroup,
                 accountType: accountType,
                 currentValue: currentValue,
                 isSystem: isSystem,

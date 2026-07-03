@@ -9,9 +9,6 @@ class PeopleBalancesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(title: const Text('People Balances')),
-
       body: StreamBuilder<List<PersonBalanceSummary>>(
         stream: database.peopleBalanceDao.watchPeopleBalances(),
 
@@ -30,7 +27,7 @@ class PeopleBalancesView extends StatelessWidget {
 
           /// EMPTY
           if (people.isEmpty) {
-            return const Center(child: Text('No balances yet.'));
+            return const Center(child: Text('No personal balances yet.'));
           }
 
           return ListView.separated(

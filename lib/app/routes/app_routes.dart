@@ -9,4 +9,5 @@ abstract class Routes {
   static const ACCOUNTS = '/accounts';
   static const PEOPLEBALANCES = '/people-balances';
   static const PERSONALBALANCE = '/personal-balance';
+  static const preferences = '/settings/preferences';
 }

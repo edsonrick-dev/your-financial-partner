@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/features/accounts/views/accounts_view.dart';
 import 'package:getx_drift_app/features/financial_planner/financial_planner_screen.dart';
 import 'package:getx_drift_app/features/home/views/home_view.dart';
+import 'package:getx_drift_app/features/settings/settings_page_view.dart';
 import 'package:getx_drift_app/features/transaction/views/transaction_view.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 
@@ -17,13 +17,13 @@ class MainShellController extends GetxController {
   String get currentTitle {
     switch (selectedTabIndex.value) {
       case 0:
-        return 'Dashboard';
+        return 'Home';
       case 1:
         return 'Transactions';
       case 2:
         return 'Budgets';
       case 3:
-        return 'People';
+        return 'Settings';
 
       default:
         return '';
@@ -34,7 +34,7 @@ class MainShellController extends GetxController {
     HomeView(),
     TransactionView(),
     FinancialPlannerScreen(),
-    AccountsView(),
+    SettingsPageView(),
   ];
 
   // void openAddTransaction() {

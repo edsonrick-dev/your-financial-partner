@@ -7,10 +7,7 @@ import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
 class FundSummaryCard extends GetView<HomeController> {
-  const FundSummaryCard({super.key, required this.controller});
-
-  @override
-  final HomeController controller;
+  const FundSummaryCard({super.key});
 
   @override
   Widget build(BuildContext context) {

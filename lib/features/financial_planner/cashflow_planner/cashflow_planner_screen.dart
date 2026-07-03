@@ -9,7 +9,6 @@ import 'package:getx_drift_app/features/widgets/cards/bills_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/budget_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
-import 'package:intl/intl.dart';
 
 class CashflowPlannerScreen extends GetView<FinancialPlannerController> {
   const CashflowPlannerScreen({super.key});
@@ -22,7 +21,7 @@ class CashflowPlannerScreen extends GetView<FinancialPlannerController> {
         () => Column(
           spacing: 12,
           children: [
-            _cashflowSummarySection(controller: controller),
+            _CashflowSummarySection(controller: controller),
             AppSection(
               sectionTitle: 'CTA',
               child: Column(
@@ -135,8 +134,8 @@ class CashflowPlannerScreen extends GetView<FinancialPlannerController> {
   }
 }
 
-class _cashflowSummarySection extends StatelessWidget {
-  const _cashflowSummarySection({required this.controller});
+class _CashflowSummarySection extends StatelessWidget {
+  const _CashflowSummarySection({required this.controller});
 
   final FinancialPlannerController controller;
 
