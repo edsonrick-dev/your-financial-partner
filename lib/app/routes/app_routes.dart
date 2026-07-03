@@ -10,4 +10,5 @@ abstract class Routes {
   static const PEOPLEBALANCES = '/people-balances';
   static const PERSONALBALANCE = '/personal-balance';
   static const preferences = '/settings/preferences';
+  static const notifications = '/settings/notifications';
 }

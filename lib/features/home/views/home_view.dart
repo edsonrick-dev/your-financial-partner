@@ -10,7 +10,9 @@ import 'package:getx_drift_app/features/widgets/fields/shared/field_container.da
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:intl/intl.dart';
+
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -89,34 +91,99 @@ class HomeView extends GetView<HomeController> {
                         children: [
                           Text('This Month'),
                           Spacer(),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              // color: colorScheme.appInfoSoft,
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: colorScheme.appBorder),
-                            ),
-                            child: Row(
-                              // crossAxisAlignment: CrossAxisAlignment.center,
-                              // mainAxisAlignment: MainAxisAlignment.center,
+                          Obx(() {
+                            return Row(
                               children: [
-                                Icon(
-                                  PhosphorIconsRegular.calendarBlank,
-                                  size: 12,
+                                if (!controller.isCurrentMonth)
+                                  TextButton(
+                                    onPressed: controller.goToCurrentMonth,
+                                    child: const Text('Today'),
+                                  ),
+                                IconButton(
+                                  icon: const Icon(Icons.chevron_left),
+                                  onPressed: controller.previousMonth,
                                 ),
-                                SizedBox(width: 2),
-                                Text(
-                                  'June 2026',
-                                  style: TextStyle(fontSize: 12),
+
+                                GestureDetector(
+                                  onTap: () async {
+                                    final month = await showMonthPicker(
+                                      context: context,
+                                      initialDate:
+                                          controller.selectedMonth.value,
+                                      firstDate: DateTime(2020),
+                                      lastDate: DateTime(2035),
+                                    );
+
+                                    if (month != null) {
+                                      controller.setMonth(month);
+                                    }
+                                  },
+                                  child: Text(
+                                    DateFormat(
+                                      "MMM ''yy",
+                                    ).format(controller.selectedMonth.value),
+                                  ),
                                 ),
-                                SizedBox(width: 4),
-                                Icon(PhosphorIconsRegular.caretDown, size: 12),
+                                Obx(
+                                  () => IconButton(
+                                    icon: const Icon(Icons.chevron_right),
+                                    onPressed: controller.canGoNext
+                                        ? controller.nextMonth
+                                        : null,
+                                  ),
+                                ),
                               ],
-                            ),
-                          ),
+                            );
+                          }),
+                          // Row(
+                          //   children: [
+                          //     IconButton(
+                          //       icon: const Icon(Icons.chevron_left),
+                          //       onPressed: controller.previousMonth,
+                          //     ),
+                          //     GestureDetector(
+                          //       onTap: () async {
+                          //         final month = await showMonthPicker(
+                          //           context: context,
+                          //           initialDate: controller.selectedMonth.value,
+                          //           firstDate: DateTime(2020),
+                          //           lastDate: DateTime(2035),
+                          //         );
+
+                          //         if (month != null) {
+                          //           controller.setMonth(month);
+                          //         }
+                          //       },
+                          //       child: Row(
+                          //         // crossAxisAlignment: CrossAxisAlignment.center,
+                          //         // mainAxisAlignment: MainAxisAlignment.center,
+                          //         children: [
+                          //           // Icon(
+                          //           //   PhosphorIconsRegular.calendarBlank,
+                          //           //   size: 12,
+                          //           // ),
+                          //           // SizedBox(width: 2),
+                          //           Obx(
+                          //             () => Text(
+                          //               DateFormat('MMMM yyyy').format(
+                          //                 controller.selectedMonth.value,
+                          //               ),
+                          //             ),
+                          //           ),
+                          //           // SizedBox(width: 4),
+                          //           // Icon(
+                          //           //   PhosphorIconsRegular.caretDown,
+                          //           //   size: 12,
+                          //           // ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //     IconButton(
+                          //       icon: const Icon(Icons.chevron_right),
+                          //       onPressed: controller.nextMonth,
+                          //     ),
+                          //   ],
+                          // ),
                         ],
                       ),
 
@@ -130,17 +197,17 @@ class HomeView extends GetView<HomeController> {
                               final summary =
                                   snapshot.data ??
                                   const MonthlyCashFlowSummary(
-                                    income: 0,
-                                    expenses: 0,
-                                    savings: 0,
+                                    totalIn: 0,
+                                    totalOut: 0,
+                                    // net: 0,
                                   );
 
                               return Row(
                                 children: [
                                   Expanded(
                                     child: CashFlowSummaryCard(
-                                      amount: summary.income,
-                                      title: 'Income',
+                                      amount: summary.totalIn,
+                                      title: 'Inflow',
                                       color: colorScheme.appInflow,
                                     ),
                                   ),
@@ -148,16 +215,16 @@ class HomeView extends GetView<HomeController> {
                                   VerticalDivider(color: colorScheme.appBorder),
                                   Expanded(
                                     child: CashFlowSummaryCard(
-                                      amount: summary.expenses,
-                                      title: 'Expenses',
+                                      amount: summary.totalOut,
+                                      title: 'Outflow',
                                       color: colorScheme.appOutflow,
                                     ),
                                   ),
                                   VerticalDivider(color: colorScheme.appBorder),
                                   Expanded(
                                     child: CashFlowSummaryCard(
-                                      amount: summary.savings,
-                                      title: 'Savings',
+                                      amount: summary.netCashFlow,
+                                      title: 'Net Cashflow',
                                       color: colorScheme.appAccent,
                                     ),
                                   ),
@@ -170,50 +237,6 @@ class HomeView extends GetView<HomeController> {
                     ],
                   ),
                   onTap: () {},
-                ),
-              ),
-              // AppAdsSection(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: colorScheme.appOnSurface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: colorScheme.appBorder),
-                  ),
-                  constraints: BoxConstraints(minHeight: 44),
-                  child: Column(
-                    children: [
-                      //TITLE
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 12.0,
-                          right: 12,
-                          top: 12,
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(PhosphorIconsRegular.caretDown, size: 20),
-                            Text('My Cash Flow'),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(24),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [Icon(PhosphorIconsRegular.acorn)],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ],
@@ -283,7 +306,7 @@ class CashFlowSummaryCard extends StatelessWidget {
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            amount.toCompactCurrency(),
+            amount.toCompactCurrency(kThreshold: 10000),
             maxLines: 1,
             style: TextStyle(
               fontSize: 16,

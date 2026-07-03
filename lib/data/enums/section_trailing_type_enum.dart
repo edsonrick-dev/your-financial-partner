@@ -1,1 +1,7 @@
-enum SectionTrailingType { text, textButton, segmentedButton, iconButton }
+enum SectionTrailingType {
+  text,
+  textButton,
+  segmentedButton,
+  iconButton,
+  toggleButton,
+}

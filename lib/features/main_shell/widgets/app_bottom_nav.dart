@@ -13,56 +13,59 @@ class AppBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final tabIndex = controller.selectedTabIndex.value;
     return SafeArea(
-      top: false,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        // mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          NavItem(
-            icon: tabIndex == 0
-                ? PhosphorIconsFill.houseLine
-                : PhosphorIconsRegular.houseLine,
-            label: 'Home',
-            isActive: tabIndex == 0,
-            onTap: () => controller.changeTab(0),
-          ),
+      // top: false,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          // mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            NavItem(
+              icon: tabIndex == 0
+                  ? PhosphorIconsFill.houseLine
+                  : PhosphorIconsRegular.houseLine,
+              label: 'Home',
+              isActive: tabIndex == 0,
+              onTap: () => controller.changeTab(0),
+            ),
 
-          NavItem(
-            icon: tabIndex == 1
-                ? PhosphorIconsFill.calendarBlank
-                : PhosphorIconsRegular.calendarBlank,
-            label: 'Transactions',
-            isActive: tabIndex == 1,
-            onTap: () => controller.changeTab(1),
-          ),
+            NavItem(
+              icon: tabIndex == 1
+                  ? PhosphorIconsFill.calendarBlank
+                  : PhosphorIconsRegular.calendarBlank,
+              label: 'Transactions',
+              isActive: tabIndex == 1,
+              onTap: () => controller.changeTab(1),
+            ),
 
-          Obx(() {
-            return AddButton(
-              isOpen: controller.isAddSheetOpen.value,
-              onTap: controller.isAddSheetOpen.value
-                  ? Get.back
-                  : controller.openAddTransaction,
-            );
-          }),
+            Obx(() {
+              return AddButton(
+                isOpen: controller.isAddSheetOpen.value,
+                onTap: controller.isAddSheetOpen.value
+                    ? Get.back
+                    : controller.openAddTransaction,
+              );
+            }),
 
-          NavItem(
-            icon: tabIndex == 2
-                ? PhosphorIconsFill.gridFour
-                : PhosphorIconsRegular.gridFour,
-            label: 'Account',
-            isActive: tabIndex == 2,
-            onTap: () => controller.changeTab(2),
-          ),
+            NavItem(
+              icon: tabIndex == 2
+                  ? PhosphorIconsFill.gridFour
+                  : PhosphorIconsRegular.gridFour,
+              label: 'Account',
+              isActive: tabIndex == 2,
+              onTap: () => controller.changeTab(2),
+            ),
 
-          NavItem(
-            icon: tabIndex == 3
-                ? PhosphorIconsFill.gear
-                : PhosphorIconsRegular.gear,
-            label: 'Settings',
-            isActive: tabIndex == 3,
-            onTap: () => controller.changeTab(3),
-          ),
-        ],
+            NavItem(
+              icon: tabIndex == 3
+                  ? PhosphorIconsFill.gear
+                  : PhosphorIconsRegular.gear,
+              label: 'Settings',
+              isActive: tabIndex == 3,
+              onTap: () => controller.changeTab(3),
+            ),
+          ],
+        ),
       ),
     );
   }

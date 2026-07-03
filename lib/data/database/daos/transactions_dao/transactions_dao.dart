@@ -75,39 +75,34 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
       );
 
     return query.watch().map((transactions) {
-      double income = 0;
-      double expenses = 0;
-      double savings = 0;
+      double totalIn = 0;
+      double totalOut = 0;
 
       for (final tx in transactions) {
         switch (tx.type) {
           case TransactionType.earn:
-            income += tx.amount;
-            break;
-
-          case TransactionType.spend:
-            expenses += tx.amount;
-            break;
-
-          case TransactionType.transfer:
-            // ignore
-            break;
-
-          case TransactionType.give:
-            // ignore
+            totalIn += tx.amount;
             break;
 
           case TransactionType.receive:
-            // ignore
+            totalIn += tx.amount;
+            break;
+
+          case TransactionType.spend:
+            totalOut += tx.amount;
+            break;
+
+          case TransactionType.give:
+            totalOut += tx.amount;
+            break;
+
+          case TransactionType.transfer:
+            // Internal movement only
             break;
         }
       }
 
-      return MonthlyCashFlowSummary(
-        income: income,
-        expenses: expenses,
-        savings: savings,
-      );
+      return MonthlyCashFlowSummary(totalIn: totalIn, totalOut: totalOut);
     });
   }
 

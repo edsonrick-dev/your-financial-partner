@@ -20,7 +20,17 @@ class HomeController extends GetxController {
     selectedMonth.value = DateTime(current.year, current.month - 1);
   }
 
+  bool get canGoNext {
+    final now = DateTime.now();
+    final selected = selectedMonth.value;
+
+    return selected.year < now.year ||
+        (selected.year == now.year && selected.month < now.month);
+  }
+
   void nextMonth() {
+    if (!canGoNext) return;
+
     final current = selectedMonth.value;
     selectedMonth.value = DateTime(current.year, current.month + 1);
   }
@@ -28,18 +38,24 @@ class HomeController extends GetxController {
   void setMonth(DateTime month) {
     selectedMonth.value = DateTime(month.year, month.month);
   }
+
+  bool get isCurrentMonth {
+    final now = DateTime.now();
+
+    return selectedMonth.value.year == now.year &&
+        selectedMonth.value.month == now.month;
+  }
+
+  void goToCurrentMonth() {
+    selectedMonth.value = DateTime.now();
+  }
 }
 
 class MonthlyCashFlowSummary {
-  final double income;
-  final double expenses;
-  final double savings;
+  final double totalIn;
+  final double totalOut;
 
-  const MonthlyCashFlowSummary({
-    required this.income,
-    required this.expenses,
-    required this.savings,
-  });
+  const MonthlyCashFlowSummary({required this.totalIn, required this.totalOut});
 
-  double get netCashFlow => income - expenses;
+  double get netCashFlow => totalIn - totalOut;
 }
