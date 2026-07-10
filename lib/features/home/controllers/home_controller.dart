@@ -14,7 +14,8 @@ class HomeController extends GetxController {
 
   Stream<MonthlyCashFlowSummary> get monthlySummaryStream =>
       database.transactionsDao.watchMonthlySummary(month: selectedMonth.value);
-
+  Stream<List<MonthlyCashFlowTrend>> get monthlyTrendStream =>
+      database.transactionsDao.watchMonthlyTrend(endMonth: selectedMonth.value);
   void previousMonth() {
     final current = selectedMonth.value;
     selectedMonth.value = DateTime(current.year, current.month - 1);
@@ -58,4 +59,19 @@ class MonthlyCashFlowSummary {
   const MonthlyCashFlowSummary({required this.totalIn, required this.totalOut});
 
   double get netCashFlow => totalIn - totalOut;
+}
+
+class MonthlyCashFlowTrend {
+  MonthlyCashFlowTrend({
+    required this.month,
+    this.inflow = 0,
+    this.outflow = 0,
+  });
+
+  final DateTime month;
+
+  double inflow;
+  double outflow;
+
+  double get netCashFlow => inflow - outflow;
 }

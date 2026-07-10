@@ -88,3 +88,18 @@ extension DoubleCurrencyExt on num {
     return isNegative ? '-$compactString' : compactString;
   }
 }
+
+extension TrendExtensions on List<double> {
+  double get percentChange {
+    if (length < 2) return 0;
+
+    final previous = this[length - 2];
+    final current = last;
+
+    if (previous == 0) {
+      return current == 0 ? 0 : 100;
+    }
+
+    return ((current - previous) / previous) * 100;
+  }
+}

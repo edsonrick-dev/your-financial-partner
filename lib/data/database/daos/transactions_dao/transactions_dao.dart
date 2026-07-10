@@ -61,6 +61,55 @@ part 'transactions_dao.g.dart';
 class TransactionsDao extends DatabaseAccessor<AppDatabase>
     with _$TransactionsDaoMixin {
   TransactionsDao(super.db);
+  Stream<List<MonthlyCashFlowTrend>> watchMonthlyTrend({
+    required DateTime endMonth,
+    int months = 7,
+  }) {
+    final start = DateTime(endMonth.year, endMonth.month - months + 1, 1);
+
+    final end = DateTime(endMonth.year, endMonth.month + 1, 1);
+
+    final query = select(transactionsTable)
+      ..where(
+        (t) =>
+            t.date.isBiggerOrEqualValue(start) & t.date.isSmallerThanValue(end),
+      );
+
+    return query.watch().map((transactions) {
+      final trendMap = <DateTime, MonthlyCashFlowTrend>{};
+
+      for (final tx in transactions) {
+        final month = DateTime(tx.date.year, tx.date.month);
+
+        trendMap.putIfAbsent(month, () => MonthlyCashFlowTrend(month: month));
+
+        final trend = trendMap[month]!;
+
+        switch (tx.type) {
+          case TransactionType.earn:
+          case TransactionType.receive:
+            trend.inflow += tx.amount;
+            break;
+
+          case TransactionType.spend:
+          case TransactionType.give:
+            trend.outflow += tx.amount;
+            break;
+
+          case TransactionType.transfer:
+            break;
+        }
+      }
+      for (int i = 0; i < months; i++) {
+        final month = DateTime(start.year, start.month + i);
+
+        trendMap.putIfAbsent(month, () => MonthlyCashFlowTrend(month: month));
+      }
+      final result = trendMap.values.toList();
+      result.sort((a, b) => a.month.compareTo(b.month));
+      return result;
+    });
+  }
 
   Stream<MonthlyCashFlowSummary> watchMonthlySummary({
     required DateTime month,
@@ -81,17 +130,11 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
       for (final tx in transactions) {
         switch (tx.type) {
           case TransactionType.earn:
-            totalIn += tx.amount;
-            break;
-
           case TransactionType.receive:
             totalIn += tx.amount;
             break;
 
           case TransactionType.spend:
-            totalOut += tx.amount;
-            break;
-
           case TransactionType.give:
             totalOut += tx.amount;
             break;

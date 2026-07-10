@@ -5,7 +5,7 @@ class AppTheme {
     useMaterial3: true,
 
     colorScheme: const ColorScheme.light(
-      surface: Color(0xFFF4F7FA),
+      surface: Color(0xFFE2E8F0),
       onSurface: Color(0xFF141c29),
       primary: Color(0xFF141C29),
     ),

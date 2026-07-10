@@ -1,242 +1,167 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/app_border_radius.dart';
-import 'package:getx_drift_app/core/constants/app_scale.dart';
+import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
+import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
+import 'package:getx_drift_app/features/home/views/section_views/cashflow_section.dart';
+import 'package:getx_drift_app/features/home/widgets/budget_progress_indicator.dart';
+import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/features/home_initial/widget/transaction_button.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/features/main_shell/controller/main_shell_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
-import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
-import 'package:intl/intl.dart';
-
-import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
   @override
   Widget build(BuildContext context) {
+    TextStyle sectionTitle = TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.w600,
+      height: 20 / 15,
+    );
     final colorScheme = context.colors;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            spacing: 12,
+            spacing: 24,
             children: [
               AppSection(
                 child: Column(
                   children: [
                     ///Save
                     FundSummaryCard(),
-                    SizedBox(height: AppScale.x3),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: colorScheme.appBorder),
-                        borderRadius: BorderRadius.circular(AppBorderRadius.m),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppBorderRadius.m),
-                        child: Row(
-                          // spacing: 12,
-                          children: [
-                            TransactionButton(
-                              label: 'Earn',
-                              color: colorScheme.appInflow,
-                              icon: Icons.add,
-                              onTap: () {
-                                AppSheets.transaction.earn();
-                              },
-                            ),
-                            TransactionButton(
-                              color: colorScheme.appOutflow,
-                              icon: Icons.remove,
-                              label: 'Spend',
-                              onTap: () {
-                                AppSheets.transaction.spend();
-                              },
-                            ),
-                            TransactionButton(
-                              color: colorScheme.appAccent,
-                              icon: Icons.sync_alt_sharp,
-                              label: 'Transfer',
-                              onTap: () {
-                                AppSheets.transaction.transfer();
-                              },
-                            ),
-                            TransactionButton(
-                              color: colorScheme.appNeutral,
-                              icon: Icons.more_horiz,
-                              label: 'Others',
-                              onTap: () {
-                                AppSheets.selection.selectOtherTransaction();
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
-
               AppSection(
-                sectionTitle: 'My Cashflow',
-                child: AppFieldContainer(
-                  trailingPadding: 12,
+                child: Container(
+                  decoration: BoxDecoration(
+                    // border: Border.all(color: colorScheme.appBorder),
+                    borderRadius: BorderRadius.circular(AppBorderRadius.m),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppBorderRadius.m),
+                    child: Row(
+                      // spacing: 12,
+                      children: [
+                        TransactionButton(
+                          label: 'Earn',
+                          color: colorScheme.appInflow,
+                          icon: Icons.add,
+                          onTap: () {
+                            AppSheets.transaction.earn();
+                          },
+                        ),
+                        TransactionButton(
+                          color: colorScheme.appOutflow,
+                          icon: Icons.remove,
+                          label: 'Spend',
+                          onTap: () {
+                            AppSheets.transaction.spend();
+                          },
+                        ),
+                        TransactionButton(
+                          color: colorScheme.appAccent,
+                          icon: Icons.sync_alt_sharp,
+                          label: 'Transfer',
+                          onTap: () {
+                            AppSheets.transaction.transfer();
+                          },
+                        ),
+                        TransactionButton(
+                          color: colorScheme.appNeutral,
+                          icon: Icons.more_horiz,
+                          label: 'Others',
+                          onTap: () {
+                            AppSheets.selection.selectOtherTransaction();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              BudgetProgressSection(sectionTitle: sectionTitle),
+              MyCashflowSection(),
+              AppSection(
+                child: Container(
+                  padding: EdgeInsets.only(bottom: 12),
+                  constraints: BoxConstraints(minHeight: 44),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: colorScheme.appOnSurface,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: Column(
                     children: [
+                      //Header
                       Row(
                         children: [
-                          Text('This Month'),
+                          SizedBox(width: 12),
+                          Text('Accounts Overview', style: sectionTitle),
                           Spacer(),
-                          Obx(() {
-                            return Row(
-                              children: [
-                                if (!controller.isCurrentMonth)
-                                  TextButton(
-                                    onPressed: controller.goToCurrentMonth,
-                                    child: const Text('Today'),
-                                  ),
-                                IconButton(
-                                  icon: const Icon(Icons.chevron_left),
-                                  onPressed: controller.previousMonth,
-                                ),
-
-                                GestureDetector(
-                                  onTap: () async {
-                                    final month = await showMonthPicker(
-                                      context: context,
-                                      initialDate:
-                                          controller.selectedMonth.value,
-                                      firstDate: DateTime(2020),
-                                      lastDate: DateTime(2035),
-                                    );
-
-                                    if (month != null) {
-                                      controller.setMonth(month);
-                                    }
-                                  },
-                                  child: Text(
-                                    DateFormat(
-                                      "MMM ''yy",
-                                    ).format(controller.selectedMonth.value),
-                                  ),
-                                ),
-                                Obx(
-                                  () => IconButton(
-                                    icon: const Icon(Icons.chevron_right),
-                                    onPressed: controller.canGoNext
-                                        ? controller.nextMonth
-                                        : null,
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
-                          // Row(
-                          //   children: [
-                          //     IconButton(
-                          //       icon: const Icon(Icons.chevron_left),
-                          //       onPressed: controller.previousMonth,
-                          //     ),
-                          //     GestureDetector(
-                          //       onTap: () async {
-                          //         final month = await showMonthPicker(
-                          //           context: context,
-                          //           initialDate: controller.selectedMonth.value,
-                          //           firstDate: DateTime(2020),
-                          //           lastDate: DateTime(2035),
-                          //         );
-
-                          //         if (month != null) {
-                          //           controller.setMonth(month);
-                          //         }
-                          //       },
-                          //       child: Row(
-                          //         // crossAxisAlignment: CrossAxisAlignment.center,
-                          //         // mainAxisAlignment: MainAxisAlignment.center,
-                          //         children: [
-                          //           // Icon(
-                          //           //   PhosphorIconsRegular.calendarBlank,
-                          //           //   size: 12,
-                          //           // ),
-                          //           // SizedBox(width: 2),
-                          //           Obx(
-                          //             () => Text(
-                          //               DateFormat('MMMM yyyy').format(
-                          //                 controller.selectedMonth.value,
-                          //               ),
-                          //             ),
-                          //           ),
-                          //           // SizedBox(width: 4),
-                          //           // Icon(
-                          //           //   PhosphorIconsRegular.caretDown,
-                          //           //   size: 12,
-                          //           // ),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //     IconButton(
-                          //       icon: const Icon(Icons.chevron_right),
-                          //       onPressed: controller.nextMonth,
-                          //     ),
-                          //   ],
-                          // ),
-                        ],
-                      ),
-
-                      SizedBox(height: 16),
-
-                      IntrinsicHeight(
-                        child: Obx(() {
-                          return StreamBuilder<MonthlyCashFlowSummary>(
-                            stream: controller.monthlySummaryStream,
-                            builder: (context, snapshot) {
-                              final summary =
-                                  snapshot.data ??
-                                  const MonthlyCashFlowSummary(
-                                    totalIn: 0,
-                                    totalOut: 0,
-                                    // net: 0,
-                                  );
-
-                              return Row(
-                                children: [
-                                  Expanded(
-                                    child: CashFlowSummaryCard(
-                                      amount: summary.totalIn,
-                                      title: 'Inflow',
-                                      color: colorScheme.appInflow,
-                                    ),
-                                  ),
-
-                                  VerticalDivider(color: colorScheme.appBorder),
-                                  Expanded(
-                                    child: CashFlowSummaryCard(
-                                      amount: summary.totalOut,
-                                      title: 'Outflow',
-                                      color: colorScheme.appOutflow,
-                                    ),
-                                  ),
-                                  VerticalDivider(color: colorScheme.appBorder),
-                                  Expanded(
-                                    child: CashFlowSummaryCard(
-                                      amount: summary.netCashFlow,
-                                      title: 'Net Cashflow',
-                                      color: colorScheme.appAccent,
-                                    ),
-                                  ),
-                                ],
+                          TextButton(
+                            onPressed: () {
+                              Get.find<MainShellController>().changeTab(2);
+                              Get.find<FinancialPlannerController>().selectTab(
+                                0,
                               );
                             },
-                          );
-                        }),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'View All',
+                                  style: TextStyle(color: colorScheme.appInfo),
+                                ),
+                                SizedBox(width: 4),
+                                Icon(
+                                  PhosphorIconsRegular.caretRight,
+                                  size: 16,
+                                  color: colorScheme.appInfo,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        spacing: 4,
+                        children: [
+                          // SizedBox(height: 4),
+                          Column(
+                            spacing: 12,
+                            children: [
+                              AccountsOverviewTile(
+                                accountName: 'Cash & Bank',
+                                iconKey: 'wallet',
+                                value: 8120,
+                                count: 3,
+                              ),
+                              AccountsOverviewTile(
+                                accountName: 'Credit Card',
+                                iconKey: 'creditCard',
+                                value: 42500,
+                                count: 2,
+                              ),
+                              AccountsOverviewTile(
+                                accountName: 'Investments',
+                                iconKey: '',
+                                value: 42500,
+                                count: 2,
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  onTap: () {},
                 ),
               ),
             ],
@@ -247,120 +172,252 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
-class CashFlowSummaryCard extends StatelessWidget {
-  const CashFlowSummaryCard({
+class AccountsOverviewTile extends StatelessWidget {
+  final String accountName;
+  final double value;
+  final int count;
+  final String iconKey;
+  final bool? flowPositive;
+  const AccountsOverviewTile({
     super.key,
-    required this.title,
-    required this.amount,
-    required this.color,
+    required this.accountName,
+    required this.value,
+    required this.count,
+    required this.iconKey,
+    this.flowPositive = true,
   });
-
-  final String title;
-  final double amount;
-  final Color color;
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Stack(
-            //   alignment: Alignment.center,
-            //   children: [
-            //     // Icon(
-            //     //   PhosphorIconsRegular.arrowUp,
-            //     //   color: colorScheme.appInflow,
-            //     //   size: 16,
-            //     // ),
-            //     Opacity(
-            //       opacity: 1,
-            //       // opacity: AppOpacity.snackBarIcon,
-            //       child: Container(
-            //         width: 8,
-            //         height: 8,
-            //         decoration: BoxDecoration(
-            //           shape: BoxShape.circle,
-            //           color: color,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // SizedBox(width: 4),
-            Text(
-              title,
-              style: TextStyle(
-                height: 12 / 12,
-                fontSize: 12,
-                color: color,
-                fontWeight: FontWeight.w600,
+    String accountCount;
+    if (count == 1) {
+      accountCount = '$count account';
+    } else {
+      accountCount = '$count accounts';
+    }
+
+    Color valueColor;
+    value >= 0
+        ? valueColor = colorScheme.appText
+        : valueColor = colorScheme.appOutflow;
+
+    return Container(
+      constraints: BoxConstraints(minHeight: 44),
+      padding: EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Icon(
+                AppIcons.categories.resolve(iconKey),
+                color: colorScheme.appSuccess,
               ),
-            ),
-          ],
-        ),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            amount.toCompactCurrency(kThreshold: 10000),
-            maxLines: 1,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: colorScheme.appText,
-              fontFeatures: const [FontFeature.tabularFigures()],
+              Opacity(
+                opacity: 0.2,
+                child: Container(
+                  height: 36,
+                  width: 36,
+                  decoration: BoxDecoration(
+                    color: colorScheme.appSuccess,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(width: 8),
+          Expanded(
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      accountName,
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      accountCount,
+                      style: TextStyle(color: colorScheme.appTextMuted),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Row(
+                  children: [
+                    Text(
+                      value.toCompactCurrency(kThreshold: 1000000),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: valueColor,
+                        fontWeight: FontWeight.w500,
+                        fontFeatures: [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Icon(
+                      PhosphorIconsRegular.caretRight,
+                      size: 16,
+                      color: colorScheme.appTextMuted,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
+class BudgetProgressSection extends StatelessWidget {
+  const BudgetProgressSection({super.key, required this.sectionTitle});
 
-// AppSection(
-//   sectionTitle: 'Budgets',
-//   trailingType: SectionTrailingType.textButton,
-//   trailingText: 'View all',
-//   onTrailingPressed: () {
-//     Get.toNamed(Routes.TRANSACTION);
-//   },
-//   // showTrailing: true,
-//   child: Column(
-//     spacing: 12,
-//     children: [
-//       BudgetCard(
-//         title: 'Food',
-//         iconKey: 'bowlFood',
-//         consumption: 250,
-//         budget: 400,
-//       ),
-//     ],
-//   ),
-// ),
+  final TextStyle sectionTitle;
 
-
-// AppSection(
-//   sectionTitle: 'Bills',
-//   trailingType: SectionTrailingType.textButton,
-//   trailingText: 'View all',
-//   onTrailingPressed: () {
-//     Get.toNamed(Routes.TRANSACTION);
-//   },
-//   child: Column(
-//     spacing: 12,
-//     children: [
-//       BillsCard(
-//         iconKey: 'internet',
-//         billName: 'Internet Home Fiber',
-//         billType: 'Internet Bill',
-//         dueDate: DateTime(2026, 6, 4),
-//         amountDue: 6000,
-//       ),
-//     ],
-//   ),
-// ),
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+    return AppSection(
+      child: Container(
+        padding: EdgeInsets.only(bottom: 12),
+        constraints: BoxConstraints(minHeight: 44),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: colorScheme.appOnSurface,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          children: [
+            //Header
+            Row(
+              children: [
+                SizedBox(width: 12),
+                Text('Budget Progress', style: sectionTitle),
+                Spacer(),
+                TextButton(
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Text(
+                        'View All',
+                        style: TextStyle(color: colorScheme.appInfo),
+                      ),
+                      SizedBox(width: 4),
+                      Icon(
+                        PhosphorIconsRegular.caretRight,
+                        size: 16,
+                        color: colorScheme.appInfo,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              spacing: 4,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Row(
+                    children: [
+                      BudgetProgressIndicator(
+                        progress: 0.42,
+                        progressColor: Colors.green,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '42%',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text('of budget', style: TextStyle(fontSize: 10)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'July Progress',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                height: 24 / 20,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  4200.toCompactCurrency(kThreshold: 1000000),
+                                ),
+                                Text(' spent of '),
+                                Text(
+                                  10000.toCompactCurrency(kThreshold: 1000000),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Row(
+                                  spacing: 4,
+                                  children: [
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: colorScheme.appSuccess,
+                                      ),
+                                    ),
+                                    Text('On Track'),
+                                  ],
+                                ),
+                                Spacer(),
+                                Text('18 days left'),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(
+                  indent: 12,
+                  endIndent: 12,
+                  color: colorScheme.appBorderMuted,
+                ),
+                SizedBox(height: 4),
+                Column(
+                  spacing: 12,
+                  children: [
+                    BudgetTile(
+                      budgetName: 'Groceries',
+                      iconKey: 'basket',
+                      consumption: 70000,
+                      budget: 7500,
+                    ),
+                    BudgetTile(
+                      budgetName: 'Food',
+                      iconKey: 'basket',
+                      budget: 2000,
+                      consumption: 100,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

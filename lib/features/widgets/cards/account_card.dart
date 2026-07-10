@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -14,44 +15,53 @@ class AccountCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    return GestureDetector(
-      onTap: onTap,
+
+    Color valueColor;
+
+    if (account.currentValue < 0) {
+      valueColor = colorScheme.appOutflow;
+    } else {
+      valueColor = colorScheme.appText;
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.all(8),
-        width: double.infinity,
-        constraints: BoxConstraints(minHeight: 44),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          color: colorScheme.surface,
-          border: Border.all(color: colorScheme.appBorder),
-        ),
-        child: Row(
-          children: [
-            Row(
-              spacing: 8,
+        decoration: BoxDecoration(color: colorScheme.appOnSurface),
+        child: AdaptivePressable(
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            width: double.infinity,
+            constraints: BoxConstraints(minHeight: 44),
+
+            child: Row(
               children: [
-                Icon(AppIcons.categories.resolve(account.icon), size: 20),
-                // Container(
-                //   height: 36,
-                //   width: 36,
-                //   decoration: BoxDecoration(borderRadius: BorderRadius.circular(999), color: Colors.grey),
-                // ),
+                Row(
+                  spacing: 12,
+                  children: [
+                    Icon(AppIcons.categories.resolve(account.icon), size: 24),
+
+                    Text(
+                      account.name,
+                      style: TextStyle(fontSize: 15, height: 20 / 15),
+                    ),
+                  ],
+                ),
+                Spacer(),
                 Text(
-                  account.name,
-                  style: TextStyle(fontSize: 15, height: 20 / 15),
+                  account.currentValue.toCurrency(),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    height: 20 / 15,
+                    color: valueColor,
+                    fontFeatures: [FontFeature.tabularFigures()],
+                  ),
                 ),
               ],
             ),
-            Spacer(),
-            Text(
-              account.currentValue.toCurrency(),
-              style: TextStyle(
-                fontSize: 15,
-                height: 20 / 15,
-                fontFeatures: [FontFeature.tabularFigures()],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

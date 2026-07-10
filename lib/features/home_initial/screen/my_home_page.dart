@@ -364,11 +364,11 @@ class BudgetReminderCard extends StatelessWidget {
               ),
             ],
           ),
-          BudgetProgressBar(
-            allocation: allocation,
-            used: used,
-            expectedProgress: expectedProgress,
-          ),
+          //  ` BudgetProgressBar(
+          //     allocation: allocation,
+          //     used: used,
+          //     expectedProgress: expectedProgress,
+          //   ),`
           Row(
             children: [
               Column(
@@ -410,87 +410,6 @@ class BudgetReminderCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class BudgetProgressBar extends StatelessWidget {
-  final double allocation;
-  final double used;
-
-  /// Expected consumption progress for the current date
-  /// Example:
-  /// Day 15 of 30 = 0.5
-  final double expectedProgress;
-
-  const BudgetProgressBar({
-    super.key,
-    required this.allocation,
-    required this.used,
-    required this.expectedProgress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-
-    final progress = (used / allocation).clamp(0.0, 1.0);
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        final markerPosition = (width * expectedProgress) - 1;
-        return SizedBox(
-          height: 8,
-
-          child: Stack(
-            clipBehavior: Clip.none,
-
-            children: [
-              /// Background track
-              Container(
-                height: 8,
-
-                decoration: BoxDecoration(
-                  color: colors.onSurface,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-              ),
-
-              /// Actual usage
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-
-                width: width * progress,
-                height: 8,
-
-                decoration: BoxDecoration(
-                  color: progress >= expectedProgress
-                      ? colors.appError
-                      : colors.appSuccess,
-
-                  borderRadius: BorderRadius.circular(999),
-                ),
-              ),
-
-              /// Expected usage marker
-              Positioned(
-                left: markerPosition.clamp(0, width),
-                top: -4,
-                child: Container(
-                  width: 2,
-                  height: 16,
-
-                  decoration: BoxDecoration(
-                    color: colors.onSurface,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

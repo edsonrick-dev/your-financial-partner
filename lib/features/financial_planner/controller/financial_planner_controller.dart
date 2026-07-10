@@ -11,6 +11,7 @@ import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
 import 'package:getx_drift_app/features/accounts/views/accounts_view.dart';
 import 'package:getx_drift_app/features/balances/views/people_balances_view.dart';
+import 'package:getx_drift_app/features/financial_planner/cashflow_planner/cashflow_planner_screen.dart';
 import 'package:getx_drift_app/features/financial_planner/cashflow_planner/services/cashflow_projection_service.dart';
 import 'package:getx_drift_app/features/financial_planner/models/financial_planner_page_model.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_day_of_month.dart';
@@ -67,6 +68,10 @@ class FinancialPlannerController extends GetxController {
 
   final financialPlannerPages = <FinancialPlannerPage>[
     FinancialPlannerPage(title: 'Accounts', page: AccountsView()),
+    FinancialPlannerPage(
+      title: 'Cashflow Planner',
+      page: CashflowPlannerScreen(),
+    ),
     FinancialPlannerPage(
       title: 'Personal Balances',
       page: PeopleBalancesView(),
