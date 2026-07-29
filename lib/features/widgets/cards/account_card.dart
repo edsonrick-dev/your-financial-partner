@@ -24,44 +24,39 @@ class AccountCard extends StatelessWidget {
       valueColor = colorScheme.appText;
     }
 
-    return ClipRRect(
+    return AdaptivePressable(
       borderRadius: BorderRadius.circular(8),
+      onTap: onTap,
       child: Container(
-        decoration: BoxDecoration(color: colorScheme.appOnSurface),
-        child: AdaptivePressable(
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            width: double.infinity,
-            constraints: BoxConstraints(minHeight: 44),
-
-            child: Row(
+        padding: const EdgeInsets.all(12),
+        width: double.infinity,
+        constraints: BoxConstraints(minHeight: 44),
+        decoration: BoxDecoration(color: colorScheme.bgLight),
+        child: Row(
+          children: [
+            Row(
+              spacing: 12,
               children: [
-                Row(
-                  spacing: 12,
-                  children: [
-                    Icon(AppIcons.categories.resolve(account.icon), size: 24),
+                Icon(AppIcons.categories.resolve(account.icon), size: 24),
 
-                    Text(
-                      account.name,
-                      style: TextStyle(fontSize: 15, height: 20 / 15),
-                    ),
-                  ],
-                ),
-                Spacer(),
                 Text(
-                  account.currentValue.toCurrency(),
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    height: 20 / 15,
-                    color: valueColor,
-                    fontFeatures: [FontFeature.tabularFigures()],
-                  ),
+                  account.name,
+                  style: TextStyle(fontSize: 15, height: 20 / 15),
                 ),
               ],
             ),
-          ),
+            Spacer(),
+            Text(
+              account.currentValue.toCurrency(),
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                height: 20 / 15,
+                color: valueColor,
+                fontFeatures: [FontFeature.tabularFigures()],
+              ),
+            ),
+          ],
         ),
       ),
     );

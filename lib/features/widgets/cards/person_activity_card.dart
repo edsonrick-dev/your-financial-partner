@@ -61,7 +61,7 @@ class PersonDebtActivityCard extends StatelessWidget {
       width: double.infinity,
 
       decoration: BoxDecoration(
-        color: colorScheme.appOnSurface,
+        color: colorScheme.bgLight,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: colorScheme.appBorder),
       ),

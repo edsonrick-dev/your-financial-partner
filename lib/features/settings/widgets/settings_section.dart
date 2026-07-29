@@ -16,7 +16,7 @@ class SettingsSection extends StatelessWidget {
         child: Container(
           constraints: BoxConstraints(minHeight: 44),
           width: double.infinity,
-          decoration: BoxDecoration(color: colorScheme.appOnSurface),
+          decoration: BoxDecoration(color: colorScheme.bgLight),
           child: Column(
             children: List.generate(children.length, (index) {
               final widgets = <Widget>[children[index]];

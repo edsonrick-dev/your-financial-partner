@@ -22,7 +22,7 @@ class MyCashflowSection extends GetView<HomeController> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: colorScheme.appOnSurface,
+          color: colorScheme.bgLight,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(

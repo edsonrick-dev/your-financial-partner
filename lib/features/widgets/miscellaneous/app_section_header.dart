@@ -21,16 +21,18 @@ class AppSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+    TextStyle sectionTitleStyle = TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.w600,
+      height: 20 / 15,
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: SizedBox(
         height: 44,
         child: Row(
           children: [
-            Text(
-              sectionTitle,
-              style: TextStyle(fontSize: 15, height: 20 / 15, color: textColor),
-            ),
+            Text(sectionTitle, style: sectionTitleStyle),
             Spacer(),
 
             if (trailingType != null)

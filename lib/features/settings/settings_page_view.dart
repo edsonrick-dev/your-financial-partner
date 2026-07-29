@@ -25,7 +25,7 @@ class SettingsPageView extends StatelessWidget {
                 constraints: BoxConstraints(minHeight: 44),
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: colorScheme.appOnSurface,
+                  color: colorScheme.bgLight,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: colorScheme.appBorder),
                 ),
@@ -64,7 +64,7 @@ class SettingsPageView extends StatelessWidget {
                                   child: Text(
                                     'Free Account',
                                     style: TextStyle(
-                                      color: colorScheme.appOnSurface,
+                                      color: colorScheme.bgLight,
                                     ),
                                   ),
                                 ),

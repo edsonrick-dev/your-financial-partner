@@ -36,8 +36,9 @@ class BudgetTile extends StatelessWidget {
       progressColor = colorScheme.appInflow;
     }
     return AdaptivePressable(
+      borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         constraints: BoxConstraints(minHeight: 60),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,8 +56,8 @@ class BudgetTile extends StatelessWidget {
                     height: 48,
                     width: 48,
                     decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                       color: colorScheme.appSuccess,
-                      borderRadius: BorderRadius.circular(4),
                     ),
                   ),
                 ),
@@ -122,6 +123,7 @@ class BudgetTile extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(width: 8),
           ],
         ),
       ),

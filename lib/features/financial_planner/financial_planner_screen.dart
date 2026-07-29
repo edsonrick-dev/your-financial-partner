@@ -11,13 +11,24 @@ class FinancialPlannerScreen extends GetView<FinancialPlannerController> {
     return Obx(() {
       final tabIndex = controller.selectedTabIndex.value;
       return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Financial Planner',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              height: 28 / 22,
+              letterSpacing: -0.2,
+            ),
+          ),
+          centerTitle: false,
+        ),
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-
                 child: Row(
                   spacing: 8,
                   mainAxisAlignment: MainAxisAlignment.start,

@@ -47,7 +47,7 @@ class _PersonCardState extends State<PersonCard> {
           constraints: const BoxConstraints(minHeight: 44),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: colorScheme.appOnSurface,
+            color: colorScheme.bgLight,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.grey, width: 0.5),
           ),

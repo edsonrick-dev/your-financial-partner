@@ -20,7 +20,7 @@ class SplitModeSelector extends GetView<TransactionController> {
         height: 44,
 
         decoration: BoxDecoration(
-          color: colorScheme.appOnSurface,
+          color: colorScheme.bgLight,
           borderRadius: BorderRadius.circular(8),
         ),
 

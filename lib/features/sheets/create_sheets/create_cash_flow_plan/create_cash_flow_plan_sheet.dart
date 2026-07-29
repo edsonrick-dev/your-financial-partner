@@ -6,7 +6,7 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
-import 'package:getx_drift_app/features/financial_planner/cashflow_planner/charts/preview_monthly_projection_chart.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/charts/preview_monthly_projection_chart.dart';
 import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/earn_transaction_sheet.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';

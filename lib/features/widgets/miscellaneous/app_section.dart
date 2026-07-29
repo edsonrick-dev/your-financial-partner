@@ -24,6 +24,7 @@ class AppSection extends StatelessWidget {
     final shouldShowHeader =
         sectionTitle != null || trailingText != null || trailingType != null;
     return Column(
+      spacing: 4,
       children: [
         if (shouldShowHeader)
           AppSectionHeader(

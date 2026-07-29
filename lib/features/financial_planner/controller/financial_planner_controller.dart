@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
@@ -11,9 +12,11 @@ import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
 import 'package:getx_drift_app/features/accounts/views/accounts_view.dart';
 import 'package:getx_drift_app/features/balances/views/people_balances_view.dart';
-import 'package:getx_drift_app/features/financial_planner/cashflow_planner/cashflow_planner_screen.dart';
-import 'package:getx_drift_app/features/financial_planner/cashflow_planner/services/cashflow_projection_service.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/cashflow_planner_screen.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/services/cashflow_projection_service.dart';
 import 'package:getx_drift_app/features/financial_planner/models/financial_planner_page_model.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurnace_planner/insurance_planner_screen.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/networth_planner_screen.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_day_of_month.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
@@ -22,6 +25,17 @@ import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 
 class FinancialPlannerController extends GetxController {
   final selectedTabIndex = 0.obs;
+
+  final financialPlannerPages = <FinancialPlannerPage>[
+    FinancialPlannerPage(title: 'Accounts', page: AccountsView()),
+    FinancialPlannerPage(title: 'Net Worth', page: NetworthPlannerScreen()),
+    FinancialPlannerPage(title: 'Cashflow', page: CashflowPlannerScreen()),
+    FinancialPlannerPage(title: 'Insurance', page: InsurancePlannerScreen()),
+    FinancialPlannerPage(
+      title: 'Personal Balances',
+      page: PeopleBalancesView(),
+    ),
+  ];
 
   final dueDay = RxnInt();
   final statementDay = RxnInt();
@@ -36,6 +50,18 @@ class FinancialPlannerController extends GetxController {
   final amountFocusNode = FocusNode();
   double get annualIncome => projections.fold(0.0, (sum, p) => sum + p.income);
 
+  double get annualExpense => 780000;
+  double get annualDebtRepayment => 180000;
+  double get annualSavings => 240000;
+
+  double get expensePercentage =>
+      clampDouble(annualExpense / dummyAnnualAllocation, 0, 1);
+  double get debtRepaymentPercentage =>
+      clampDouble(annualDebtRepayment / dummyAnnualAllocation, 0, 1);
+  double get savingsPercentage =>
+      clampDouble(annualSavings / dummyAnnualAllocation, 0, 1);
+  double get dummyAnnualAllocation =>
+      annualDebtRepayment + annualExpense + annualSavings;
   double get annualAllocated =>
       projections.fold(0.0, (sum, p) => sum + p.allocated);
 
@@ -65,18 +91,6 @@ class FinancialPlannerController extends GetxController {
     ever(selectedSplitMode, (_) => refreshPreview());
     ever(selectedMonthPattern, (_) => refreshPreview());
   }
-
-  final financialPlannerPages = <FinancialPlannerPage>[
-    FinancialPlannerPage(title: 'Accounts', page: AccountsView()),
-    FinancialPlannerPage(
-      title: 'Cashflow Planner',
-      page: CashflowPlannerScreen(),
-    ),
-    FinancialPlannerPage(
-      title: 'Personal Balances',
-      page: PeopleBalancesView(),
-    ),
-  ];
 
   final selectedCashflowPlanType = Rxn<CashflowPlanType>();
   final selectedCategory = Rxn<CashflowCategoriesTableData>();

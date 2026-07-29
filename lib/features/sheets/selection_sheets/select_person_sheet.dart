@@ -90,7 +90,7 @@ class AddPersonButton extends GetView<CreateEntityController> {
             ? const EdgeInsets.all(12)
             : const EdgeInsets.all(0),
         decoration: BoxDecoration(
-          color: isExpanded ? colorScheme.appOnSurface : Colors.transparent,
+          color: isExpanded ? colorScheme.bgLight : Colors.transparent,
           borderRadius: BorderRadius.circular(isExpanded ? 20 : 12),
           border: Border.all(color: colorScheme.appBorder),
         ),

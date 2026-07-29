@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/organize_THIS/icon_selector_sheet.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_category_sheet/create_category_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/icon_picker_field.dart';
@@ -78,57 +79,61 @@ class _BuildExpanded extends StatelessWidget {
           spacing: 8,
           children: [
             ///CANCEL BUTTON
-            GestureDetector(
-              onTap: controller.collapseButton,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                decoration: BoxDecoration(
-                  // color: colorScheme.text,
-                  border: Border.all(color: context.colors.appText),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                height: 44,
-                child: Row(
-                  spacing: 8,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text('Cancel', style: TextStyle())],
-                ),
-              ),
-            ),
-
-            ///SAVE BUTTON
-            Expanded(
+            AdaptivePressable(
               child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () async {
-                  final createdCategory = await controller.saveCategory();
-
-                  if (createdCategory != null) {
-                    Get.back(result: createdCategory);
-                  }
-                },
+                onTap: controller.collapseButton,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 24),
                   decoration: BoxDecoration(
-                    color: context.colors.appText,
+                    // color: colorScheme.text,
+                    border: Border.all(color: context.colors.appText),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   height: 44,
                   child: Row(
                     spacing: 8,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      state == AddButtonState.loading
-                          ? Center(
-                              child: CircularProgressIndicator(
-                                color: context.colors.surface,
+                    children: [Text('Cancel', style: TextStyle())],
+                  ),
+                ),
+              ),
+            ),
+
+            ///SAVE BUTTON
+            Expanded(
+              child: AdaptivePressable(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    final createdCategory = await controller.saveCategory();
+
+                    if (createdCategory != null) {
+                      Get.back(result: createdCategory);
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    decoration: BoxDecoration(
+                      color: context.colors.appText,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    height: 44,
+                    child: Row(
+                      spacing: 8,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        state == AddButtonState.loading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: context.colors.surface,
+                                ),
+                              )
+                            : Text(
+                                'Save Category',
+                                style: TextStyle(color: context.colors.surface),
                               ),
-                            )
-                          : Text(
-                              'Save Category',
-                              style: TextStyle(color: context.colors.surface),
-                            ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

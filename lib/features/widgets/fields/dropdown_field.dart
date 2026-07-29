@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/field_themes/field_color.dart';
@@ -48,90 +49,92 @@ class AppDropdownField extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = FieldColors.text(effectiveState);
 
-    return AppFieldContainer(
-      state: effectiveState,
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return AdaptivePressable(
+      child: AppFieldContainer(
+        state: effectiveState,
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
 
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                  mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
 
-                  children: [
-                    Text(
-                      label,
-
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-
-                        height: 16 / 13,
-
-                        color: FieldColors.label(effectiveState),
-                      ),
-                    ),
-
-                    Text(
-                      isFilled ? value! : hint,
-
-                      overflow: TextOverflow.ellipsis,
-
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: textColor,
-                        fontWeight: isFilled
-                            ? FontWeight.w600
-                            : FontWeight.w400,
-                        height: 24 / 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (showIcon == true)
-                SizedBox(
-                  width: 28,
-                  height: 44,
-
-                  child: Row(
                     children: [
-                      defaultIcon ??
-                          Icon(
-                            AppIcons.categories.resolve(iconKey!),
-                            size: 18,
-                            color: FieldColors.icon(effectiveState),
-                          ),
+                      Text(
+                        label,
+
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+
+                          height: 16 / 13,
+
+                          color: FieldColors.label(effectiveState),
+                        ),
+                      ),
+
+                      Text(
+                        isFilled ? value! : hint,
+
+                        overflow: TextOverflow.ellipsis,
+
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: textColor,
+                          fontWeight: isFilled
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                          height: 24 / 16,
+                        ),
+                      ),
                     ],
                   ),
                 ),
+                if (showIcon == true)
+                  SizedBox(
+                    width: 28,
+                    height: 44,
+
+                    child: Row(
+                      children: [
+                        defaultIcon ??
+                            Icon(
+                              AppIcons.categories.resolve(iconKey!),
+                              size: 18,
+                              color: FieldColors.icon(effectiveState),
+                            ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+
+            if (state == FieldState.error && errorText != null) ...[
+              const SizedBox(height: 6),
+
+              Text(
+                errorText!,
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
             ],
-          ),
 
-          if (state == FieldState.error && errorText != null) ...[
-            const SizedBox(height: 6),
+            if (state == FieldState.success && successText != null) ...[
+              const SizedBox(height: 6),
 
-            Text(
-              errorText!,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-            ),
+              Text(
+                successText!,
+                style: const TextStyle(color: Colors.green, fontSize: 12),
+              ),
+            ],
           ],
-
-          if (state == FieldState.success && successText != null) ...[
-            const SizedBox(height: 6),
-
-            Text(
-              successText!,
-              style: const TextStyle(color: Colors.green, fontSize: 12),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }

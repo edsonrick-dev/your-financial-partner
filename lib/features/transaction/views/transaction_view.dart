@@ -14,7 +14,7 @@ class TransactionView extends GetView<TransactionController> {
   Widget build(BuildContext context) {
     final cardsSpacing = 12.0;
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      // backgroundColor: Colors.transparent,
       appBar: AppBar(title: const Text('Transactions'), centerTitle: false),
       body: StreamBuilder<Map<String, List<TransactionWithDetails>>>(
         stream: database.transactionsDao.watchGroupedTransactions(),

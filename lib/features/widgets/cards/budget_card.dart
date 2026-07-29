@@ -40,7 +40,7 @@ class BudgetCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: colorScheme.appOnSurface,
+          color: colorScheme.bgLight,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: colorScheme.appBorder, width: 0.5),
         ),

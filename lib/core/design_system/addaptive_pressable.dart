@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -59,7 +58,7 @@ class _AdaptivePressableState extends State<AdaptivePressable> {
   }
 
   Widget _buildCupertino() {
-    final pressedColor = widget.pressedColor ?? CupertinoColors.systemGrey5;
+    // final pressedColor = widget.pressedColor ?? CupertinoColors.systemGrey5;
 
     return MouseRegion(
       cursor: widget.onTap != null
@@ -77,13 +76,20 @@ class _AdaptivePressableState extends State<AdaptivePressable> {
 
         child: ClipRRect(
           borderRadius: widget.borderRadius ?? BorderRadius.zero,
-          child: AnimatedContainer(
+          child: AnimatedScale(
+            scale: _pressed ? 0.97 : 1,
             duration: widget.duration,
-            decoration: BoxDecoration(
-              color: _pressed ? pressedColor : Colors.transparent,
-              borderRadius: widget.borderRadius,
+            child: AnimatedOpacity(
+              opacity: _pressed ? 0.65 : 1,
+              duration: widget.duration,
+              child: Container(
+                decoration: BoxDecoration(
+                  // color: _pressed ? pressedColor : Colors.transparent,
+                  borderRadius: widget.borderRadius,
+                ),
+                child: widget.child,
+              ),
             ),
-            child: widget.child,
           ),
         ),
       ),

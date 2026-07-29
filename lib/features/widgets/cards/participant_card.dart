@@ -43,9 +43,9 @@ class ParticipantCard extends GetView<TransactionController> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isActive ? colorScheme.appOnSurface : Colors.transparent,
+              color: isActive ? colorScheme.bgLight : Colors.transparent,
             ),
-            color: isActive ? colorScheme.appOnSurface : Colors.transparent,
+            color: isActive ? colorScheme.bgLight : Colors.transparent,
           ),
           child: Row(
             children: [

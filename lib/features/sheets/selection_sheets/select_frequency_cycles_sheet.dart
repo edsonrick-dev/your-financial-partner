@@ -56,7 +56,7 @@ class SelectMonthPatternSheet extends StatelessWidget {
                             width: double.infinity,
                             padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: colorScheme.appOnSurface,
+                              color: colorScheme.bgLight,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(color: colorScheme.appBorder),
                             ),

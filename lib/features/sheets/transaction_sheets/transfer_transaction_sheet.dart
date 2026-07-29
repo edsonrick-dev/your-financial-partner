@@ -43,7 +43,7 @@ class TransferTransactionSheet extends GetView<TransactionController> {
                     top: Radius.circular(38),
                     bottom: Radius.circular(20),
                   ),
-                  color: colorScheme.primary,
+                  color: colorScheme.appOnSurfaceSecondary,
                 ),
                 child: Column(
                   children: [

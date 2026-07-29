@@ -41,7 +41,7 @@ class AppSnackbar {
       messageText: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: colors.appOnSurface,
+          color: colors.bgLight,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: accent),
         ),

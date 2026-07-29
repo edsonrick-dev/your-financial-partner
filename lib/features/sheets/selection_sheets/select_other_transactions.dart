@@ -49,7 +49,7 @@ class SelectOtherTransactionSheet extends StatelessWidget {
                             constraints: const BoxConstraints(minHeight: 44),
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: colorScheme.appOnSurface,
+                              color: colorScheme.bgLight,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 color: colorScheme.appBorder,
@@ -122,7 +122,7 @@ class SelectOtherTransactionSheet extends StatelessWidget {
                             constraints: const BoxConstraints(minHeight: 44),
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: colorScheme.appOnSurface,
+                              color: colorScheme.bgLight,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 color: colorScheme.appBorder,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/icon_picker_field.dart';
@@ -97,57 +98,61 @@ class _BuildExpanded extends StatelessWidget {
           spacing: 8,
           children: [
             ///CANCEL BUTTON
-            GestureDetector(
-              onTap: controller.collapseButton,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                decoration: BoxDecoration(
-                  // color: colorScheme.text,
-                  border: Border.all(color: context.colors.appText),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                height: 44,
-                child: Row(
-                  spacing: 8,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text('Cancel', style: TextStyle())],
-                ),
-              ),
-            ),
-
-            ///SAVE BUTTON
-            Expanded(
+            AdaptivePressable(
               child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () async {
-                  final createdCategory = await controller.saveAccount();
-
-                  if (createdCategory != null) {
-                    Get.back(result: createdCategory);
-                  }
-                },
+                onTap: controller.collapseButton,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 24),
                   decoration: BoxDecoration(
-                    color: context.colors.appText,
+                    // color: colorScheme.text,
+                    border: Border.all(color: context.colors.appText),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   height: 44,
                   child: Row(
                     spacing: 8,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      state == AddButtonState.loading
-                          ? Center(
-                              child: CircularProgressIndicator(
-                                color: context.colors.surface,
+                    children: [Text('Cancel', style: TextStyle())],
+                  ),
+                ),
+              ),
+            ),
+
+            ///SAVE BUTTON
+            Expanded(
+              child: AdaptivePressable(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    final createdCategory = await controller.saveAccount();
+
+                    if (createdCategory != null) {
+                      Get.back(result: createdCategory);
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    decoration: BoxDecoration(
+                      color: context.colors.appText,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    height: 44,
+                    child: Row(
+                      spacing: 8,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        state == AddButtonState.loading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: context.colors.surface,
+                                ),
+                              )
+                            : Text(
+                                'Save Account',
+                                style: TextStyle(color: context.colors.surface),
                               ),
-                            )
-                          : Text(
-                              'Save Account',
-                              style: TextStyle(color: context.colors.surface),
-                            ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -165,19 +170,21 @@ class _BuildCollapsed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: controller.expandButton,
-      child: SizedBox(
-        height: 52,
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.add),
-            SizedBox(width: 8),
-            Text('Add New Payment Account'),
-          ],
+    return AdaptivePressable(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: controller.expandButton,
+        child: SizedBox(
+          height: 52,
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.add),
+              SizedBox(width: 8),
+              Text('Add New Payment Account'),
+            ],
+          ),
         ),
       ),
     );

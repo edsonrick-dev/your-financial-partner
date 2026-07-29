@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:getx_drift_app/core/constants/app_opacity.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/delete_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
@@ -21,143 +22,145 @@ class ReceiveMoneyTransactionCard extends GetView<TransactionController> {
     final participantName = item.participants.isNotEmpty
         ? item.participants.first.entity.name
         : 'Unknown Person';
-    return GestureDetector(
-      onTap: () {
-        AppSheets.transaction.receiveMoney(item);
-      },
-      onLongPress: () async {
-        final confirmed = await showDialog<bool>(
-          context: context,
-          builder: (_) {
-            return AlertDialog(
-              title: const Text('Delete Transaction'),
-              content: const Text('This action cannot be undone.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: const Text('Delete'),
-                ),
-              ],
-            );
-          },
-        );
+    return AdaptivePressable(
+      child: GestureDetector(
+        onTap: () {
+          AppSheets.transaction.receiveMoney(item);
+        },
+        onLongPress: () async {
+          final confirmed = await showDialog<bool>(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: const Text('Delete Transaction'),
+                content: const Text('This action cannot be undone.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    },
+                    child: const Text('Delete'),
+                  ),
+                ],
+              );
+            },
+          );
 
-        if (confirmed == true) {
-          await controller.deleteTransactionWithBalanceUpdate(item);
-        }
-      },
-      child: Container(
-        padding: EdgeInsets.all(8),
-        constraints: BoxConstraints(minHeight: 44),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: colorScheme.appOnSurface,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: colorScheme.appBorder),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 8,
-          children: [
-            ///Icon Holder
-            SizedBox(
-              width: 36,
-              height: 36,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Opacity(
-                    opacity: AppOpacity.transactionIcon,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(999),
-                        color: colorScheme.appText,
+          if (confirmed == true) {
+            await controller.deleteTransactionWithBalanceUpdate(item);
+          }
+        },
+        child: Container(
+          padding: EdgeInsets.all(8),
+          constraints: BoxConstraints(minHeight: 44),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: colorScheme.bgLight,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: colorScheme.appBorder),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8,
+            children: [
+              ///Icon Holder
+              SizedBox(
+                width: 36,
+                height: 36,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Opacity(
+                      opacity: AppOpacity.transactionIcon,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(999),
+                          color: colorScheme.appText,
+                        ),
                       ),
                     ),
-                  ),
-                  Icon(
-                    AppIcons.categories.resolve('handCoins'),
-                    size: 20,
-                    color: colorScheme.appText,
-                  ),
-                ],
+                    Icon(
+                      AppIcons.categories.resolve('handCoins'),
+                      size: 20,
+                      color: colorScheme.appText,
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            ///Details Row
-            Expanded(
-              child: Column(
-                spacing: 8,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ///Left Section
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              ///Details Row
+              Expanded(
+                child: Column(
+                  spacing: 8,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ///Left Section
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
 
-                        children: [
-                          Text(
-                            'Receive Money',
-                            style: TextStyle(fontSize: 17, height: 20 / 17),
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                PhosphorIconsRegular.user,
-                                color: colorScheme.appTextMuted,
-                                size: 14,
-                              ),
-                              SizedBox(width: 2),
-                              Text(
-                                '$participantName → ${item.account.name}',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  height: 16 / 11,
+                          children: [
+                            Text(
+                              'Receive Money',
+                              style: TextStyle(fontSize: 17, height: 20 / 17),
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  PhosphorIconsRegular.user,
                                   color: colorScheme.appTextMuted,
+                                  size: 14,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Spacer(),
+                                SizedBox(width: 2),
+                                Text(
+                                  '$participantName → ${item.account.name}',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    height: 16 / 11,
+                                    color: colorScheme.appTextMuted,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Spacer(),
 
-                      ///Right Section
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            item.transaction.amount.toCurrency(),
-                            style: TextStyle(
-                              fontSize: 17,
-                              height: 20 / 17,
-                              color: colorScheme.appInflow,
-                              // fontWeight: FontWeight(600),
+                        ///Right Section
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              item.transaction.amount.toCurrency(),
+                              style: TextStyle(
+                                fontSize: 17,
+                                height: 20 / 17,
+                                color: colorScheme.appInflow,
+                                // fontWeight: FontWeight(600),
+                              ),
                             ),
-                          ),
-                          if (item.hasDebtImpact)
-                            Icon(
-                              PhosphorIconsRegular.coins,
-                              color: colorScheme.appInfo,
-                              size: 16,
-                            ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                            if (item.hasDebtImpact)
+                              Icon(
+                                PhosphorIconsRegular.coins,
+                                color: colorScheme.appInfo,
+                                size: 16,
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

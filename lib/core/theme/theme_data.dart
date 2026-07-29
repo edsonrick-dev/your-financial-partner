@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
 class AppTheme {
   static ThemeData light = ThemeData(
     useMaterial3: true,
 
-    colorScheme: const ColorScheme.light(
-      surface: Color(0xFFE2E8F0),
-      onSurface: Color(0xFF141c29),
-      primary: Color(0xFF141C29),
+    colorScheme: ColorScheme.light(
+      surface: AppPalette.color100,
+      onSurface: AppPalette.color900,
+      primary: AppPalette.accent,
     ),
   );
   static ThemeData dark = ThemeData(
     useMaterial3: true,
     colorScheme: const ColorScheme.dark(
       surface: Color(0xFf0a0e17),
-      onSurface: Color(0xF0141c29),
+      onSurface: AppPalette.color100,
     ),
   );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/app_border_radius.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
+import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/views/section_views/cashflow_section.dart';
@@ -88,7 +89,13 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
               ),
-              BudgetProgressSection(sectionTitle: sectionTitle),
+              AppSection(
+                sectionTitle: 'Budget Progress',
+                trailingText: 'View All',
+                trailingType: SectionTrailingType.textButton,
+                onTrailingPressed: () {},
+                child: BudgetProgressSection(sectionTitle: sectionTitle),
+              ),
               MyCashflowSection(),
               AppSection(
                 child: Container(
@@ -96,7 +103,7 @@ class HomeView extends GetView<HomeController> {
                   constraints: BoxConstraints(minHeight: 44),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: colorScheme.appOnSurface,
+                    color: colorScheme.bgLight,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -280,124 +287,100 @@ class BudgetProgressSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    return AppSection(
-      child: Container(
-        padding: EdgeInsets.only(bottom: 12),
-        constraints: BoxConstraints(minHeight: 44),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: colorScheme.appOnSurface,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          children: [
-            //Header
-            Row(
-              children: [
-                SizedBox(width: 12),
-                Text('Budget Progress', style: sectionTitle),
-                Spacer(),
-                TextButton(
-                  onPressed: () {},
-                  child: Row(
-                    children: [
-                      Text(
-                        'View All',
-                        style: TextStyle(color: colorScheme.appInfo),
+    return Container(
+      // padding: EdgeInsets.all(16),
+      constraints: BoxConstraints(minHeight: 44),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: colorScheme.bgLight,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        children: [
+          //Header
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
+                child: Row(
+                  spacing: 16,
+                  children: [
+                    BudgetProgressIndicator(
+                      progress: 0.42,
+                      progressColor: Colors.green,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '42%',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text('of budget', style: TextStyle(fontSize: 10)),
+                        ],
                       ),
-                      SizedBox(width: 4),
-                      Icon(
-                        PhosphorIconsRegular.caretRight,
-                        size: 16,
-                        color: colorScheme.appInfo,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              spacing: 4,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Row(
-                    children: [
-                      BudgetProgressIndicator(
-                        progress: 0.42,
-                        progressColor: Colors.green,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              '42%',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                    ),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'July Progress',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              height: 24 / 20,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(4200.toCompactCurrency(kThreshold: 1000000)),
+                              Text(' spent of '),
+                              Text(
+                                10000.toCompactCurrency(kThreshold: 1000000),
                               ),
-                            ),
-                            Text('of budget', style: TextStyle(fontSize: 10)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'July Progress',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                height: 24 / 20,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  4200.toCompactCurrency(kThreshold: 1000000),
-                                ),
-                                Text(' spent of '),
-                                Text(
-                                  10000.toCompactCurrency(kThreshold: 1000000),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Row(
-                                  spacing: 4,
-                                  children: [
-                                    Container(
-                                      width: 8,
-                                      height: 8,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: colorScheme.appSuccess,
-                                      ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Row(
+                                spacing: 4,
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: colorScheme.appSuccess,
                                     ),
-                                    Text('On Track'),
-                                  ],
-                                ),
-                                Spacer(),
-                                Text('18 days left'),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  ),
+                                  Text('On Track'),
+                                ],
+                              ),
+                              Spacer(),
+                              Text('18 days left'),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Divider(
-                  indent: 12,
-                  endIndent: 12,
-                  color: colorScheme.appBorderMuted,
-                ),
-                SizedBox(height: 4),
-                Column(
-                  spacing: 12,
+              ),
+              SizedBox(height: 4),
+              Divider(
+                indent: 16,
+                endIndent: 16,
+                color: colorScheme.appBorderMuted,
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+                child: Column(
+                  // spacing: 12,
                   children: [
                     BudgetTile(
                       budgetName: 'Groceries',
@@ -413,10 +396,10 @@ class BudgetProgressSection extends StatelessWidget {
                     ),
                   ],
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
