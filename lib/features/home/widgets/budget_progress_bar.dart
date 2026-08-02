@@ -26,7 +26,7 @@ class BudgetProgressBar extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: colors.appBorderMuted,
+              color: colors.bgDark,
               borderRadius: BorderRadius.circular(999),
             ),
           ),
@@ -48,7 +48,7 @@ class BudgetProgressBar extends StatelessWidget {
                 width: 2,
                 height: 10,
                 decoration: BoxDecoration(
-                  color: colors.appTextMuted,
+                  color: colors.appBorder,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),

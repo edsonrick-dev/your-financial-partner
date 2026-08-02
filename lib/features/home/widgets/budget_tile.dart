@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_progress_bar.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
@@ -35,6 +36,8 @@ class BudgetTile extends StatelessWidget {
     } else {
       progressColor = colorScheme.appInflow;
     }
+
+    Color iconColor = colorScheme.appInfo;
     return AdaptivePressable(
       borderRadius: BorderRadius.circular(16),
       child: Container(
@@ -46,10 +49,7 @@ class BudgetTile extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Icon(
-                  AppIcons.categories.resolve(iconKey),
-                  color: colorScheme.appSuccess,
-                ),
+                Icon(AppIcons.categories.resolve(iconKey), color: iconColor),
                 Opacity(
                   opacity: 0.2,
                   child: Container(
@@ -57,7 +57,7 @@ class BudgetTile extends StatelessWidget {
                     width: 48,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: colorScheme.appSuccess,
+                      color: iconColor,
                     ),
                   ),
                 ),
@@ -70,10 +70,7 @@ class BudgetTile extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        budgetName,
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
+                      Text(budgetName, style: AppTextStyle.bodyM),
                       Spacer(),
                       Text(
                         '${remainingBalance.abs().toCurrency()} ${isOverBudget ? 'over' : 'left'}',

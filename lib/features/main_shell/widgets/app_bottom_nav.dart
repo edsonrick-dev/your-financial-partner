@@ -51,16 +51,16 @@ class AppBottomNav extends StatelessWidget {
               icon: tabIndex == 2
                   ? PhosphorIconsFill.gridFour
                   : PhosphorIconsRegular.gridFour,
-              label: 'Account',
+              label: 'Planner',
               isActive: tabIndex == 2,
               onTap: () => controller.changeTab(2),
             ),
 
             NavItem(
               icon: tabIndex == 3
-                  ? PhosphorIconsFill.gear
-                  : PhosphorIconsRegular.gear,
-              label: 'Settings',
+                  ? PhosphorIconsFill.user
+                  : PhosphorIconsRegular.user,
+              label: 'Profile',
               isActive: tabIndex == 3,
               onTap: () => controller.changeTab(3),
             ),

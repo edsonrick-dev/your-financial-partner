@@ -10,12 +10,11 @@ import 'package:getx_drift_app/data/models/cashflow_plan_model.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
-import 'package:getx_drift_app/features/accounts/views/accounts_view.dart';
 import 'package:getx_drift_app/features/balances/views/people_balances_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/cashflow_planner_screen.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/services/cashflow_projection_service.dart';
 import 'package:getx_drift_app/features/financial_planner/models/financial_planner_page_model.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurnace_planner/insurance_planner_screen.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_planner_screen.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/networth_planner_screen.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_day_of_month.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
@@ -27,14 +26,14 @@ class FinancialPlannerController extends GetxController {
   final selectedTabIndex = 0.obs;
 
   final financialPlannerPages = <FinancialPlannerPage>[
-    FinancialPlannerPage(title: 'Accounts', page: AccountsView()),
+    // FinancialPlannerPage(title: 'Accounts', page: AccountsView()),
     FinancialPlannerPage(title: 'Net Worth', page: NetworthPlannerScreen()),
     FinancialPlannerPage(title: 'Cashflow', page: CashflowPlannerScreen()),
     FinancialPlannerPage(title: 'Insurance', page: InsurancePlannerScreen()),
-    FinancialPlannerPage(
-      title: 'Personal Balances',
-      page: PeopleBalancesView(),
-    ),
+    // FinancialPlannerPage(
+    //   title: 'Personal Balances',
+    //   page: PeopleBalancesView(),
+    // ),
   ];
 
   final dueDay = RxnInt();
@@ -50,9 +49,9 @@ class FinancialPlannerController extends GetxController {
   final amountFocusNode = FocusNode();
   double get annualIncome => projections.fold(0.0, (sum, p) => sum + p.income);
 
-  double get annualExpense => 780000;
-  double get annualDebtRepayment => 180000;
-  double get annualSavings => 240000;
+  double get annualDebtRepayment => 90000;
+  double get annualExpense => 390000;
+  double get annualSavings => 120000;
 
   double get expensePercentage =>
       clampDouble(annualExpense / dummyAnnualAllocation, 0, 1);

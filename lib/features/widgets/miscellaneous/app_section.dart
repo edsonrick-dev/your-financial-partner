@@ -5,13 +5,14 @@ import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 class AppSection extends StatelessWidget {
   final SectionTrailingType? trailingType;
   final Widget child;
+  final Widget? sectionChild;
   final String? sectionTitle;
   final String? trailingText;
   final VoidCallback? onTrailingPressed;
 
   const AppSection({
     required this.child,
-
+    this.sectionChild,
     this.sectionTitle,
     this.trailingText,
     this.onTrailingPressed,
@@ -32,6 +33,7 @@ class AppSection extends StatelessWidget {
             sectionTitle: sectionTitle!,
             onTrailingPressed: onTrailingPressed,
             trailingType: trailingType,
+            child: sectionChild,
           ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),

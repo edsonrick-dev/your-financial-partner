@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/constants/app_border_radius.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 
@@ -8,6 +10,7 @@ class AppSectionHeader extends StatelessWidget {
   final SectionTrailingType? trailingType;
   final VoidCallback? onTrailingPressed;
   final Color textColor;
+  final Widget? child;
   const AppSectionHeader({
     super.key,
     required this.sectionTitle,
@@ -16,23 +19,20 @@ class AppSectionHeader extends StatelessWidget {
     this.onTrailingPressed,
     this.trailingText,
     this.trailingType,
+    this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    TextStyle sectionTitleStyle = TextStyle(
-      fontSize: 15,
-      fontWeight: FontWeight.w600,
-      height: 20 / 15,
-    );
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: AppPadding.pageHorizontal,
       child: SizedBox(
         height: 44,
         child: Row(
           children: [
-            Text(sectionTitle, style: sectionTitleStyle),
+            Text(sectionTitle, style: AppTextStyle.titleL),
             Spacer(),
 
             if (trailingType != null)
@@ -57,7 +57,10 @@ class AppSectionHeader extends StatelessWidget {
                   ),
                 ),
 
+                SectionTrailingType.custom => child!,
+
                 _ => SizedBox.shrink(),
+
                 // null => SizedBox.shrink(),
               },
 

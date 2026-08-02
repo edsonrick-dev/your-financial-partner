@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/constants/app_border_radius.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
-import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
-import 'package:getx_drift_app/features/home/views/section_views/cashflow_section.dart';
-import 'package:getx_drift_app/features/home/widgets/budget_progress_indicator.dart';
-import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
-import 'package:getx_drift_app/features/home_initial/widget/transaction_button.dart';
-import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
+import 'package:getx_drift_app/features/home/views/section_views/cashflow_history_section.dart';
+import 'package:getx_drift_app/features/home/views/section_views/quick_actions_section.dart';
 import 'package:getx_drift_app/features/main_shell/controller/main_shell_controller.dart';
+import 'package:getx_drift_app/features/widgets/cards/bills_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -21,156 +19,146 @@ class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
   @override
   Widget build(BuildContext context) {
-    TextStyle sectionTitle = TextStyle(
-      fontSize: 15,
-      fontWeight: FontWeight.w600,
-      height: 20 / 15,
-    );
     final colorScheme = context.colors;
     return Scaffold(
       body: SafeArea(
+        top: false,
         child: SingleChildScrollView(
           child: Column(
-            spacing: 24,
+            spacing: 12,
             children: [
-              AppSection(
-                child: Column(
-                  children: [
-                    ///Save
-                    FundSummaryCard(),
-                  ],
-                ),
-              ),
-              AppSection(
-                child: Container(
-                  decoration: BoxDecoration(
-                    // border: Border.all(color: colorScheme.appBorder),
-                    borderRadius: BorderRadius.circular(AppBorderRadius.m),
+              Column(
+                children: [
+                  AppBar(
+                    centerTitle: false,
+                    title: Text(
+                      'Good morning, Edson Rick!',
+                      style: AppTextStyle.headlineL,
+                    ),
+                    surfaceTintColor: Colors.transparent,
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppBorderRadius.m),
-                    child: Row(
-                      // spacing: 12,
+                  AppSection(
+                    child: Column(
+                      spacing: 12,
+                      children: [FundSummaryCard(), QuickActionSection()],
+                    ),
+                  ),
+                ],
+              ),
+              BudgetProgressSection(),
+              AppSection(
+                sectionTitle: 'Payment Reminders',
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    constraints: BoxConstraints(minHeight: 44),
+                    width: double.infinity,
+                    decoration: BoxDecoration(color: colorScheme.bgLight),
+                    child: Column(
+                      spacing: 8,
                       children: [
-                        TransactionButton(
-                          label: 'Earn',
-                          color: colorScheme.appInflow,
-                          icon: Icons.add,
-                          onTap: () {
-                            AppSheets.transaction.earn();
-                          },
+                        BillsCard(
+                          billName: 'Internet Bill',
+                          billType: 'Internet',
+                          dueDate: DateTime(2026, 8, 3),
+                          amountDue: 1499,
+                          iconKey: 'wifi',
                         ),
-                        TransactionButton(
-                          color: colorScheme.appOutflow,
-                          icon: Icons.remove,
-                          label: 'Spend',
-                          onTap: () {
-                            AppSheets.transaction.spend();
-                          },
+                        BillsCard(
+                          billName: 'Electric Bill',
+                          billType: 'Electricity',
+                          dueDate: DateTime(2026, 8, 14),
+                          amountDue: 1499,
+                          iconKey: 'lightning',
                         ),
-                        TransactionButton(
-                          color: colorScheme.appAccent,
-                          icon: Icons.sync_alt_sharp,
-                          label: 'Transfer',
-                          onTap: () {
-                            AppSheets.transaction.transfer();
-                          },
-                        ),
-                        TransactionButton(
-                          color: colorScheme.appNeutral,
-                          icon: Icons.more_horiz,
-                          label: 'Others',
-                          onTap: () {
-                            AppSheets.selection.selectOtherTransaction();
-                          },
+                        BillsCard(
+                          billName: 'Credit Card Bill',
+                          billType: 'Credit Card',
+                          dueDate: DateTime(2026, 8, 28),
+                          amountDue: 24000,
+                          iconKey: 'creditCard',
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-              AppSection(
-                sectionTitle: 'Budget Progress',
-                trailingText: 'View All',
-                trailingType: SectionTrailingType.textButton,
-                onTrailingPressed: () {},
-                child: BudgetProgressSection(sectionTitle: sectionTitle),
-              ),
-              MyCashflowSection(),
-              AppSection(
-                child: Container(
-                  padding: EdgeInsets.only(bottom: 12),
-                  constraints: BoxConstraints(minHeight: 44),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: colorScheme.bgLight,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: [
-                      //Header
-                      Row(
-                        children: [
-                          SizedBox(width: 12),
-                          Text('Accounts Overview', style: sectionTitle),
-                          Spacer(),
-                          TextButton(
-                            onPressed: () {
-                              Get.find<MainShellController>().changeTab(2);
-                              Get.find<FinancialPlannerController>().selectTab(
-                                0,
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                Text(
-                                  'View All',
-                                  style: TextStyle(color: colorScheme.appInfo),
-                                ),
-                                SizedBox(width: 4),
-                                Icon(
-                                  PhosphorIconsRegular.caretRight,
-                                  size: 16,
-                                  color: colorScheme.appInfo,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        spacing: 4,
-                        children: [
-                          // SizedBox(height: 4),
-                          Column(
-                            spacing: 12,
-                            children: [
-                              AccountsOverviewTile(
-                                accountName: 'Cash & Bank',
-                                iconKey: 'wallet',
-                                value: 8120,
-                                count: 3,
-                              ),
-                              AccountsOverviewTile(
-                                accountName: 'Credit Card',
-                                iconKey: 'creditCard',
-                                value: 42500,
-                                count: 2,
-                              ),
-                              AccountsOverviewTile(
-                                accountName: 'Investments',
-                                iconKey: '',
-                                value: 42500,
-                                count: 2,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
+              // AppSection(
+              //   child: Container(
+              //     padding: EdgeInsets.only(bottom: 12),
+              //     constraints: BoxConstraints(minHeight: 44),
+              //     width: double.infinity,
+              //     decoration: BoxDecoration(
+              //       color: colorScheme.bgLight,
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //     child: Column(
+              //       children: [
+              //         //Header
+              //         Row(
+              //           children: [
+              //             SizedBox(width: 12),
+              //             Text('Accounts Overview'),
+              //             Spacer(),
+              //             TextButton(
+              //               onPressed: () {
+              //                 Get.find<MainShellController>().changeTab(2);
+              //                 Get.find<FinancialPlannerController>().selectTab(
+              //                   0,
+              //                 );
+              //               },
+              //               child: Row(
+              //                 children: [
+              //                   Text(
+              //                     'View All',
+              //                     style: TextStyle(color: colorScheme.appInfo),
+              //                   ),
+              //                   SizedBox(width: 4),
+              //                   Icon(
+              //                     PhosphorIconsRegular.caretRight,
+              //                     size: 16,
+              //                     color: colorScheme.appInfo,
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //         Column(
+              //           spacing: 4,
+              //           children: [
+              //             // SizedBox(height: 4),
+              //             Column(
+              //               spacing: 12,
+              //               children: [
+              //                 AccountsOverviewTile(
+              //                   accountName: 'Cash & Bank',
+              //                   iconKey: 'wallet',
+              //                   value: 8120,
+              //                   count: 3,
+              //                 ),
+              //                 AccountsOverviewTile(
+              //                   accountName: 'Credit Card',
+              //                   iconKey: 'creditCard',
+              //                   value: 42500,
+              //                   count: 2,
+              //                 ),
+              //                 AccountsOverviewTile(
+              //                   accountName: 'Investments',
+              //                   iconKey: '',
+              //                   value: 42500,
+              //                   count: 2,
+              //                 ),
+              //               ],
+              //             ),
+              //           ],
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -272,132 +260,6 @@ class AccountsOverviewTile extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class BudgetProgressSection extends StatelessWidget {
-  const BudgetProgressSection({super.key, required this.sectionTitle});
-
-  final TextStyle sectionTitle;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return Container(
-      // padding: EdgeInsets.all(16),
-      constraints: BoxConstraints(minHeight: 44),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: colorScheme.bgLight,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        children: [
-          //Header
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
-                child: Row(
-                  spacing: 16,
-                  children: [
-                    BudgetProgressIndicator(
-                      progress: 0.42,
-                      progressColor: Colors.green,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '42%',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text('of budget', style: TextStyle(fontSize: 10)),
-                        ],
-                      ),
-                    ),
-
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'July Progress',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              height: 24 / 20,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(4200.toCompactCurrency(kThreshold: 1000000)),
-                              Text(' spent of '),
-                              Text(
-                                10000.toCompactCurrency(kThreshold: 1000000),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Row(
-                                spacing: 4,
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: colorScheme.appSuccess,
-                                    ),
-                                  ),
-                                  Text('On Track'),
-                                ],
-                              ),
-                              Spacer(),
-                              Text('18 days left'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 4),
-              Divider(
-                indent: 16,
-                endIndent: 16,
-                color: colorScheme.appBorderMuted,
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: Column(
-                  // spacing: 12,
-                  children: [
-                    BudgetTile(
-                      budgetName: 'Groceries',
-                      iconKey: 'basket',
-                      consumption: 70000,
-                      budget: 7500,
-                    ),
-                    BudgetTile(
-                      budgetName: 'Food',
-                      iconKey: 'basket',
-                      budget: 2000,
-                      consumption: 100,
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
         ],
       ),

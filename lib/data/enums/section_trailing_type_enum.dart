@@ -4,4 +4,5 @@ enum SectionTrailingType {
   segmentedButton,
   iconButton,
   toggleButton,
+  custom,
 }

@@ -153,7 +153,7 @@ class _EndDrawerSheets {
 
                     ElevatedButton(
                       onPressed: () {
-                        Get.toNamed(Routes.ACCOUNTS);
+                        Get.toNamed(Routes.NETWORTHDETAILS);
                       },
                       child: Text('List of Accounts in DB'),
                     ),

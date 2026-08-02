@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/transaction_card_shell.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
@@ -15,7 +16,11 @@ class TransactionView extends GetView<TransactionController> {
     final cardsSpacing = 12.0;
     return Scaffold(
       // backgroundColor: Colors.transparent,
-      appBar: AppBar(title: const Text('Transactions'), centerTitle: false),
+      appBar: AppBar(
+        title: Text('Transactions', style: AppTextStyle.headlineL),
+        centerTitle: false,
+        surfaceTintColor: Colors.transparent,
+      ),
       body: StreamBuilder<Map<String, List<TransactionWithDetails>>>(
         stream: database.transactionsDao.watchGroupedTransactions(),
 

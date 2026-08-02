@@ -96,6 +96,16 @@ class _CategoryIcons {
       group: IconGroup.others,
     ),
     AppCategoryIcon(
+      key: 'wifi',
+      icon: PhosphorIconsRegular.wifiHigh,
+      group: IconGroup.others,
+    ),
+    AppCategoryIcon(
+      key: 'lightning',
+      icon: PhosphorIconsRegular.lightning,
+      group: IconGroup.others,
+    ),
+    AppCategoryIcon(
       key: 'user',
       icon: PhosphorIconsRegular.user,
       group: IconGroup.others,

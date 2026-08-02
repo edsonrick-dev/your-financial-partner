@@ -6,7 +6,7 @@ class BudgetProgressIndicator extends StatelessWidget {
     super.key,
     required this.progress,
     required this.child,
-    this.size = 80,
+    this.size = 100,
     this.strokeWidth = 8,
     required this.progressColor,
     this.backgroundColor = const Color(0xFFE7EAF0),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_card.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -10,6 +11,7 @@ class AccountsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Accounts', style: AppTextStyle.headlineL)),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

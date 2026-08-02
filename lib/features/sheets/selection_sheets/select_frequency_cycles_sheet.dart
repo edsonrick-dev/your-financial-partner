@@ -49,9 +49,7 @@ class SelectMonthPatternSheet extends StatelessWidget {
                           Get.back(result: pattern);
                         },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppPadding.pageHorizontal,
-                          ),
+                          padding: AppPadding.pageHorizontal,
                           child: Container(
                             width: double.infinity,
                             padding: EdgeInsets.all(12),

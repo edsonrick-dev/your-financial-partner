@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/widgets/cards/person_balance_card.dart';
 import 'package:getx_drift_app/data/models/person_balance_summary_model.dart';
 
@@ -9,6 +10,10 @@ class PeopleBalancesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('Personal Balances', style: AppTextStyle.headlineL),
+      ),
       body: StreamBuilder<List<PersonBalanceSummary>>(
         stream: database.peopleBalanceDao.watchPeopleBalances(),
 

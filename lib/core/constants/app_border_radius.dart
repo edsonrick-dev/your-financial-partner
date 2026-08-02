@@ -10,6 +10,8 @@ class AppBorderRadius {
   static BorderRadius sheet = BorderRadius.all(Radius.circular(38));
 
   static double m = AppScale.x2;
+  static double xL = AppScale.x4;
+  // static double xL = AppScale.x8;
 }
 
 class AppSpacing {
@@ -22,5 +24,7 @@ class AppSpacing {
 class AppPadding {
   AppPadding._();
 
-  static double pageHorizontal = AppScale.x4;
+  static EdgeInsets pageHorizontal = EdgeInsets.symmetric(
+    horizontal: AppScale.x4,
+  );
 }

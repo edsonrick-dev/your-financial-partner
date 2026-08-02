@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/app_sparkline.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -32,11 +33,11 @@ class CashFlowSummaryCard extends StatelessWidget {
     return isVertical
         ? Container(
             padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              border: BoxBorder.all(color: colorScheme.appBorder),
-              borderRadius: BorderRadius.circular(4),
-            ),
 
+            // decoration: BoxDecoration(
+            //   // border: BoxBorder.all(color: colorScheme.appBorder),
+            //   // borderRadius: BorderRadius.circular(4),
+            // ),
             child: Row(
               children: [
                 Column(
@@ -118,35 +119,20 @@ class CashFlowSummaryCard extends StatelessWidget {
             ),
           )
         : Container(
-            padding: EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: colorScheme.appBorderMuted),
-            ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    height: 16 / 13,
-                    fontSize: 13,
-                    color: color,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                Text(title, style: AppTextStyle.labelM.copyWith(color: color)),
                 SizedBox(height: 4),
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
                     amount.toCompactCurrency(kThreshold: 10000),
                     maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 18,
-                      height: 24 / 18,
-                      fontWeight: FontWeight.w600,
+                    style: AppTextStyle.amountM.copyWith(
                       color: colorScheme.appText,
-                      fontFeatures: const [FontFeature.tabularFigures()],
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -159,8 +145,8 @@ class CashFlowSummaryCard extends StatelessWidget {
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      SizedBox(width: 2),
                       Icon(
                         change > 0
                             ? PhosphorIconsFill.caretUp
@@ -174,12 +160,9 @@ class CashFlowSummaryCard extends StatelessWidget {
                       SizedBox(width: 2),
                       Text(
                         '${change >= 0 ? '+' : ''}${change.toStringAsFixed(1)}%',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          height: 16 / 12,
-                        ),
+                        style: AppTextStyle.labelS,
                       ),
+                      SizedBox(width: 4),
                     ],
                   ),
                 ),
@@ -187,7 +170,6 @@ class CashFlowSummaryCard extends StatelessWidget {
                 Expanded(
                   child: AppSparkline(values: trend, color: color, height: 16),
                 ),
-                SizedBox(height: 12),
               ],
             ),
           );

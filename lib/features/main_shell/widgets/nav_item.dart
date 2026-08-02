@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
 class NavItem extends StatelessWidget {
@@ -22,36 +23,38 @@ class NavItem extends StatelessWidget {
     final inactiveColor = colorScheme.appTextMuted;
 
     return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-          child: SizedBox(
-            height: 44,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
-                  size: 20,
-                  color: isActive ? activeColor : inactiveColor,
-                ),
+      child: AdaptivePressable(
+        child: GestureDetector(
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+            child: SizedBox(
+              height: 44,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    icon,
+                    size: 20,
+                    color: isActive ? activeColor : inactiveColor,
+                  ),
 
-                // const SizedBox(height: 2),
-                AnimatedOpacity(
-                  duration: const Duration(milliseconds: 150),
-                  opacity: isActive ? 1 : 0,
-                  child: Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 11,
-                      height: 16 / 11,
-                      fontWeight: FontWeight.w600,
-                      color: activeColor,
+                  // const SizedBox(height: 2),
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 150),
+                    opacity: isActive ? 1 : 0,
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 11,
+                        height: 16 / 11,
+                        fontWeight: FontWeight.w600,
+                        color: activeColor,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
