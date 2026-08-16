@@ -9,16 +9,16 @@ extension FinancialRatioTypeExtension on FinancialRatioType {
   String get displayName {
     switch (this) {
       case FinancialRatioType.debtLoad:
-        return 'Debt Load Ratio';
+        return 'Debt Load';
 
       case FinancialRatioType.emergencyFund:
-        return 'Emergency Fund Ratio';
+        return 'Emergency Fund';
 
       case FinancialRatioType.wealthBuilding:
-        return 'Wealth Building Rate';
+        return 'Wealth Building';
 
       case FinancialRatioType.lifestyleCoverage:
-        return 'Lifestyle Coverage Ratio';
+        return 'Lifestyle Coverage';
     }
   }
 

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/default_data/default_policy_recommendations.dart';
-import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/sections/protection_score_container_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/widgets/protection_gap_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/widgets/recommended_policy_card.dart';
@@ -13,7 +13,7 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.d
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class InsurancePlannerScreen extends GetView<FinancialPlannerController> {
+class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
   const InsurancePlannerScreen({super.key});
 
   @override
@@ -24,7 +24,12 @@ class InsurancePlannerScreen extends GetView<FinancialPlannerController> {
         spacing: 12,
         children: [
           SizedBox(height: 12),
-          ProtectionScoreContainerSection(),
+          Obx(
+            () => ProtectionScoreContainerSection(
+              profile: controller.protectionProfile,
+              unmetGoals: controller.unmetProtectionGoals,
+            ),
+          ),
           AppSection(
             sectionTitle: 'Protection Breakdown',
             child: AppSectionBody(
@@ -35,7 +40,8 @@ class InsurancePlannerScreen extends GetView<FinancialPlannerController> {
                     color: colorScheme.appInfo,
                     icon: PhosphorIconsRegular.ambulance,
                     gapTitle: 'Death Benefit Gap',
-                    gapAmount: 4400000,
+                    amountCovered: controller.deathBenefitCovered.value,
+                    amountNeed: controller.deathBenefitNeed.value,
                     onTap: () {
                       Get.toNamed(Routes.DEATHBENEFITGAP);
                     },
@@ -44,7 +50,9 @@ class InsurancePlannerScreen extends GetView<FinancialPlannerController> {
                     color: colorScheme.appInfo,
                     icon: PhosphorIconsRegular.hospital,
                     gapTitle: 'Critical Illness Benefit Gap',
-                    gapAmount: 2000000,
+
+                    amountCovered: controller.criticalIllnessCovered.value,
+                    amountNeed: controller.criticalIllnessNeed.value,
                     onTap: () {
                       Get.toNamed(Routes.CRITICALILLNESSBENEFITGAP);
                     },
@@ -53,7 +61,9 @@ class InsurancePlannerScreen extends GetView<FinancialPlannerController> {
                     color: colorScheme.appInfo,
                     icon: PhosphorIconsRegular.wheelchair,
                     gapTitle: 'Disability Benefit Gap',
-                    gapAmount: 1500000,
+
+                    amountCovered: controller.disabilityCovered.value,
+                    amountNeed: controller.disabilityNeed.value,
                     onTap: () {
                       Get.toNamed(Routes.DISABILITYBENEFITGAP);
                     },
