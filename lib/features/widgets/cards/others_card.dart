@@ -18,24 +18,24 @@ class OthersCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     return AdaptivePressable(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          constraints: BoxConstraints(minHeight: 44),
-          decoration: BoxDecoration(
-            color: colorScheme.bgLight,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Icon(icon),
-              SizedBox(width: 12),
-              Text(title),
-              Spacer(),
-              Icon(PhosphorIconsRegular.caretRight, size: 16),
-            ],
-          ),
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        constraints: BoxConstraints(minHeight: 44),
+        decoration: BoxDecoration(
+          color: colorScheme.bgLight,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 20),
+            SizedBox(width: 12),
+            Expanded(
+              child: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
+            ),
+            const SizedBox(width: 8),
+            Icon(PhosphorIconsRegular.caretRight, size: 16),
+          ],
         ),
       ),
     );

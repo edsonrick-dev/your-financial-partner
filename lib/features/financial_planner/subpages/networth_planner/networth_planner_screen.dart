@@ -9,6 +9,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
+import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -25,7 +26,7 @@ class NetworthPlannerScreen extends GetView<FinancialPlannerController> {
           SizedBox(height: 12),
           NetWorthSummaryContainerSection(),
           AppSection(
-            sectionTitle: 'Overview',
+            sectionTitle: 'Wealth Overview',
             trailingType: SectionTrailingType.textButton,
             trailingText: 'See more',
             onTrailingPressed: () {
@@ -66,28 +67,96 @@ class NetworthPlannerScreen extends GetView<FinancialPlannerController> {
                       ),
                     ),
                   ),
+                  Container(
+                    height: 8,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: colorScheme.text,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
                   Column(
                     spacing: 12,
                     children: [
                       AccountGroupOverviewTile(
+                        icon: PhosphorIconsRegular.handDeposit,
+                        type: 'Receivables',
+                        amount: 300000,
+                        percentage: 0.342,
+                      ),
+                      AccountGroupOverviewTile(
                         icon: PhosphorIconsRegular.warehouse,
-                        type: 'Real Estate',
-                        amount: 1210000,
+                        type: 'Tangible Properties',
+                        amount: 250000,
+                        percentage: 0.285,
                       ),
                       AccountGroupOverviewTile(
                         icon: PhosphorIconsRegular.chartLine,
-                        type: 'Investments',
-                        amount: 275000,
+                        type: 'Financial Instruments',
+                        amount: 177351.2,
+                        percentage: 0.202,
                       ),
                       AccountGroupOverviewTile(
                         icon: PhosphorIconsRegular.money,
                         type: 'Cash & Bank',
-                        amount: 210500,
+                        amount: 88648.8,
+                        percentage: 0.101,
                       ),
                       AccountGroupOverviewTile(
                         icon: PhosphorIconsRegular.handWithdraw,
-                        type: 'Receivables',
-                        amount: 18500,
+                        type: 'Intangible Properties',
+                        amount: 60000,
+                        percentage: 0.068,
+                      ),
+                    ],
+                  ),
+
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(width: 80, child: Text('Assets')),
+                          Container(
+                            height: 8,
+                            width: 175,
+                            decoration: BoxDecoration(
+                              color: colorScheme.appInflow,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text(876000.toCompactCurrency()),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(width: 80, child: Text('Liabilities')),
+                          Container(
+                            height: 8,
+                            width: 133,
+                            decoration: BoxDecoration(
+                              color: colorScheme.appOutflow,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text(400000.toCompactCurrency()),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(width: 80, child: Text('Net Worth')),
+                          Container(
+                            height: 8,
+                            width: 143,
+                            decoration: BoxDecoration(
+                              color: colorScheme.appInfo,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text(476000.toCompactCurrency()),
+                        ],
                       ),
                     ],
                   ),
@@ -116,7 +185,7 @@ class NetworthPlannerScreen extends GetView<FinancialPlannerController> {
                     Expanded(
                       child: OthersCard(
                         icon: PhosphorIconsRegular.users,
-                        title: 'People',
+                        title: 'Personal Balances',
                         onTap: () {
                           Get.toNamed(Routes.PEOPLEBALANCES);
                         },

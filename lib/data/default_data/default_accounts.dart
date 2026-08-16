@@ -3,15 +3,15 @@ import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_acco
 class DefaultAccount {
   final String name;
   final String iconKey;
-  final String type;
-  // final String group;
+  final AccountType type;
+  final double currentValue;
   final bool isSystem;
 
   const DefaultAccount({
     required this.name,
     required this.iconKey,
     required this.type,
-    // required this.group,
+    this.currentValue = 0,
     this.isSystem = false,
   });
 }
@@ -21,16 +21,44 @@ class DefaultAccounts {
     DefaultAccount(
       name: 'Cash Wallet',
       iconKey: 'wallet',
-      type: AccountType.cash.name,
-      // group: AccountGroup.paymentAccount.name,
+      type: AccountType.cash,
+      currentValue: 3250.00,
+      isSystem: true,
+    ),
+    DefaultAccount(
+      name: 'Emergency Cash',
+      iconKey: 'wallet',
+      type: AccountType.cash,
+      currentValue: 10000.00,
+      isSystem: true,
+    ),
+    DefaultAccount(
+      name: 'BPI Savings Account',
+      iconKey: 'wallet',
+      type: AccountType.savingsAccount,
+      currentValue: 48720.35,
       isSystem: true,
     ),
 
     DefaultAccount(
-      name: 'Savings Account',
+      name: 'BDO Checking',
       iconKey: 'wallet',
-      type: AccountType.savingsAccount.name,
-      // group: AccountGroup.paymentAccount.name,
+      type: AccountType.checkingAccount,
+      currentValue: 22145.8,
+      isSystem: true,
+    ),
+    DefaultAccount(
+      name: 'Maya Wallet',
+      iconKey: 'wallet',
+      type: AccountType.eWallet,
+      currentValue: 2890.15,
+      isSystem: true,
+    ),
+    DefaultAccount(
+      name: 'GCash',
+      iconKey: 'wallet',
+      type: AccountType.eWallet,
+      currentValue: 1642.5,
       isSystem: true,
     ),
   ];
@@ -38,8 +66,7 @@ class DefaultAccounts {
     DefaultAccount(
       name: 'Credit Card',
       iconKey: 'wallet',
-      // group: AccountGroup.paymentAccount.name,
-      type: AccountType.creditCard.name,
+      type: AccountType.creditCard,
       isSystem: true,
     ),
   ];

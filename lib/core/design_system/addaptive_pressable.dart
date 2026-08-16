@@ -74,21 +74,18 @@ class _AdaptivePressableState extends State<AdaptivePressable> {
         onTap: _handleTap,
         onLongPress: widget.onLongPress,
 
-        child: ClipRRect(
-          borderRadius: widget.borderRadius ?? BorderRadius.zero,
-          child: AnimatedScale(
-            scale: _pressed ? 0.97 : 1,
+        child: AnimatedScale(
+          scale: _pressed ? 0.97 : 1,
+          duration: widget.duration,
+          child: AnimatedOpacity(
+            opacity: _pressed ? 0.65 : 1,
             duration: widget.duration,
-            child: AnimatedOpacity(
-              opacity: _pressed ? 0.65 : 1,
-              duration: widget.duration,
-              child: Container(
-                decoration: BoxDecoration(
-                  // color: _pressed ? pressedColor : Colors.transparent,
-                  borderRadius: widget.borderRadius,
-                ),
-                child: widget.child,
+            child: Container(
+              decoration: BoxDecoration(
+                // color: _pressed ? pressedColor : Colors.transparent,
+                borderRadius: widget.borderRadius,
               ),
+              child: widget.child,
             ),
           ),
         ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
@@ -8,11 +7,13 @@ class AccountGroupOverviewTile extends StatelessWidget {
   final IconData icon;
   final String type;
   final double amount;
+  final double percentage;
   const AccountGroupOverviewTile({
     super.key,
     required this.type,
     required this.icon,
     this.amount = 0,
+    required this.percentage,
   });
 
   @override
@@ -43,7 +44,15 @@ class AccountGroupOverviewTile extends StatelessWidget {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(type, style: AppTextStyle.bodyM)],
+              children: [
+                Text(type, style: AppTextStyle.bodyM),
+                Text(
+                  '${(percentage * 100).toStringAsFixed(1)}% of Assets',
+                  style: AppTextStyle.labelS.copyWith(
+                    color: colorScheme.textMuted,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

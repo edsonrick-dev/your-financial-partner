@@ -9,6 +9,7 @@ class AppSection extends StatelessWidget {
   final String? sectionTitle;
   final String? trailingText;
   final VoidCallback? onTrailingPressed;
+  final bool isHorizontalScrolling;
 
   const AppSection({
     required this.child,
@@ -17,6 +18,7 @@ class AppSection extends StatelessWidget {
     this.trailingText,
     this.onTrailingPressed,
     this.trailingType,
+    this.isHorizontalScrolling = false,
     super.key,
   });
 
@@ -25,6 +27,7 @@ class AppSection extends StatelessWidget {
     final shouldShowHeader =
         sectionTitle != null || trailingText != null || trailingType != null;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 4,
       children: [
         if (shouldShowHeader)
@@ -35,10 +38,17 @@ class AppSection extends StatelessWidget {
             trailingType: trailingType,
             child: sectionChild,
           ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: child,
-        ),
+        isHorizontalScrolling
+            ? SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                clipBehavior: Clip.none,
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: child,
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: child,
+              ),
       ],
     );
   }

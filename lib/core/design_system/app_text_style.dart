@@ -31,6 +31,12 @@ class AppTextStyle {
     height: 28 / 22,
     letterSpacing: -0.2,
   );
+  static TextStyle get headlineM => TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    height: 28 / 20,
+    letterSpacing: -0.2,
+  );
   static TextStyle get headlineS => TextStyle(
     fontSize: 17,
     fontWeight: FontWeight.w600,
@@ -71,6 +77,12 @@ class AppTextStyle {
     height: 20 / 16,
     letterSpacing: 0,
   );
+  static TextStyle get bodyS => TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    height: 16 / 12,
+    letterSpacing: 0,
+  );
 
   //Label
   static TextStyle get labelM => TextStyle(
@@ -83,6 +95,12 @@ class AppTextStyle {
     fontSize: 11,
     fontWeight: FontWeight.w500,
     height: 16 / 11,
+    letterSpacing: 0.5,
+  );
+  static TextStyle get labelXS => TextStyle(
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+    height: 12 / 10,
     letterSpacing: 0.5,
   );
   //Amount
@@ -104,6 +122,20 @@ class AppTextStyle {
     fontSize: 15,
     fontWeight: FontWeight.w600,
     height: 20 / 15,
+    fontFeatures: [FontFeature.tabularFigures()],
+    letterSpacing: 0,
+  );
+  static TextStyle get amountS => TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+    height: 16 / 13,
+    fontFeatures: [FontFeature.tabularFigures()],
+    letterSpacing: 0,
+  );
+  static TextStyle get amountXS => TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w600,
+    height: 16 / 11,
     fontFeatures: [FontFeature.tabularFigures()],
     letterSpacing: 0,
   );

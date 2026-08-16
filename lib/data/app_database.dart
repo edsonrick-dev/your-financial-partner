@@ -176,8 +176,9 @@ class AppDatabase extends _$AppDatabase {
           (account) => AccountsTableCompanion.insert(
             name: account.name,
             icon: account.iconKey,
+            currentValue: Value(account.currentValue),
             // accountGroup: account.group,
-            accountType: account.type,
+            accountType: account.type.name,
           ),
         )
         .toList();

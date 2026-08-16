@@ -8,6 +8,9 @@ import 'package:getx_drift_app/features/balances/views/people_balances_view.dart
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/selection_sheets.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/transaction_sheets.dart';
+import 'package:getx_drift_app/features/profile/controller/profile_controller.dart';
+import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
+import 'package:getx_drift_app/features/profile/views/financial_stability_details_sheet.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_cash_flow_plan/create_cash_flow_plan_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_cashflow_plan_type.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_sheet.dart';
@@ -18,6 +21,34 @@ class AppSheets {
   static final transaction = TransactionSheets();
   static final selection = SelectionSheets();
   static final endDrawer = _EndDrawerSheets();
+
+  static Future<void> viewStabilityProfileDetails1(int index) async {
+    Get.find<ProfileController>().selectTab(index);
+
+    return await Get.bottomSheet(
+      const FinancialStabilityDetailsSheet(),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+    );
+  }
+
+  static Future<void> viewStabilityProfileDetails(
+    FinancialRatioType? ratioType,
+  ) async {
+    final controller = Get.find<ProfileController>();
+
+    if (ratioType != null) {
+      controller.selectRatioTab(ratioType);
+    } else {
+      controller.selectedDetailsIndex.value = 0;
+    }
+
+    return Get.bottomSheet(
+      const FinancialStabilityDetailsSheet(),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+    );
+  }
 
   static Future<FrequencyType?> selectFrequency() async {
     return await Get.bottomSheet<FrequencyType>(

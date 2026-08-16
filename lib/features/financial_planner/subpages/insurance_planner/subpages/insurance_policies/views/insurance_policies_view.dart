@@ -10,7 +10,7 @@ class InsurancePoliciesView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Insurance Policies', style: AppTextStyle.headlineL),
+        title: Text('My Insurance Policies', style: AppTextStyle.headlineL),
       ),
       body: SingleChildScrollView(child: Column(children: [          ],
         )),

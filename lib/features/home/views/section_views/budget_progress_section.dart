@@ -12,6 +12,9 @@ class BudgetProgressSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double spentAmount = 4200;
+    double budgetAmount = 10000;
+    double progress = spentAmount / budgetAmount;
     final colorScheme = context.colors;
     return AppSection(
       sectionTitle: 'Budget Progress',
@@ -41,12 +44,15 @@ class BudgetProgressSection extends StatelessWidget {
                     spacing: 16,
                     children: [
                       BudgetProgressIndicator(
-                        progress: 0.42,
+                        progress: progress,
                         progressColor: Colors.green,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('42%', style: AppTextStyle.amountM),
+                            Text(
+                              '${(progress * 100).round()}%',
+                              style: AppTextStyle.amountM,
+                            ),
                             Text('of budget', style: AppTextStyle.labelS),
                           ],
                         ),
@@ -67,12 +73,16 @@ class BudgetProgressSection extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  4200.toCompactCurrency(kThreshold: 1000000),
+                                  spentAmount.toCompactCurrency(
+                                    kThreshold: 1000000,
+                                  ),
                                   style: AppTextStyle.amountM,
                                 ),
                                 Text(' spent of '),
                                 Text(
-                                  10000.toCompactCurrency(kThreshold: 1000000),
+                                  budgetAmount.toCompactCurrency(
+                                    kThreshold: 1000000,
+                                  ),
                                   style: TextStyle(
                                     fontFeatures: [
                                       FontFeature.tabularFigures(),
