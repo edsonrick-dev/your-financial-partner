@@ -30,6 +30,7 @@ class TabSwitcher extends StatelessWidget {
             ),
           )
         : AdaptivePressable(
+            onTap: onTap,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Container(

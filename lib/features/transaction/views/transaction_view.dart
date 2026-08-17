@@ -95,9 +95,7 @@ class TransactionView extends GetView<TransactionController> {
                         ? const SizedBox.shrink()
                         : Text(
                             formatGroupTotal(groupTotal),
-                            style: TextStyle(
-                              fontSize: 15,
-                              height: 20 / 15,
+                            style: AppTextStyle.amountM.copyWith(
                               color: groupTotal > 0 ? Colors.green : Colors.red,
                             ),
                           ),

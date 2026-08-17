@@ -175,7 +175,6 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   // ============================================================================
   // PORTFOLIO METRICS
   // ============================================================================
-
   /// Money immediately available for spending.
   ///
   /// Includes:
@@ -188,21 +187,18 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   /// • Credit Cards
   /// • Loans
   /// • Investments
-  /// • Assets
+  /// • Other Assets
   ///
   /// Rule:
-  /// AccountType.isPaymentAccount == true
-  /// AND
-  /// AccountType.flow == FlowDirection.positive
+  /// AccountType.group == AccountGroup.cashAndBank
   Stream<double> watchAvailableFunds() {
-    final positiveTypes = AccountType.values
-        .where((type) => type.flow == FlowDirection.positive)
-        .where((type) => type.group == AccountGroup.paymentAccount)
+    final cashAndBankTypes = AccountType.values
+        .where((type) => type.group == AccountGroup.cashAndBank)
         .map((type) => type.name)
         .toList();
 
     final query = select(accountsTable)
-      ..where((tbl) => tbl.accountType.isIn(positiveTypes));
+      ..where((tbl) => tbl.accountType.isIn(cashAndBankTypes));
 
     return query.watch().map((accounts) {
       return accounts.fold(0.0, (sum, account) => sum + account.currentValue);

@@ -6,12 +6,12 @@ import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class NetWorthSummaryContainerSection extends StatelessWidget {
-  const NetWorthSummaryContainerSection({super.key});
+  final double netWorth;
+  const NetWorthSummaryContainerSection({super.key, required this.netWorth});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    double amount = 1164500;
     double change = 0.028;
     bool isGrowth = change > 0 ? true : false;
     String comparison = 'last month';
@@ -41,7 +41,7 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  amount.toCurrency(),
+                  netWorth.toCurrency(),
                   style: AppTextStyle.amountXL.copyWith(
                     color: colorScheme.inversePrimary,
                   ),

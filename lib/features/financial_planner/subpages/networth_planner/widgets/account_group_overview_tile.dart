@@ -8,12 +8,17 @@ class AccountGroupOverviewTile extends StatelessWidget {
   final String type;
   final double amount;
   final double percentage;
+  final Color color;
+  final String percentageLabel;
+
   const AccountGroupOverviewTile({
     super.key,
     required this.type,
     required this.icon,
+    required this.color,
     this.amount = 0,
     required this.percentage,
+    required this.percentageLabel,
   });
 
   @override
@@ -35,19 +40,20 @@ class AccountGroupOverviewTile extends StatelessWidget {
                     height: 36,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: colorScheme.appInflow,
+                      color: color,
                     ),
                   ),
                 ),
-                Icon(icon, color: colorScheme.appInflow, size: 20),
+                Icon(icon, color: color, size: 20),
               ],
             ),
+
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(type, style: AppTextStyle.bodyM),
                 Text(
-                  '${(percentage * 100).toStringAsFixed(1)}% of Assets',
+                  '${(percentage * 100).toStringAsFixed(1)}% of $percentageLabel',
                   style: AppTextStyle.labelS.copyWith(
                     color: colorScheme.textMuted,
                   ),
@@ -56,9 +62,12 @@ class AccountGroupOverviewTile extends StatelessWidget {
             ),
           ],
         ),
-        Spacer(),
+
+        const Spacer(),
+
         Text(amount.toCurrency(), style: AppTextStyle.amountM),
-        SizedBox(width: 12),
+
+        const SizedBox(width: 12),
       ],
     );
   }

@@ -4,16 +4,19 @@ import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/sections/networth_summary_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_group_overview_tile.dart';
+import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
+import 'package:getx_drift_app/features/widgets/cards/account_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class NetworthPlannerScreen extends GetView<FinancialPlannerController> {
+class NetworthPlannerScreen extends GetView<NetWorthController> {
   const NetworthPlannerScreen({super.key});
 
   @override
@@ -24,7 +27,10 @@ class NetworthPlannerScreen extends GetView<FinancialPlannerController> {
         spacing: 12,
         children: [
           SizedBox(height: 12),
-          NetWorthSummaryContainerSection(),
+          Obx(
+            () =>
+                NetWorthSummaryContainerSection(netWorth: controller.netWorth),
+          ),
           AppSection(
             sectionTitle: 'Wealth Overview',
             trailingType: SectionTrailingType.textButton,
@@ -42,28 +48,46 @@ class NetworthPlannerScreen extends GetView<FinancialPlannerController> {
               child: Column(
                 spacing: 16,
                 children: [
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: colorScheme.bg,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: colorScheme.appBorder),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TabSwitcher(label: 'Assets', onTap: () {}),
-                          ),
-                          Expanded(
-                            child: TabSwitcher(
-                              label: 'Liabilities',
-                              isActive: false,
-                              onTap: () {},
+                  Obx(
+                    () => Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: colorScheme.bg,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: colorScheme.appBorder),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TabSwitcher(
+                                label: 'Assets',
+                                isActive:
+                                    controller.selectedView.value ==
+                                    BalanceSheetType.asset,
+                                onTap: () {
+                                  controller.selectBalanceSheetType(
+                                    BalanceSheetType.asset,
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: TabSwitcher(
+                                label: 'Liabilities',
+                                isActive:
+                                    controller.selectedView.value ==
+                                    BalanceSheetType.liability,
+                                onTap: () {
+                                  controller.selectBalanceSheetType(
+                                    BalanceSheetType.liability,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -75,90 +99,56 @@ class NetworthPlannerScreen extends GetView<FinancialPlannerController> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  Column(
-                    spacing: 12,
-                    children: [
-                      AccountGroupOverviewTile(
-                        icon: PhosphorIconsRegular.handDeposit,
-                        type: 'Receivables',
-                        amount: 300000,
-                        percentage: 0.342,
-                      ),
-                      AccountGroupOverviewTile(
-                        icon: PhosphorIconsRegular.warehouse,
-                        type: 'Tangible Properties',
-                        amount: 250000,
-                        percentage: 0.285,
-                      ),
-                      AccountGroupOverviewTile(
-                        icon: PhosphorIconsRegular.chartLine,
-                        type: 'Financial Instruments',
-                        amount: 177351.2,
-                        percentage: 0.202,
-                      ),
-                      AccountGroupOverviewTile(
-                        icon: PhosphorIconsRegular.money,
-                        type: 'Cash & Bank',
-                        amount: 88648.8,
-                        percentage: 0.101,
-                      ),
-                      AccountGroupOverviewTile(
-                        icon: PhosphorIconsRegular.handWithdraw,
-                        type: 'Intangible Properties',
-                        amount: 60000,
-                        percentage: 0.068,
-                      ),
-                    ],
-                  ),
+                  Obx(
+                    () => Column(
+                      spacing: 12,
+                      children: controller.displayedGroupTotals.entries.map((
+                        entry,
+                      ) {
+                        final group = entry.key;
+                        final amount = entry.value;
 
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(width: 80, child: Text('Assets')),
-                          Container(
-                            height: 8,
-                            width: 175,
-                            decoration: BoxDecoration(
-                              color: colorScheme.appInflow,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Text(876000.toCompactCurrency()),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(width: 80, child: Text('Liabilities')),
-                          Container(
-                            height: 8,
-                            width: 133,
-                            decoration: BoxDecoration(
-                              color: colorScheme.appOutflow,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Text(400000.toCompactCurrency()),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(width: 80, child: Text('Net Worth')),
-                          Container(
-                            height: 8,
-                            width: 143,
-                            decoration: BoxDecoration(
-                              color: colorScheme.appInfo,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Text(476000.toCompactCurrency()),
-                        ],
-                      ),
-                    ],
+                        return AccountGroupOverviewTile(
+                          icon: group.icon,
+                          type: group.label,
+                          amount: amount,
+                          percentage: controller.groupPercentage(group),
+                          color: group.color,
+                          percentageLabel:
+                              controller.selectedView.value ==
+                                  BalanceSheetType.asset
+                              ? 'Assets'
+                              : 'Liabilities',
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  Obx(
+                    () => Column(
+                      spacing: 8,
+                      children: [
+                        _WealthMetricRow(
+                          label: 'Assets',
+                          amount: controller.totalAssets,
+                          ratio: controller.assetRatio,
+                          color: colorScheme.appInflow,
+                        ),
+
+                        _WealthMetricRow(
+                          label: 'Liabilities',
+                          amount: controller.totalLiabilities,
+                          ratio: controller.liabilityRatio,
+                          color: colorScheme.appOutflow,
+                        ),
+
+                        _WealthMetricRow(
+                          label: 'Net Worth',
+                          amount: controller.netWorth,
+                          ratio: controller.netWorthRatio,
+                          color: colorScheme.appInfo,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -269,6 +259,51 @@ class NetworthPlannerScreen extends GetView<FinancialPlannerController> {
           // ),
         ],
       ),
+    );
+  }
+}
+
+class _WealthMetricRow extends StatelessWidget {
+  final String label;
+  final double amount;
+  final double ratio;
+  final Color color;
+
+  const _WealthMetricRow({
+    required this.label,
+    required this.amount,
+    required this.ratio,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(width: 80, child: Text(label)),
+
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  height: 8,
+                  width: constraints.maxWidth * ratio,
+                  decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+
+        const SizedBox(width: 8),
+
+        Text(amount.toCompactCurrency(), textAlign: TextAlign.right),
+      ],
     );
   }
 }

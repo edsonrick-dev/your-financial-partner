@@ -17,42 +17,7 @@ class FinancialStabilityDetailsSheet extends GetView<ProfileController> {
       title: 'Financial Stability Details',
       child: Column(
         children: [
-          SingleChildScrollView(
-            controller: controller.detailsScrollController,
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              spacing: 8,
-              children: [
-                const SizedBox(width: 16),
-
-                // ...controller.stabilityProfileDetails.asMap().entries.map((
-                //   entry,
-                // ) {
-                //   final index = entry.key;
-                //   final item = entry.value;
-
-                //   return FinancialStabilityScreenShifter(
-                //     title: item.title,
-                //     index: index,
-                //   );
-                // }),
-                ...controller.stabilityProfileDetails.asMap().entries.map((
-                  entry,
-                ) {
-                  final index = entry.key;
-                  final item = entry.value;
-
-                  return FinancialStabilityScreenShifter(
-                    key: controller.stabilityDetailKeys[index],
-                    title: item.title,
-                    index: index,
-                  );
-                }),
-
-                const SizedBox(width: 16),
-              ],
-            ),
-          ),
+          FinancialStabilityDetailPicker(),
 
           Expanded(
             child: Obx(() {
@@ -68,16 +33,36 @@ class FinancialStabilityDetailsSheet extends GetView<ProfileController> {
               return IndexedStack(index: index, children: pages);
             }),
           ),
-          // Expanded(
-          //   child: Obx(
-          //     () => IndexedStack(
-          //       index: controller.selectedDetailsIndex.value,
-          //       children: controller.stabilityProfileDetails
-          //           .map((e) => e.page)
-          //           .toList(),
-          //     ),
-          //   ),
-          // ),
+        ],
+      ),
+    );
+  }
+}
+
+class FinancialStabilityDetailPicker extends GetView<ProfileController> {
+  const FinancialStabilityDetailPicker({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      controller: controller.detailsScrollController,
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        spacing: 8,
+        children: [
+          const SizedBox(width: 16),
+          ...controller.stabilityProfileDetails.asMap().entries.map((entry) {
+            final index = entry.key;
+            final item = entry.value;
+
+            return FinancialStabilityScreenShifter(
+              key: controller.stabilityDetailKeys[index],
+              title: item.title,
+              index: index,
+            );
+          }),
+
+          const SizedBox(width: 16),
         ],
       ),
     );

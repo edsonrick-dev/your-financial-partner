@@ -5,6 +5,7 @@ import 'package:getx_drift_app/organize_THIS/add_payment_account_button.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_card.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/data/tables/accounts_table.dart';
 
 class PaymentAccountList extends StatelessWidget {
   final TransactionType transactionType;
@@ -35,24 +36,21 @@ class PaymentAccountList extends StatelessWidget {
         final accounts = snapshot.data ?? [];
 
         final filteredAccounts = accounts.where((account) {
-          /// ✅ EXCLUDE SAME ACCOUNT
           if (excludedAccountId != null && account.id == excludedAccountId) {
             return false;
           }
-          final type = AccountType.fromName(account.accountType);
 
-          /// Credit cards are only available for spending.
-          if (type == AccountType.creditCard &&
-              transactionType != TransactionType.spend) {
-            return false;
+          switch (transactionType) {
+            case TransactionType.spend:
+              return account.group == AccountGroup.cashAndBank ||
+                  account.group == AccountGroup.creditCards;
+
+            case TransactionType.earn:
+            case TransactionType.transfer:
+            case TransactionType.give:
+            case TransactionType.receive:
+              return account.group == AccountGroup.cashAndBank;
           }
-
-          /// ✅ EARN FILTER
-          if (transactionType == TransactionType.earn) {
-            return type.flow == FlowDirection.positive;
-          }
-
-          return true;
         }).toList();
 
         return ListView.builder(

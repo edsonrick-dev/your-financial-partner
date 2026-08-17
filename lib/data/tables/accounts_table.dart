@@ -4,15 +4,26 @@ import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_acco
 
 class AccountsTable extends Table {
   IntColumn get id => integer().autoIncrement()();
+
   TextColumn get name => text()();
+
   TextColumn get icon => text()();
+
   TextColumn get accountType => text()();
+
   RealColumn get currentValue => real().withDefault(const Constant(0))();
+
   BoolColumn get isSystem => boolean().withDefault(const Constant(false))();
 }
 
 extension AccountExtensions on AccountsTableData {
   AccountType get type => AccountType.fromName(accountType);
+
   AccountGroup get group => type.group;
-  FlowDirection get flow => type.flow;
+
+  bool get isAsset => type.isAsset;
+
+  bool get isLiability => type.isLiability;
+
+  BalanceSheetType get balanceSheetType => type.balanceSheetType;
 }

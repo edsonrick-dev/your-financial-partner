@@ -4,63 +4,116 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+
+enum BalanceSheetType { asset, liability }
 
 enum AccountGroup {
-  paymentAccount, // May include both assets and liabilities (credit card)
-  receivable,
-  payable,
-  tangibleProperty,
-  intangibleProperty,
-  loan,
+  cashAndBank(
+    label: 'Cash & Bank',
+    icon: PhosphorIconsRegular.money,
+    color: Color(0xFF00B85A),
+    balanceSheetType: BalanceSheetType.asset,
+  ),
+
+  receivable(
+    label: 'Receivables',
+    icon: PhosphorIconsRegular.handDeposit,
+    color: Color(0xFF1683FF),
+    balanceSheetType: BalanceSheetType.asset,
+  ),
+
+  tangibleProperty(
+    label: 'Tangible Properties',
+    icon: PhosphorIconsRegular.warehouse,
+    color: Color(0xFFFF9F0A),
+    balanceSheetType: BalanceSheetType.asset,
+  ),
+
+  intangibleProperty(
+    label: 'Intangible Properties',
+    icon: PhosphorIconsRegular.handWithdraw,
+    color: Color(0xFF8E5CF6),
+    balanceSheetType: BalanceSheetType.asset,
+  ),
+
+  creditCards(
+    label: 'Credit Cards',
+    icon: PhosphorIconsRegular.creditCard,
+    color: Color(0xFFFF3B30),
+    balanceSheetType: BalanceSheetType.liability,
+  ),
+
+  payable(
+    label: 'Payables',
+    icon: PhosphorIconsRegular.receipt,
+    color: Color(0xFFFF6B35),
+    balanceSheetType: BalanceSheetType.liability,
+  ),
+
+  loan(
+    label: 'Loans',
+    icon: PhosphorIconsRegular.bank,
+    color: Color(0xFF8E5CF6),
+    balanceSheetType: BalanceSheetType.liability,
+  );
+
+  final String label;
+  final PhosphorIconData icon;
+  final Color color;
+  final BalanceSheetType balanceSheetType;
+
+  const AccountGroup({
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.balanceSheetType,
+  });
+
+  bool get isAsset => balanceSheetType == BalanceSheetType.asset;
+
+  bool get isLiability => balanceSheetType == BalanceSheetType.liability;
 }
 
-enum FlowDirection { positive, negative }
-
 enum AccountType {
-  cash(
-    id: 'cash',
-    label: 'Cash',
-    group: AccountGroup.paymentAccount,
-    flow: FlowDirection.positive,
-  ),
+  cash(id: 'cash', label: 'Cash', group: AccountGroup.cashAndBank),
+
   savingsAccount(
     id: 'savingsAccount',
     label: 'Savings Account',
-    group: AccountGroup.paymentAccount,
-    flow: FlowDirection.positive,
+    group: AccountGroup.cashAndBank,
   ),
+
   checkingAccount(
     id: 'checkingAccount',
     label: 'Checking',
-    group: AccountGroup.paymentAccount,
-    flow: FlowDirection.positive,
+    group: AccountGroup.cashAndBank,
   ),
-  eWallet(
-    id: 'eWallet',
-    label: 'E-Wallet',
-    group: AccountGroup.paymentAccount,
-    flow: FlowDirection.positive,
-  ),
+
+  eWallet(id: 'eWallet', label: 'E-Wallet', group: AccountGroup.cashAndBank),
 
   creditCard(
     id: 'creditCard',
     label: 'Credit Card',
-    group: AccountGroup.paymentAccount,
-    flow: FlowDirection.negative,
+    group: AccountGroup.creditCards,
   );
 
-  // cash, savingsAccount, checkingAccount, eWallet, creditCard
-  final String label;
-  final FlowDirection flow;
-  final AccountGroup group;
   final String id;
+  final String label;
+  final AccountGroup group;
 
   const AccountType({
     required this.id,
     required this.label,
     required this.group,
-    required this.flow,
   });
+
+  bool get isAsset => group.isAsset;
+
+  bool get isLiability => group.isLiability;
+
+  BalanceSheetType get balanceSheetType => group.balanceSheetType;
+
   static AccountType fromName(String value) {
     return AccountType.values.firstWhere((e) => e.name == value);
   }
@@ -70,10 +123,17 @@ class CreateAccountController extends GetxController {
   CreateAccountController({required this.transactionType});
 
   final TransactionType transactionType;
+
   final RxString selectedIconKey = 'wallet'.obs;
+
   final Rx<AddButtonState> buttonState = AddButtonState.collapsed.obs;
+
   final nameFocusNode = FocusNode();
+
   final selectedAccountType = Rxn<AccountType>();
+
+  final TextEditingController nameController = TextEditingController();
+
   void selectAccountType(AccountType type) {
     selectedAccountType.value = type;
   }
@@ -89,20 +149,25 @@ class CreateAccountController extends GetxController {
   List<AccountType> get availableAccountTypes {
     switch (transactionType) {
       case TransactionType.earn:
-        return AccountType.values
-            .where((e) => e.flow == FlowDirection.positive)
-            .toList();
+        // Earning money must go into an asset account.
+        return AccountType.values.where((account) => account.isAsset).toList();
 
       case TransactionType.spend:
+        // Spending can use both assets and credit cards.
         return AccountType.values;
 
       case TransactionType.transfer:
+        // Transfers are only between asset/payment accounts.
         return AccountType.values
-            .where((e) => e != AccountType.creditCard)
+            .where((account) => account.group == AccountGroup.cashAndBank)
             .toList();
 
-      default:
-        return AccountType.values;
+      case TransactionType.give:
+      case TransactionType.receive:
+        // Give/receive use payment accounts for the actual money movement.
+        return AccountType.values
+            .where((account) => account.group == AccountGroup.cashAndBank)
+            .toList();
     }
   }
 
@@ -120,7 +185,6 @@ class CreateAccountController extends GetxController {
         name: name,
         icon: selectedIconKey.value,
         accountType: type.name,
-        // accountGroup: type.group.name,
       ),
     );
 
@@ -133,8 +197,14 @@ class CreateAccountController extends GetxController {
     return createdAccount;
   }
 
-  final TextEditingController nameController = TextEditingController();
   void selectIcon(String iconKey) {
     selectedIconKey.value = iconKey;
+  }
+
+  @override
+  void onClose() {
+    nameController.dispose();
+    nameFocusNode.dispose();
+    super.onClose();
   }
 }
