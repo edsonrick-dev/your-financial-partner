@@ -15,6 +15,10 @@ import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+class CashflowController extends GetxController {
+  final seletectedDetailsTabIndex = 0.obs;
+}
+
 class CashflowPlannerScreen extends GetView<FinancialPlannerController> {
   const CashflowPlannerScreen({super.key});
 

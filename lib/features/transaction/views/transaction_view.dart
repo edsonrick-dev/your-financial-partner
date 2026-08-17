@@ -91,7 +91,7 @@ class TransactionView extends GetView<TransactionController> {
                   AppSection(
                     sectionTitle: sectionTitle,
                     trailingType: SectionTrailingType.custom,
-                    sectionChild: groupTotal == 0
+                    trailingWidget: groupTotal == 0
                         ? const SizedBox.shrink()
                         : Text(
                             formatGroupTotal(groupTotal),

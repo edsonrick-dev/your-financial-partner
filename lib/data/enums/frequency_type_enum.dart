@@ -13,6 +13,34 @@ enum FrequencyType {
 }
 
 extension FrequencyTypeExtension on FrequencyType {
+  String get period {
+    switch (this) {
+      case FrequencyType.daily:
+        return 'day';
+
+      case FrequencyType.weekly:
+        return 'week';
+
+      case FrequencyType.biWeekly:
+        return 'twice a month';
+
+      case FrequencyType.fortnightly:
+        return 'two weeks';
+
+      case FrequencyType.monthly:
+        return 'month';
+
+      case FrequencyType.quarterly:
+        return 'quarter';
+
+      case FrequencyType.semiAnnual:
+        return '6 months';
+
+      case FrequencyType.annual:
+        return 'year';
+    }
+  }
+
   String get label {
     switch (this) {
       case FrequencyType.daily:
@@ -112,5 +140,35 @@ extension FrequencyTypeExtension on FrequencyType {
       default:
         return [];
     }
+  }
+
+  double toAnnual(double amount) {
+    switch (this) {
+      case FrequencyType.daily:
+        return amount * 365;
+      case FrequencyType.weekly:
+        return amount * 52;
+
+      case FrequencyType.biWeekly:
+        return amount * 26;
+      case FrequencyType.fortnightly:
+        return amount * 26;
+
+      case FrequencyType.monthly:
+        return amount * 12;
+
+      case FrequencyType.quarterly:
+        return amount * 4;
+
+      case FrequencyType.semiAnnual:
+        return amount * 2;
+
+      case FrequencyType.annual:
+        return amount;
+    }
+  }
+
+  double toMonthly(double amount) {
+    return toAnnual(amount) / 12;
   }
 }

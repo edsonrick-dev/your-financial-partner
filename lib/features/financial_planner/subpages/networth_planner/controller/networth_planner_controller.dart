@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class NetWorthController extends GetxController {
+  final seletectedDetailsTabIndex = 0.obs;
   double get assetRatio {
     final total = totalAssets + totalLiabilities;
 

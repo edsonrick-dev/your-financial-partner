@@ -18,7 +18,7 @@ class CashflowHistorySection extends GetView<HomeController> {
     return AppSection(
       sectionTitle: 'Cashflow History',
       trailingType: SectionTrailingType.custom,
-      sectionChild: Obx(() {
+      trailingWidget: Obx(() {
         return Row(
           children: [
             if (!controller.isCurrentMonth)

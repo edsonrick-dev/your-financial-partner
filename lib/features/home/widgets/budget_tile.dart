@@ -63,7 +63,7 @@ class BudgetTile extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

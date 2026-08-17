@@ -1,22 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:get/get.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/controller/insurance_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/widgets/protection_gap_details_header.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
 
-class CriticalIllnessDetailsView extends StatelessWidget {
+class CriticalIllnessDetailsView extends GetView<InsurancePlannerController> {
   const CriticalIllnessDetailsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // final colorScheme = context.colors;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Critical Illness Benefit Gap',
-          style: AppTextStyle.headlineL,
-        ),
+      body: Column(
+        children: [
+          AppDetailsHeader(
+            title: 'Critical Illness Benefit Gap',
+            child: ProtectionGapDetailsHeader(
+              severity: controller.criticalIllnessSeverity,
+              protectionNeed: controller.criticalIllnessNeed.value,
+              protectionSource: controller.criticalIllnessCovered.value,
+            ),
+          ),
+          AppDetailsPageActionSection(
+            selectedIndex: controller.selectedCriticalIllnessDetailsIndex,
+            actions: const [
+              'Needs', 'Sources',
+              // AppDetailsPageAction(
+              //   title: 'Needs',
+              //   page: _CriticalIllnessNeedsContent(),
+              // ),
+              // AppDetailsPageAction(
+              //   title: 'Sources',
+              //   page: _CriticalIllnessSourcesContent(),
+              // ),
+            ],
+            onAdd: () {
+              // Add source/need action
+            },
+          ),
+          // Light content goes here
+          // ProtectionGapSummaryCard(...)
+          // AppSection(...)
+          Expanded(
+            child: Obx(
+              () => IndexedStack(
+                index: controller.selectedCriticalIllnessDetailsIndex.value,
+                children: const [
+                  _CriticalIllnessNeedsContent(),
+                  _CriticalIllnessSourcesContent(),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-      body: SingleChildScrollView(child: Column(children: [          ],
-        )),
     );
+  }
+}
+
+class _CriticalIllnessNeedsContent extends StatelessWidget {
+  const _CriticalIllnessNeedsContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text('Needs content goes here.');
+  }
+}
+
+class _CriticalIllnessSourcesContent extends StatelessWidget {
+  const _CriticalIllnessSourcesContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text('Sources content goes here.');
   }
 }

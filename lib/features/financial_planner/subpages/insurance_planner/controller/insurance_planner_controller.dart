@@ -47,4 +47,8 @@ class InsurancePlannerController extends GetxController {
 
   // Protection score
   // calculations and severity classification
+
+  final selectedDisabilityDetailsIndex = 0.obs;
+  final selectedCriticalIllnessDetailsIndex = 0.obs;
+  final selectedDeathDetailsIndex = 0.obs;
 }

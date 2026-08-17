@@ -20,7 +20,7 @@ class ProfilePage extends GetView<ProfileController> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
-          spacing: 24,
+          spacing: 12,
           children: [
             //Personal Profile Section
             Column(

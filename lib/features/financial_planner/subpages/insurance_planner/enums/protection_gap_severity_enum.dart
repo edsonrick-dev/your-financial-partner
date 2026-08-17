@@ -37,13 +37,17 @@ extension ProtectionGapSeverityX on ProtectionGapSeverity {
     }
   }
 
+  Color get softColor {
+    return color.withValues(alpha: 0.0);
+  }
+
   String get label {
     switch (this) {
       case ProtectionGapSeverity.critical:
-        return 'Critical Gap';
+        return 'Protection Critical';
 
       case ProtectionGapSeverity.partial:
-        return 'Partial Coverage';
+        return 'Partially Covered';
 
       case ProtectionGapSeverity.covered:
         return 'Fully Covered';

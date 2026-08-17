@@ -56,24 +56,24 @@ class BillsCard extends StatelessWidget {
       return '';
     }
 
-    Color getDueDateColor(DateTime dueDate, BuildContext context) {
-      final now = DateTime.now();
+    // Color getDueDateColor(DateTime dueDate, BuildContext context) {
+    //   final now = DateTime.now();
 
-      final today = DateTime(now.year, now.month, now.day);
-      final due = DateTime(dueDate.year, dueDate.month, dueDate.day);
+    //   final today = DateTime(now.year, now.month, now.day);
+    //   final due = DateTime(dueDate.year, dueDate.month, dueDate.day);
 
-      final days = due.difference(today).inDays;
-      final colors = context.colors;
-      if (days <= 2) {
-        return colors.appError;
-      }
+    //   final days = due.difference(today).inDays;
+    //   final colors = context.colors;
+    //   if (days <= 2) {
+    //     return colors.appError;
+    //   }
 
-      if (days <= 7) {
-        return colors.appText;
-      }
+    //   if (days <= 7) {
+    //     return colors.appText;
+    //   }
 
-      return colors.appText;
-    }
+    //   return colors.appText;
+    // }
 
     final dueText = getDueText(dueDate);
     Color iconColor = colorScheme.appInfo;

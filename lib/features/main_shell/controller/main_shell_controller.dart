@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/features/financial_planner/financial_planner_screen.dart';
 import 'package:getx_drift_app/features/home/views/home_view.dart';
 import 'package:getx_drift_app/features/profile/profile_page_view.dart';
-import 'package:getx_drift_app/features/settings/settings_page_view.dart';
 import 'package:getx_drift_app/features/transaction/views/transaction_view.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 

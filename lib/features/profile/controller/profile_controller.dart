@@ -13,7 +13,6 @@ import 'package:getx_drift_app/features/profile/views/sheet/details/emergency_fu
 import 'package:getx_drift_app/features/profile/views/sheet/details/lifestyle_coverage_details.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/details/stability_level_details.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/details/wealth_building_details_sheet.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class FinancialStabilityDetail {
   final String title;

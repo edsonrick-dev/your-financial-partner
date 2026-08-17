@@ -10,7 +10,6 @@ import 'package:getx_drift_app/data/models/cashflow_plan_model.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
-import 'package:getx_drift_app/features/balances/views/people_balances_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/cashflow_planner_screen.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/services/cashflow_projection_service.dart';
 import 'package:getx_drift_app/features/financial_planner/models/financial_planner_page_model.dart';

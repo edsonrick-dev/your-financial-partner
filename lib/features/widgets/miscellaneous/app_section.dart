@@ -5,7 +5,7 @@ import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 class AppSection extends StatelessWidget {
   final SectionTrailingType? trailingType;
   final Widget child;
-  final Widget? sectionChild;
+  final Widget? trailingWidget;
   final String? sectionTitle;
   final String? trailingText;
   final VoidCallback? onTrailingPressed;
@@ -13,7 +13,7 @@ class AppSection extends StatelessWidget {
 
   const AppSection({
     required this.child,
-    this.sectionChild,
+    this.trailingWidget,
     this.sectionTitle,
     this.trailingText,
     this.onTrailingPressed,
@@ -36,7 +36,7 @@ class AppSection extends StatelessWidget {
             sectionTitle: sectionTitle!,
             onTrailingPressed: onTrailingPressed,
             trailingType: trailingType,
-            child: sectionChild,
+            child: trailingWidget,
           ),
         isHorizontalScrolling
             ? SingleChildScrollView(
