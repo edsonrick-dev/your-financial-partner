@@ -4,14 +4,14 @@ class DefaultAccount {
   final String name;
   final String iconKey;
   final AccountType type;
-  final double currentValue;
+  final double availableFund;
   final bool isSystem;
 
   const DefaultAccount({
     required this.name,
     required this.iconKey,
     required this.type,
-    this.currentValue = 0,
+    this.availableFund = 0,
     this.isSystem = false,
   });
 }
@@ -22,21 +22,21 @@ class DefaultAccounts {
       name: 'Cash Wallet',
       iconKey: 'wallet',
       type: AccountType.cash,
-      currentValue: 3250.00,
+      availableFund: 3250.00,
       isSystem: true,
     ),
     DefaultAccount(
       name: 'Emergency Cash',
       iconKey: 'wallet',
       type: AccountType.cash,
-      currentValue: 10000.00,
+      availableFund: 10000.00,
       isSystem: true,
     ),
     DefaultAccount(
       name: 'BPI Savings Account',
       iconKey: 'wallet',
       type: AccountType.savingsAccount,
-      currentValue: 48720.35,
+      availableFund: 48720.35,
       isSystem: true,
     ),
 
@@ -44,33 +44,48 @@ class DefaultAccounts {
       name: 'BDO Checking',
       iconKey: 'wallet',
       type: AccountType.checkingAccount,
-      currentValue: 22145.8,
+      availableFund: 22145.8,
       isSystem: true,
     ),
     DefaultAccount(
       name: 'Maya Wallet',
       iconKey: 'wallet',
       type: AccountType.eWallet,
-      currentValue: 2890.15,
+      availableFund: 2890.15,
       isSystem: true,
     ),
     DefaultAccount(
       name: 'GCash',
       iconKey: 'wallet',
       type: AccountType.eWallet,
-      currentValue: 1642.5,
+      availableFund: 1642.5,
       isSystem: true,
     ),
   ];
   static final liabilityAccounts = [
     DefaultAccount(
-      name: 'Credit Card',
+      name: 'BPI Blue MasterCard',
       iconKey: 'wallet',
       type: AccountType.creditCard,
+      availableFund: 87154.4,
+      isSystem: true,
+    ),
+    DefaultAccount(
+      name: 'UnionBank Rewards Visa',
+      iconKey: 'wallet',
+      type: AccountType.creditCard,
+      availableFund: 56714.25,
+      isSystem: true,
+    ),
+    DefaultAccount(
+      name: 'Security Bank Gold',
+      iconKey: 'wallet',
+      type: AccountType.creditCard,
+      availableFund: 125149.6,
       isSystem: true,
     ),
   ];
-  static var all = [...assetAccounts];
+  static var all = [...assetAccounts, ...liabilityAccounts];
 }
 
 enum NetWorthType { asset, liability }

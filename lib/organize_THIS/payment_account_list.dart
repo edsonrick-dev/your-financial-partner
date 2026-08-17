@@ -41,6 +41,12 @@ class PaymentAccountList extends StatelessWidget {
           }
           final type = AccountType.fromName(account.accountType);
 
+          /// Credit cards are only available for spending.
+          if (type == AccountType.creditCard &&
+              transactionType != TransactionType.spend) {
+            return false;
+          }
+
           /// ✅ EARN FILTER
           if (transactionType == TransactionType.earn) {
             return type.flow == FlowDirection.positive;

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/enums/protection_gap_severity_enum.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 
 class ProtectionGapCard extends StatelessWidget {
   final IconData icon;
-  final Color color;
   final String gapTitle;
   final double amountCovered;
   final double amountNeed;
@@ -15,7 +15,6 @@ class ProtectionGapCard extends StatelessWidget {
   const ProtectionGapCard({
     super.key,
     required this.icon,
-    required this.color,
     required this.gapTitle,
     required this.amountCovered,
     required this.amountNeed,
@@ -52,10 +51,20 @@ class ProtectionGapCard extends StatelessWidget {
     final severityColor = severity.color;
     return AdaptivePressable(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
       child: Container(
         padding: const EdgeInsets.all(8),
         constraints: const BoxConstraints(minHeight: 44),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: colorScheme.bgLight,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
         child: Row(
           children: [
             Stack(
@@ -162,205 +171,5 @@ class ProtectionGapCard extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-enum ProtectionGapSeverity { critical, partial, covered }
-
-ProtectionGapSeverity getProtectionGapSeverity({
-  required double amountCovered,
-  required double amountNeed,
-}) {
-  if (amountNeed <= 0) {
-    return ProtectionGapSeverity.critical;
-  }
-
-  final coverage = (amountCovered / amountNeed * 100).clamp(0, 100);
-
-  if (coverage >= 95) {
-    return ProtectionGapSeverity.covered;
-  }
-
-  if (coverage >= 50) {
-    return ProtectionGapSeverity.partial;
-  }
-
-  return ProtectionGapSeverity.critical;
-}
-
-extension ProtectionGapSeverityX on ProtectionGapSeverity {
-  Color get color {
-    switch (this) {
-      case ProtectionGapSeverity.critical:
-        return const Color(0xFFDC2626);
-
-      case ProtectionGapSeverity.partial:
-        return const Color(0xFFEA580C);
-
-      case ProtectionGapSeverity.covered:
-        return const Color(0xFF059669);
-    }
-  }
-
-  String get label {
-    switch (this) {
-      case ProtectionGapSeverity.critical:
-        return 'Critical Gap';
-
-      case ProtectionGapSeverity.partial:
-        return 'Partial Coverage';
-
-      case ProtectionGapSeverity.covered:
-        return 'Fully Covered';
-    }
-  }
-}
-
-class ProtectionScore {
-  final String title;
-  final String description;
-  final Color color;
-
-  const ProtectionScore({
-    required this.title,
-    required this.description,
-    required this.color,
-  });
-
-  static const financiallySecured = ProtectionScore(
-    title: 'Financially Secured',
-    description: 'All essential protection goals are covered.',
-    color: Color(0xFF16A34A),
-  );
-
-  static const almostSecured = ProtectionScore(
-    title: 'Almost Secured',
-    description: 'Your protection is strong with only minor gaps.',
-    color: Color(0xFFCA8A04),
-  );
-
-  static const moderatelyProtected = ProtectionScore(
-    title: 'Moderately Protected',
-    description:
-        'Your protection is established but still has room to improve.',
-    color: Color(0xFFCA8A04),
-  );
-
-  static const unevenProtection = ProtectionScore(
-    title: 'Uneven Protection',
-    description:
-        'Some protection areas are strong while others remain exposed.',
-    color: Color(0xFFF97316),
-  );
-
-  static const vulnerableCoverage = ProtectionScore(
-    title: 'Vulnerable Coverage',
-    description: 'Your protection has significant gaps across key areas.',
-    color: Color(0xFFF97316),
-  );
-
-  static const financiallyExposed = ProtectionScore(
-    title: 'Financially Exposed',
-    description: 'Your protection is insufficient across all key areas.',
-    color: Color(0xFFDC2626),
-  );
-}
-
-enum ProtectionProfile {
-  financiallySecured,
-  almostSecured,
-  moderatelyProtected,
-  unevenProtection,
-  vulnerableCoverage,
-  financiallyExposed,
-}
-
-ProtectionProfile getProtectionProfile(List<ProtectionGapSeverity> severities) {
-  if (severities.length != 3) {
-    throw ArgumentError('Exactly 3 protection severities are required.');
-  }
-
-  final criticalCount = severities
-      .where((s) => s == ProtectionGapSeverity.critical)
-      .length;
-
-  final partialCount = severities
-      .where((s) => s == ProtectionGapSeverity.partial)
-      .length;
-
-  final coveredCount = severities
-      .where((s) => s == ProtectionGapSeverity.covered)
-      .length;
-
-  if (coveredCount == 3) {
-    return ProtectionProfile.financiallySecured;
-  }
-
-  if (criticalCount == 3) {
-    return ProtectionProfile.financiallyExposed;
-  }
-
-  if (partialCount == 3) {
-    return ProtectionProfile.moderatelyProtected;
-  }
-
-  if (criticalCount > 0 && partialCount > 0 && coveredCount > 0) {
-    return ProtectionProfile.unevenProtection;
-  }
-
-  if (criticalCount > 0 && partialCount > 0) {
-    return ProtectionProfile.vulnerableCoverage;
-  }
-
-  if (coveredCount > 0 && partialCount > 0) {
-    return ProtectionProfile.almostSecured;
-  }
-
-  if (criticalCount > 0 && coveredCount > 0) {
-    return ProtectionProfile.unevenProtection;
-  }
-
-  return ProtectionProfile.moderatelyProtected;
-}
-
-extension ProtectionProfileX on ProtectionProfile {
-  String get title {
-    switch (this) {
-      case ProtectionProfile.financiallySecured:
-        return 'Financially Secured';
-
-      case ProtectionProfile.almostSecured:
-        return 'Almost Secured';
-
-      case ProtectionProfile.moderatelyProtected:
-        return 'Moderately Protected';
-
-      case ProtectionProfile.unevenProtection:
-        return 'Uneven Protection';
-
-      case ProtectionProfile.vulnerableCoverage:
-        return 'Vulnerable Coverage';
-
-      case ProtectionProfile.financiallyExposed:
-        return 'Financially Exposed';
-    }
-  }
-
-  Color get color {
-    switch (this) {
-      case ProtectionProfile.financiallySecured:
-        return const Color(0xFF16A34A);
-
-      case ProtectionProfile.almostSecured:
-      case ProtectionProfile.moderatelyProtected:
-        return const Color(0xFFCA8A04);
-
-      case ProtectionProfile.unevenProtection:
-      case ProtectionProfile.vulnerableCoverage:
-        return const Color(0xFFF97316);
-
-      case ProtectionProfile.financiallyExposed:
-        return const Color(0xFFDC2626);
-    }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/widgets/protection_gap_card.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/enums/protection_profile_enum.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class ProtectionScoreContainerSection extends StatelessWidget {

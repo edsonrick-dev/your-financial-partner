@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/widgets/protection_gap_card.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/enums/protection_gap_severity_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/enums/protection_profile_enum.dart';
 
 class InsurancePlannerController extends GetxController {
   // Protection amounts

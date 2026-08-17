@@ -2,14 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
+import 'package:getx_drift_app/data/tables/transactions_table.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/transaction_card_shell.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
-
+import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import '../controllers/transaction_controller.dart';
 
 class TransactionView extends GetView<TransactionController> {
   const TransactionView({super.key});
+  double calculateGroupTotal(List<TransactionWithDetails> transactions) {
+    return transactions.fold<double>(0, (total, item) {
+      switch (item.transaction.type) {
+        case TransactionType.earn:
+        case TransactionType.receive:
+          return total + item.transaction.amount;
+
+        case TransactionType.spend:
+        case TransactionType.give:
+          return total - item.transaction.amount;
+
+        case TransactionType.transfer:
+          // Transfers are between your own accounts,
+          // so they have no effect on net cash flow.
+          return total;
+      }
+    });
+  }
+
+  String formatGroupTotal(double total) {
+    if (total == 0) return '';
+
+    final amount = total.abs().toCurrency();
+
+    // if (total > 0) {
+    //   return '+$amount';
+    // }
+
+    return amount;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +83,24 @@ class TransactionView extends GetView<TransactionController> {
             children: groupedTransactions.entries.map((entry) {
               final sectionTitle = entry.key;
               final transactions = entry.value;
-
+              final groupTotal = calculateGroupTotal(transactions);
               return Column(
                 spacing: cardsSpacing,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppSection(
                     sectionTitle: sectionTitle,
+                    trailingType: SectionTrailingType.custom,
+                    sectionChild: groupTotal == 0
+                        ? const SizedBox.shrink()
+                        : Text(
+                            formatGroupTotal(groupTotal),
+                            style: TextStyle(
+                              fontSize: 15,
+                              height: 20 / 15,
+                              color: groupTotal > 0 ? Colors.green : Colors.red,
+                            ),
+                          ),
                     child: Column(
                       spacing: cardsSpacing,
                       children: transactions

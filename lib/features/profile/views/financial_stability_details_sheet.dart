@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/widgets/cashflow_planner_page_shifter.dart';
 import 'package:getx_drift_app/features/profile/controller/profile_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
