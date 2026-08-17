@@ -8,6 +8,12 @@ import 'package:getx_drift_app/features/profile/financial_ratios/wealth_building
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
 import 'package:getx_drift_app/features/profile/models/financial_stability_score_model.dart';
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/features/profile/views/sheet/details/debt_load_details.dart';
+import 'package:getx_drift_app/features/profile/views/sheet/details/emergency_fund_details.dart';
+import 'package:getx_drift_app/features/profile/views/sheet/details/lifestyle_coverage_details.dart';
+import 'package:getx_drift_app/features/profile/views/sheet/details/stability_level_details.dart';
+import 'package:getx_drift_app/features/profile/views/sheet/details/wealth_building_details_sheet.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class FinancialStabilityDetail {
   final String title;
@@ -108,27 +114,30 @@ class ProfileController extends GetxController {
     );
   }
 
-  final stabilityProfileDetails = [
-    FinancialStabilityDetail(title: 'Stability Level', page: const Column()),
+  List<FinancialStabilityDetail> get stabilityProfileDetails => [
     FinancialStabilityDetail(
-      title: 'Debt Load',
+      title: 'Stability Level',
+      page: StabilityLevelDetails(stability: stability),
+    ),
+    FinancialStabilityDetail(
+      title: FinancialRatioType.debtLoad.displayName,
       ratioType: FinancialRatioType.debtLoad,
-      page: const Column(),
+      page: DebtLoadDetails(ratio: debtLoad),
     ),
     FinancialStabilityDetail(
-      title: 'Wealth Building',
+      title: FinancialRatioType.wealthBuilding.displayName,
       ratioType: FinancialRatioType.wealthBuilding,
-      page: const Column(),
+      page: WealthBuildingDetailsSheet(ratio: wealthBuilding),
     ),
     FinancialStabilityDetail(
-      title: 'Emergency Fund',
+      title: FinancialRatioType.emergencyFund.displayName,
       ratioType: FinancialRatioType.emergencyFund,
-      page: const Column(),
+      page: EmergencyFundDetails(ratio: emergencyFund),
     ),
     FinancialStabilityDetail(
-      title: 'Lifestyle Coverage',
+      title: FinancialRatioType.lifestyleCoverage.displayName,
       ratioType: FinancialRatioType.lifestyleCoverage,
-      page: const Column(),
+      page: LifestyleCoverageDetails(ratio: lifestyleCoverage),
     ),
   ];
   int getDetailIndex(FinancialRatioType ratioType) {

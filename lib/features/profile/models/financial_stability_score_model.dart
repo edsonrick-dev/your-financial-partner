@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-enum FinancialStabilityLevel { unstable, early, partial, good, excellent }
+import 'package:getx_drift_app/features/profile/enum/financial_stability_level.dart';
 
 class FinancialStability {
   final FinancialStabilityLevel level;
