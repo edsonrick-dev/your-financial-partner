@@ -52,15 +52,24 @@ class AppDatabase extends _$AppDatabase {
     },
 
     onUpgrade: (m, from, to) async {
-      await m.deleteTable('financial_obligations_table');
-      await m.deleteTable('transaction_participants_table');
+      if (from < 6) {
+        await m.deleteTable('financial_obligations_table');
+        await m.deleteTable('transaction_participants_table');
 
-      await m.createTable(financialObligationsTable);
-      await m.createTable(transactionParticipantsTable);
+        await m.createTable(financialObligationsTable);
+        await m.createTable(transactionParticipantsTable);
+      }
+
+      if (from < 7) {
+        await m.addColumn(accountsTable, accountsTable.creditLimit);
+      }
+      if (from < 8) {
+        await m.addColumn(accountsTable, accountsTable.initialBalance);
+      }
     },
   );
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 8;
 
   Future<List<CashFlowPlan>> getCashFlowPlans() async {
     final rows = await select(cashflowPlansTable).get();
@@ -410,7 +419,7 @@ class AppDatabase extends _$AppDatabase {
           (account) => AccountsTableCompanion.insert(
             name: account.name,
             icon: account.iconKey,
-            currentValue: Value(account.availableFund),
+            currentValue: Value(account.currentValue),
             // accountGroup: account.group,
             accountType: account.type.name,
           ),

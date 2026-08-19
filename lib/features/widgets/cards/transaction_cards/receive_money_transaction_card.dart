@@ -53,7 +53,7 @@ class ReceiveMoneyTransactionCard extends GetView<TransactionController> {
           );
 
           if (confirmed == true) {
-            await controller.deleteTransactionWithBalanceUpdate(item);
+            await controller.deleteTransaction(item);
           }
         },
         child: Container(

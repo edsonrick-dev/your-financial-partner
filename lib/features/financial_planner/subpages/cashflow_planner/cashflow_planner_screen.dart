@@ -5,6 +5,7 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sections/cashflow_summary_container_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_overview_tile.dart';
 import 'package:getx_drift_app/features/home/views/section_views/cashflow_history_section.dart';
@@ -15,11 +16,7 @@ import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class CashflowController extends GetxController {
-  final seletectedDetailsTabIndex = 0.obs;
-}
-
-class CashflowPlannerScreen extends GetView<FinancialPlannerController> {
+class CashflowPlannerScreen extends GetView<CashflowController> {
   const CashflowPlannerScreen({super.key});
 
   @override

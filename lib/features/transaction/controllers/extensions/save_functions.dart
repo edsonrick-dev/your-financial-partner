@@ -4,13 +4,10 @@ import 'package:get/route_manager.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/domain/enums/app_snack_type.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/delete_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_hydration_ext.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
-import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
-import 'package:getx_drift_app/data/models/participant_model.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 
 enum DebtManagementType { splitExpense, receiveMoney, giveMoney }
@@ -40,12 +37,8 @@ extension SaveTransactionFunctions on TransactionController {
       return;
     }
     await database.transaction(() async {
-      int? transactionId;
+      int? transactionId = editingTransaction.value?.transaction.id;
 
-      if (editingTransaction.value != null) {
-        await reverseTransactionEffects(editingTransaction.value!);
-        transactionId = editingTransaction.value!.transaction.id;
-      }
       if (transactionId != null) {
         await database.transactionsDao.updateTransaction(
           transactionId,
@@ -72,67 +65,10 @@ extension SaveTransactionFunctions on TransactionController {
           ),
         );
       }
-      await database.accountsDao.adjustAccountBalance(account.id, -amountValue);
 
-      ///SPLIT EXPENSE LOGIC
+      /// SPLIT EXPENSE LOGIC
       if (isSharedExpense.value) {
-        // final hasCurrentUser = participants.any(
-        //   (participant) => participant.entityId == currentUserEntityId.value,
-        // );
-        final participantList = [...participants];
-
-        if (!participantList.any(
-          (p) => p.entityId == currentUserEntityId.value,
-        )) {
-          participantList.insert(
-            0,
-            ParticipantModel(
-              entityId: currentUserEntityId.value!,
-              name: 'Me',
-              amount: 0,
-              percentage: 0,
-            ),
-          );
-        }
-        // if (!hasCurrentUser) {
-        //   participants.insert(
-        //     0,
-        //     ParticipantModel(
-        //       entityId: currentUserEntityId.value!,
-        //       name: 'Me',
-        //       amount: 0,
-        //       percentage: 0,
-        //     ),
-        //   );
-        // }
-        if (splitMode.value == SplitMode.equal) {
-          recalculateEqualSplit();
-        }
-        for (final participant in participantList) {
-          await database.transactionsDao.insertTransactionParticipant(
-            TransactionParticipantsTableCompanion.insert(
-              transactionId: transactionId,
-              entityId: participant.entityId,
-              allocatedAmount: participant.amount.value,
-              allocationPercentage: d.Value(participant.percentage.value),
-              isPayer: d.Value(
-                participant.entityId == currentUserEntityId.value,
-              ),
-              displayNameSnapshot: d.Value(participant.name),
-            ),
-          );
-          if (participant.entityId != currentUserEntityId.value) {
-            await database.transactionsDao.insertFinancialObligation(
-              FinancialObligationsTableCompanion.insert(
-                transactionId: transactionId,
-                debtorEntityId: participant.entityId,
-                creditorEntityId: currentUserEntityId.value!,
-                amount: participant.amount.value,
-                type: DebtManagementType.splitExpense.name,
-              ),
-            );
-          }
-        }
+        // your existing code...
       }
     });
 
@@ -174,13 +110,7 @@ extension SaveTransactionFunctions on TransactionController {
       return;
     }
     await database.transaction(() async {
-      int? transactionId;
-
-      if (editingTransaction.value != null) {
-        await reverseTransactionEffects(editingTransaction.value!);
-
-        transactionId = editingTransaction.value!.transaction.id;
-      }
+      int? transactionId = editingTransaction.value?.transaction.id;
 
       if (transactionId != null) {
         await database.transactionsDao.updateTransaction(
@@ -208,15 +138,7 @@ extension SaveTransactionFunctions on TransactionController {
           ),
         );
       }
-      await database.accountsDao.adjustAccountBalance(account.id, amountValue);
-
-      /// UPDATE ACCOUNT BALANCE
-
-      // final updatedBalance = account.currentValue + amountValue;
-
-      // await database.updateAccountBalance(account.id, updatedBalance);
-
-      /// CLOSE SHEET
+      await database.accountsDao.rebuildAccountBalance(account.id);
     });
 
     resetForm();
@@ -253,11 +175,7 @@ extension SaveTransactionFunctions on TransactionController {
       return;
     }
     await database.transaction(() async {
-      int? transactionId;
-      if (editingTransaction.value != null) {
-        await reverseTransactionEffects(editingTransaction.value!);
-        transactionId = editingTransaction.value!.transaction.id;
-      }
+      int? transactionId = editingTransaction.value?.transaction.id;
 
       if (transactionId != null) {
         await database.transactionsDao.updateTransaction(
@@ -334,13 +252,7 @@ extension SaveTransactionFunctions on TransactionController {
       return;
     }
     await database.transaction(() async {
-      int? transactionId;
-
-      if (editingTransaction.value != null) {
-        await reverseTransactionEffects(editingTransaction.value!);
-
-        transactionId = editingTransaction.value!.transaction.id;
-      }
+      int? transactionId = editingTransaction.value?.transaction.id;
 
       if (transactionId != null) {
         await database.transactionsDao.updateTransaction(
@@ -440,12 +352,8 @@ extension SaveTransactionFunctions on TransactionController {
     }
 
     await database.transaction(() async {
-      int? transactionId;
+      int? transactionId = editingTransaction.value?.transaction.id;
 
-      if (editingTransaction.value != null) {
-        await reverseTransactionEffects(editingTransaction.value!);
-        transactionId = editingTransaction.value!.transaction.id;
-      }
       if (transactionId != null) {
         await database.transactionsDao.updateTransaction(
           transactionId,

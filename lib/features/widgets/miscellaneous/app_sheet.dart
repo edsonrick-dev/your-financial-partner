@@ -11,49 +11,52 @@ class AppSheet extends StatelessWidget {
     required this.child,
     required this.title,
     this.height = AppSheetHeight.semiFull,
+    this.adaptiveHeight = false,
+    this.minHeight = 300,
   });
 
   final String title;
   final Widget child;
   final double height;
+  final bool adaptiveHeight;
+  final double minHeight;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    return FractionallySizedBox(
-      heightFactor: height,
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: AppBorderRadius.sheetTop,
-          ),
 
-          child: SafeArea(
-            bottom: false,
-            child: Column(
-              // mainAxisSize: MainAxisSize.min,
-              spacing: 8,
-              children: [
-                /// Header
-                Column(
-                  children: [
-                    AppGrabber(),
-                    AppToolbar(title: title),
-                  ],
-                ),
-                Expanded(child: child),
+    final content = Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: AppBorderRadius.sheetTop,
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          mainAxisSize: adaptiveHeight ? MainAxisSize.min : MainAxisSize.max,
+          children: [
+            AppGrabber(),
+            AppToolbar(title: title),
 
-                // const SizedBox(height: 12),
-              ],
-            ),
-          ),
+            if (adaptiveHeight)
+              Flexible(fit: FlexFit.loose, child: child)
+            else
+              Expanded(child: child),
+          ],
         ),
       ),
     );
+
+    if (adaptiveHeight) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: minHeight,
+          maxHeight: MediaQuery.sizeOf(context).height * height,
+        ),
+        child: content,
+      );
+    }
+
+    return FractionallySizedBox(heightFactor: height, child: content);
   }
 }

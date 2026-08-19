@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:getx_drift_app/app/globals/app_globals.dart';
-import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/add_button_state.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 enum BalanceSheetType { asset, liability }
@@ -76,36 +71,51 @@ enum AccountGroup {
 }
 
 enum AccountType {
-  cash(id: 'cash', label: 'Cash', group: AccountGroup.cashAndBank),
+  cash(
+    id: 'cash',
+    label: 'Cash Wallet',
+    group: AccountGroup.cashAndBank,
+    iconKey: 'money',
+  ),
 
   savingsAccount(
     id: 'savingsAccount',
     label: 'Savings Account',
     group: AccountGroup.cashAndBank,
+    iconKey: 'bank',
   ),
 
   checkingAccount(
     id: 'checkingAccount',
-    label: 'Checking',
+    label: 'Checking Account',
     group: AccountGroup.cashAndBank,
+    iconKey: 'bank',
   ),
 
-  eWallet(id: 'eWallet', label: 'E-Wallet', group: AccountGroup.cashAndBank),
+  eWallet(
+    id: 'eWallet',
+    label: 'E-Wallet',
+    group: AccountGroup.cashAndBank,
+    iconKey: 'device-mobile',
+  ),
 
   creditCard(
     id: 'creditCard',
     label: 'Credit Card',
     group: AccountGroup.creditCards,
+    iconKey: 'creditCard',
   );
 
   final String id;
   final String label;
   final AccountGroup group;
+  final String iconKey;
 
   const AccountType({
     required this.id,
     required this.label,
     required this.group,
+    required this.iconKey,
   });
 
   bool get isAsset => group.isAsset;
@@ -116,95 +126,5 @@ enum AccountType {
 
   static AccountType fromName(String value) {
     return AccountType.values.firstWhere((e) => e.name == value);
-  }
-}
-
-class CreateAccountController extends GetxController {
-  CreateAccountController({required this.transactionType});
-
-  final TransactionType transactionType;
-
-  final RxString selectedIconKey = 'wallet'.obs;
-
-  final Rx<AddButtonState> buttonState = AddButtonState.collapsed.obs;
-
-  final nameFocusNode = FocusNode();
-
-  final selectedAccountType = Rxn<AccountType>();
-
-  final TextEditingController nameController = TextEditingController();
-
-  void selectAccountType(AccountType type) {
-    selectedAccountType.value = type;
-  }
-
-  void expandButton() {
-    buttonState.value = AddButtonState.expanded;
-  }
-
-  void collapseButton() {
-    buttonState.value = AddButtonState.collapsed;
-  }
-
-  List<AccountType> get availableAccountTypes {
-    switch (transactionType) {
-      case TransactionType.earn:
-        // Earning money must go into an asset account.
-        return AccountType.values.where((account) => account.isAsset).toList();
-
-      case TransactionType.spend:
-        // Spending can use both assets and credit cards.
-        return AccountType.values;
-
-      case TransactionType.transfer:
-        // Transfers are only between asset/payment accounts.
-        return AccountType.values
-            .where((account) => account.group == AccountGroup.cashAndBank)
-            .toList();
-
-      case TransactionType.give:
-      case TransactionType.receive:
-        // Give/receive use payment accounts for the actual money movement.
-        return AccountType.values
-            .where((account) => account.group == AccountGroup.cashAndBank)
-            .toList();
-    }
-  }
-
-  Future<AccountsTableData?> saveAccount() async {
-    final name = nameController.text.trim();
-
-    if (name.isEmpty) return null;
-
-    final type = selectedAccountType.value;
-
-    if (type == null) return null;
-
-    final insertedId = await database.accountsDao.insertAccount(
-      AccountsTableCompanion.insert(
-        name: name,
-        icon: selectedIconKey.value,
-        accountType: type.name,
-      ),
-    );
-
-    final createdAccount = await (database.select(
-      database.accountsTable,
-    )..where((tbl) => tbl.id.equals(insertedId))).getSingleOrNull();
-
-    collapseButton();
-
-    return createdAccount;
-  }
-
-  void selectIcon(String iconKey) {
-    selectedIconKey.value = iconKey;
-  }
-
-  @override
-  void onClose() {
-    nameController.dispose();
-    nameFocusNode.dispose();
-    super.onClose();
   }
 }

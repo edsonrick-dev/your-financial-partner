@@ -10,7 +10,7 @@ import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_other_transactions.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_payment_account_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_person_sheet.dart';
-import 'package:getx_drift_app/features/sheets/selection_sheets/select_type_payment_account_sheet.dart';
+import 'package:getx_drift_app/features/sheets/selection_sheets/select_payment_account_type_sheet.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 

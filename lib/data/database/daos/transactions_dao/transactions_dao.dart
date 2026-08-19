@@ -97,6 +97,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
             break;
 
           case TransactionType.transfer:
+          case TransactionType.balanceUpdate:
             break;
         }
       }
@@ -140,6 +141,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
             break;
 
           case TransactionType.transfer:
+          case TransactionType.balanceUpdate:
             // Internal movement only
             break;
         }
@@ -519,4 +521,61 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
 
     return result;
   }
+
+  Stream<Map<String, List<TransactionWithDetails>>>
+  watchGroupedTransactionsForAccount(int accountId) {
+    return watchTransactions().map((transactions) {
+      final accountTransactions = transactions
+          .where((item) => item.transaction.accountId == accountId)
+          .toList();
+
+      final grouped = <DateTime, List<TransactionWithDetails>>{};
+
+      for (final item in accountTransactions) {
+        final date = item.transaction.date;
+
+        final normalizedDate = DateTime(date.year, date.month, date.day);
+
+        grouped.putIfAbsent(normalizedDate, () => []);
+
+        grouped[normalizedDate]!.add(item);
+      }
+
+      final sortedEntries = grouped.entries.toList()
+        ..sort((a, b) => b.key.compareTo(a.key));
+
+      final result = <String, List<TransactionWithDetails>>{};
+
+      for (final entry in sortedEntries) {
+        result[groupLabel(entry.key)] = entry.value;
+      }
+
+      return result;
+    });
+  }
+
+  // Stream<Map<String, List<TransactionWithDetails>>>
+  //     watchGroupedTransactionsForAccount(int accountId) {
+  //   // Use the same query/grouping logic as watchGroupedTransactions(),
+  //   // but add the account filter.
+  //   return (select(transactionsTable)
+  //           ..where((tbl) => tbl.accountId.equals(accountId))
+  //           ..orderBy([
+  //             (tbl) =>
+  //                 OrderingTerm(expression: tbl.date, mode: OrderingMode.desc),
+  //           ]))
+  //         .watch();
+  //   }
+  // }
+  // Stream<List<TransactionsTableData>> watchTransactionsForAccount(
+  //   int accountId,
+  // ) {
+  //   return (select(transactionsTable)
+  //         ..where((tbl) => tbl.accountId.equals(accountId))
+  //         ..orderBy([
+  //           (tbl) =>
+  //               OrderingTerm(expression: tbl.date, mode: OrderingMode.desc),
+  //         ]))
+  //       .watch();
+  // }
 }

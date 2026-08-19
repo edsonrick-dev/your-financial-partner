@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_plan_enum.dart';
 import 'package:getx_drift_app/features/add_transaction_sheet.dart';
@@ -8,6 +9,8 @@ import 'package:getx_drift_app/features/balances/views/people_balances_view.dart
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/selection_sheets.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/transaction_sheets.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/cash_and_bank_details_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_detail_sheet.dart';
 import 'package:getx_drift_app/features/profile/controller/profile_controller.dart';
 import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/shell/financial_stability_sheet_shell.dart';
@@ -52,6 +55,28 @@ class AppSheets {
       AddTransactionSheet(transaction: transaction, selection: selection),
       backgroundColor: Colors.transparent,
       isDismissible: true,
+    );
+  }
+
+  static Future<void> viewCreditCardDetailSheet(
+    AccountsTableData account,
+  ) async {
+    return await Get.bottomSheet(
+      CreditCardDetailSheet(account: account),
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      isScrollControlled: true,
+    );
+  }
+
+  static Future<void> viewCashAndBankDetailSheet(
+    AccountsTableData account,
+  ) async {
+    return await Get.bottomSheet(
+      CashAndBankDetailsSheet(account: account),
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      isScrollControlled: true,
     );
   }
 

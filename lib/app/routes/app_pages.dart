@@ -7,7 +7,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/death_benefit_gap/views/death_benefit_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/disability_benefit_gap/views/disability_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/insurance_policies/views/insurance_policies_view.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/net_worth_details_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_page/net_worth_details_page.dart';
 import 'package:getx_drift_app/features/balances/views/people_balances_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/charts/views/networth_charts_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/checks/views/checks_management_view.dart';
@@ -105,7 +105,7 @@ class AppPages {
     //NET WORTH PAGE
     GetPage(
       name: Routes.NETWORTHDETAILS,
-      page: () => const NetWorthDetailsView(),
+      page: () => const NetWorthDetailsPage(),
       // binding: TransactionBinding(),
     ),
     GetPage(

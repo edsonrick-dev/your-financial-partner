@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_group/account_group_summary.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
@@ -121,6 +122,59 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
     return select(accountsTable).get();
   }
 
+  Stream<List<AccountsTableData>> watchAssetAccounts() {
+    final assetTypes = AccountType.values
+        .where((type) => type.isAsset)
+        .map((type) => type.name)
+        .toList();
+
+    return (select(
+      accountsTable,
+    )..where((tbl) => tbl.accountType.isIn(assetTypes))).watch();
+  }
+
+  Stream<List<AccountGroupSummary>> watchAssetAccountGroups() {
+    return watchAccounts().map((accounts) {
+      final assetGroups = AccountGroup.values
+          .where((group) => group.isAsset)
+          .toList();
+
+      return assetGroups
+          .map((group) {
+            final groupAccounts = accounts.where((account) {
+              final accountType = AccountType.fromName(account.accountType);
+
+              return accountType.group == group;
+            }).toList();
+
+            return AccountGroupSummary(group: group, accounts: groupAccounts);
+          })
+          .where((summary) => summary.accounts.isNotEmpty)
+          .toList();
+    });
+  }
+
+  Stream<List<AccountGroupSummary>> watchLiabilityAccountGroups() {
+    return watchAccounts().map((accounts) {
+      final liabilityGroups = AccountGroup.values
+          .where((group) => group.isLiability)
+          .toList();
+
+      return liabilityGroups
+          .map((group) {
+            final groupAccounts = accounts.where((account) {
+              final accountType = AccountType.fromName(account.accountType);
+
+              return accountType.group == group;
+            }).toList();
+
+            return AccountGroupSummary(group: group, accounts: groupAccounts);
+          })
+          .where((summary) => summary.accounts.isNotEmpty)
+          .toList();
+    });
+  }
+
   Future<int> insertAccount(AccountsTableCompanion entry) {
     return into(accountsTable).insert(entry);
   }
@@ -231,9 +285,16 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   /// • verifyAccountBalance()
   /// • balanceDifference()
   Stream<double> watchAccountBalance(int accountId) {
-    return select(
-      transactionsTable,
-    ).watch().map((transactions) => _calculateBalance(transactions, accountId));
+    return watchAccount(accountId).asyncExpand((account) {
+      if (account == null) {
+        return Stream.value(0);
+      }
+
+      return select(transactionsTable).watch().map(
+        (transactions) =>
+            _calculateBalance(transactions, accountId, account.isLiability),
+      );
+    });
   }
 
   /// Core balance calculation engine.
@@ -250,9 +311,9 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   ///
   /// Any future transaction types must be added here.
   double _calculateBalance(
-    ///Goes together with watchAccountBalance
     List<TransactionsTableData> transactions,
     int accountId,
+    bool isLiability,
   ) {
     double balance = 0;
 
@@ -270,7 +331,7 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
 
         case TransactionType.spend:
           if (tx.accountId == accountId) {
-            balance -= tx.amount;
+            balance += isLiability ? tx.amount : -tx.amount;
           }
           break;
 
@@ -282,7 +343,7 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
 
         case TransactionType.give:
           if (tx.accountId == accountId) {
-            balance -= tx.amount;
+            balance += isLiability ? tx.amount : -tx.amount;
           }
           break;
 
@@ -292,6 +353,11 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
           }
 
           if (tx.linkedAccountId == accountId) {
+            balance += tx.amount;
+          }
+          break;
+        case TransactionType.balanceUpdate:
+          if (tx.accountId == accountId) {
             balance += tx.amount;
           }
           break;
@@ -310,9 +376,13 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   /// • account rebuild operations
   /// • diagnostics
   Future<double> calculateAccountBalance(int accountId) async {
+    final account = await (select(
+      accountsTable,
+    )..where((tbl) => tbl.id.equals(accountId))).getSingle();
+
     final transactions = await select(transactionsTable).get();
 
-    return _calculateBalance(transactions, accountId);
+    return _calculateBalance(transactions, accountId, account.isLiability);
   }
   // ============================================================================
   // BALANCE DIAGNOSTICS

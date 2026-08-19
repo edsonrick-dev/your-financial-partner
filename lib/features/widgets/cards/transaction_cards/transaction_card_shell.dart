@@ -7,6 +7,7 @@ import 'package:getx_drift_app/features/widgets/cards/transaction_cards/give_mon
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/receive_money_transaction_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/spend_transaction_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/transfer_transaction_card.dart';
+import 'package:getx_drift_app/features/widgets/cards/transaction_cards/update_balance_transaction_card.dart';
 
 class TransactionCard extends StatelessWidget {
   final TransactionWithDetails item;
@@ -25,6 +26,8 @@ class TransactionCard extends StatelessWidget {
         return ReceiveMoneyTransactionCard(item: item);
       case TransactionType.give:
         return GiveMoneyTransactionCard(item: item);
+      case TransactionType.balanceUpdate:
+        return UpdateBalanceTransactionCard(item: item);
     }
   }
 }

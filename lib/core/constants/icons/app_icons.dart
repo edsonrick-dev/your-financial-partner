@@ -81,6 +81,11 @@ class _CategoryIcons {
       group: IconGroup.others,
     ),
     AppCategoryIcon(
+      key: 'device-mobile',
+      icon: PhosphorIconsRegular.deviceMobile,
+      group: IconGroup.others,
+    ),
+    AppCategoryIcon(
       key: 'caretDown',
       icon: PhosphorIconsRegular.caretDown,
       group: IconGroup.others,
@@ -402,6 +407,7 @@ class _CategoryIcons {
       icon: PhosphorIconsRegular.chartLineUp,
       group: IconGroup.shopping,
     ),
+
     AppCategoryIcon(
       key: 'suitCase',
       icon: PhosphorIconsRegular.suitcase,
@@ -441,6 +447,7 @@ class _CategoryIcons {
     AppCategoryIcon(key: 'wallet', icon: PhosphorIconsRegular.wallet),
     AppCategoryIcon(key: 'creditCard', icon: PhosphorIconsRegular.creditCard),
     AppCategoryIcon(key: 'piggyBank', icon: PhosphorIconsRegular.piggyBank),
+    AppCategoryIcon(key: 'bank', icon: PhosphorIconsRegular.bank),
     const AppCategoryIcon(
       key: AppIcons.fallbackKey,
       icon: Icons.category_outlined,

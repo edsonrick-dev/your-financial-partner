@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_toolbar.dart';
@@ -9,11 +11,11 @@ class SelectPaymentAccountTypeSheet extends StatelessWidget {
   final List<AccountType> accountTypes;
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     return FractionallySizedBox(
       child: Container(
-        // constraints: BoxConstraints(maxHeight: Get.height * 0.75, minHeight: 200),
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: colorScheme.bg,
           borderRadius: BorderRadius.vertical(top: Radius.circular(38)),
         ),
 
@@ -41,20 +43,7 @@ class SelectPaymentAccountTypeSheet extends StatelessWidget {
                       onTap: () {
                         Get.back(result: type);
                       },
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.payments),
-                            const SizedBox(width: 12),
-                            Expanded(child: Text(type.label)),
-                          ],
-                        ),
-                      ),
+                      child: AccountTypeCard(type: type),
                     );
                   },
                   separatorBuilder: (context, index) {
@@ -115,6 +104,30 @@ class SelectPaymentAccountTypeSheet extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class AccountTypeCard extends StatelessWidget {
+  const AccountTypeCard({super.key, required this.type});
+
+  final AccountType type;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey),
+      ),
+      child: Row(
+        children: [
+          Icon(AppIcons.categories.resolve(type.iconKey)),
+          const SizedBox(width: 12),
+          Expanded(child: Text(type.label)),
+        ],
       ),
     );
   }

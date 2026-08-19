@@ -426,6 +426,17 @@ class $AccountsTableTable extends AccountsTable
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _creditLimitMeta = const VerificationMeta(
+    'creditLimit',
+  );
+  @override
+  late final GeneratedColumn<double> creditLimit = GeneratedColumn<double>(
+    'credit_limit',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -434,6 +445,7 @@ class $AccountsTableTable extends AccountsTable
     accountType,
     currentValue,
     isSystem,
+    creditLimit,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -492,6 +504,15 @@ class $AccountsTableTable extends AccountsTable
         isSystem.isAcceptableOrUnknown(data['is_system']!, _isSystemMeta),
       );
     }
+    if (data.containsKey('credit_limit')) {
+      context.handle(
+        _creditLimitMeta,
+        creditLimit.isAcceptableOrUnknown(
+          data['credit_limit']!,
+          _creditLimitMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -525,6 +546,10 @@ class $AccountsTableTable extends AccountsTable
         DriftSqlType.bool,
         data['${effectivePrefix}is_system'],
       )!,
+      creditLimit: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}credit_limit'],
+      ),
     );
   }
 
@@ -542,6 +567,7 @@ class AccountsTableData extends DataClass
   final String accountType;
   final double currentValue;
   final bool isSystem;
+  final double? creditLimit;
   const AccountsTableData({
     required this.id,
     required this.name,
@@ -549,6 +575,7 @@ class AccountsTableData extends DataClass
     required this.accountType,
     required this.currentValue,
     required this.isSystem,
+    this.creditLimit,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -559,6 +586,9 @@ class AccountsTableData extends DataClass
     map['account_type'] = Variable<String>(accountType);
     map['current_value'] = Variable<double>(currentValue);
     map['is_system'] = Variable<bool>(isSystem);
+    if (!nullToAbsent || creditLimit != null) {
+      map['credit_limit'] = Variable<double>(creditLimit);
+    }
     return map;
   }
 
@@ -570,6 +600,9 @@ class AccountsTableData extends DataClass
       accountType: Value(accountType),
       currentValue: Value(currentValue),
       isSystem: Value(isSystem),
+      creditLimit: creditLimit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(creditLimit),
     );
   }
 
@@ -585,6 +618,7 @@ class AccountsTableData extends DataClass
       accountType: serializer.fromJson<String>(json['accountType']),
       currentValue: serializer.fromJson<double>(json['currentValue']),
       isSystem: serializer.fromJson<bool>(json['isSystem']),
+      creditLimit: serializer.fromJson<double?>(json['creditLimit']),
     );
   }
   @override
@@ -597,6 +631,7 @@ class AccountsTableData extends DataClass
       'accountType': serializer.toJson<String>(accountType),
       'currentValue': serializer.toJson<double>(currentValue),
       'isSystem': serializer.toJson<bool>(isSystem),
+      'creditLimit': serializer.toJson<double?>(creditLimit),
     };
   }
 
@@ -607,6 +642,7 @@ class AccountsTableData extends DataClass
     String? accountType,
     double? currentValue,
     bool? isSystem,
+    Value<double?> creditLimit = const Value.absent(),
   }) => AccountsTableData(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -614,6 +650,7 @@ class AccountsTableData extends DataClass
     accountType: accountType ?? this.accountType,
     currentValue: currentValue ?? this.currentValue,
     isSystem: isSystem ?? this.isSystem,
+    creditLimit: creditLimit.present ? creditLimit.value : this.creditLimit,
   );
   AccountsTableData copyWithCompanion(AccountsTableCompanion data) {
     return AccountsTableData(
@@ -627,6 +664,9 @@ class AccountsTableData extends DataClass
           ? data.currentValue.value
           : this.currentValue,
       isSystem: data.isSystem.present ? data.isSystem.value : this.isSystem,
+      creditLimit: data.creditLimit.present
+          ? data.creditLimit.value
+          : this.creditLimit,
     );
   }
 
@@ -638,14 +678,22 @@ class AccountsTableData extends DataClass
           ..write('icon: $icon, ')
           ..write('accountType: $accountType, ')
           ..write('currentValue: $currentValue, ')
-          ..write('isSystem: $isSystem')
+          ..write('isSystem: $isSystem, ')
+          ..write('creditLimit: $creditLimit')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, icon, accountType, currentValue, isSystem);
+  int get hashCode => Object.hash(
+    id,
+    name,
+    icon,
+    accountType,
+    currentValue,
+    isSystem,
+    creditLimit,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -655,7 +703,8 @@ class AccountsTableData extends DataClass
           other.icon == this.icon &&
           other.accountType == this.accountType &&
           other.currentValue == this.currentValue &&
-          other.isSystem == this.isSystem);
+          other.isSystem == this.isSystem &&
+          other.creditLimit == this.creditLimit);
 }
 
 class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
@@ -665,6 +714,7 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
   final Value<String> accountType;
   final Value<double> currentValue;
   final Value<bool> isSystem;
+  final Value<double?> creditLimit;
   const AccountsTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -672,6 +722,7 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     this.accountType = const Value.absent(),
     this.currentValue = const Value.absent(),
     this.isSystem = const Value.absent(),
+    this.creditLimit = const Value.absent(),
   });
   AccountsTableCompanion.insert({
     this.id = const Value.absent(),
@@ -680,6 +731,7 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     required String accountType,
     this.currentValue = const Value.absent(),
     this.isSystem = const Value.absent(),
+    this.creditLimit = const Value.absent(),
   }) : name = Value(name),
        icon = Value(icon),
        accountType = Value(accountType);
@@ -690,6 +742,7 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     Expression<String>? accountType,
     Expression<double>? currentValue,
     Expression<bool>? isSystem,
+    Expression<double>? creditLimit,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -698,6 +751,7 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
       if (accountType != null) 'account_type': accountType,
       if (currentValue != null) 'current_value': currentValue,
       if (isSystem != null) 'is_system': isSystem,
+      if (creditLimit != null) 'credit_limit': creditLimit,
     });
   }
 
@@ -708,6 +762,7 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     Value<String>? accountType,
     Value<double>? currentValue,
     Value<bool>? isSystem,
+    Value<double?>? creditLimit,
   }) {
     return AccountsTableCompanion(
       id: id ?? this.id,
@@ -716,6 +771,7 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
       accountType: accountType ?? this.accountType,
       currentValue: currentValue ?? this.currentValue,
       isSystem: isSystem ?? this.isSystem,
+      creditLimit: creditLimit ?? this.creditLimit,
     );
   }
 
@@ -740,6 +796,9 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     if (isSystem.present) {
       map['is_system'] = Variable<bool>(isSystem.value);
     }
+    if (creditLimit.present) {
+      map['credit_limit'] = Variable<double>(creditLimit.value);
+    }
     return map;
   }
 
@@ -751,7 +810,8 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
           ..write('icon: $icon, ')
           ..write('accountType: $accountType, ')
           ..write('currentValue: $currentValue, ')
-          ..write('isSystem: $isSystem')
+          ..write('isSystem: $isSystem, ')
+          ..write('creditLimit: $creditLimit')
           ..write(')'))
         .toString();
   }
@@ -4512,6 +4572,7 @@ typedef $$AccountsTableTableCreateCompanionBuilder =
       required String accountType,
       Value<double> currentValue,
       Value<bool> isSystem,
+      Value<double?> creditLimit,
     });
 typedef $$AccountsTableTableUpdateCompanionBuilder =
     AccountsTableCompanion Function({
@@ -4521,6 +4582,7 @@ typedef $$AccountsTableTableUpdateCompanionBuilder =
       Value<String> accountType,
       Value<double> currentValue,
       Value<bool> isSystem,
+      Value<double?> creditLimit,
     });
 
 class $$AccountsTableTableFilterComposer
@@ -4559,6 +4621,11 @@ class $$AccountsTableTableFilterComposer
 
   ColumnFilters<bool> get isSystem => $composableBuilder(
     column: $table.isSystem,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get creditLimit => $composableBuilder(
+    column: $table.creditLimit,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -4601,6 +4668,11 @@ class $$AccountsTableTableOrderingComposer
     column: $table.isSystem,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<double> get creditLimit => $composableBuilder(
+    column: $table.creditLimit,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AccountsTableTableAnnotationComposer
@@ -4633,6 +4705,11 @@ class $$AccountsTableTableAnnotationComposer
 
   GeneratedColumn<bool> get isSystem =>
       $composableBuilder(column: $table.isSystem, builder: (column) => column);
+
+  GeneratedColumn<double> get creditLimit => $composableBuilder(
+    column: $table.creditLimit,
+    builder: (column) => column,
+  );
 }
 
 class $$AccountsTableTableTableManager
@@ -4676,6 +4753,7 @@ class $$AccountsTableTableTableManager
                 Value<String> accountType = const Value.absent(),
                 Value<double> currentValue = const Value.absent(),
                 Value<bool> isSystem = const Value.absent(),
+                Value<double?> creditLimit = const Value.absent(),
               }) => AccountsTableCompanion(
                 id: id,
                 name: name,
@@ -4683,6 +4761,7 @@ class $$AccountsTableTableTableManager
                 accountType: accountType,
                 currentValue: currentValue,
                 isSystem: isSystem,
+                creditLimit: creditLimit,
               ),
           createCompanionCallback:
               ({
@@ -4692,6 +4771,7 @@ class $$AccountsTableTableTableManager
                 required String accountType,
                 Value<double> currentValue = const Value.absent(),
                 Value<bool> isSystem = const Value.absent(),
+                Value<double?> creditLimit = const Value.absent(),
               }) => AccountsTableCompanion.insert(
                 id: id,
                 name: name,
@@ -4699,6 +4779,7 @@ class $$AccountsTableTableTableManager
                 accountType: accountType,
                 currentValue: currentValue,
                 isSystem: isSystem,
+                creditLimit: creditLimit,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

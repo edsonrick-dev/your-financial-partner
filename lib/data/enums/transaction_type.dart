@@ -3,7 +3,8 @@ enum TransactionType {
   spend,
   transfer,
   give,
-  receive;
+  receive,
+  balanceUpdate;
 
   static TransactionType fromName(String value) {
     return TransactionType.values.firstWhere((e) => e.name == value);

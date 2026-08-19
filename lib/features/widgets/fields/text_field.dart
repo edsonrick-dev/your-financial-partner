@@ -9,12 +9,14 @@ class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool multiLine;
   final bool optional;
+  final TextInputType? keyboardType;
 
   const AppTextField({
     super.key,
     this.hintText = '',
     this.multiLine = false,
     this.optional = false,
+    this.keyboardType,
     required this.label,
     required this.focusNode,
     required this.controller,
@@ -32,15 +34,16 @@ class AppTextField extends StatelessWidget {
             controller: controller,
             focusNode: focusNode,
 
-            keyboardType: multiLine
-                ? TextInputType.multiline
-                : TextInputType.text,
+            keyboardType:
+                keyboardType ??
+                (multiLine ? TextInputType.multiline : TextInputType.text),
 
             minLines: multiLine ? 2 : 1,
             maxLines: multiLine ? 4 : 1,
             maxLength: 250,
 
             style: const TextStyle(fontSize: 17, height: 24 / 17),
+
             decoration: InputDecoration(
               isDense: true,
               contentPadding: EdgeInsets.zero,

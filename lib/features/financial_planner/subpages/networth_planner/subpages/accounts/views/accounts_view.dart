@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/features/widgets/cards/account_card.dart';
+import 'package:getx_drift_app/features/widgets/cards/account_cards/select_account_card.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
@@ -43,7 +43,7 @@ class AccountsView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final account = accounts[index];
 
-                    return AccountCard(account: account);
+                    return SelectAccountCard(account: account);
                   },
                 );
               },

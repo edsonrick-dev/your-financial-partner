@@ -14,6 +14,8 @@ class AccountsTable extends Table {
   RealColumn get currentValue => real().withDefault(const Constant(0))();
 
   BoolColumn get isSystem => boolean().withDefault(const Constant(false))();
+
+  RealColumn get creditLimit => real().nullable()();
 }
 
 extension AccountExtensions on AccountsTableData {
@@ -26,4 +28,25 @@ extension AccountExtensions on AccountsTableData {
   bool get isLiability => type.isLiability;
 
   BalanceSheetType get balanceSheetType => type.balanceSheetType;
+  double? get availableCredit {
+    if (type != AccountType.creditCard) return null;
+    if (creditLimit == null) return null;
+
+    return creditLimit! + currentValue;
+  }
+
+  double? get creditUtilization {
+    if (type != AccountType.creditCard) return null;
+    if (creditLimit == null || creditLimit == 0) return null;
+
+    return (-currentValue) / creditLimit!;
+  }
+
+  double get availableForPayment {
+    if (type == AccountType.creditCard) {
+      return availableCredit ?? 0;
+    }
+
+    return currentValue;
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/create_account_controller.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/icon_picker_field.dart';
@@ -12,7 +13,12 @@ import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 
 class AddPaymentAccountButton extends GetView<CreateAccountController> {
   final TransactionType transactionType;
-  const AddPaymentAccountButton({super.key, required this.transactionType});
+  final VoidCallback? onExpand;
+  const AddPaymentAccountButton({
+    super.key,
+    required this.transactionType,
+    this.onExpand,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +43,7 @@ class AddPaymentAccountButton extends GetView<CreateAccountController> {
 
         child: isExpanded
             ? _BuildExpanded(controller: controller)
-            : _BuildCollapsed(controller: controller),
+            : _BuildCollapsed(controller: controller, onExpand: onExpand),
       );
     });
   }
@@ -50,50 +56,74 @@ class _BuildExpanded extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.find<CreateAccountController>();
     final state = controller.buttonState.value;
-    // final colorScheme = context.colors;
     return Column(
       spacing: 12,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Obx(
-          () => AppDropdownField(
-            label: 'Account Type',
-            value: controller.selectedAccountType.value?.label,
-            hint: 'Select account type',
-            onTap: () async {
-              final selected = await AppSheets.selection
-                  .selectPaymentAccountType(
-                    accountTypes: controller.availableAccountTypes,
-                  );
+        Obx(() {
+          final type = controller.selectedAccountType.value;
 
-              if (selected == null) return;
+          return Column(
+            spacing: 12,
+            children: [
+              AppDropdownField(
+                iconKey: type?.iconKey,
+                label: 'Account Type',
+                value: type?.label,
+                hint: 'Select account type',
+                onTap: () async {
+                  final selected = await AppSheets.selection
+                      .selectPaymentAccountType(
+                        accountTypes: controller.availableAccountTypes,
+                      );
 
-              controller.selectAccountType(selected);
-            },
-          ),
-        ),
-        Row(
-          children: [
-            Obx(
-              () => AppIconPickerField(
-                iconKey: controller.selectedIconKey.value,
-                onTap: () {
-                  // Get.bottomSheet(IconSelectorSheet(controller: controller));
+                  if (selected == null) return;
+
+                  controller.selectAccountType(selected);
                 },
               ),
-            ),
-            SizedBox(width: 8),
-            Expanded(
-              child: AppTextField(
-                label: 'Name',
-                focusNode: controller.nameFocusNode,
-                controller: controller.nameController,
+
+              Row(
+                children: [
+                  AppIconPickerField(
+                    iconKey: controller.selectedIconKey.value,
+                    onTap: () {},
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: AppTextField(
+                      label: 'Name',
+                      focusNode: controller.nameFocusNode,
+                      controller: controller.nameController,
+                    ),
+                  ),
+                  // Expanded(
+                  //   child: Container(
+                  //     color: Colors.red,
+                  //     child: AppTextField(
+                  //       label: 'Name',
+                  //       focusNode: controller.nameFocusNode,
+                  //       controller: controller.nameController,
+                  //     ),
+                  //   ),
+                  // ),
+                ],
               ),
-            ),
-          ],
-        ),
+
+              if (type == AccountType.creditCard)
+                AppTextField(
+                  label: 'Credit Limit',
+                  controller: controller.creditLimitController,
+                  focusNode: controller.creditLimitFocusNode,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                ),
+            ],
+          );
+        }),
+
         Row(
           spacing: 8,
           children: [
@@ -166,14 +196,22 @@ class _BuildExpanded extends StatelessWidget {
 
 class _BuildCollapsed extends StatelessWidget {
   final CreateAccountController controller;
-  const _BuildCollapsed({required this.controller});
+  final VoidCallback? onExpand;
+
+  const _BuildCollapsed({required this.controller, this.onExpand});
 
   @override
   Widget build(BuildContext context) {
     return AdaptivePressable(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: controller.expandButton,
+        onTap: () {
+          controller.expandButton();
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            onExpand?.call();
+          });
+        },
         child: SizedBox(
           height: 52,
           width: double.infinity,

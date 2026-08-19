@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_page/subpages/assets_list.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_page/subpages/liabilities_list.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 
-class NetWorthDetailsView extends GetView<NetWorthController> {
-  const NetWorthDetailsView({super.key});
+class NetWorthDetailsPage extends GetView<NetWorthController> {
+  const NetWorthDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -74,48 +76,19 @@ class NetWorthDetailsView extends GetView<NetWorthController> {
           ),
           AppDetailsPageActionSection(
             selectedIndex: controller.seletectedDetailsTabIndex,
-            actions: const [
-              'Assets', 'Liabilities',
-              // AppDetailsPageAction(title: 'Assets', page: _AssetsContent()),
-              // AppDetailsPageAction(
-              //   title: 'Liabilities',
-              //   page: _LiabilitiesContent(),
-              // ),
-            ],
+            actions: const ['Assets', 'Liabilities'],
             onAdd: () {},
           ),
           Expanded(
             child: Obx(
               () => IndexedStack(
                 index: controller.seletectedDetailsTabIndex.value,
-                children: const [_AssetsContent(), _LiabilitiesContent()],
+                children: const [AssetsList(), LiabilitiesList()],
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _AssetsContent extends StatelessWidget {
-  const _AssetsContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(children: [Text('Needs content goes here.')]),
-    );
-  }
-}
-
-class _LiabilitiesContent extends StatelessWidget {
-  const _LiabilitiesContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(children: [Text('Sources content goes here.')]),
     );
   }
 }

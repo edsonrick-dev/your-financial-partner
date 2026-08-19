@@ -106,7 +106,7 @@ class AppDropdownField extends StatelessWidget {
                       children: [
                         defaultIcon ??
                             Icon(
-                              AppIcons.categories.resolve(iconKey!),
+                              AppIcons.categories.resolve(iconKey ?? ''),
                               size: 18,
                               color: FieldColors.icon(effectiveState),
                             ),

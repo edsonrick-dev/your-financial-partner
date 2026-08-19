@@ -41,9 +41,11 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  netWorth.toCurrency(),
+                  netWorth.abs().toCurrency(),
                   style: AppTextStyle.amountXL.copyWith(
-                    color: colorScheme.inversePrimary,
+                    color: netWorth < 0
+                        ? colorScheme.appOutflow
+                        : colorScheme.inversePrimary,
                   ),
                 ),
                 Row(

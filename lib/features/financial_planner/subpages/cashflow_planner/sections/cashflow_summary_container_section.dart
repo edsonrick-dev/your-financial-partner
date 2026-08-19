@@ -2,13 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/cashflow_planner_screen.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_ring_chart.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
-class CashflowSummaryContainerSection
-    extends GetView<FinancialPlannerController> {
+class CashflowSummaryContainerSection extends GetView<CashflowController> {
   const CashflowSummaryContainerSection({super.key});
 
   @override
