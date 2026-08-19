@@ -4,6 +4,7 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_card_metric.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -89,47 +90,22 @@ class CashAndBankSummarySection extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _Metric(
+                  child: AccountCardMetric(
                     label: 'Available Fund',
                     value: availableFunds.toCurrency(),
                   ),
                 ),
                 Expanded(
-                  child: _Metric(label: 'Reserved Fund', value: 0.toCurrency()),
+                  child: AccountCardMetric(
+                    label: 'Reserved Fund',
+                    value: 0.toCurrency(),
+                  ),
                 ),
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _Metric extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _Metric({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTextStyle.titleS.copyWith(
-            color: colorScheme.appInversedtextMuted,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: AppTextStyle.amountM.copyWith(color: colorScheme.textInversed),
-        ),
-      ],
     );
   }
 }
