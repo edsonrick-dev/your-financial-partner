@@ -130,6 +130,8 @@ extension SaveTransactionFunctions on TransactionController {
       }
     });
 
+    await database.accountsDao.rebuildAccountBalance(account.id);
+
     /// CLOSE SHEET
     ///
 

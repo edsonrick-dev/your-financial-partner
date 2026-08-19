@@ -526,7 +526,11 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
   watchGroupedTransactionsForAccount(int accountId) {
     return watchTransactions().map((transactions) {
       final accountTransactions = transactions
-          .where((item) => item.transaction.accountId == accountId)
+          .where(
+            (item) =>
+                item.transaction.accountId == accountId ||
+                item.transaction.linkedAccountId == accountId,
+          )
           .toList();
 
       final grouped = <DateTime, List<TransactionWithDetails>>{};
