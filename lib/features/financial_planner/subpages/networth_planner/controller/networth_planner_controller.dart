@@ -1,9 +1,54 @@
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/domain/enums/net_worth_comparison_enum.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 
 class NetWorthController extends GetxController {
+  final netWorthComparison = NetWorthComparison.mtd.obs;
+
+  DateTime get baselineDate {
+    final now = DateTime.now();
+
+    switch (netWorthComparison.value) {
+      case NetWorthComparison.wtd:
+        // End of previous week
+        final startOfThisWeek = DateTime(
+          now.year,
+          now.month,
+          now.day,
+        ).subtract(Duration(days: now.weekday - DateTime.monday));
+
+        return startOfThisWeek.subtract(const Duration(seconds: 1));
+
+      case NetWorthComparison.mtd:
+        // End of previous month
+        return DateTime(
+          now.year,
+          now.month,
+          1,
+        ).subtract(const Duration(seconds: 1));
+
+      case NetWorthComparison.ytd:
+        // End of previous year
+        return DateTime(now.year, 1, 1).subtract(const Duration(seconds: 1));
+    }
+  }
+
+  final baselineNetWorth = 0.0.obs;
+  Future<void> calculateBaselineNetWorth() async {
+    final date = baselineDate;
+
+    final value = await database.accountsDao.calculateNetWorthAt(date);
+
+    baselineNetWorth.value = value;
+  }
+
+  void setNetWorthComparison(NetWorthComparison value) {
+    netWorthComparison.value = value;
+    calculateBaselineNetWorth();
+  }
+
   final seletectedDetailsTabIndex = 0.obs;
   double get assetRatio {
     final total = totalAssets + totalLiabilities;
@@ -32,7 +77,7 @@ class NetWorthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+    calculateBaselineNetWorth();
     accounts.bindStream(database.accountsDao.watchAccounts());
   }
 

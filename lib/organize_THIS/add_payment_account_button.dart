@@ -11,7 +11,7 @@ import 'package:getx_drift_app/data/enums/add_button_state.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 
-class AddPaymentAccountButton extends GetView<CreateAccountController> {
+class AddPaymentAccountButton extends GetView<AccountController> {
   final TransactionType transactionType;
   final VoidCallback? onExpand;
   const AddPaymentAccountButton({
@@ -19,11 +19,30 @@ class AddPaymentAccountButton extends GetView<CreateAccountController> {
     required this.transactionType,
     this.onExpand,
   });
+  List<AccountType> get availableAccountTypes {
+    switch (transactionType) {
+      case TransactionType.earn:
+        return AccountType.values.where((account) => account.isAsset).toList();
+
+      case TransactionType.spend:
+        return AccountType.values;
+
+      case TransactionType.transfer:
+      case TransactionType.give:
+      case TransactionType.receive:
+        return AccountType.values
+            .where((account) => account.group == AccountGroup.cashAndBank)
+            .toList();
+
+      case TransactionType.balanceUpdate:
+        return [];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    Get.put(CreateAccountController(transactionType: transactionType));
+
     return Obx(() {
       final state = controller.buttonState.value;
 
@@ -42,7 +61,10 @@ class AddPaymentAccountButton extends GetView<CreateAccountController> {
         ),
 
         child: isExpanded
-            ? _BuildExpanded(controller: controller)
+            ? _BuildExpanded(
+                controller: controller,
+                availableAccountTypes: availableAccountTypes,
+              )
             : _BuildCollapsed(controller: controller, onExpand: onExpand),
       );
     });
@@ -50,9 +72,13 @@ class AddPaymentAccountButton extends GetView<CreateAccountController> {
 }
 
 class _BuildExpanded extends StatelessWidget {
-  const _BuildExpanded({required this.controller});
+  const _BuildExpanded({
+    required this.controller,
+    required this.availableAccountTypes,
+  });
 
-  final CreateAccountController controller;
+  final AccountController controller;
+  final List<AccountType> availableAccountTypes;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +101,7 @@ class _BuildExpanded extends StatelessWidget {
                 onTap: () async {
                   final selected = await AppSheets.selection
                       .selectPaymentAccountType(
-                        accountTypes: controller.availableAccountTypes,
+                        accountTypes: availableAccountTypes,
                       );
 
                   if (selected == null) return;
@@ -195,7 +221,7 @@ class _BuildExpanded extends StatelessWidget {
 }
 
 class _BuildCollapsed extends StatelessWidget {
-  final CreateAccountController controller;
+  final AccountController controller;
   final VoidCallback? onExpand;
 
   const _BuildCollapsed({required this.controller, this.onExpand});

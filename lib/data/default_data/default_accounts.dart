@@ -4,7 +4,7 @@ class DefaultAccount {
   final String name;
   final String iconKey;
   final AccountType type;
-  final double currentValue;
+  final double startingBalance;
   final double? creditLimit;
   final bool isSystem;
 
@@ -12,7 +12,7 @@ class DefaultAccount {
     required this.name,
     required this.iconKey,
     required this.type,
-    this.currentValue = 0,
+    this.startingBalance = 0,
     this.creditLimit,
     this.isSystem = false,
   });
@@ -24,21 +24,21 @@ class DefaultAccounts {
       name: 'Cash Wallet',
       iconKey: 'wallet',
       type: AccountType.cash,
-      currentValue: 3250.00,
+      startingBalance: 3250.00,
       isSystem: true,
     ),
     DefaultAccount(
       name: 'Emergency Cash',
       iconKey: 'wallet',
       type: AccountType.cash,
-      currentValue: 10000.00,
+      startingBalance: 10000.00,
       isSystem: true,
     ),
     DefaultAccount(
       name: 'BPI Savings Account',
       iconKey: 'wallet',
       type: AccountType.savingsAccount,
-      currentValue: 48720.35,
+      startingBalance: 48720.35,
       isSystem: true,
     ),
 
@@ -46,21 +46,21 @@ class DefaultAccounts {
       name: 'BDO Checking',
       iconKey: 'wallet',
       type: AccountType.checkingAccount,
-      currentValue: 22145.8,
+      startingBalance: 22145.8,
       isSystem: true,
     ),
     DefaultAccount(
       name: 'Maya Wallet',
       iconKey: 'wallet',
       type: AccountType.eWallet,
-      currentValue: 2890.15,
+      startingBalance: 2890.15,
       isSystem: true,
     ),
     DefaultAccount(
       name: 'GCash',
       iconKey: 'wallet',
       type: AccountType.eWallet,
-      currentValue: 1642.5,
+      startingBalance: 1642.5,
       isSystem: true,
     ),
   ];
@@ -70,14 +70,14 @@ class DefaultAccounts {
       iconKey: 'wallet',
       type: AccountType.creditCard,
       creditLimit: 100000,
-      currentValue: 87154.4,
+      startingBalance: 87154.4,
       isSystem: true,
     ),
     DefaultAccount(
       name: 'UnionBank Rewards Visa',
       iconKey: 'wallet',
       type: AccountType.creditCard,
-      currentValue: 56714.25,
+      startingBalance: 56714.25,
       creditLimit: 60000,
       isSystem: true,
     ),
@@ -85,7 +85,7 @@ class DefaultAccounts {
       name: 'Security Bank Gold',
       iconKey: 'wallet',
       type: AccountType.creditCard,
-      currentValue: 125149.6,
+      startingBalance: 125149.6,
       creditLimit: 150000,
       isSystem: true,
     ),

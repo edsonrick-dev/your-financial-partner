@@ -367,6 +367,32 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
     return balance;
   }
 
+  Future<double> calculateNetWorthAt(DateTime date) async {
+    final accounts = await select(accountsTable).get();
+
+    final transactions = await (select(
+      transactionsTable,
+    )..where((tbl) => tbl.date.isSmallerOrEqualValue(date))).get();
+
+    double netWorth = 0;
+
+    for (final account in accounts) {
+      final balance = _calculateBalance(
+        transactions,
+        account.id,
+        account.isLiability,
+      );
+
+      if (account.isLiability) {
+        netWorth -= balance;
+      } else {
+        netWorth += balance;
+      }
+    }
+
+    return netWorth;
+  }
+
   /// Calculates an account balance on-demand.
   ///
   /// Unlike watchAccountBalance(), this performs a one-time calculation.

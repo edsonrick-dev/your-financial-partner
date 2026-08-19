@@ -26,8 +26,12 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
         children: [
           SizedBox(height: 12),
           Obx(
-            () =>
-                NetWorthSummaryContainerSection(netWorth: controller.netWorth),
+            () => NetWorthSummaryContainerSection(
+              netWorth: controller.netWorth,
+              baselineNetWorth: controller.baselineNetWorth.value,
+              comparisonType: controller.netWorthComparison.value,
+              onComparisonChanged: controller.setNetWorthComparison,
+            ),
           ),
           AppSection(
             sectionTitle: 'Wealth Overview',
@@ -287,7 +291,7 @@ class _WealthMetricRow extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Container(
                   height: 8,
-                  width: constraints.maxWidth * ratio,
+                  width: constraints.maxWidth * ratio.clamp(0.0, 1.0),
                   decoration: BoxDecoration(
                     color: color,
                     borderRadius: BorderRadius.circular(6),

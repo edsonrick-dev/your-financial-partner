@@ -70,6 +70,7 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
             case TransactionType.transfer:
             case TransactionType.give:
             case TransactionType.receive:
+            case TransactionType.balanceUpdate:
               return account.group == AccountGroup.cashAndBank;
           }
         }).toList();

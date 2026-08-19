@@ -7,10 +7,55 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:drift/drift.dart' as drift;
 
-class CreateAccountController extends GetxController {
-  CreateAccountController({required this.transactionType});
+class AccountController extends GetxController {
+  final TextEditingController balanceController = TextEditingController();
+  final RxDouble enteredBalance = 0.0.obs;
+  void onBalanceChanged(String value) {
+    enteredBalance.value =
+        double.tryParse(value.replaceAll(',', '').trim()) ?? 0;
+  }
 
-  final TransactionType transactionType;
+  double get actualBalance => enteredBalance.value;
+
+  double getBalanceAdjustment(double currentBalance) {
+    return actualBalance - currentBalance;
+  }
+
+  Future<void> updateAccountBalance(AccountsTableData account) async {
+    final actual = actualBalance;
+    final adjustment = actual - account.currentValue;
+
+    if (actual < 0) {
+      Get.snackbar('Invalid Balance', 'Balance cannot be negative.');
+      return;
+    }
+
+    if (adjustment == 0) {
+      Get.back();
+      return;
+    }
+
+    await database.transaction(() async {
+      await database.transactionsDao.insertTransaction(
+        TransactionsTableCompanion.insert(
+          amount: adjustment,
+          date: DateTime.now(),
+          transactionType: TransactionType.balanceUpdate.name,
+          accountId: account.id,
+          categoryId: const drift.Value(null),
+          note: const drift.Value(null),
+          createdAt: drift.Value(DateTime.now()),
+          updatedAt: drift.Value(DateTime.now()),
+        ),
+      );
+
+      await database.accountsDao.rebuildAccountBalance(account.id);
+    });
+
+    balanceController.clear();
+
+    Get.back();
+  }
 
   final RxString selectedIconKey = 'wallet'.obs;
 
@@ -41,33 +86,6 @@ class CreateAccountController extends GetxController {
 
   void collapseButton() {
     buttonState.value = AddButtonState.collapsed;
-  }
-
-  List<AccountType> get availableAccountTypes {
-    switch (transactionType) {
-      case TransactionType.earn:
-        // Earning money must go into an asset account.
-        return AccountType.values.where((account) => account.isAsset).toList();
-
-      case TransactionType.spend:
-        // Spending can use both assets and credit cards.
-        return AccountType.values;
-
-      case TransactionType.transfer:
-        // Transfers are only between asset/payment accounts.
-        return AccountType.values
-            .where((account) => account.group == AccountGroup.cashAndBank)
-            .toList();
-
-      case TransactionType.give:
-      case TransactionType.receive:
-        // Give/receive use payment accounts for the actual money movement.
-        return AccountType.values
-            .where((account) => account.group == AccountGroup.cashAndBank)
-            .toList();
-      case TransactionType.balanceUpdate:
-        return [];
-    }
   }
 
   Future<AccountsTableData?> saveAccount() async {
@@ -117,7 +135,10 @@ class CreateAccountController extends GetxController {
     nameController.dispose();
     creditLimitController.dispose();
     nameFocusNode.dispose();
+    balanceController.dispose();
 
     super.onClose();
   }
+
+  final TextEditingController amountController = TextEditingController();
 }

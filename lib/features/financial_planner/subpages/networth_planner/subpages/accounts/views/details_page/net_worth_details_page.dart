@@ -18,60 +18,66 @@ class NetWorthDetailsPage extends GetView<NetWorthController> {
     return Scaffold(
       body: Column(
         children: [
-          AppDetailsHeader(
-            title: 'Net Worth',
-            child: Column(
-              children: [
-                Text(
-                  controller.netWorth.abs().toCurrency(),
-                  style: AppTextStyle.amountXL.copyWith(
-                    color: controller.netWorth <= 0
-                        ? colorScheme.appOutflow
-                        : colorScheme.appInflow,
+          Obx(
+            () => AppDetailsHeader(
+              title: 'Net Worth',
+              child: Column(
+                children: [
+                  Text(
+                    controller.netWorth.abs().toCurrency(),
+                    style: AppTextStyle.amountXL.copyWith(
+                      color: controller.netWorth <= 0
+                          ? colorScheme.appOutflow
+                          : colorScheme.appInflow,
+                    ),
                   ),
-                ),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Text(
-                            controller.totalAssets.toCurrency(),
-                            style: AppTextStyle.amountL.copyWith(
-                              color: colorScheme.appInflow,
+                  SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              controller.totalAssets.toCurrency(),
+                              style: AppTextStyle.amountL.copyWith(
+                                color: colorScheme.appInflow,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'Assets',
-                            style: AppTextStyle.titleM.copyWith(
-                              color: colorScheme.inversePrimary.withAlpha(150),
+                            Text(
+                              'Assets',
+                              style: AppTextStyle.titleM.copyWith(
+                                color: colorScheme.inversePrimary.withAlpha(
+                                  150,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Text(
-                            controller.totalLiabilities.toCurrency(),
-                            style: AppTextStyle.amountL.copyWith(
-                              color: colorScheme.appOutflow,
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              controller.totalLiabilities.toCurrency(),
+                              style: AppTextStyle.amountL.copyWith(
+                                color: colorScheme.appOutflow,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'Liabilities',
-                            style: AppTextStyle.titleM.copyWith(
-                              color: colorScheme.inversePrimary.withAlpha(150),
+                            Text(
+                              'Liabilities',
+                              style: AppTextStyle.titleM.copyWith(
+                                color: colorScheme.inversePrimary.withAlpha(
+                                  150,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           AppDetailsPageActionSection(

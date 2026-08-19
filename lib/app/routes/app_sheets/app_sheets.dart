@@ -9,6 +9,7 @@ import 'package:getx_drift_app/features/balances/views/people_balances_view.dart
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/selection_sheets.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/transaction_sheets.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/account_action_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/cash_and_bank_details_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_detail_sheet.dart';
 import 'package:getx_drift_app/features/profile/controller/profile_controller.dart';
@@ -55,6 +56,14 @@ class AppSheets {
       AddTransactionSheet(transaction: transaction, selection: selection),
       backgroundColor: Colors.transparent,
       isDismissible: true,
+    );
+  }
+
+  static Future<void> openAccountActionSheet(AccountsTableData account) async {
+    return await Get.bottomSheet(
+      AccountActionsSheet(account: account),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
     );
   }
 

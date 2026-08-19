@@ -48,6 +48,9 @@ extension DeleteFunctions on TransactionController {
       }
 
       await database.deleteTransaction(transactionData.id);
+      await database.accountsDao.rebuildAccountBalance(
+        transactionData.accountId,
+      );
     });
   }
 }

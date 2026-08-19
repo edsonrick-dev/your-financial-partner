@@ -63,9 +63,6 @@ class AppDatabase extends _$AppDatabase {
       if (from < 7) {
         await m.addColumn(accountsTable, accountsTable.creditLimit);
       }
-      if (from < 8) {
-        await m.addColumn(accountsTable, accountsTable.initialBalance);
-      }
     },
   );
   @override
@@ -419,7 +416,7 @@ class AppDatabase extends _$AppDatabase {
           (account) => AccountsTableCompanion.insert(
             name: account.name,
             icon: account.iconKey,
-            currentValue: Value(account.currentValue),
+
             // accountGroup: account.group,
             accountType: account.type.name,
           ),

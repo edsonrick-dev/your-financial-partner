@@ -74,7 +74,21 @@ class TransactionView extends GetView<TransactionController> {
           }
 
           /// EMPTY STATE
-          final groupedTransactions = snapshot.data!;
+
+          final groupedTransactions = <String, List<TransactionWithDetails>>{};
+
+          for (final entry in snapshot.data!.entries) {
+            final filtered = entry.value
+                .where(
+                  (item) =>
+                      item.transaction.type != TransactionType.balanceUpdate,
+                )
+                .toList();
+
+            if (filtered.isNotEmpty) {
+              groupedTransactions[entry.key] = filtered;
+            }
+          }
           if (groupedTransactions.isEmpty) {
             return const Center(child: Text('No transactions yet.'));
           }

@@ -42,8 +42,6 @@ class CashAndBankDetailsSheet extends StatelessWidget {
             children: [
               CashAndBankSummarySection(account: currentAccount),
 
-              const SizedBox(height: 16),
-
               AppDetailsPageActionSection(
                 selectedIndex: selectedIndex,
                 actions: const ['Transactions', 'Goal Reservation'],

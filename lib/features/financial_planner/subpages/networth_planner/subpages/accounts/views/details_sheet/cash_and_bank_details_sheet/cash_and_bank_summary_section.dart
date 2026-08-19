@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -58,11 +58,7 @@ class CashAndBankSummarySection extends StatelessWidget {
                 Spacer(),
                 AdaptivePressable(
                   onTap: () {
-                    Get.bottomSheet(
-                      UpdateAccountBalanceSheet(account: account),
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                    );
+                    AppSheets.openAccountActionSheet(account);
                   },
                   child: Stack(
                     alignment: Alignment.center,
@@ -134,144 +130,6 @@ class _Metric extends StatelessWidget {
           style: AppTextStyle.amountM.copyWith(color: colorScheme.textInversed),
         ),
       ],
-    );
-  }
-}
-
-class UpdateAccountBalanceSheet extends StatefulWidget {
-  final AccountsTableData account;
-
-  const UpdateAccountBalanceSheet({super.key, required this.account});
-
-  @override
-  State<UpdateAccountBalanceSheet> createState() =>
-      _UpdateAccountBalanceSheetState();
-}
-
-class _UpdateAccountBalanceSheetState extends State<UpdateAccountBalanceSheet> {
-  late final TextEditingController amountController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    amountController = TextEditingController(
-      text: widget.account.currentValue.toStringAsFixed(2),
-    );
-  }
-
-  @override
-  void dispose() {
-    amountController.dispose();
-    super.dispose();
-  }
-
-  double get actualBalance {
-    return double.tryParse(amountController.text) ?? 0;
-  }
-
-  double get adjustment {
-    return actualBalance - widget.account.currentValue;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(99),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            Text(
-              'Update Balance',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-
-            const SizedBox(height: 24),
-
-            Text(
-              'Current Balance',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-
-            const SizedBox(height: 4),
-
-            Text(
-              widget.account.currentValue.toCurrency(),
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-
-            const SizedBox(height: 20),
-
-            Text(
-              'Actual Balance',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-
-            const SizedBox(height: 8),
-
-            TextField(
-              controller: amountController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              decoration: const InputDecoration(
-                prefixText: '₱',
-                hintText: 'Enter actual balance',
-              ),
-              onChanged: (_) {
-                setState(() {});
-              },
-            ),
-
-            const SizedBox(height: 20),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Adjustment'),
-
-                Text(
-                  adjustment.toCurrency(),
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: actualBalance < 0
-                    ? null
-                    : () {
-                        // Save adjustment here
-                      },
-                child: const Text('Update Balance'),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -15,15 +15,13 @@ class CashAndBankAccountCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    final availableFund = 10000;
-    final reservedFund = 20000;
 
     return AdaptivePressable(
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,86 +46,24 @@ class CashAndBankAccountCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      'Total Fund',
-                      style: AppTextStyle.labelXS.copyWith(
-                        color: colorScheme.textMuted,
-                      ),
-                    ),
-                    Text(
                       account.currentValue.toCurrency(),
                       style: AppTextStyle.amountL.copyWith(
                         color: colorScheme.appInflow,
+                      ),
+                    ),
+                    Text(
+                      'Total Fund',
+                      style: AppTextStyle.labelXS.copyWith(
+                        color: colorScheme.textMuted,
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-
-            const SizedBox(height: 16),
-
-            // Available / limit
-            Row(
-              children: [
-                Expanded(
-                  child: _AccountMetric(
-                    label: 'Available Fund',
-                    value: availableFund.toCurrency(),
-                  ),
-                ),
-                Expanded(
-                  child: _AccountMetric(
-                    label: 'Reserved',
-                    value: reservedFund.toCurrency(),
-                  ),
-                ),
-              ],
-            ),
-
-            // ...[
-            //   const SizedBox(height: 16),
-
-            //   ClipRRect(
-            //     borderRadius: BorderRadius.circular(4),
-            //     child: LinearProgressIndicator(
-            //       value: utilization.clamp(0.0, 1.0),
-            //       minHeight: 6,
-            //     ),
-            //   ),
-
-            //   const SizedBox(height: 6),
-
-            //   Text(
-            //     '${(utilization * 100).toStringAsFixed(1)}% utilized',
-            //     style: AppTextStyle.bodyS,
-            //   ),
-            // ],
           ],
         ),
       ),
-    );
-  }
-}
-
-class _AccountMetric extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _AccountMetric({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTextStyle.labelXS.copyWith(color: colorScheme.textMuted),
-        ),
-        const SizedBox(height: 2),
-        Text(value, style: AppTextStyle.amountM),
-      ],
     );
   }
 }
