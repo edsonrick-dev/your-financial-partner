@@ -5,6 +5,6 @@ abstract final class SeedInitializer {
     await database.seedDefaultCategories();
     await database.seedDefaultPaymentAccounts();
     await database.seedDefaultEntities();
-    await database.seedDefaultTransactions();
+    // await database.seedDefaultTransactions();
   }
 }

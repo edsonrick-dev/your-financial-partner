@@ -48,7 +48,7 @@ class AppDatabase extends _$AppDatabase {
       await seedDefaultCategories();
       await seedDefaultPaymentAccounts();
       await seedDefaultEntities();
-      await seedDefaultTransactions();
+      // await seedDefaultTransactions();
     },
 
     onUpgrade: (m, from, to) async {
@@ -162,226 +162,226 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
-  Future<void> seedDefaultTransactions() async {
-    final existing = await select(transactionsTable).get();
+  // Future<void> seedDefaultTransactions() async {
+  //   final existing = await select(transactionsTable).get();
 
-    if (existing.isNotEmpty) return;
+  //   if (existing.isNotEmpty) return;
 
-    // ------------------------------------------------------------
-    // GET SEEDED REFERENCES
-    // ------------------------------------------------------------
+  //   // ------------------------------------------------------------
+  //   // GET SEEDED REFERENCES
+  //   // ------------------------------------------------------------
 
-    final accounts = await select(accountsTable).get();
-    final categories = await select(cashflowCategoriesTable).get();
-    final entities = await select(entitiesTable).get();
+  //   final accounts = await select(accountsTable).get();
+  //   final categories = await select(cashflowCategoriesTable).get();
+  //   final entities = await select(entitiesTable).get();
 
-    // Resolve records by their seed names.
-    final accountByName = {
-      for (final account in accounts) account.name: account,
-    };
+  //   // Resolve records by their seed names.
+  //   final accountByName = {
+  //     for (final account in accounts) account.name: account,
+  //   };
 
-    final categoryByName = {
-      for (final category in categories) category.name: category,
-    };
+  //   final categoryByName = {
+  //     for (final category in categories) category.name: category,
+  //   };
 
-    final entityByName = {for (final entity in entities) entity.name: entity};
+  //   final entityByName = {for (final entity in entities) entity.name: entity};
 
-    // ------------------------------------------------------------
-    // SORT TRANSACTIONS CHRONOLOGICALLY
-    // ------------------------------------------------------------
+  //   // ------------------------------------------------------------
+  //   // SORT TRANSACTIONS CHRONOLOGICALLY
+  //   // ------------------------------------------------------------
 
-    final transactions = [...DefaultTransactions.all]
-      ..sort((a, b) => a.date.compareTo(b.date));
+  //   final transactions = [...DefaultTransactions.all]
+  //     ..sort((a, b) => a.date.compareTo(b.date));
 
-    // ------------------------------------------------------------
-    // VALIDATE REFERENCES
-    // ------------------------------------------------------------
+  //   // ------------------------------------------------------------
+  //   // VALIDATE REFERENCES
+  //   // ------------------------------------------------------------
 
-    for (final transaction in transactions) {
-      if (!accountByName.containsKey(transaction.accountName)) {
-        throw StateError(
-          'Default transaction "${transaction.description}" '
-          'references unknown account "${transaction.accountName}".',
-        );
-      }
+  //   for (final transaction in transactions) {
+  //     if (!accountByName.containsKey(transaction.accountName)) {
+  //       throw StateError(
+  //         'Default transaction "${transaction.description}" '
+  //         'references unknown account "${transaction.accountName}".',
+  //       );
+  //     }
 
-      if (transaction.categoryName != null &&
-          !categoryByName.containsKey(transaction.categoryName)) {
-        throw StateError(
-          'Default transaction "${transaction.description}" '
-          'references unknown category "${transaction.categoryName}".',
-        );
-      }
+  //     if (transaction.categoryName != null &&
+  //         !categoryByName.containsKey(transaction.categoryName)) {
+  //       throw StateError(
+  //         'Default transaction "${transaction.description}" '
+  //         'references unknown category "${transaction.categoryName}".',
+  //       );
+  //     }
 
-      if (transaction.entityName != null &&
-          !entityByName.containsKey(transaction.entityName)) {
-        throw StateError(
-          'Default transaction "${transaction.description}" '
-          'references unknown entity "${transaction.entityName}".',
-        );
-      }
+  //     if (transaction.entityName != null &&
+  //         !entityByName.containsKey(transaction.entityName)) {
+  //       throw StateError(
+  //         'Default transaction "${transaction.description}" '
+  //         'references unknown entity "${transaction.entityName}".',
+  //       );
+  //     }
 
-      if (transaction.linkedAccountName != null &&
-          !accountByName.containsKey(transaction.linkedAccountName)) {
-        throw StateError(
-          'Default transaction "${transaction.description}" '
-          'references unknown linked account '
-          '"${transaction.linkedAccountName}".',
-        );
-      }
+  //     if (transaction.linkedAccountName != null &&
+  //         !accountByName.containsKey(transaction.linkedAccountName)) {
+  //       throw StateError(
+  //         'Default transaction "${transaction.description}" '
+  //         'references unknown linked account '
+  //         '"${transaction.linkedAccountName}".',
+  //       );
+  //     }
 
-      if (transaction.isDebtRepayment && !transaction.isDebt) {
-        throw StateError(
-          'Default transaction "${transaction.description}" '
-          'cannot be a debt repayment without isDebt = true.',
-        );
-      }
+  //     if (transaction.isDebtRepayment && !transaction.isDebt) {
+  //       throw StateError(
+  //         'Default transaction "${transaction.description}" '
+  //         'cannot be a debt repayment without isDebt = true.',
+  //       );
+  //     }
 
-      // Give and receive transactions must have a person/entity.
-      if ((transaction.type == TransactionType.give ||
-              transaction.type == TransactionType.receive) &&
-          transaction.entityName == null) {
-        throw StateError(
-          'Default transaction "${transaction.description}" '
-          'requires an entity.',
-        );
-      }
-    }
+  //     // Give and receive transactions must have a person/entity.
+  //     if ((transaction.type == TransactionType.give ||
+  //             transaction.type == TransactionType.receive) &&
+  //         transaction.entityName == null) {
+  //       throw StateError(
+  //         'Default transaction "${transaction.description}" '
+  //         'requires an entity.',
+  //       );
+  //     }
+  //   }
 
-    // ------------------------------------------------------------
-    // INSERT TRANSACTIONS
-    // ------------------------------------------------------------
+  //   // ------------------------------------------------------------
+  //   // INSERT TRANSACTIONS
+  //   // ------------------------------------------------------------
 
-    for (final transaction in transactions) {
-      final account = accountByName[transaction.accountName]!;
+  //   for (final transaction in transactions) {
+  //     final account = accountByName[transaction.accountName]!;
 
-      final category = transaction.categoryName == null
-          ? null
-          : categoryByName[transaction.categoryName];
+  //     final category = transaction.categoryName == null
+  //         ? null
+  //         : categoryByName[transaction.categoryName];
 
-      final linkedAccount = transaction.linkedAccountName == null
-          ? null
-          : accountByName[transaction.linkedAccountName];
+  //     final linkedAccount = transaction.linkedAccountName == null
+  //         ? null
+  //         : accountByName[transaction.linkedAccountName];
 
-      final entity = transaction.entityName == null
-          ? null
-          : entityByName[transaction.entityName];
+  //     final entity = transaction.entityName == null
+  //         ? null
+  //         : entityByName[transaction.entityName];
 
-      // ----------------------------------------------------------
-      // TRANSACTION
-      // ----------------------------------------------------------
+  //     // ----------------------------------------------------------
+  //     // TRANSACTION
+  //     // ----------------------------------------------------------
 
-      final transactionId = await into(transactionsTable).insert(
-        TransactionsTableCompanion.insert(
-          amount: transaction.amount,
-          date: transaction.date,
-          note: Value(transaction.description),
-          transactionType: transaction.type.name,
-          categoryId: Value(category?.id),
-          accountId: account.id,
-          linkedAccountId: Value(linkedAccount?.id),
-        ),
-      );
+  //     final transactionId = await into(transactionsTable).insert(
+  //       TransactionsTableCompanion.insert(
+  //         amount: transaction.amount,
+  //         date: transaction.date,
+  //         note: Value(transaction.description),
+  //         transactionType: transaction.type.name,
+  //         categoryId: Value(category?.id),
+  //         accountId: account.id,
+  //         linkedAccountId: Value(linkedAccount?.id),
+  //       ),
+  //     );
 
-      // ----------------------------------------------------------
-      // PERSON TRANSACTION
-      // ----------------------------------------------------------
+  //     // ----------------------------------------------------------
+  //     // PERSON TRANSACTION
+  //     // ----------------------------------------------------------
 
-      if (entity != null &&
-          (transaction.type == TransactionType.give ||
-              transaction.type == TransactionType.receive)) {
-        await into(transactionParticipantsTable).insert(
-          TransactionParticipantsTableCompanion.insert(
-            transactionId: transactionId,
-            entityId: entity.id,
-            allocatedAmount: transaction.amount,
-            allocationPercentage: const Value(1.0),
+  //     if (entity != null &&
+  //         (transaction.type == TransactionType.give ||
+  //             transaction.type == TransactionType.receive)) {
+  //       await into(transactionParticipantsTable).insert(
+  //         TransactionParticipantsTableCompanion.insert(
+  //           transactionId: transactionId,
+  //           entityId: entity.id,
+  //           allocatedAmount: transaction.amount,
+  //           allocationPercentage: const Value(1.0),
 
-            // For RECEIVE:
-            // the other person gave/payed the money.
-            //
-            // For GIVE:
-            // you gave/payed the money.
-            isPayer: Value(transaction.type == TransactionType.receive),
+  //           // For RECEIVE:
+  //           // the other person gave/payed the money.
+  //           //
+  //           // For GIVE:
+  //           // you gave/payed the money.
+  //           isPayer: Value(transaction.type == TransactionType.receive),
 
-            displayNameSnapshot: Value(entity.name),
-          ),
-        );
-      }
+  //           displayNameSnapshot: Value(entity.name),
+  //         ),
+  //       );
+  //     }
 
-      // ----------------------------------------------------------
-      // DEBT / DEBT REPAYMENT
-      // ----------------------------------------------------------
+  //     // ----------------------------------------------------------
+  //     // DEBT / DEBT REPAYMENT
+  //     // ----------------------------------------------------------
 
-      if (entity != null && transaction.isDebt) {
-        final me = entityByName['Me'];
+  //     if (entity != null && transaction.isDebt) {
+  //       final me = entityByName['Me'];
 
-        if (me == null) {
-          throw StateError('Current user entity "Me" was not found.');
-        }
+  //       if (me == null) {
+  //         throw StateError('Current user entity "Me" was not found.');
+  //       }
 
-        late final int debtorEntityId;
-        late final int creditorEntityId;
+  //       late final int debtorEntityId;
+  //       late final int creditorEntityId;
 
-        if (transaction.isDebtRepayment) {
-          // ------------------------------------------------------
-          // DEBT REPAYMENT
-          //
-          // Give repayment:
-          // Juan → Me
-          //
-          // Receive repayment:
-          // Me → Maria
-          //
-          // The repayment reverses the original debt direction.
-          // ------------------------------------------------------
+  //       if (transaction.isDebtRepayment) {
+  //         // ------------------------------------------------------
+  //         // DEBT REPAYMENT
+  //         //
+  //         // Give repayment:
+  //         // Juan → Me
+  //         //
+  //         // Receive repayment:
+  //         // Me → Maria
+  //         //
+  //         // The repayment reverses the original debt direction.
+  //         // ------------------------------------------------------
 
-          debtorEntityId = me.id;
-          creditorEntityId = entity.id;
-        } else {
-          // ------------------------------------------------------
-          // NEW DEBT
-          // ------------------------------------------------------
+  //         debtorEntityId = me.id;
+  //         creditorEntityId = entity.id;
+  //       } else {
+  //         // ------------------------------------------------------
+  //         // NEW DEBT
+  //         // ------------------------------------------------------
 
-          switch (transaction.type) {
-            case TransactionType.give:
-              // You gave/lent money to the person.
-              //
-              // Person owes you.
-              debtorEntityId = entity.id;
-              creditorEntityId = me.id;
-              break;
+  //         switch (transaction.type) {
+  //           case TransactionType.give:
+  //             // You gave/lent money to the person.
+  //             //
+  //             // Person owes you.
+  //             debtorEntityId = entity.id;
+  //             creditorEntityId = me.id;
+  //             break;
 
-            case TransactionType.receive:
-              // You received/borrowed money from the person.
-              //
-              // You owe the person.
-              debtorEntityId = me.id;
-              creditorEntityId = entity.id;
-              break;
+  //           case TransactionType.receive:
+  //             // You received/borrowed money from the person.
+  //             //
+  //             // You owe the person.
+  //             debtorEntityId = me.id;
+  //             creditorEntityId = entity.id;
+  //             break;
 
-            default:
-              throw StateError(
-                'Debt is only valid for give or receive transactions.',
-              );
-          }
-        }
+  //           default:
+  //             throw StateError(
+  //               'Debt is only valid for give or receive transactions.',
+  //             );
+  //         }
+  //       }
 
-        await into(financialObligationsTable).insert(
-          FinancialObligationsTableCompanion.insert(
-            transactionId: transactionId,
-            debtorEntityId: debtorEntityId,
-            creditorEntityId: creditorEntityId,
-            amount: transaction.amount,
-            type: transaction.isDebtRepayment
-                ? 'repayment'
-                : transaction.type.name,
-            note: Value(transaction.description),
-          ),
-        );
-      }
-    }
-  }
+  //       await into(financialObligationsTable).insert(
+  //         FinancialObligationsTableCompanion.insert(
+  //           transactionId: transactionId,
+  //           debtorEntityId: debtorEntityId,
+  //           creditorEntityId: creditorEntityId,
+  //           amount: transaction.amount,
+  //           type: transaction.isDebtRepayment
+  //               ? 'repayment'
+  //               : transaction.type.name,
+  //           note: Value(transaction.description),
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
   Future<void> seedDefaultEntities() async {
     final existing = await select(entitiesTable).get();
