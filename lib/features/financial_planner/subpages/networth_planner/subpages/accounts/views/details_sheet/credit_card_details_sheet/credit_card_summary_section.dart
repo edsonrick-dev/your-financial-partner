@@ -5,6 +5,7 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_card_metric.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -110,6 +111,7 @@ class CreditCardSummarySection extends StatelessWidget {
             const SizedBox(height: 16),
 
             LinearProgressIndicator(
+              backgroundColor: colorScheme.textInversed,
               value: utilization.clamp(0.0, 1.0),
               minHeight: 6,
               borderRadius: BorderRadius.circular(10),
@@ -119,43 +121,13 @@ class CreditCardSummarySection extends StatelessWidget {
 
             Text(
               '${(utilization * 100).toStringAsFixed(1)}% utilized',
-              style: AppTextStyle.bodyS,
+              style: AppTextStyle.bodyS.copyWith(
+                color: colorScheme.textInversedMuted,
+              ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class AccountCardMetric extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const AccountCardMetric({
-    super.key,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTextStyle.titleS.copyWith(
-            color: colorScheme.appInversedtextMuted,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: AppTextStyle.amountM.copyWith(color: colorScheme.textInversed),
-        ),
-      ],
     );
   }
 }
