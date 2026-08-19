@@ -225,8 +225,17 @@ extension SaveTransactionFunctions on TransactionController {
       Get.snackbar('Missing Account', 'Select an account.');
       return;
     }
+
     if (accountTo == null) {
       Get.snackbar('Missing Account', 'Select an account.');
+      return;
+    }
+
+    if (accountFrom.id == accountTo.id) {
+      Get.snackbar(
+        'Invalid Transfer',
+        'The source and destination accounts must be different.',
+      );
       return;
     }
 
@@ -234,8 +243,34 @@ extension SaveTransactionFunctions on TransactionController {
       Get.snackbar('Invalid Amount', 'Enter an amount.');
       return;
     }
+
     await database.transaction(() async {
-      int? transactionId = editingTransaction.value?.transaction.id;
+      final oldTransaction = editingTransaction.value?.transaction;
+
+      int? transactionId = oldTransaction?.id;
+
+      /// ACCOUNTS AFFECTED BY THIS OPERATION
+      ///
+      /// For a new transfer:
+      ///   accountFrom + accountTo
+      ///
+      /// For an edited transfer:
+      ///   old source + old destination
+      ///   new source + new destination
+      ///
+      /// Using a Set prevents duplicate rebuilds when
+      /// the old/new accounts are the same.
+      final affectedAccountIds = <int>{accountFrom.id, accountTo.id};
+
+      if (oldTransaction != null) {
+        affectedAccountIds.add(oldTransaction.accountId);
+
+        if (oldTransaction.linkedAccountId != null) {
+          affectedAccountIds.add(oldTransaction.linkedAccountId!);
+        }
+      }
+
+      /// SAVE / UPDATE TRANSACTION
 
       if (transactionId != null) {
         await database.transactionsDao.updateTransaction(
@@ -264,16 +299,15 @@ extension SaveTransactionFunctions on TransactionController {
         );
       }
 
-      /// UPDATE ACCOUNT BALANCE
-      await database.accountsDao.adjustAccountBalance(
-        accountFrom.id,
-        -amountValue,
-      );
+      /// REBUILD BALANCES
+      ///
+      /// Do NOT manually add/subtract the transfer amount.
+      /// The transaction is already stored, so _calculateBalance()
+      /// will calculate the correct result.
 
-      await database.accountsDao.adjustAccountBalance(
-        accountTo.id,
-        amountValue,
-      );
+      for (final accountId in affectedAccountIds) {
+        await database.accountsDao.rebuildAccountBalance(accountId);
+      }
     });
 
     /// CLOSE SHEET
