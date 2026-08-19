@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/delete_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
@@ -21,182 +22,178 @@ class SpendTransactionCard extends GetView<TransactionController> {
     final colorScheme = context.colors;
 
     return AdaptivePressable(
-      child: GestureDetector(
-        onTap: () {
-          AppSheets.transaction.spend(item);
-        },
-        onLongPress: () async {
-          final confirmed = await showDialog<bool>(
-            context: context,
-            builder: (_) {
-              return AlertDialog(
-                title: const Text('Delete Transaction'),
-                content: const Text('This action cannot be undone.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context, false);
-                    },
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context, true);
-                    },
-                    child: const Text('Delete'),
-                  ),
-                ],
-              );
-            },
-          );
+      onTap: () {
+        AppSheets.transaction.spend(item);
+      },
+      onLongPress: () async {
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: const Text('Delete Transaction'),
+              content: const Text('This action cannot be undone.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('Delete'),
+                ),
+              ],
+            );
+          },
+        );
 
-          if (confirmed == true) {
-            await controller.deleteTransaction(item);
-          }
-        },
-        child: Container(
-          padding: EdgeInsets.all(8),
-          constraints: BoxConstraints(minHeight: 44),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: colorScheme.bgLight,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: colorScheme.appBorder),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ///TOP SECTION
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 8,
-                children: [
-                  ///Icon Holder
-                  CategoryIconContainer(item: item, color: colorScheme.appText),
+        if (confirmed == true) {
+          await controller.deleteTransaction(item);
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(8),
+        constraints: BoxConstraints(minHeight: 44),
+        width: double.infinity,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ///TOP SECTION
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
 
-                  ///Details Row
-                  Expanded(
-                    child: Column(
-                      spacing: 8,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ///Left Section
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ///Icon Holder
+                CategoryIconContainer(
+                  item: item,
+                  color: colorScheme.appOutflow,
+                ),
+                SizedBox(width: 12),
 
-                              children: [
-                                Text(
-                                  item.category?.name ?? 'Unknown',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    height: 20 / 17,
-                                  ),
+                ///Details Row
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ///Left Section
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+
+                            children: [
+                              Text(
+                                item.category?.name ?? 'Unknown',
+                                style: AppTextStyle.titleL,
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                item.account.name,
+                                style: AppTextStyle.bodyS.copyWith(
+                                  color: colorScheme.appTextMuted,
                                 ),
-                                Text(
-                                  item.account.name,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    height: 16 / 11,
-                                    color: colorScheme.appTextMuted,
-                                  ),
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+
+                          ///Right Section
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                item.transaction.amount.toCurrency(),
+                                style: AppTextStyle.amountL.copyWith(
+                                  color: colorScheme.appOutflow,
                                 ),
-                              ],
-                            ),
-                            Spacer(),
+                              ),
 
-                            ///Right Section
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  item.transaction.amount.toCurrency(),
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    height: 20 / 17,
-                                    color: colorScheme.appOutflow,
-                                    // fontWeight: FontWeight(600),
-                                  ),
+                              if (item.isSharedExpense)
+                                Column(
+                                  children: [
+                                    SizedBox(width: 2),
+                                    Icon(
+                                      PhosphorIconsRegular.users,
+                                      color: colorScheme.appInfo,
+                                      size: 16,
+                                    ),
+                                  ],
                                 ),
-                                if (item.isSharedExpense)
-                                  Icon(
-                                    PhosphorIconsRegular.users,
-                                    color: colorScheme.appInfo,
-                                    size: 16,
-                                  ),
 
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.center,
-                                //   children: [
-                                //     Icon(
-                                //       PhosphorIconsRegular.users,
-                                //       color: colorScheme.info,
-                                //       size: 12,
-                                //     ),
-                                //     SizedBox(width: 4),
-                                //     Text(
-                                //       'Split with '
-                                //       '$othersCount ${othersCount == 1 ? 'other' : 'others'}',
-                                //       style: TextStyle(
-                                //         fontSize: 11,
-                                //         height: 16 / 11,
-                                //         color: colorScheme.info,
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.center,
+                              //   children: [
+                              //     Icon(
+                              //       PhosphorIconsRegular.users,
+                              //       color: colorScheme.info,
+                              //       size: 12,
+                              //     ),
+                              //     SizedBox(width: 4),
+                              //     Text(
+                              //       'Split with '
+                              //       '$othersCount ${othersCount == 1 ? 'other' : 'others'}',
+                              //       style: TextStyle(
+                              //         fontSize: 11,
+                              //         height: 16 / 11,
+                              //         color: colorScheme.info,
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                            ],
+                          ),
+                        ],
+                      ),
 
-                        /// SHARED SUMMARY
-                        // if (item.isSharedExpense)
-                        //   Container(
-                        //     padding: const EdgeInsets.all(8),
+                      /// SHARED SUMMARY
+                      // if (item.isSharedExpense)
+                      //   Container(
+                      //     padding: const EdgeInsets.all(8),
 
-                        //     decoration: BoxDecoration(
-                        //       color: colorScheme.infoSoft,
-                        //       borderRadius: BorderRadius.circular(4),
-                        //       border: Border.all(
-                        //         color: colorScheme.info,
-                        //         width: 0.4,
-                        //       ),
-                        //     ),
+                      //     decoration: BoxDecoration(
+                      //       color: colorScheme.infoSoft,
+                      //       borderRadius: BorderRadius.circular(4),
+                      //       border: Border.all(
+                      //         color: colorScheme.info,
+                      //         width: 0.4,
+                      //       ),
+                      //     ),
 
-                        //     child: Column(
-                        //       spacing: 4,
-                        //       children: [
-                        //         _SummaryRow(
-                        //           label: 'Your share',
+                      //     child: Column(
+                      //       spacing: 4,
+                      //       children: [
+                      //         _SummaryRow(
+                      //           label: 'Your share',
 
-                        //           value: item.splitSummary?.myShare ?? 0,
+                      //           value: item.splitSummary?.myShare ?? 0,
 
-                        //           valueColor: colorScheme.error,
-                        //           fontWeight: 600,
-                        //         ),
+                      //           valueColor: colorScheme.error,
+                      //           fontWeight: 600,
+                      //         ),
 
-                        //         // const SizedBox(height: 4),
-                        //         _SummaryRow(
-                        //           label: 'Others owe you',
+                      //         // const SizedBox(height: 4),
+                      //         _SummaryRow(
+                      //           label: 'Others owe you',
 
-                        //           value: item.splitSummary?.receivableAmount ?? 0,
+                      //           value: item.splitSummary?.receivableAmount ?? 0,
 
-                        //           valueColor: Colors.green,
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                      ],
-                    ),
+                      //           valueColor: Colors.green,
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
 
-              ///BOTTOM SECTION
-            ],
-          ),
+            ///BOTTOM SECTION
+          ],
         ),
       ),
     );

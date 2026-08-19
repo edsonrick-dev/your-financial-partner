@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/transaction_card_shell.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import '../controllers/transaction_controller.dart';
 
@@ -47,6 +49,7 @@ class TransactionView extends GetView<TransactionController> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     final cardsSpacing = 12.0;
     return Scaffold(
       // backgroundColor: Colors.transparent,
@@ -110,15 +113,19 @@ class TransactionView extends GetView<TransactionController> {
                         ? const SizedBox.shrink()
                         : Text(
                             formatGroupTotal(groupTotal),
-                            style: AppTextStyle.amountM.copyWith(
-                              color: groupTotal > 0 ? Colors.green : Colors.red,
+                            style: AppTextStyle.amountL.copyWith(
+                              color: groupTotal >= 0
+                                  ? colorScheme.appInflow
+                                  : colorScheme.appOutflow,
                             ),
                           ),
-                    child: Column(
-                      spacing: cardsSpacing,
-                      children: transactions
-                          .map((item) => TransactionCard(item: item))
-                          .toList(),
+                    child: AppSectionBody(
+                      child: Column(
+                        spacing: cardsSpacing,
+                        children: transactions
+                            .map((item) => TransactionCard(item: item))
+                            .toList(),
+                      ),
                     ),
                   ),
                 ],
