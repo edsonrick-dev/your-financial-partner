@@ -77,19 +77,22 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
 
             const SizedBox(height: 20),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Adjustment'),
+            Obx(() {
+              final adjustment = controller.getBalanceAdjustment(
+                account.currentValue,
+              );
 
-                Text(
-                  controller
-                      .getBalanceAdjustment(account.currentValue)
-                      .toCurrency(),
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ],
-            ),
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Adjustment'),
+                  Text(
+                    adjustment.toCurrency(),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ],
+              );
+            }),
 
             const SizedBox(height: 24),
 
