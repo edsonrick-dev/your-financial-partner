@@ -3,7 +3,7 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/enums/protection_gap_severity_enum.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 
 class ProtectionGapCard extends StatelessWidget {
   final IconData icon;

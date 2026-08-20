@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
@@ -7,7 +6,6 @@ import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transact
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/save_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/earn_transaction_sheet.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
@@ -16,7 +14,6 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_toolbar.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class ReceiveMoneyTransactionSheet extends GetView<TransactionController> {
   const ReceiveMoneyTransactionSheet({super.key});

@@ -4,7 +4,7 @@ import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_card_factory.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_group/account_group_summary.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 
 class AccountGroupSection extends StatelessWidget {
   final AccountGroupSummary summary;

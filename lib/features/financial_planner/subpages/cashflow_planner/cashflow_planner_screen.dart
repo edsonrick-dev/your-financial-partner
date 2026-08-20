@@ -12,7 +12,7 @@ import 'package:getx_drift_app/features/home/views/section_views/cashflow_histor
 import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 

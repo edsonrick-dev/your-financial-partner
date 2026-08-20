@@ -3,7 +3,7 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CashflowPlanCard extends StatelessWidget {

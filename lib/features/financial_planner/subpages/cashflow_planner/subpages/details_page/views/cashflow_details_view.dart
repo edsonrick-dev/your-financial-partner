@@ -7,7 +7,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/planned_income_list.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 
 class CashflowDetailsView extends GetView<CashflowController> {
   const CashflowDetailsView({super.key});

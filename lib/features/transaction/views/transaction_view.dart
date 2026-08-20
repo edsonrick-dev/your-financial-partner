@@ -10,7 +10,7 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 import '../controllers/transaction_controller.dart';
 
 class TransactionView extends GetView<TransactionController> {

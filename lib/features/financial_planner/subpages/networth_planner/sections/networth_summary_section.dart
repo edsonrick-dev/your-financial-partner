@@ -3,7 +3,7 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/domain/enums/net_worth_comparison_enum.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class NetWorthSummaryContainerSection extends StatelessWidget {

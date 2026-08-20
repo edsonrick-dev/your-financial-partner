@@ -3150,12 +3150,11 @@ class FinancialObligationsTableCompanion
   }
 }
 
-class $CashflowPlansTableTable extends CashflowPlansTable
-    with TableInfo<$CashflowPlansTableTable, CashflowPlansTableData> {
+class $LoansTable extends Loans with TableInfo<$LoansTable, Loan> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $CashflowPlansTableTable(this.attachedDatabase, [this._alias]);
+  $LoansTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -3178,127 +3177,108 @@ class $CashflowPlansTableTable extends CashflowPlansTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _planTypeMeta = const VerificationMeta(
-    'planType',
+  static const VerificationMeta _loanTypeMeta = const VerificationMeta(
+    'loanType',
   );
   @override
-  late final GeneratedColumn<String> planType = GeneratedColumn<String>(
-    'plan_type',
+  late final GeneratedColumn<String> loanType = GeneratedColumn<String>(
+    'loan_type',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _expenseModeMeta = const VerificationMeta(
-    'expenseMode',
+  static const VerificationMeta _originalPrincipalMeta = const VerificationMeta(
+    'originalPrincipal',
   );
   @override
-  late final GeneratedColumn<String> expenseMode = GeneratedColumn<String>(
-    'expense_mode',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
-    'categoryId',
+  late final GeneratedColumn<double> originalPrincipal =
+      GeneratedColumn<double>(
+        'original_principal',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _outstandingBalanceMeta =
+      const VerificationMeta('outstandingBalance');
+  @override
+  late final GeneratedColumn<double> outstandingBalance =
+      GeneratedColumn<double>(
+        'outstanding_balance',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _interestRateMeta = const VerificationMeta(
+    'interestRate',
   );
   @override
-  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
-    'category_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES cashflow_categories_table (id)',
-    ),
-  );
-  static const VerificationMeta _debtIdMeta = const VerificationMeta('debtId');
-  @override
-  late final GeneratedColumn<int> debtId = GeneratedColumn<int>(
-    'debt_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
-  @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
+  late final GeneratedColumn<double> interestRate = GeneratedColumn<double>(
+    'interest_rate',
     aliasedName,
     true,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _customAmountsJsonMeta = const VerificationMeta(
-    'customAmountsJson',
+  static const VerificationMeta _paymentAmountMeta = const VerificationMeta(
+    'paymentAmount',
   );
   @override
-  late final GeneratedColumn<String> customAmountsJson =
-      GeneratedColumn<String>(
-        'custom_amounts_json',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _frequencyMeta = const VerificationMeta(
-    'frequency',
+  late final GeneratedColumn<double> paymentAmount = GeneratedColumn<double>(
+    'payment_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paymentFrequencyMeta = const VerificationMeta(
+    'paymentFrequency',
   );
   @override
-  late final GeneratedColumn<String> frequency = GeneratedColumn<String>(
-    'frequency',
+  late final GeneratedColumn<String> paymentFrequency = GeneratedColumn<String>(
+    'payment_frequency',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _monthMaskMeta = const VerificationMeta(
-    'monthMask',
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
   );
   @override
-  late final GeneratedColumn<int> monthMask = GeneratedColumn<int>(
-    'month_mask',
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
     aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
   );
-  static const VerificationMeta _occurrenceDaysJsonMeta =
-      const VerificationMeta('occurrenceDaysJson');
-  @override
-  late final GeneratedColumn<String> occurrenceDaysJson =
-      GeneratedColumn<String>(
-        'occurrence_days_json',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _anchorDateMeta = const VerificationMeta(
-    'anchorDate',
+  static const VerificationMeta _maturityDateMeta = const VerificationMeta(
+    'maturityDate',
   );
   @override
-  late final GeneratedColumn<DateTime> anchorDate = GeneratedColumn<DateTime>(
-    'anchor_date',
+  late final GeneratedColumn<DateTime> maturityDate = GeneratedColumn<DateTime>(
+    'maturity_date',
     aliasedName,
     true,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _dependentSurvivalFactorMeta =
-      const VerificationMeta('dependentSurvivalFactor');
+  static const VerificationMeta _defaultPaymentAccountIdMeta =
+      const VerificationMeta('defaultPaymentAccountId');
   @override
-  late final GeneratedColumn<double> dependentSurvivalFactor =
-      GeneratedColumn<double>(
-        'dependent_survival_factor',
+  late final GeneratedColumn<int> defaultPaymentAccountId =
+      GeneratedColumn<int>(
+        'default_payment_account_id',
         aliasedName,
-        false,
-        type: DriftSqlType.double,
+        true,
+        type: DriftSqlType.int,
         requiredDuringInsert: false,
-        defaultValue: const Constant(0),
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES accounts_table (id)',
+        ),
       );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -3328,17 +3308,15 @@ class $CashflowPlansTableTable extends CashflowPlansTable
   List<GeneratedColumn> get $columns => [
     id,
     name,
-    planType,
-    expenseMode,
-    categoryId,
-    debtId,
-    amount,
-    customAmountsJson,
-    frequency,
-    monthMask,
-    occurrenceDaysJson,
-    anchorDate,
-    dependentSurvivalFactor,
+    loanType,
+    originalPrincipal,
+    outstandingBalance,
+    interestRate,
+    paymentAmount,
+    paymentFrequency,
+    startDate,
+    maturityDate,
+    defaultPaymentAccountId,
     createdAt,
     updatedAt,
   ];
@@ -3346,10 +3324,10 @@ class $CashflowPlansTableTable extends CashflowPlansTable
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'cashflow_plans_table';
+  static const String $name = 'loans';
   @override
   VerificationContext validateIntegrity(
-    Insertable<CashflowPlansTableData> instance, {
+    Insertable<Loan> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -3365,85 +3343,90 @@ class $CashflowPlansTableTable extends CashflowPlansTable
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('plan_type')) {
+    if (data.containsKey('loan_type')) {
       context.handle(
-        _planTypeMeta,
-        planType.isAcceptableOrUnknown(data['plan_type']!, _planTypeMeta),
+        _loanTypeMeta,
+        loanType.isAcceptableOrUnknown(data['loan_type']!, _loanTypeMeta),
       );
     } else if (isInserting) {
-      context.missing(_planTypeMeta);
+      context.missing(_loanTypeMeta);
     }
-    if (data.containsKey('expense_mode')) {
+    if (data.containsKey('original_principal')) {
       context.handle(
-        _expenseModeMeta,
-        expenseMode.isAcceptableOrUnknown(
-          data['expense_mode']!,
-          _expenseModeMeta,
+        _originalPrincipalMeta,
+        originalPrincipal.isAcceptableOrUnknown(
+          data['original_principal']!,
+          _originalPrincipalMeta,
         ),
-      );
-    }
-    if (data.containsKey('category_id')) {
-      context.handle(
-        _categoryIdMeta,
-        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
-      );
-    }
-    if (data.containsKey('debt_id')) {
-      context.handle(
-        _debtIdMeta,
-        debtId.isAcceptableOrUnknown(data['debt_id']!, _debtIdMeta),
-      );
-    }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    }
-    if (data.containsKey('custom_amounts_json')) {
-      context.handle(
-        _customAmountsJsonMeta,
-        customAmountsJson.isAcceptableOrUnknown(
-          data['custom_amounts_json']!,
-          _customAmountsJsonMeta,
-        ),
-      );
-    }
-    if (data.containsKey('frequency')) {
-      context.handle(
-        _frequencyMeta,
-        frequency.isAcceptableOrUnknown(data['frequency']!, _frequencyMeta),
       );
     } else if (isInserting) {
-      context.missing(_frequencyMeta);
+      context.missing(_originalPrincipalMeta);
     }
-    if (data.containsKey('month_mask')) {
+    if (data.containsKey('outstanding_balance')) {
       context.handle(
-        _monthMaskMeta,
-        monthMask.isAcceptableOrUnknown(data['month_mask']!, _monthMaskMeta),
+        _outstandingBalanceMeta,
+        outstandingBalance.isAcceptableOrUnknown(
+          data['outstanding_balance']!,
+          _outstandingBalanceMeta,
+        ),
       );
+    } else if (isInserting) {
+      context.missing(_outstandingBalanceMeta);
     }
-    if (data.containsKey('occurrence_days_json')) {
+    if (data.containsKey('interest_rate')) {
       context.handle(
-        _occurrenceDaysJsonMeta,
-        occurrenceDaysJson.isAcceptableOrUnknown(
-          data['occurrence_days_json']!,
-          _occurrenceDaysJsonMeta,
+        _interestRateMeta,
+        interestRate.isAcceptableOrUnknown(
+          data['interest_rate']!,
+          _interestRateMeta,
         ),
       );
     }
-    if (data.containsKey('anchor_date')) {
+    if (data.containsKey('payment_amount')) {
       context.handle(
-        _anchorDateMeta,
-        anchorDate.isAcceptableOrUnknown(data['anchor_date']!, _anchorDateMeta),
+        _paymentAmountMeta,
+        paymentAmount.isAcceptableOrUnknown(
+          data['payment_amount']!,
+          _paymentAmountMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentAmountMeta);
+    }
+    if (data.containsKey('payment_frequency')) {
+      context.handle(
+        _paymentFrequencyMeta,
+        paymentFrequency.isAcceptableOrUnknown(
+          data['payment_frequency']!,
+          _paymentFrequencyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentFrequencyMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('maturity_date')) {
+      context.handle(
+        _maturityDateMeta,
+        maturityDate.isAcceptableOrUnknown(
+          data['maturity_date']!,
+          _maturityDateMeta,
+        ),
       );
     }
-    if (data.containsKey('dependent_survival_factor')) {
+    if (data.containsKey('default_payment_account_id')) {
       context.handle(
-        _dependentSurvivalFactorMeta,
-        dependentSurvivalFactor.isAcceptableOrUnknown(
-          data['dependent_survival_factor']!,
-          _dependentSurvivalFactorMeta,
+        _defaultPaymentAccountIdMeta,
+        defaultPaymentAccountId.isAcceptableOrUnknown(
+          data['default_payment_account_id']!,
+          _defaultPaymentAccountIdMeta,
         ),
       );
     }
@@ -3465,9 +3448,9 @@ class $CashflowPlansTableTable extends CashflowPlansTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  CashflowPlansTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Loan map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CashflowPlansTableData(
+    return Loan(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -3476,50 +3459,42 @@ class $CashflowPlansTableTable extends CashflowPlansTable
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      planType: attachedDatabase.typeMapping.read(
+      loanType: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}plan_type'],
+        data['${effectivePrefix}loan_type'],
       )!,
-      expenseMode: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}expense_mode'],
-      ),
-      categoryId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}category_id'],
-      ),
-      debtId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}debt_id'],
-      ),
-      amount: attachedDatabase.typeMapping.read(
+      originalPrincipal: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      ),
-      customAmountsJson: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}custom_amounts_json'],
-      ),
-      frequency: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}frequency'],
+        data['${effectivePrefix}original_principal'],
       )!,
-      monthMask: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}month_mask'],
+      outstandingBalance: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}outstanding_balance'],
+      )!,
+      interestRate: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}interest_rate'],
       ),
-      occurrenceDaysJson: attachedDatabase.typeMapping.read(
+      paymentAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}payment_amount'],
+      )!,
+      paymentFrequency: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}occurrence_days_json'],
-      ),
-      anchorDate: attachedDatabase.typeMapping.read(
+        data['${effectivePrefix}payment_frequency'],
+      )!,
+      startDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
-        data['${effectivePrefix}anchor_date'],
-      ),
-      dependentSurvivalFactor: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}dependent_survival_factor'],
+        data['${effectivePrefix}start_date'],
       )!,
+      maturityDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}maturity_date'],
+      ),
+      defaultPaymentAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}default_payment_account_id'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -3532,42 +3507,37 @@ class $CashflowPlansTableTable extends CashflowPlansTable
   }
 
   @override
-  $CashflowPlansTableTable createAlias(String alias) {
-    return $CashflowPlansTableTable(attachedDatabase, alias);
+  $LoansTable createAlias(String alias) {
+    return $LoansTable(attachedDatabase, alias);
   }
 }
 
-class CashflowPlansTableData extends DataClass
-    implements Insertable<CashflowPlansTableData> {
+class Loan extends DataClass implements Insertable<Loan> {
   final int id;
   final String name;
-  final String planType;
-  final String? expenseMode;
-  final int? categoryId;
-  final int? debtId;
-  final double? amount;
-  final String? customAmountsJson;
-  final String frequency;
-  final int? monthMask;
-  final String? occurrenceDaysJson;
-  final DateTime? anchorDate;
-  final double dependentSurvivalFactor;
+  final String loanType;
+  final double originalPrincipal;
+  final double outstandingBalance;
+  final double? interestRate;
+  final double paymentAmount;
+  final String paymentFrequency;
+  final DateTime startDate;
+  final DateTime? maturityDate;
+  final int? defaultPaymentAccountId;
   final DateTime createdAt;
   final DateTime updatedAt;
-  const CashflowPlansTableData({
+  const Loan({
     required this.id,
     required this.name,
-    required this.planType,
-    this.expenseMode,
-    this.categoryId,
-    this.debtId,
-    this.amount,
-    this.customAmountsJson,
-    required this.frequency,
-    this.monthMask,
-    this.occurrenceDaysJson,
-    this.anchorDate,
-    required this.dependentSurvivalFactor,
+    required this.loanType,
+    required this.originalPrincipal,
+    required this.outstandingBalance,
+    this.interestRate,
+    required this.paymentAmount,
+    required this.paymentFrequency,
+    required this.startDate,
+    this.maturityDate,
+    this.defaultPaymentAccountId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -3576,100 +3546,72 @@ class CashflowPlansTableData extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
-    map['plan_type'] = Variable<String>(planType);
-    if (!nullToAbsent || expenseMode != null) {
-      map['expense_mode'] = Variable<String>(expenseMode);
+    map['loan_type'] = Variable<String>(loanType);
+    map['original_principal'] = Variable<double>(originalPrincipal);
+    map['outstanding_balance'] = Variable<double>(outstandingBalance);
+    if (!nullToAbsent || interestRate != null) {
+      map['interest_rate'] = Variable<double>(interestRate);
     }
-    if (!nullToAbsent || categoryId != null) {
-      map['category_id'] = Variable<int>(categoryId);
+    map['payment_amount'] = Variable<double>(paymentAmount);
+    map['payment_frequency'] = Variable<String>(paymentFrequency);
+    map['start_date'] = Variable<DateTime>(startDate);
+    if (!nullToAbsent || maturityDate != null) {
+      map['maturity_date'] = Variable<DateTime>(maturityDate);
     }
-    if (!nullToAbsent || debtId != null) {
-      map['debt_id'] = Variable<int>(debtId);
+    if (!nullToAbsent || defaultPaymentAccountId != null) {
+      map['default_payment_account_id'] = Variable<int>(
+        defaultPaymentAccountId,
+      );
     }
-    if (!nullToAbsent || amount != null) {
-      map['amount'] = Variable<double>(amount);
-    }
-    if (!nullToAbsent || customAmountsJson != null) {
-      map['custom_amounts_json'] = Variable<String>(customAmountsJson);
-    }
-    map['frequency'] = Variable<String>(frequency);
-    if (!nullToAbsent || monthMask != null) {
-      map['month_mask'] = Variable<int>(monthMask);
-    }
-    if (!nullToAbsent || occurrenceDaysJson != null) {
-      map['occurrence_days_json'] = Variable<String>(occurrenceDaysJson);
-    }
-    if (!nullToAbsent || anchorDate != null) {
-      map['anchor_date'] = Variable<DateTime>(anchorDate);
-    }
-    map['dependent_survival_factor'] = Variable<double>(
-      dependentSurvivalFactor,
-    );
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
-  CashflowPlansTableCompanion toCompanion(bool nullToAbsent) {
-    return CashflowPlansTableCompanion(
+  LoansCompanion toCompanion(bool nullToAbsent) {
+    return LoansCompanion(
       id: Value(id),
       name: Value(name),
-      planType: Value(planType),
-      expenseMode: expenseMode == null && nullToAbsent
+      loanType: Value(loanType),
+      originalPrincipal: Value(originalPrincipal),
+      outstandingBalance: Value(outstandingBalance),
+      interestRate: interestRate == null && nullToAbsent
           ? const Value.absent()
-          : Value(expenseMode),
-      categoryId: categoryId == null && nullToAbsent
+          : Value(interestRate),
+      paymentAmount: Value(paymentAmount),
+      paymentFrequency: Value(paymentFrequency),
+      startDate: Value(startDate),
+      maturityDate: maturityDate == null && nullToAbsent
           ? const Value.absent()
-          : Value(categoryId),
-      debtId: debtId == null && nullToAbsent
+          : Value(maturityDate),
+      defaultPaymentAccountId: defaultPaymentAccountId == null && nullToAbsent
           ? const Value.absent()
-          : Value(debtId),
-      amount: amount == null && nullToAbsent
-          ? const Value.absent()
-          : Value(amount),
-      customAmountsJson: customAmountsJson == null && nullToAbsent
-          ? const Value.absent()
-          : Value(customAmountsJson),
-      frequency: Value(frequency),
-      monthMask: monthMask == null && nullToAbsent
-          ? const Value.absent()
-          : Value(monthMask),
-      occurrenceDaysJson: occurrenceDaysJson == null && nullToAbsent
-          ? const Value.absent()
-          : Value(occurrenceDaysJson),
-      anchorDate: anchorDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(anchorDate),
-      dependentSurvivalFactor: Value(dependentSurvivalFactor),
+          : Value(defaultPaymentAccountId),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
   }
 
-  factory CashflowPlansTableData.fromJson(
+  factory Loan.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CashflowPlansTableData(
+    return Loan(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      planType: serializer.fromJson<String>(json['planType']),
-      expenseMode: serializer.fromJson<String?>(json['expenseMode']),
-      categoryId: serializer.fromJson<int?>(json['categoryId']),
-      debtId: serializer.fromJson<int?>(json['debtId']),
-      amount: serializer.fromJson<double?>(json['amount']),
-      customAmountsJson: serializer.fromJson<String?>(
-        json['customAmountsJson'],
+      loanType: serializer.fromJson<String>(json['loanType']),
+      originalPrincipal: serializer.fromJson<double>(json['originalPrincipal']),
+      outstandingBalance: serializer.fromJson<double>(
+        json['outstandingBalance'],
       ),
-      frequency: serializer.fromJson<String>(json['frequency']),
-      monthMask: serializer.fromJson<int?>(json['monthMask']),
-      occurrenceDaysJson: serializer.fromJson<String?>(
-        json['occurrenceDaysJson'],
-      ),
-      anchorDate: serializer.fromJson<DateTime?>(json['anchorDate']),
-      dependentSurvivalFactor: serializer.fromJson<double>(
-        json['dependentSurvivalFactor'],
+      interestRate: serializer.fromJson<double?>(json['interestRate']),
+      paymentAmount: serializer.fromJson<double>(json['paymentAmount']),
+      paymentFrequency: serializer.fromJson<String>(json['paymentFrequency']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      maturityDate: serializer.fromJson<DateTime?>(json['maturityDate']),
+      defaultPaymentAccountId: serializer.fromJson<int?>(
+        json['defaultPaymentAccountId'],
       ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -3681,89 +3623,80 @@ class CashflowPlansTableData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
-      'planType': serializer.toJson<String>(planType),
-      'expenseMode': serializer.toJson<String?>(expenseMode),
-      'categoryId': serializer.toJson<int?>(categoryId),
-      'debtId': serializer.toJson<int?>(debtId),
-      'amount': serializer.toJson<double?>(amount),
-      'customAmountsJson': serializer.toJson<String?>(customAmountsJson),
-      'frequency': serializer.toJson<String>(frequency),
-      'monthMask': serializer.toJson<int?>(monthMask),
-      'occurrenceDaysJson': serializer.toJson<String?>(occurrenceDaysJson),
-      'anchorDate': serializer.toJson<DateTime?>(anchorDate),
-      'dependentSurvivalFactor': serializer.toJson<double>(
-        dependentSurvivalFactor,
+      'loanType': serializer.toJson<String>(loanType),
+      'originalPrincipal': serializer.toJson<double>(originalPrincipal),
+      'outstandingBalance': serializer.toJson<double>(outstandingBalance),
+      'interestRate': serializer.toJson<double?>(interestRate),
+      'paymentAmount': serializer.toJson<double>(paymentAmount),
+      'paymentFrequency': serializer.toJson<String>(paymentFrequency),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'maturityDate': serializer.toJson<DateTime?>(maturityDate),
+      'defaultPaymentAccountId': serializer.toJson<int?>(
+        defaultPaymentAccountId,
       ),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
-  CashflowPlansTableData copyWith({
+  Loan copyWith({
     int? id,
     String? name,
-    String? planType,
-    Value<String?> expenseMode = const Value.absent(),
-    Value<int?> categoryId = const Value.absent(),
-    Value<int?> debtId = const Value.absent(),
-    Value<double?> amount = const Value.absent(),
-    Value<String?> customAmountsJson = const Value.absent(),
-    String? frequency,
-    Value<int?> monthMask = const Value.absent(),
-    Value<String?> occurrenceDaysJson = const Value.absent(),
-    Value<DateTime?> anchorDate = const Value.absent(),
-    double? dependentSurvivalFactor,
+    String? loanType,
+    double? originalPrincipal,
+    double? outstandingBalance,
+    Value<double?> interestRate = const Value.absent(),
+    double? paymentAmount,
+    String? paymentFrequency,
+    DateTime? startDate,
+    Value<DateTime?> maturityDate = const Value.absent(),
+    Value<int?> defaultPaymentAccountId = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => CashflowPlansTableData(
+  }) => Loan(
     id: id ?? this.id,
     name: name ?? this.name,
-    planType: planType ?? this.planType,
-    expenseMode: expenseMode.present ? expenseMode.value : this.expenseMode,
-    categoryId: categoryId.present ? categoryId.value : this.categoryId,
-    debtId: debtId.present ? debtId.value : this.debtId,
-    amount: amount.present ? amount.value : this.amount,
-    customAmountsJson: customAmountsJson.present
-        ? customAmountsJson.value
-        : this.customAmountsJson,
-    frequency: frequency ?? this.frequency,
-    monthMask: monthMask.present ? monthMask.value : this.monthMask,
-    occurrenceDaysJson: occurrenceDaysJson.present
-        ? occurrenceDaysJson.value
-        : this.occurrenceDaysJson,
-    anchorDate: anchorDate.present ? anchorDate.value : this.anchorDate,
-    dependentSurvivalFactor:
-        dependentSurvivalFactor ?? this.dependentSurvivalFactor,
+    loanType: loanType ?? this.loanType,
+    originalPrincipal: originalPrincipal ?? this.originalPrincipal,
+    outstandingBalance: outstandingBalance ?? this.outstandingBalance,
+    interestRate: interestRate.present ? interestRate.value : this.interestRate,
+    paymentAmount: paymentAmount ?? this.paymentAmount,
+    paymentFrequency: paymentFrequency ?? this.paymentFrequency,
+    startDate: startDate ?? this.startDate,
+    maturityDate: maturityDate.present ? maturityDate.value : this.maturityDate,
+    defaultPaymentAccountId: defaultPaymentAccountId.present
+        ? defaultPaymentAccountId.value
+        : this.defaultPaymentAccountId,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
-  CashflowPlansTableData copyWithCompanion(CashflowPlansTableCompanion data) {
-    return CashflowPlansTableData(
+  Loan copyWithCompanion(LoansCompanion data) {
+    return Loan(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
-      planType: data.planType.present ? data.planType.value : this.planType,
-      expenseMode: data.expenseMode.present
-          ? data.expenseMode.value
-          : this.expenseMode,
-      categoryId: data.categoryId.present
-          ? data.categoryId.value
-          : this.categoryId,
-      debtId: data.debtId.present ? data.debtId.value : this.debtId,
-      amount: data.amount.present ? data.amount.value : this.amount,
-      customAmountsJson: data.customAmountsJson.present
-          ? data.customAmountsJson.value
-          : this.customAmountsJson,
-      frequency: data.frequency.present ? data.frequency.value : this.frequency,
-      monthMask: data.monthMask.present ? data.monthMask.value : this.monthMask,
-      occurrenceDaysJson: data.occurrenceDaysJson.present
-          ? data.occurrenceDaysJson.value
-          : this.occurrenceDaysJson,
-      anchorDate: data.anchorDate.present
-          ? data.anchorDate.value
-          : this.anchorDate,
-      dependentSurvivalFactor: data.dependentSurvivalFactor.present
-          ? data.dependentSurvivalFactor.value
-          : this.dependentSurvivalFactor,
+      loanType: data.loanType.present ? data.loanType.value : this.loanType,
+      originalPrincipal: data.originalPrincipal.present
+          ? data.originalPrincipal.value
+          : this.originalPrincipal,
+      outstandingBalance: data.outstandingBalance.present
+          ? data.outstandingBalance.value
+          : this.outstandingBalance,
+      interestRate: data.interestRate.present
+          ? data.interestRate.value
+          : this.interestRate,
+      paymentAmount: data.paymentAmount.present
+          ? data.paymentAmount.value
+          : this.paymentAmount,
+      paymentFrequency: data.paymentFrequency.present
+          ? data.paymentFrequency.value
+          : this.paymentFrequency,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      maturityDate: data.maturityDate.present
+          ? data.maturityDate.value
+          : this.maturityDate,
+      defaultPaymentAccountId: data.defaultPaymentAccountId.present
+          ? data.defaultPaymentAccountId.value
+          : this.defaultPaymentAccountId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -3771,20 +3704,18 @@ class CashflowPlansTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('CashflowPlansTableData(')
+    return (StringBuffer('Loan(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('planType: $planType, ')
-          ..write('expenseMode: $expenseMode, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('debtId: $debtId, ')
-          ..write('amount: $amount, ')
-          ..write('customAmountsJson: $customAmountsJson, ')
-          ..write('frequency: $frequency, ')
-          ..write('monthMask: $monthMask, ')
-          ..write('occurrenceDaysJson: $occurrenceDaysJson, ')
-          ..write('anchorDate: $anchorDate, ')
-          ..write('dependentSurvivalFactor: $dependentSurvivalFactor, ')
+          ..write('loanType: $loanType, ')
+          ..write('originalPrincipal: $originalPrincipal, ')
+          ..write('outstandingBalance: $outstandingBalance, ')
+          ..write('interestRate: $interestRate, ')
+          ..write('paymentAmount: $paymentAmount, ')
+          ..write('paymentFrequency: $paymentFrequency, ')
+          ..write('startDate: $startDate, ')
+          ..write('maturityDate: $maturityDate, ')
+          ..write('defaultPaymentAccountId: $defaultPaymentAccountId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -3795,164 +3726,148 @@ class CashflowPlansTableData extends DataClass
   int get hashCode => Object.hash(
     id,
     name,
-    planType,
-    expenseMode,
-    categoryId,
-    debtId,
-    amount,
-    customAmountsJson,
-    frequency,
-    monthMask,
-    occurrenceDaysJson,
-    anchorDate,
-    dependentSurvivalFactor,
+    loanType,
+    originalPrincipal,
+    outstandingBalance,
+    interestRate,
+    paymentAmount,
+    paymentFrequency,
+    startDate,
+    maturityDate,
+    defaultPaymentAccountId,
     createdAt,
     updatedAt,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CashflowPlansTableData &&
+      (other is Loan &&
           other.id == this.id &&
           other.name == this.name &&
-          other.planType == this.planType &&
-          other.expenseMode == this.expenseMode &&
-          other.categoryId == this.categoryId &&
-          other.debtId == this.debtId &&
-          other.amount == this.amount &&
-          other.customAmountsJson == this.customAmountsJson &&
-          other.frequency == this.frequency &&
-          other.monthMask == this.monthMask &&
-          other.occurrenceDaysJson == this.occurrenceDaysJson &&
-          other.anchorDate == this.anchorDate &&
-          other.dependentSurvivalFactor == this.dependentSurvivalFactor &&
+          other.loanType == this.loanType &&
+          other.originalPrincipal == this.originalPrincipal &&
+          other.outstandingBalance == this.outstandingBalance &&
+          other.interestRate == this.interestRate &&
+          other.paymentAmount == this.paymentAmount &&
+          other.paymentFrequency == this.paymentFrequency &&
+          other.startDate == this.startDate &&
+          other.maturityDate == this.maturityDate &&
+          other.defaultPaymentAccountId == this.defaultPaymentAccountId &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
 
-class CashflowPlansTableCompanion
-    extends UpdateCompanion<CashflowPlansTableData> {
+class LoansCompanion extends UpdateCompanion<Loan> {
   final Value<int> id;
   final Value<String> name;
-  final Value<String> planType;
-  final Value<String?> expenseMode;
-  final Value<int?> categoryId;
-  final Value<int?> debtId;
-  final Value<double?> amount;
-  final Value<String?> customAmountsJson;
-  final Value<String> frequency;
-  final Value<int?> monthMask;
-  final Value<String?> occurrenceDaysJson;
-  final Value<DateTime?> anchorDate;
-  final Value<double> dependentSurvivalFactor;
+  final Value<String> loanType;
+  final Value<double> originalPrincipal;
+  final Value<double> outstandingBalance;
+  final Value<double?> interestRate;
+  final Value<double> paymentAmount;
+  final Value<String> paymentFrequency;
+  final Value<DateTime> startDate;
+  final Value<DateTime?> maturityDate;
+  final Value<int?> defaultPaymentAccountId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
-  const CashflowPlansTableCompanion({
+  const LoansCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
-    this.planType = const Value.absent(),
-    this.expenseMode = const Value.absent(),
-    this.categoryId = const Value.absent(),
-    this.debtId = const Value.absent(),
-    this.amount = const Value.absent(),
-    this.customAmountsJson = const Value.absent(),
-    this.frequency = const Value.absent(),
-    this.monthMask = const Value.absent(),
-    this.occurrenceDaysJson = const Value.absent(),
-    this.anchorDate = const Value.absent(),
-    this.dependentSurvivalFactor = const Value.absent(),
+    this.loanType = const Value.absent(),
+    this.originalPrincipal = const Value.absent(),
+    this.outstandingBalance = const Value.absent(),
+    this.interestRate = const Value.absent(),
+    this.paymentAmount = const Value.absent(),
+    this.paymentFrequency = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.maturityDate = const Value.absent(),
+    this.defaultPaymentAccountId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
-  CashflowPlansTableCompanion.insert({
+  LoansCompanion.insert({
     this.id = const Value.absent(),
     required String name,
-    required String planType,
-    this.expenseMode = const Value.absent(),
-    this.categoryId = const Value.absent(),
-    this.debtId = const Value.absent(),
-    this.amount = const Value.absent(),
-    this.customAmountsJson = const Value.absent(),
-    required String frequency,
-    this.monthMask = const Value.absent(),
-    this.occurrenceDaysJson = const Value.absent(),
-    this.anchorDate = const Value.absent(),
-    this.dependentSurvivalFactor = const Value.absent(),
+    required String loanType,
+    required double originalPrincipal,
+    required double outstandingBalance,
+    this.interestRate = const Value.absent(),
+    required double paymentAmount,
+    required String paymentFrequency,
+    required DateTime startDate,
+    this.maturityDate = const Value.absent(),
+    this.defaultPaymentAccountId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : name = Value(name),
-       planType = Value(planType),
-       frequency = Value(frequency);
-  static Insertable<CashflowPlansTableData> custom({
+       loanType = Value(loanType),
+       originalPrincipal = Value(originalPrincipal),
+       outstandingBalance = Value(outstandingBalance),
+       paymentAmount = Value(paymentAmount),
+       paymentFrequency = Value(paymentFrequency),
+       startDate = Value(startDate);
+  static Insertable<Loan> custom({
     Expression<int>? id,
     Expression<String>? name,
-    Expression<String>? planType,
-    Expression<String>? expenseMode,
-    Expression<int>? categoryId,
-    Expression<int>? debtId,
-    Expression<double>? amount,
-    Expression<String>? customAmountsJson,
-    Expression<String>? frequency,
-    Expression<int>? monthMask,
-    Expression<String>? occurrenceDaysJson,
-    Expression<DateTime>? anchorDate,
-    Expression<double>? dependentSurvivalFactor,
+    Expression<String>? loanType,
+    Expression<double>? originalPrincipal,
+    Expression<double>? outstandingBalance,
+    Expression<double>? interestRate,
+    Expression<double>? paymentAmount,
+    Expression<String>? paymentFrequency,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? maturityDate,
+    Expression<int>? defaultPaymentAccountId,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
-      if (planType != null) 'plan_type': planType,
-      if (expenseMode != null) 'expense_mode': expenseMode,
-      if (categoryId != null) 'category_id': categoryId,
-      if (debtId != null) 'debt_id': debtId,
-      if (amount != null) 'amount': amount,
-      if (customAmountsJson != null) 'custom_amounts_json': customAmountsJson,
-      if (frequency != null) 'frequency': frequency,
-      if (monthMask != null) 'month_mask': monthMask,
-      if (occurrenceDaysJson != null)
-        'occurrence_days_json': occurrenceDaysJson,
-      if (anchorDate != null) 'anchor_date': anchorDate,
-      if (dependentSurvivalFactor != null)
-        'dependent_survival_factor': dependentSurvivalFactor,
+      if (loanType != null) 'loan_type': loanType,
+      if (originalPrincipal != null) 'original_principal': originalPrincipal,
+      if (outstandingBalance != null) 'outstanding_balance': outstandingBalance,
+      if (interestRate != null) 'interest_rate': interestRate,
+      if (paymentAmount != null) 'payment_amount': paymentAmount,
+      if (paymentFrequency != null) 'payment_frequency': paymentFrequency,
+      if (startDate != null) 'start_date': startDate,
+      if (maturityDate != null) 'maturity_date': maturityDate,
+      if (defaultPaymentAccountId != null)
+        'default_payment_account_id': defaultPaymentAccountId,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
-  CashflowPlansTableCompanion copyWith({
+  LoansCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
-    Value<String>? planType,
-    Value<String?>? expenseMode,
-    Value<int?>? categoryId,
-    Value<int?>? debtId,
-    Value<double?>? amount,
-    Value<String?>? customAmountsJson,
-    Value<String>? frequency,
-    Value<int?>? monthMask,
-    Value<String?>? occurrenceDaysJson,
-    Value<DateTime?>? anchorDate,
-    Value<double>? dependentSurvivalFactor,
+    Value<String>? loanType,
+    Value<double>? originalPrincipal,
+    Value<double>? outstandingBalance,
+    Value<double?>? interestRate,
+    Value<double>? paymentAmount,
+    Value<String>? paymentFrequency,
+    Value<DateTime>? startDate,
+    Value<DateTime?>? maturityDate,
+    Value<int?>? defaultPaymentAccountId,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
   }) {
-    return CashflowPlansTableCompanion(
+    return LoansCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
-      planType: planType ?? this.planType,
-      expenseMode: expenseMode ?? this.expenseMode,
-      categoryId: categoryId ?? this.categoryId,
-      debtId: debtId ?? this.debtId,
-      amount: amount ?? this.amount,
-      customAmountsJson: customAmountsJson ?? this.customAmountsJson,
-      frequency: frequency ?? this.frequency,
-      monthMask: monthMask ?? this.monthMask,
-      occurrenceDaysJson: occurrenceDaysJson ?? this.occurrenceDaysJson,
-      anchorDate: anchorDate ?? this.anchorDate,
-      dependentSurvivalFactor:
-          dependentSurvivalFactor ?? this.dependentSurvivalFactor,
+      loanType: loanType ?? this.loanType,
+      originalPrincipal: originalPrincipal ?? this.originalPrincipal,
+      outstandingBalance: outstandingBalance ?? this.outstandingBalance,
+      interestRate: interestRate ?? this.interestRate,
+      paymentAmount: paymentAmount ?? this.paymentAmount,
+      paymentFrequency: paymentFrequency ?? this.paymentFrequency,
+      startDate: startDate ?? this.startDate,
+      maturityDate: maturityDate ?? this.maturityDate,
+      defaultPaymentAccountId:
+          defaultPaymentAccountId ?? this.defaultPaymentAccountId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -3967,39 +3882,33 @@ class CashflowPlansTableCompanion
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (planType.present) {
-      map['plan_type'] = Variable<String>(planType.value);
+    if (loanType.present) {
+      map['loan_type'] = Variable<String>(loanType.value);
     }
-    if (expenseMode.present) {
-      map['expense_mode'] = Variable<String>(expenseMode.value);
+    if (originalPrincipal.present) {
+      map['original_principal'] = Variable<double>(originalPrincipal.value);
     }
-    if (categoryId.present) {
-      map['category_id'] = Variable<int>(categoryId.value);
+    if (outstandingBalance.present) {
+      map['outstanding_balance'] = Variable<double>(outstandingBalance.value);
     }
-    if (debtId.present) {
-      map['debt_id'] = Variable<int>(debtId.value);
+    if (interestRate.present) {
+      map['interest_rate'] = Variable<double>(interestRate.value);
     }
-    if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+    if (paymentAmount.present) {
+      map['payment_amount'] = Variable<double>(paymentAmount.value);
     }
-    if (customAmountsJson.present) {
-      map['custom_amounts_json'] = Variable<String>(customAmountsJson.value);
+    if (paymentFrequency.present) {
+      map['payment_frequency'] = Variable<String>(paymentFrequency.value);
     }
-    if (frequency.present) {
-      map['frequency'] = Variable<String>(frequency.value);
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
     }
-    if (monthMask.present) {
-      map['month_mask'] = Variable<int>(monthMask.value);
+    if (maturityDate.present) {
+      map['maturity_date'] = Variable<DateTime>(maturityDate.value);
     }
-    if (occurrenceDaysJson.present) {
-      map['occurrence_days_json'] = Variable<String>(occurrenceDaysJson.value);
-    }
-    if (anchorDate.present) {
-      map['anchor_date'] = Variable<DateTime>(anchorDate.value);
-    }
-    if (dependentSurvivalFactor.present) {
-      map['dependent_survival_factor'] = Variable<double>(
-        dependentSurvivalFactor.value,
+    if (defaultPaymentAccountId.present) {
+      map['default_payment_account_id'] = Variable<int>(
+        defaultPaymentAccountId.value,
       );
     }
     if (createdAt.present) {
@@ -4013,22 +3922,984 @@ class CashflowPlansTableCompanion
 
   @override
   String toString() {
-    return (StringBuffer('CashflowPlansTableCompanion(')
+    return (StringBuffer('LoansCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('planType: $planType, ')
-          ..write('expenseMode: $expenseMode, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('debtId: $debtId, ')
-          ..write('amount: $amount, ')
-          ..write('customAmountsJson: $customAmountsJson, ')
-          ..write('frequency: $frequency, ')
-          ..write('monthMask: $monthMask, ')
-          ..write('occurrenceDaysJson: $occurrenceDaysJson, ')
-          ..write('anchorDate: $anchorDate, ')
-          ..write('dependentSurvivalFactor: $dependentSurvivalFactor, ')
+          ..write('loanType: $loanType, ')
+          ..write('originalPrincipal: $originalPrincipal, ')
+          ..write('outstandingBalance: $outstandingBalance, ')
+          ..write('interestRate: $interestRate, ')
+          ..write('paymentAmount: $paymentAmount, ')
+          ..write('paymentFrequency: $paymentFrequency, ')
+          ..write('startDate: $startDate, ')
+          ..write('maturityDate: $maturityDate, ')
+          ..write('defaultPaymentAccountId: $defaultPaymentAccountId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CashFlowPlansTable extends CashFlowPlans
+    with TableInfo<$CashFlowPlansTable, CashFlowPlan> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CashFlowPlansTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
+    'category_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES cashflow_categories_table (id)',
+    ),
+  );
+  static const VerificationMeta _loanIdMeta = const VerificationMeta('loanId');
+  @override
+  late final GeneratedColumn<int> loanId = GeneratedColumn<int>(
+    'loan_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES loans (id)',
+    ),
+  );
+  static const VerificationMeta _planTypeMeta = const VerificationMeta(
+    'planType',
+  );
+  @override
+  late final GeneratedColumn<String> planType = GeneratedColumn<String>(
+    'plan_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _periodMeta = const VerificationMeta('period');
+  @override
+  late final GeneratedColumn<String> period = GeneratedColumn<String>(
+    'period',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _distributionTypeMeta = const VerificationMeta(
+    'distributionType',
+  );
+  @override
+  late final GeneratedColumn<String> distributionType = GeneratedColumn<String>(
+    'distribution_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+    'end_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    categoryId,
+    loanId,
+    planType,
+    amount,
+    period,
+    distributionType,
+    startDate,
+    endDate,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cash_flow_plans';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CashFlowPlan> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    }
+    if (data.containsKey('loan_id')) {
+      context.handle(
+        _loanIdMeta,
+        loanId.isAcceptableOrUnknown(data['loan_id']!, _loanIdMeta),
+      );
+    }
+    if (data.containsKey('plan_type')) {
+      context.handle(
+        _planTypeMeta,
+        planType.isAcceptableOrUnknown(data['plan_type']!, _planTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_planTypeMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('period')) {
+      context.handle(
+        _periodMeta,
+        period.isAcceptableOrUnknown(data['period']!, _periodMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_periodMeta);
+    }
+    if (data.containsKey('distribution_type')) {
+      context.handle(
+        _distributionTypeMeta,
+        distributionType.isAcceptableOrUnknown(
+          data['distribution_type']!,
+          _distributionTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_distributionTypeMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CashFlowPlan map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CashFlowPlan(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}category_id'],
+      ),
+      loanId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}loan_id'],
+      ),
+      planType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}plan_type'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+      period: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}period'],
+      )!,
+      distributionType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}distribution_type'],
+      )!,
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_date'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CashFlowPlansTable createAlias(String alias) {
+    return $CashFlowPlansTable(attachedDatabase, alias);
+  }
+}
+
+class CashFlowPlan extends DataClass implements Insertable<CashFlowPlan> {
+  final int id;
+  final int? categoryId;
+  final int? loanId;
+  final String planType;
+  final double amount;
+  final String period;
+  final String distributionType;
+  final DateTime startDate;
+  final DateTime? endDate;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const CashFlowPlan({
+    required this.id,
+    this.categoryId,
+    this.loanId,
+    required this.planType,
+    required this.amount,
+    required this.period,
+    required this.distributionType,
+    required this.startDate,
+    this.endDate,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || categoryId != null) {
+      map['category_id'] = Variable<int>(categoryId);
+    }
+    if (!nullToAbsent || loanId != null) {
+      map['loan_id'] = Variable<int>(loanId);
+    }
+    map['plan_type'] = Variable<String>(planType);
+    map['amount'] = Variable<double>(amount);
+    map['period'] = Variable<String>(period);
+    map['distribution_type'] = Variable<String>(distributionType);
+    map['start_date'] = Variable<DateTime>(startDate);
+    if (!nullToAbsent || endDate != null) {
+      map['end_date'] = Variable<DateTime>(endDate);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CashFlowPlansCompanion toCompanion(bool nullToAbsent) {
+    return CashFlowPlansCompanion(
+      id: Value(id),
+      categoryId: categoryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(categoryId),
+      loanId: loanId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(loanId),
+      planType: Value(planType),
+      amount: Value(amount),
+      period: Value(period),
+      distributionType: Value(distributionType),
+      startDate: Value(startDate),
+      endDate: endDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endDate),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CashFlowPlan.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CashFlowPlan(
+      id: serializer.fromJson<int>(json['id']),
+      categoryId: serializer.fromJson<int?>(json['categoryId']),
+      loanId: serializer.fromJson<int?>(json['loanId']),
+      planType: serializer.fromJson<String>(json['planType']),
+      amount: serializer.fromJson<double>(json['amount']),
+      period: serializer.fromJson<String>(json['period']),
+      distributionType: serializer.fromJson<String>(json['distributionType']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      endDate: serializer.fromJson<DateTime?>(json['endDate']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'categoryId': serializer.toJson<int?>(categoryId),
+      'loanId': serializer.toJson<int?>(loanId),
+      'planType': serializer.toJson<String>(planType),
+      'amount': serializer.toJson<double>(amount),
+      'period': serializer.toJson<String>(period),
+      'distributionType': serializer.toJson<String>(distributionType),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'endDate': serializer.toJson<DateTime?>(endDate),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CashFlowPlan copyWith({
+    int? id,
+    Value<int?> categoryId = const Value.absent(),
+    Value<int?> loanId = const Value.absent(),
+    String? planType,
+    double? amount,
+    String? period,
+    String? distributionType,
+    DateTime? startDate,
+    Value<DateTime?> endDate = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => CashFlowPlan(
+    id: id ?? this.id,
+    categoryId: categoryId.present ? categoryId.value : this.categoryId,
+    loanId: loanId.present ? loanId.value : this.loanId,
+    planType: planType ?? this.planType,
+    amount: amount ?? this.amount,
+    period: period ?? this.period,
+    distributionType: distributionType ?? this.distributionType,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate.present ? endDate.value : this.endDate,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  CashFlowPlan copyWithCompanion(CashFlowPlansCompanion data) {
+    return CashFlowPlan(
+      id: data.id.present ? data.id.value : this.id,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      loanId: data.loanId.present ? data.loanId.value : this.loanId,
+      planType: data.planType.present ? data.planType.value : this.planType,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      period: data.period.present ? data.period.value : this.period,
+      distributionType: data.distributionType.present
+          ? data.distributionType.value
+          : this.distributionType,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashFlowPlan(')
+          ..write('id: $id, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('loanId: $loanId, ')
+          ..write('planType: $planType, ')
+          ..write('amount: $amount, ')
+          ..write('period: $period, ')
+          ..write('distributionType: $distributionType, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    categoryId,
+    loanId,
+    planType,
+    amount,
+    period,
+    distributionType,
+    startDate,
+    endDate,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CashFlowPlan &&
+          other.id == this.id &&
+          other.categoryId == this.categoryId &&
+          other.loanId == this.loanId &&
+          other.planType == this.planType &&
+          other.amount == this.amount &&
+          other.period == this.period &&
+          other.distributionType == this.distributionType &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CashFlowPlansCompanion extends UpdateCompanion<CashFlowPlan> {
+  final Value<int> id;
+  final Value<int?> categoryId;
+  final Value<int?> loanId;
+  final Value<String> planType;
+  final Value<double> amount;
+  final Value<String> period;
+  final Value<String> distributionType;
+  final Value<DateTime> startDate;
+  final Value<DateTime?> endDate;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const CashFlowPlansCompanion({
+    this.id = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.loanId = const Value.absent(),
+    this.planType = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.period = const Value.absent(),
+    this.distributionType = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  CashFlowPlansCompanion.insert({
+    this.id = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.loanId = const Value.absent(),
+    required String planType,
+    required double amount,
+    required String period,
+    required String distributionType,
+    required DateTime startDate,
+    this.endDate = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) : planType = Value(planType),
+       amount = Value(amount),
+       period = Value(period),
+       distributionType = Value(distributionType),
+       startDate = Value(startDate),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<CashFlowPlan> custom({
+    Expression<int>? id,
+    Expression<int>? categoryId,
+    Expression<int>? loanId,
+    Expression<String>? planType,
+    Expression<double>? amount,
+    Expression<String>? period,
+    Expression<String>? distributionType,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (categoryId != null) 'category_id': categoryId,
+      if (loanId != null) 'loan_id': loanId,
+      if (planType != null) 'plan_type': planType,
+      if (amount != null) 'amount': amount,
+      if (period != null) 'period': period,
+      if (distributionType != null) 'distribution_type': distributionType,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  CashFlowPlansCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? categoryId,
+    Value<int?>? loanId,
+    Value<String>? planType,
+    Value<double>? amount,
+    Value<String>? period,
+    Value<String>? distributionType,
+    Value<DateTime>? startDate,
+    Value<DateTime?>? endDate,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return CashFlowPlansCompanion(
+      id: id ?? this.id,
+      categoryId: categoryId ?? this.categoryId,
+      loanId: loanId ?? this.loanId,
+      planType: planType ?? this.planType,
+      amount: amount ?? this.amount,
+      period: period ?? this.period,
+      distributionType: distributionType ?? this.distributionType,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<int>(categoryId.value);
+    }
+    if (loanId.present) {
+      map['loan_id'] = Variable<int>(loanId.value);
+    }
+    if (planType.present) {
+      map['plan_type'] = Variable<String>(planType.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (period.present) {
+      map['period'] = Variable<String>(period.value);
+    }
+    if (distributionType.present) {
+      map['distribution_type'] = Variable<String>(distributionType.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashFlowPlansCompanion(')
+          ..write('id: $id, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('loanId: $loanId, ')
+          ..write('planType: $planType, ')
+          ..write('amount: $amount, ')
+          ..write('period: $period, ')
+          ..write('distributionType: $distributionType, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CashFlowPlanAllocationsTable extends CashFlowPlanAllocations
+    with TableInfo<$CashFlowPlanAllocationsTable, CashFlowPlanAllocation> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CashFlowPlanAllocationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _planIdMeta = const VerificationMeta('planId');
+  @override
+  late final GeneratedColumn<int> planId = GeneratedColumn<int>(
+    'plan_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES cash_flow_plans (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _allocationKeyMeta = const VerificationMeta(
+    'allocationKey',
+  );
+  @override
+  late final GeneratedColumn<int> allocationKey = GeneratedColumn<int>(
+    'allocation_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, planId, allocationKey, amount];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cash_flow_plan_allocations';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CashFlowPlanAllocation> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('plan_id')) {
+      context.handle(
+        _planIdMeta,
+        planId.isAcceptableOrUnknown(data['plan_id']!, _planIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_planIdMeta);
+    }
+    if (data.containsKey('allocation_key')) {
+      context.handle(
+        _allocationKeyMeta,
+        allocationKey.isAcceptableOrUnknown(
+          data['allocation_key']!,
+          _allocationKeyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_allocationKeyMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CashFlowPlanAllocation map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CashFlowPlanAllocation(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      planId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}plan_id'],
+      )!,
+      allocationKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}allocation_key'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+    );
+  }
+
+  @override
+  $CashFlowPlanAllocationsTable createAlias(String alias) {
+    return $CashFlowPlanAllocationsTable(attachedDatabase, alias);
+  }
+}
+
+class CashFlowPlanAllocation extends DataClass
+    implements Insertable<CashFlowPlanAllocation> {
+  final int id;
+  final int planId;
+  final int allocationKey;
+  final double amount;
+  const CashFlowPlanAllocation({
+    required this.id,
+    required this.planId,
+    required this.allocationKey,
+    required this.amount,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['plan_id'] = Variable<int>(planId);
+    map['allocation_key'] = Variable<int>(allocationKey);
+    map['amount'] = Variable<double>(amount);
+    return map;
+  }
+
+  CashFlowPlanAllocationsCompanion toCompanion(bool nullToAbsent) {
+    return CashFlowPlanAllocationsCompanion(
+      id: Value(id),
+      planId: Value(planId),
+      allocationKey: Value(allocationKey),
+      amount: Value(amount),
+    );
+  }
+
+  factory CashFlowPlanAllocation.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CashFlowPlanAllocation(
+      id: serializer.fromJson<int>(json['id']),
+      planId: serializer.fromJson<int>(json['planId']),
+      allocationKey: serializer.fromJson<int>(json['allocationKey']),
+      amount: serializer.fromJson<double>(json['amount']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'planId': serializer.toJson<int>(planId),
+      'allocationKey': serializer.toJson<int>(allocationKey),
+      'amount': serializer.toJson<double>(amount),
+    };
+  }
+
+  CashFlowPlanAllocation copyWith({
+    int? id,
+    int? planId,
+    int? allocationKey,
+    double? amount,
+  }) => CashFlowPlanAllocation(
+    id: id ?? this.id,
+    planId: planId ?? this.planId,
+    allocationKey: allocationKey ?? this.allocationKey,
+    amount: amount ?? this.amount,
+  );
+  CashFlowPlanAllocation copyWithCompanion(
+    CashFlowPlanAllocationsCompanion data,
+  ) {
+    return CashFlowPlanAllocation(
+      id: data.id.present ? data.id.value : this.id,
+      planId: data.planId.present ? data.planId.value : this.planId,
+      allocationKey: data.allocationKey.present
+          ? data.allocationKey.value
+          : this.allocationKey,
+      amount: data.amount.present ? data.amount.value : this.amount,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashFlowPlanAllocation(')
+          ..write('id: $id, ')
+          ..write('planId: $planId, ')
+          ..write('allocationKey: $allocationKey, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, planId, allocationKey, amount);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CashFlowPlanAllocation &&
+          other.id == this.id &&
+          other.planId == this.planId &&
+          other.allocationKey == this.allocationKey &&
+          other.amount == this.amount);
+}
+
+class CashFlowPlanAllocationsCompanion
+    extends UpdateCompanion<CashFlowPlanAllocation> {
+  final Value<int> id;
+  final Value<int> planId;
+  final Value<int> allocationKey;
+  final Value<double> amount;
+  const CashFlowPlanAllocationsCompanion({
+    this.id = const Value.absent(),
+    this.planId = const Value.absent(),
+    this.allocationKey = const Value.absent(),
+    this.amount = const Value.absent(),
+  });
+  CashFlowPlanAllocationsCompanion.insert({
+    this.id = const Value.absent(),
+    required int planId,
+    required int allocationKey,
+    required double amount,
+  }) : planId = Value(planId),
+       allocationKey = Value(allocationKey),
+       amount = Value(amount);
+  static Insertable<CashFlowPlanAllocation> custom({
+    Expression<int>? id,
+    Expression<int>? planId,
+    Expression<int>? allocationKey,
+    Expression<double>? amount,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (planId != null) 'plan_id': planId,
+      if (allocationKey != null) 'allocation_key': allocationKey,
+      if (amount != null) 'amount': amount,
+    });
+  }
+
+  CashFlowPlanAllocationsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? planId,
+    Value<int>? allocationKey,
+    Value<double>? amount,
+  }) {
+    return CashFlowPlanAllocationsCompanion(
+      id: id ?? this.id,
+      planId: planId ?? this.planId,
+      allocationKey: allocationKey ?? this.allocationKey,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (planId.present) {
+      map['plan_id'] = Variable<int>(planId.value);
+    }
+    if (allocationKey.present) {
+      map['allocation_key'] = Variable<int>(allocationKey.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashFlowPlanAllocationsCompanion(')
+          ..write('id: $id, ')
+          ..write('planId: $planId, ')
+          ..write('allocationKey: $allocationKey, ')
+          ..write('amount: $amount')
           ..write(')'))
         .toString();
   }
@@ -4047,8 +4918,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $TransactionParticipantsTableTable(this);
   late final $FinancialObligationsTableTable financialObligationsTable =
       $FinancialObligationsTableTable(this);
-  late final $CashflowPlansTableTable cashflowPlansTable =
-      $CashflowPlansTableTable(this);
+  late final $LoansTable loans = $LoansTable(this);
+  late final $CashFlowPlansTable cashFlowPlans = $CashFlowPlansTable(this);
+  late final $CashFlowPlanAllocationsTable cashFlowPlanAllocations =
+      $CashFlowPlanAllocationsTable(this);
   late final TransactionsDao transactionsDao = TransactionsDao(
     this as AppDatabase,
   );
@@ -4068,7 +4941,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     entitiesTable,
     transactionParticipantsTable,
     financialObligationsTable,
-    cashflowPlansTable,
+    loans,
+    cashFlowPlans,
+    cashFlowPlanAllocations,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -4115,6 +4990,15 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       ),
       result: [
         TableUpdate('financial_obligations_table', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'cash_flow_plans',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('cash_flow_plan_allocations', kind: UpdateKind.delete),
       ],
     ),
   ]);
@@ -4177,28 +5061,22 @@ final class $$CashflowCategoriesTableTableReferences
     );
   }
 
-  static MultiTypedResultKey<
-    $CashflowPlansTableTable,
-    List<CashflowPlansTableData>
-  >
-  _cashflowPlansTableRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.cashflowPlansTable,
-        aliasName: $_aliasNameGenerator(
-          db.cashflowCategoriesTable.id,
-          db.cashflowPlansTable.categoryId,
-        ),
-      );
+  static MultiTypedResultKey<$CashFlowPlansTable, List<CashFlowPlan>>
+  _cashFlowPlansRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.cashFlowPlans,
+    aliasName: $_aliasNameGenerator(
+      db.cashflowCategoriesTable.id,
+      db.cashFlowPlans.categoryId,
+    ),
+  );
 
-  $$CashflowPlansTableTableProcessedTableManager get cashflowPlansTableRefs {
-    final manager = $$CashflowPlansTableTableTableManager(
+  $$CashFlowPlansTableProcessedTableManager get cashFlowPlansRefs {
+    final manager = $$CashFlowPlansTableTableManager(
       $_db,
-      $_db.cashflowPlansTable,
+      $_db.cashFlowPlans,
     ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(
-      _cashflowPlansTableRefsTable($_db),
-    );
+    final cache = $_typedResult.readTableOrNull(_cashFlowPlansRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -4264,22 +5142,22 @@ class $$CashflowCategoriesTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> cashflowPlansTableRefs(
-    Expression<bool> Function($$CashflowPlansTableTableFilterComposer f) f,
+  Expression<bool> cashFlowPlansRefs(
+    Expression<bool> Function($$CashFlowPlansTableFilterComposer f) f,
   ) {
-    final $$CashflowPlansTableTableFilterComposer composer = $composerBuilder(
+    final $$CashFlowPlansTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.cashflowPlansTable,
+      referencedTable: $db.cashFlowPlans,
       getReferencedColumn: (t) => t.categoryId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$CashflowPlansTableTableFilterComposer(
+          }) => $$CashFlowPlansTableFilterComposer(
             $db: $db,
-            $table: $db.cashflowPlansTable,
+            $table: $db.cashFlowPlans,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4375,29 +5253,28 @@ class $$CashflowCategoriesTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> cashflowPlansTableRefs<T extends Object>(
-    Expression<T> Function($$CashflowPlansTableTableAnnotationComposer a) f,
+  Expression<T> cashFlowPlansRefs<T extends Object>(
+    Expression<T> Function($$CashFlowPlansTableAnnotationComposer a) f,
   ) {
-    final $$CashflowPlansTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.cashflowPlansTable,
-          getReferencedColumn: (t) => t.categoryId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
+    final $$CashFlowPlansTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashFlowPlans,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashFlowPlansTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashFlowPlans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
                 $removeJoinBuilderFromRootComposer,
-              }) => $$CashflowPlansTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.cashflowPlansTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
+          ),
+    );
     return f(composer);
   }
 }
@@ -4420,7 +5297,7 @@ class $$CashflowCategoriesTableTableTableManager
           CashflowCategoriesTableData,
           PrefetchHooks Function({
             bool transactionsTableRefs,
-            bool cashflowPlansTableRefs,
+            bool cashFlowPlansRefs,
           })
         > {
   $$CashflowCategoriesTableTableTableManager(
@@ -4482,15 +5359,12 @@ class $$CashflowCategoriesTableTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({
-                transactionsTableRefs = false,
-                cashflowPlansTableRefs = false,
-              }) {
+              ({transactionsTableRefs = false, cashFlowPlansRefs = false}) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (transactionsTableRefs) db.transactionsTable,
-                    if (cashflowPlansTableRefs) db.cashflowPlansTable,
+                    if (cashFlowPlansRefs) db.cashFlowPlans,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -4517,22 +5391,22 @@ class $$CashflowCategoriesTableTableTableManager
                               ),
                           typedResults: items,
                         ),
-                      if (cashflowPlansTableRefs)
+                      if (cashFlowPlansRefs)
                         await $_getPrefetchedData<
                           CashflowCategoriesTableData,
                           $CashflowCategoriesTableTable,
-                          CashflowPlansTableData
+                          CashFlowPlan
                         >(
                           currentTable: table,
                           referencedTable:
                               $$CashflowCategoriesTableTableReferences
-                                  ._cashflowPlansTableRefsTable(db),
+                                  ._cashFlowPlansRefsTable(db),
                           managerFromTypedResult: (p0) =>
                               $$CashflowCategoriesTableTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).cashflowPlansTableRefs,
+                              ).cashFlowPlansRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.categoryId == item.id,
@@ -4561,7 +5435,7 @@ typedef $$CashflowCategoriesTableTableProcessedTableManager =
       CashflowCategoriesTableData,
       PrefetchHooks Function({
         bool transactionsTableRefs,
-        bool cashflowPlansTableRefs,
+        bool cashFlowPlansRefs,
       })
     >;
 typedef $$AccountsTableTableCreateCompanionBuilder =
@@ -4584,6 +5458,37 @@ typedef $$AccountsTableTableUpdateCompanionBuilder =
       Value<bool> isSystem,
       Value<double?> creditLimit,
     });
+
+final class $$AccountsTableTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $AccountsTableTable, AccountsTableData> {
+  $$AccountsTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$LoansTable, List<Loan>> _loansRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.loans,
+    aliasName: $_aliasNameGenerator(
+      db.accountsTable.id,
+      db.loans.defaultPaymentAccountId,
+    ),
+  );
+
+  $$LoansTableProcessedTableManager get loansRefs {
+    final manager = $$LoansTableTableManager($_db, $_db.loans).filter(
+      (f) => f.defaultPaymentAccountId.id.sqlEquals($_itemColumn<int>('id')!),
+    );
+
+    final cache = $_typedResult.readTableOrNull(_loansRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
 
 class $$AccountsTableTableFilterComposer
     extends Composer<_$AppDatabase, $AccountsTableTable> {
@@ -4628,6 +5533,31 @@ class $$AccountsTableTableFilterComposer
     column: $table.creditLimit,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> loansRefs(
+    Expression<bool> Function($$LoansTableFilterComposer f) f,
+  ) {
+    final $$LoansTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.loans,
+      getReferencedColumn: (t) => t.defaultPaymentAccountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LoansTableFilterComposer(
+            $db: $db,
+            $table: $db.loans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$AccountsTableTableOrderingComposer
@@ -4710,6 +5640,31 @@ class $$AccountsTableTableAnnotationComposer
     column: $table.creditLimit,
     builder: (column) => column,
   );
+
+  Expression<T> loansRefs<T extends Object>(
+    Expression<T> Function($$LoansTableAnnotationComposer a) f,
+  ) {
+    final $$LoansTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.loans,
+      getReferencedColumn: (t) => t.defaultPaymentAccountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LoansTableAnnotationComposer(
+            $db: $db,
+            $table: $db.loans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$AccountsTableTableTableManager
@@ -4723,16 +5678,9 @@ class $$AccountsTableTableTableManager
           $$AccountsTableTableAnnotationComposer,
           $$AccountsTableTableCreateCompanionBuilder,
           $$AccountsTableTableUpdateCompanionBuilder,
-          (
-            AccountsTableData,
-            BaseReferences<
-              _$AppDatabase,
-              $AccountsTableTable,
-              AccountsTableData
-            >,
-          ),
+          (AccountsTableData, $$AccountsTableTableReferences),
           AccountsTableData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool loansRefs})
         > {
   $$AccountsTableTableTableManager(_$AppDatabase db, $AccountsTableTable table)
     : super(
@@ -4782,9 +5730,45 @@ class $$AccountsTableTableTableManager
                 creditLimit: creditLimit,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$AccountsTableTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({loansRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (loansRefs) db.loans],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (loansRefs)
+                    await $_getPrefetchedData<
+                      AccountsTableData,
+                      $AccountsTableTable,
+                      Loan
+                    >(
+                      currentTable: table,
+                      referencedTable: $$AccountsTableTableReferences
+                          ._loansRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$AccountsTableTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).loansRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.defaultPaymentAccountId == item.id,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
         ),
       );
 }
@@ -4799,12 +5783,9 @@ typedef $$AccountsTableTableProcessedTableManager =
       $$AccountsTableTableAnnotationComposer,
       $$AccountsTableTableCreateCompanionBuilder,
       $$AccountsTableTableUpdateCompanionBuilder,
-      (
-        AccountsTableData,
-        BaseReferences<_$AppDatabase, $AccountsTableTable, AccountsTableData>,
-      ),
+      (AccountsTableData, $$AccountsTableTableReferences),
       AccountsTableData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool loansRefs})
     >;
 typedef $$TransactionsTableTableCreateCompanionBuilder =
     TransactionsTableCompanion Function({
@@ -7187,51 +8168,617 @@ typedef $$FinancialObligationsTableTableProcessedTableManager =
         bool creditorEntityId,
       })
     >;
-typedef $$CashflowPlansTableTableCreateCompanionBuilder =
-    CashflowPlansTableCompanion Function({
+typedef $$LoansTableCreateCompanionBuilder =
+    LoansCompanion Function({
       Value<int> id,
       required String name,
-      required String planType,
-      Value<String?> expenseMode,
-      Value<int?> categoryId,
-      Value<int?> debtId,
-      Value<double?> amount,
-      Value<String?> customAmountsJson,
-      required String frequency,
-      Value<int?> monthMask,
-      Value<String?> occurrenceDaysJson,
-      Value<DateTime?> anchorDate,
-      Value<double> dependentSurvivalFactor,
+      required String loanType,
+      required double originalPrincipal,
+      required double outstandingBalance,
+      Value<double?> interestRate,
+      required double paymentAmount,
+      required String paymentFrequency,
+      required DateTime startDate,
+      Value<DateTime?> maturityDate,
+      Value<int?> defaultPaymentAccountId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
-typedef $$CashflowPlansTableTableUpdateCompanionBuilder =
-    CashflowPlansTableCompanion Function({
+typedef $$LoansTableUpdateCompanionBuilder =
+    LoansCompanion Function({
       Value<int> id,
       Value<String> name,
-      Value<String> planType,
-      Value<String?> expenseMode,
-      Value<int?> categoryId,
-      Value<int?> debtId,
-      Value<double?> amount,
-      Value<String?> customAmountsJson,
-      Value<String> frequency,
-      Value<int?> monthMask,
-      Value<String?> occurrenceDaysJson,
-      Value<DateTime?> anchorDate,
-      Value<double> dependentSurvivalFactor,
+      Value<String> loanType,
+      Value<double> originalPrincipal,
+      Value<double> outstandingBalance,
+      Value<double?> interestRate,
+      Value<double> paymentAmount,
+      Value<String> paymentFrequency,
+      Value<DateTime> startDate,
+      Value<DateTime?> maturityDate,
+      Value<int?> defaultPaymentAccountId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
 
-final class $$CashflowPlansTableTableReferences
+final class $$LoansTableReferences
+    extends BaseReferences<_$AppDatabase, $LoansTable, Loan> {
+  $$LoansTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $AccountsTableTable _defaultPaymentAccountIdTable(_$AppDatabase db) =>
+      db.accountsTable.createAlias(
+        $_aliasNameGenerator(
+          db.loans.defaultPaymentAccountId,
+          db.accountsTable.id,
+        ),
+      );
+
+  $$AccountsTableTableProcessedTableManager? get defaultPaymentAccountId {
+    final $_column = $_itemColumn<int>('default_payment_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableTableManager(
+      $_db,
+      $_db.accountsTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(
+      _defaultPaymentAccountIdTable($_db),
+    );
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$CashFlowPlansTable, List<CashFlowPlan>>
+  _cashFlowPlansRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.cashFlowPlans,
+    aliasName: $_aliasNameGenerator(db.loans.id, db.cashFlowPlans.loanId),
+  );
+
+  $$CashFlowPlansTableProcessedTableManager get cashFlowPlansRefs {
+    final manager = $$CashFlowPlansTableTableManager(
+      $_db,
+      $_db.cashFlowPlans,
+    ).filter((f) => f.loanId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_cashFlowPlansRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$LoansTableFilterComposer extends Composer<_$AppDatabase, $LoansTable> {
+  $$LoansTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get loanType => $composableBuilder(
+    column: $table.loanType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get originalPrincipal => $composableBuilder(
+    column: $table.originalPrincipal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get outstandingBalance => $composableBuilder(
+    column: $table.outstandingBalance,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get interestRate => $composableBuilder(
+    column: $table.interestRate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get paymentAmount => $composableBuilder(
+    column: $table.paymentAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get paymentFrequency => $composableBuilder(
+    column: $table.paymentFrequency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get maturityDate => $composableBuilder(
+    column: $table.maturityDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$AccountsTableTableFilterComposer get defaultPaymentAccountId {
+    final $$AccountsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.defaultPaymentAccountId,
+      referencedTable: $db.accountsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.accountsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> cashFlowPlansRefs(
+    Expression<bool> Function($$CashFlowPlansTableFilterComposer f) f,
+  ) {
+    final $$CashFlowPlansTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashFlowPlans,
+      getReferencedColumn: (t) => t.loanId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashFlowPlansTableFilterComposer(
+            $db: $db,
+            $table: $db.cashFlowPlans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$LoansTableOrderingComposer
+    extends Composer<_$AppDatabase, $LoansTable> {
+  $$LoansTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get loanType => $composableBuilder(
+    column: $table.loanType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get originalPrincipal => $composableBuilder(
+    column: $table.originalPrincipal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get outstandingBalance => $composableBuilder(
+    column: $table.outstandingBalance,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get interestRate => $composableBuilder(
+    column: $table.interestRate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get paymentAmount => $composableBuilder(
+    column: $table.paymentAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get paymentFrequency => $composableBuilder(
+    column: $table.paymentFrequency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get maturityDate => $composableBuilder(
+    column: $table.maturityDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$AccountsTableTableOrderingComposer get defaultPaymentAccountId {
+    final $$AccountsTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.defaultPaymentAccountId,
+      referencedTable: $db.accountsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.accountsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LoansTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LoansTable> {
+  $$LoansTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get loanType =>
+      $composableBuilder(column: $table.loanType, builder: (column) => column);
+
+  GeneratedColumn<double> get originalPrincipal => $composableBuilder(
+    column: $table.originalPrincipal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get outstandingBalance => $composableBuilder(
+    column: $table.outstandingBalance,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get interestRate => $composableBuilder(
+    column: $table.interestRate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get paymentAmount => $composableBuilder(
+    column: $table.paymentAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get paymentFrequency => $composableBuilder(
+    column: $table.paymentFrequency,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get maturityDate => $composableBuilder(
+    column: $table.maturityDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$AccountsTableTableAnnotationComposer get defaultPaymentAccountId {
+    final $$AccountsTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.defaultPaymentAccountId,
+      referencedTable: $db.accountsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accountsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> cashFlowPlansRefs<T extends Object>(
+    Expression<T> Function($$CashFlowPlansTableAnnotationComposer a) f,
+  ) {
+    final $$CashFlowPlansTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashFlowPlans,
+      getReferencedColumn: (t) => t.loanId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashFlowPlansTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashFlowPlans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$LoansTableTableManager
     extends
-        BaseReferences<
+        RootTableManager<
           _$AppDatabase,
-          $CashflowPlansTableTable,
-          CashflowPlansTableData
+          $LoansTable,
+          Loan,
+          $$LoansTableFilterComposer,
+          $$LoansTableOrderingComposer,
+          $$LoansTableAnnotationComposer,
+          $$LoansTableCreateCompanionBuilder,
+          $$LoansTableUpdateCompanionBuilder,
+          (Loan, $$LoansTableReferences),
+          Loan,
+          PrefetchHooks Function({
+            bool defaultPaymentAccountId,
+            bool cashFlowPlansRefs,
+          })
         > {
-  $$CashflowPlansTableTableReferences(
+  $$LoansTableTableManager(_$AppDatabase db, $LoansTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LoansTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LoansTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LoansTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> loanType = const Value.absent(),
+                Value<double> originalPrincipal = const Value.absent(),
+                Value<double> outstandingBalance = const Value.absent(),
+                Value<double?> interestRate = const Value.absent(),
+                Value<double> paymentAmount = const Value.absent(),
+                Value<String> paymentFrequency = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime?> maturityDate = const Value.absent(),
+                Value<int?> defaultPaymentAccountId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => LoansCompanion(
+                id: id,
+                name: name,
+                loanType: loanType,
+                originalPrincipal: originalPrincipal,
+                outstandingBalance: outstandingBalance,
+                interestRate: interestRate,
+                paymentAmount: paymentAmount,
+                paymentFrequency: paymentFrequency,
+                startDate: startDate,
+                maturityDate: maturityDate,
+                defaultPaymentAccountId: defaultPaymentAccountId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                required String loanType,
+                required double originalPrincipal,
+                required double outstandingBalance,
+                Value<double?> interestRate = const Value.absent(),
+                required double paymentAmount,
+                required String paymentFrequency,
+                required DateTime startDate,
+                Value<DateTime?> maturityDate = const Value.absent(),
+                Value<int?> defaultPaymentAccountId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => LoansCompanion.insert(
+                id: id,
+                name: name,
+                loanType: loanType,
+                originalPrincipal: originalPrincipal,
+                outstandingBalance: outstandingBalance,
+                interestRate: interestRate,
+                paymentAmount: paymentAmount,
+                paymentFrequency: paymentFrequency,
+                startDate: startDate,
+                maturityDate: maturityDate,
+                defaultPaymentAccountId: defaultPaymentAccountId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) =>
+                    (e.readTable(table), $$LoansTableReferences(db, table, e)),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({defaultPaymentAccountId = false, cashFlowPlansRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (cashFlowPlansRefs) db.cashFlowPlans,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (defaultPaymentAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn:
+                                        table.defaultPaymentAccountId,
+                                    referencedTable: $$LoansTableReferences
+                                        ._defaultPaymentAccountIdTable(db),
+                                    referencedColumn: $$LoansTableReferences
+                                        ._defaultPaymentAccountIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (cashFlowPlansRefs)
+                        await $_getPrefetchedData<
+                          Loan,
+                          $LoansTable,
+                          CashFlowPlan
+                        >(
+                          currentTable: table,
+                          referencedTable: $$LoansTableReferences
+                              ._cashFlowPlansRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$LoansTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).cashFlowPlansRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.loanId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$LoansTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LoansTable,
+      Loan,
+      $$LoansTableFilterComposer,
+      $$LoansTableOrderingComposer,
+      $$LoansTableAnnotationComposer,
+      $$LoansTableCreateCompanionBuilder,
+      $$LoansTableUpdateCompanionBuilder,
+      (Loan, $$LoansTableReferences),
+      Loan,
+      PrefetchHooks Function({
+        bool defaultPaymentAccountId,
+        bool cashFlowPlansRefs,
+      })
+    >;
+typedef $$CashFlowPlansTableCreateCompanionBuilder =
+    CashFlowPlansCompanion Function({
+      Value<int> id,
+      Value<int?> categoryId,
+      Value<int?> loanId,
+      required String planType,
+      required double amount,
+      required String period,
+      required String distributionType,
+      required DateTime startDate,
+      Value<DateTime?> endDate,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+    });
+typedef $$CashFlowPlansTableUpdateCompanionBuilder =
+    CashFlowPlansCompanion Function({
+      Value<int> id,
+      Value<int?> categoryId,
+      Value<int?> loanId,
+      Value<String> planType,
+      Value<double> amount,
+      Value<String> period,
+      Value<String> distributionType,
+      Value<DateTime> startDate,
+      Value<DateTime?> endDate,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+final class $$CashFlowPlansTableReferences
+    extends BaseReferences<_$AppDatabase, $CashFlowPlansTable, CashFlowPlan> {
+  $$CashFlowPlansTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
@@ -7240,7 +8787,7 @@ final class $$CashflowPlansTableTableReferences
   static $CashflowCategoriesTableTable _categoryIdTable(_$AppDatabase db) =>
       db.cashflowCategoriesTable.createAlias(
         $_aliasNameGenerator(
-          db.cashflowPlansTable.categoryId,
+          db.cashFlowPlans.categoryId,
           db.cashflowCategoriesTable.id,
         ),
       );
@@ -7258,11 +8805,57 @@ final class $$CashflowPlansTableTableReferences
       manager.$state.copyWith(prefetchedData: [item]),
     );
   }
+
+  static $LoansTable _loanIdTable(_$AppDatabase db) => db.loans.createAlias(
+    $_aliasNameGenerator(db.cashFlowPlans.loanId, db.loans.id),
+  );
+
+  $$LoansTableProcessedTableManager? get loanId {
+    final $_column = $_itemColumn<int>('loan_id');
+    if ($_column == null) return null;
+    final manager = $$LoansTableTableManager(
+      $_db,
+      $_db.loans,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_loanIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $CashFlowPlanAllocationsTable,
+    List<CashFlowPlanAllocation>
+  >
+  _cashFlowPlanAllocationsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.cashFlowPlanAllocations,
+        aliasName: $_aliasNameGenerator(
+          db.cashFlowPlans.id,
+          db.cashFlowPlanAllocations.planId,
+        ),
+      );
+
+  $$CashFlowPlanAllocationsTableProcessedTableManager
+  get cashFlowPlanAllocationsRefs {
+    final manager = $$CashFlowPlanAllocationsTableTableManager(
+      $_db,
+      $_db.cashFlowPlanAllocations,
+    ).filter((f) => f.planId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _cashFlowPlanAllocationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
-class $$CashflowPlansTableTableFilterComposer
-    extends Composer<_$AppDatabase, $CashflowPlansTableTable> {
-  $$CashflowPlansTableTableFilterComposer({
+class $$CashFlowPlansTableFilterComposer
+    extends Composer<_$AppDatabase, $CashFlowPlansTable> {
+  $$CashFlowPlansTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7274,23 +8867,8 @@ class $$CashflowPlansTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get planType => $composableBuilder(
     column: $table.planType,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get expenseMode => $composableBuilder(
-    column: $table.expenseMode,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get debtId => $composableBuilder(
-    column: $table.debtId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7299,33 +8877,23 @@ class $$CashflowPlansTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get customAmountsJson => $composableBuilder(
-    column: $table.customAmountsJson,
+  ColumnFilters<String> get period => $composableBuilder(
+    column: $table.period,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get frequency => $composableBuilder(
-    column: $table.frequency,
+  ColumnFilters<String> get distributionType => $composableBuilder(
+    column: $table.distributionType,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get monthMask => $composableBuilder(
-    column: $table.monthMask,
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get occurrenceDaysJson => $composableBuilder(
-    column: $table.occurrenceDaysJson,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get anchorDate => $composableBuilder(
-    column: $table.anchorDate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get dependentSurvivalFactor => $composableBuilder(
-    column: $table.dependentSurvivalFactor,
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7362,11 +8930,60 @@ class $$CashflowPlansTableTableFilterComposer
         );
     return composer;
   }
+
+  $$LoansTableFilterComposer get loanId {
+    final $$LoansTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.loanId,
+      referencedTable: $db.loans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LoansTableFilterComposer(
+            $db: $db,
+            $table: $db.loans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> cashFlowPlanAllocationsRefs(
+    Expression<bool> Function($$CashFlowPlanAllocationsTableFilterComposer f) f,
+  ) {
+    final $$CashFlowPlanAllocationsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.cashFlowPlanAllocations,
+          getReferencedColumn: (t) => t.planId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$CashFlowPlanAllocationsTableFilterComposer(
+                $db: $db,
+                $table: $db.cashFlowPlanAllocations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
-class $$CashflowPlansTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $CashflowPlansTableTable> {
-  $$CashflowPlansTableTableOrderingComposer({
+class $$CashFlowPlansTableOrderingComposer
+    extends Composer<_$AppDatabase, $CashFlowPlansTable> {
+  $$CashFlowPlansTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7378,23 +8995,8 @@ class $$CashflowPlansTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get planType => $composableBuilder(
     column: $table.planType,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get expenseMode => $composableBuilder(
-    column: $table.expenseMode,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get debtId => $composableBuilder(
-    column: $table.debtId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -7403,33 +9005,23 @@ class $$CashflowPlansTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get customAmountsJson => $composableBuilder(
-    column: $table.customAmountsJson,
+  ColumnOrderings<String> get period => $composableBuilder(
+    column: $table.period,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get frequency => $composableBuilder(
-    column: $table.frequency,
+  ColumnOrderings<String> get distributionType => $composableBuilder(
+    column: $table.distributionType,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get monthMask => $composableBuilder(
-    column: $table.monthMask,
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get occurrenceDaysJson => $composableBuilder(
-    column: $table.occurrenceDaysJson,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get anchorDate => $composableBuilder(
-    column: $table.anchorDate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<double> get dependentSurvivalFactor => $composableBuilder(
-    column: $table.dependentSurvivalFactor,
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -7466,11 +9058,34 @@ class $$CashflowPlansTableTableOrderingComposer
         );
     return composer;
   }
+
+  $$LoansTableOrderingComposer get loanId {
+    final $$LoansTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.loanId,
+      referencedTable: $db.loans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LoansTableOrderingComposer(
+            $db: $db,
+            $table: $db.loans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
-class $$CashflowPlansTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $CashflowPlansTableTable> {
-  $$CashflowPlansTableTableAnnotationComposer({
+class $$CashFlowPlansTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CashFlowPlansTable> {
+  $$CashFlowPlansTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7480,48 +9095,25 @@ class $$CashflowPlansTableTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
   GeneratedColumn<String> get planType =>
       $composableBuilder(column: $table.planType, builder: (column) => column);
-
-  GeneratedColumn<String> get expenseMode => $composableBuilder(
-    column: $table.expenseMode,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get debtId =>
-      $composableBuilder(column: $table.debtId, builder: (column) => column);
 
   GeneratedColumn<double> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
-  GeneratedColumn<String> get customAmountsJson => $composableBuilder(
-    column: $table.customAmountsJson,
+  GeneratedColumn<String> get period =>
+      $composableBuilder(column: $table.period, builder: (column) => column);
+
+  GeneratedColumn<String> get distributionType => $composableBuilder(
+    column: $table.distributionType,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get frequency =>
-      $composableBuilder(column: $table.frequency, builder: (column) => column);
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
 
-  GeneratedColumn<int> get monthMask =>
-      $composableBuilder(column: $table.monthMask, builder: (column) => column);
-
-  GeneratedColumn<String> get occurrenceDaysJson => $composableBuilder(
-    column: $table.occurrenceDaysJson,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get anchorDate => $composableBuilder(
-    column: $table.anchorDate,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<double> get dependentSurvivalFactor => $composableBuilder(
-    column: $table.dependentSurvivalFactor,
-    builder: (column) => column,
-  );
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -7552,104 +9144,137 @@ class $$CashflowPlansTableTableAnnotationComposer
         );
     return composer;
   }
+
+  $$LoansTableAnnotationComposer get loanId {
+    final $$LoansTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.loanId,
+      referencedTable: $db.loans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LoansTableAnnotationComposer(
+            $db: $db,
+            $table: $db.loans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> cashFlowPlanAllocationsRefs<T extends Object>(
+    Expression<T> Function($$CashFlowPlanAllocationsTableAnnotationComposer a)
+    f,
+  ) {
+    final $$CashFlowPlanAllocationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.cashFlowPlanAllocations,
+          getReferencedColumn: (t) => t.planId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$CashFlowPlanAllocationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.cashFlowPlanAllocations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
-class $$CashflowPlansTableTableTableManager
+class $$CashFlowPlansTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $CashflowPlansTableTable,
-          CashflowPlansTableData,
-          $$CashflowPlansTableTableFilterComposer,
-          $$CashflowPlansTableTableOrderingComposer,
-          $$CashflowPlansTableTableAnnotationComposer,
-          $$CashflowPlansTableTableCreateCompanionBuilder,
-          $$CashflowPlansTableTableUpdateCompanionBuilder,
-          (CashflowPlansTableData, $$CashflowPlansTableTableReferences),
-          CashflowPlansTableData,
-          PrefetchHooks Function({bool categoryId})
+          $CashFlowPlansTable,
+          CashFlowPlan,
+          $$CashFlowPlansTableFilterComposer,
+          $$CashFlowPlansTableOrderingComposer,
+          $$CashFlowPlansTableAnnotationComposer,
+          $$CashFlowPlansTableCreateCompanionBuilder,
+          $$CashFlowPlansTableUpdateCompanionBuilder,
+          (CashFlowPlan, $$CashFlowPlansTableReferences),
+          CashFlowPlan,
+          PrefetchHooks Function({
+            bool categoryId,
+            bool loanId,
+            bool cashFlowPlanAllocationsRefs,
+          })
         > {
-  $$CashflowPlansTableTableTableManager(
-    _$AppDatabase db,
-    $CashflowPlansTableTable table,
-  ) : super(
+  $$CashFlowPlansTableTableManager(_$AppDatabase db, $CashFlowPlansTable table)
+    : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$CashflowPlansTableTableFilterComposer($db: db, $table: table),
+              $$CashFlowPlansTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$CashflowPlansTableTableOrderingComposer($db: db, $table: table),
+              $$CashFlowPlansTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$CashflowPlansTableTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
+              $$CashFlowPlansTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> planType = const Value.absent(),
-                Value<String?> expenseMode = const Value.absent(),
                 Value<int?> categoryId = const Value.absent(),
-                Value<int?> debtId = const Value.absent(),
-                Value<double?> amount = const Value.absent(),
-                Value<String?> customAmountsJson = const Value.absent(),
-                Value<String> frequency = const Value.absent(),
-                Value<int?> monthMask = const Value.absent(),
-                Value<String?> occurrenceDaysJson = const Value.absent(),
-                Value<DateTime?> anchorDate = const Value.absent(),
-                Value<double> dependentSurvivalFactor = const Value.absent(),
+                Value<int?> loanId = const Value.absent(),
+                Value<String> planType = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<String> period = const Value.absent(),
+                Value<String> distributionType = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime?> endDate = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-              }) => CashflowPlansTableCompanion(
+              }) => CashFlowPlansCompanion(
                 id: id,
-                name: name,
-                planType: planType,
-                expenseMode: expenseMode,
                 categoryId: categoryId,
-                debtId: debtId,
+                loanId: loanId,
+                planType: planType,
                 amount: amount,
-                customAmountsJson: customAmountsJson,
-                frequency: frequency,
-                monthMask: monthMask,
-                occurrenceDaysJson: occurrenceDaysJson,
-                anchorDate: anchorDate,
-                dependentSurvivalFactor: dependentSurvivalFactor,
+                period: period,
+                distributionType: distributionType,
+                startDate: startDate,
+                endDate: endDate,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required String name,
-                required String planType,
-                Value<String?> expenseMode = const Value.absent(),
                 Value<int?> categoryId = const Value.absent(),
-                Value<int?> debtId = const Value.absent(),
-                Value<double?> amount = const Value.absent(),
-                Value<String?> customAmountsJson = const Value.absent(),
-                required String frequency,
-                Value<int?> monthMask = const Value.absent(),
-                Value<String?> occurrenceDaysJson = const Value.absent(),
-                Value<DateTime?> anchorDate = const Value.absent(),
-                Value<double> dependentSurvivalFactor = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-              }) => CashflowPlansTableCompanion.insert(
+                Value<int?> loanId = const Value.absent(),
+                required String planType,
+                required double amount,
+                required String period,
+                required String distributionType,
+                required DateTime startDate,
+                Value<DateTime?> endDate = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+              }) => CashFlowPlansCompanion.insert(
                 id: id,
-                name: name,
-                planType: planType,
-                expenseMode: expenseMode,
                 categoryId: categoryId,
-                debtId: debtId,
+                loanId: loanId,
+                planType: planType,
                 amount: amount,
-                customAmountsJson: customAmountsJson,
-                frequency: frequency,
-                monthMask: monthMask,
-                occurrenceDaysJson: occurrenceDaysJson,
-                anchorDate: anchorDate,
-                dependentSurvivalFactor: dependentSurvivalFactor,
+                period: period,
+                distributionType: distributionType,
+                startDate: startDate,
+                endDate: endDate,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -7657,11 +9282,380 @@ class $$CashflowPlansTableTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$CashflowPlansTableTableReferences(db, table, e),
+                  $$CashFlowPlansTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({categoryId = false}) {
+          prefetchHooksCallback:
+              ({
+                categoryId = false,
+                loanId = false,
+                cashFlowPlanAllocationsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (cashFlowPlanAllocationsRefs) db.cashFlowPlanAllocations,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (categoryId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.categoryId,
+                                    referencedTable:
+                                        $$CashFlowPlansTableReferences
+                                            ._categoryIdTable(db),
+                                    referencedColumn:
+                                        $$CashFlowPlansTableReferences
+                                            ._categoryIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (loanId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.loanId,
+                                    referencedTable:
+                                        $$CashFlowPlansTableReferences
+                                            ._loanIdTable(db),
+                                    referencedColumn:
+                                        $$CashFlowPlansTableReferences
+                                            ._loanIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (cashFlowPlanAllocationsRefs)
+                        await $_getPrefetchedData<
+                          CashFlowPlan,
+                          $CashFlowPlansTable,
+                          CashFlowPlanAllocation
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CashFlowPlansTableReferences
+                              ._cashFlowPlanAllocationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CashFlowPlansTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).cashFlowPlanAllocationsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.planId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$CashFlowPlansTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CashFlowPlansTable,
+      CashFlowPlan,
+      $$CashFlowPlansTableFilterComposer,
+      $$CashFlowPlansTableOrderingComposer,
+      $$CashFlowPlansTableAnnotationComposer,
+      $$CashFlowPlansTableCreateCompanionBuilder,
+      $$CashFlowPlansTableUpdateCompanionBuilder,
+      (CashFlowPlan, $$CashFlowPlansTableReferences),
+      CashFlowPlan,
+      PrefetchHooks Function({
+        bool categoryId,
+        bool loanId,
+        bool cashFlowPlanAllocationsRefs,
+      })
+    >;
+typedef $$CashFlowPlanAllocationsTableCreateCompanionBuilder =
+    CashFlowPlanAllocationsCompanion Function({
+      Value<int> id,
+      required int planId,
+      required int allocationKey,
+      required double amount,
+    });
+typedef $$CashFlowPlanAllocationsTableUpdateCompanionBuilder =
+    CashFlowPlanAllocationsCompanion Function({
+      Value<int> id,
+      Value<int> planId,
+      Value<int> allocationKey,
+      Value<double> amount,
+    });
+
+final class $$CashFlowPlanAllocationsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $CashFlowPlanAllocationsTable,
+          CashFlowPlanAllocation
+        > {
+  $$CashFlowPlanAllocationsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $CashFlowPlansTable _planIdTable(_$AppDatabase db) =>
+      db.cashFlowPlans.createAlias(
+        $_aliasNameGenerator(
+          db.cashFlowPlanAllocations.planId,
+          db.cashFlowPlans.id,
+        ),
+      );
+
+  $$CashFlowPlansTableProcessedTableManager get planId {
+    final $_column = $_itemColumn<int>('plan_id')!;
+
+    final manager = $$CashFlowPlansTableTableManager(
+      $_db,
+      $_db.cashFlowPlans,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_planIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$CashFlowPlanAllocationsTableFilterComposer
+    extends Composer<_$AppDatabase, $CashFlowPlanAllocationsTable> {
+  $$CashFlowPlanAllocationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get allocationKey => $composableBuilder(
+    column: $table.allocationKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CashFlowPlansTableFilterComposer get planId {
+    final $$CashFlowPlansTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planId,
+      referencedTable: $db.cashFlowPlans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashFlowPlansTableFilterComposer(
+            $db: $db,
+            $table: $db.cashFlowPlans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CashFlowPlanAllocationsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CashFlowPlanAllocationsTable> {
+  $$CashFlowPlanAllocationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get allocationKey => $composableBuilder(
+    column: $table.allocationKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CashFlowPlansTableOrderingComposer get planId {
+    final $$CashFlowPlansTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planId,
+      referencedTable: $db.cashFlowPlans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashFlowPlansTableOrderingComposer(
+            $db: $db,
+            $table: $db.cashFlowPlans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CashFlowPlanAllocationsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CashFlowPlanAllocationsTable> {
+  $$CashFlowPlanAllocationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get allocationKey => $composableBuilder(
+    column: $table.allocationKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  $$CashFlowPlansTableAnnotationComposer get planId {
+    final $$CashFlowPlansTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planId,
+      referencedTable: $db.cashFlowPlans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashFlowPlansTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashFlowPlans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CashFlowPlanAllocationsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CashFlowPlanAllocationsTable,
+          CashFlowPlanAllocation,
+          $$CashFlowPlanAllocationsTableFilterComposer,
+          $$CashFlowPlanAllocationsTableOrderingComposer,
+          $$CashFlowPlanAllocationsTableAnnotationComposer,
+          $$CashFlowPlanAllocationsTableCreateCompanionBuilder,
+          $$CashFlowPlanAllocationsTableUpdateCompanionBuilder,
+          (CashFlowPlanAllocation, $$CashFlowPlanAllocationsTableReferences),
+          CashFlowPlanAllocation,
+          PrefetchHooks Function({bool planId})
+        > {
+  $$CashFlowPlanAllocationsTableTableManager(
+    _$AppDatabase db,
+    $CashFlowPlanAllocationsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CashFlowPlanAllocationsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$CashFlowPlanAllocationsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$CashFlowPlanAllocationsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> planId = const Value.absent(),
+                Value<int> allocationKey = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+              }) => CashFlowPlanAllocationsCompanion(
+                id: id,
+                planId: planId,
+                allocationKey: allocationKey,
+                amount: amount,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int planId,
+                required int allocationKey,
+                required double amount,
+              }) => CashFlowPlanAllocationsCompanion.insert(
+                id: id,
+                planId: planId,
+                allocationKey: allocationKey,
+                amount: amount,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$CashFlowPlanAllocationsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({planId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -7681,17 +9675,17 @@ class $$CashflowPlansTableTableTableManager
                       dynamic
                     >
                   >(state) {
-                    if (categoryId) {
+                    if (planId) {
                       state =
                           state.withJoin(
                                 currentTable: table,
-                                currentColumn: table.categoryId,
+                                currentColumn: table.planId,
                                 referencedTable:
-                                    $$CashflowPlansTableTableReferences
-                                        ._categoryIdTable(db),
+                                    $$CashFlowPlanAllocationsTableReferences
+                                        ._planIdTable(db),
                                 referencedColumn:
-                                    $$CashflowPlansTableTableReferences
-                                        ._categoryIdTable(db)
+                                    $$CashFlowPlanAllocationsTableReferences
+                                        ._planIdTable(db)
                                         .id,
                               )
                               as T;
@@ -7708,19 +9702,19 @@ class $$CashflowPlansTableTableTableManager
       );
 }
 
-typedef $$CashflowPlansTableTableProcessedTableManager =
+typedef $$CashFlowPlanAllocationsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $CashflowPlansTableTable,
-      CashflowPlansTableData,
-      $$CashflowPlansTableTableFilterComposer,
-      $$CashflowPlansTableTableOrderingComposer,
-      $$CashflowPlansTableTableAnnotationComposer,
-      $$CashflowPlansTableTableCreateCompanionBuilder,
-      $$CashflowPlansTableTableUpdateCompanionBuilder,
-      (CashflowPlansTableData, $$CashflowPlansTableTableReferences),
-      CashflowPlansTableData,
-      PrefetchHooks Function({bool categoryId})
+      $CashFlowPlanAllocationsTable,
+      CashFlowPlanAllocation,
+      $$CashFlowPlanAllocationsTableFilterComposer,
+      $$CashFlowPlanAllocationsTableOrderingComposer,
+      $$CashFlowPlanAllocationsTableAnnotationComposer,
+      $$CashFlowPlanAllocationsTableCreateCompanionBuilder,
+      $$CashFlowPlanAllocationsTableUpdateCompanionBuilder,
+      (CashFlowPlanAllocation, $$CashFlowPlanAllocationsTableReferences),
+      CashFlowPlanAllocation,
+      PrefetchHooks Function({bool planId})
     >;
 
 class $AppDatabaseManager {
@@ -7748,6 +9742,13 @@ class $AppDatabaseManager {
         _db,
         _db.financialObligationsTable,
       );
-  $$CashflowPlansTableTableTableManager get cashflowPlansTable =>
-      $$CashflowPlansTableTableTableManager(_db, _db.cashflowPlansTable);
+  $$LoansTableTableManager get loans =>
+      $$LoansTableTableManager(_db, _db.loans);
+  $$CashFlowPlansTableTableManager get cashFlowPlans =>
+      $$CashFlowPlansTableTableManager(_db, _db.cashFlowPlans);
+  $$CashFlowPlanAllocationsTableTableManager get cashFlowPlanAllocations =>
+      $$CashFlowPlanAllocationsTableTableManager(
+        _db,
+        _db.cashFlowPlanAllocations,
+      );
 }

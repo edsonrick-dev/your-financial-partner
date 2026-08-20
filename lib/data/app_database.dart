@@ -5,7 +5,6 @@ import 'package:drift/native.dart';
 import 'package:getx_drift_app/data/default_data/default_accounts.dart';
 import 'package:getx_drift_app/data/default_data/default_categories.dart';
 import 'package:getx_drift_app/data/enums/entity_type_enum.dart';
-import 'package:getx_drift_app/data/models/cashflow_plan_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'tables/cashflow_categories_table.dart';
@@ -14,7 +13,10 @@ import 'tables/transaction_participants_table.dart';
 import 'tables/entities_table.dart';
 import 'tables/transactions_table.dart';
 import 'tables/financial_obligations_table.dart';
-import 'tables/cashflow_plans_table.dart';
+import 'tables/cashflow_plan_allocation_table.dart';
+import 'tables/cashflow_plan_table.dart';
+import 'tables/loan_table.dart';
+// import 'tables/cashflow_plans_table.dart';
 
 import 'package:getx_drift_app/data/database/daos/transactions_dao/transactions_dao.dart';
 import 'package:getx_drift_app/data/database/daos/accounts_dao/accounts_dao.dart';
@@ -31,7 +33,9 @@ part 'app_database.g.dart';
     EntitiesTable,
     TransactionParticipantsTable,
     FinancialObligationsTable,
-    CashflowPlansTable,
+    Loans,
+    CashFlowPlanAllocations,
+    CashFlowPlans,
   ],
   daos: [TransactionsDao, AccountsDao, PeopleBalanceDao, EntitiesDao],
 )
@@ -61,16 +65,15 @@ class AppDatabase extends _$AppDatabase {
       if (from < 7) {
         await m.addColumn(accountsTable, accountsTable.creditLimit);
       }
+      if (from < 10) {
+        await m.createTable(loans);
+        await m.createTable(cashFlowPlans);
+        await m.createTable(cashFlowPlanAllocations);
+      }
     },
   );
   @override
-  int get schemaVersion => 8;
-
-  Future<List<CashFlowPlan>> getCashFlowPlans() async {
-    final rows = await select(cashflowPlansTable).get();
-
-    return rows.map((e) => e.toDomain()).toList();
-  }
+  int get schemaVersion => 10;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();

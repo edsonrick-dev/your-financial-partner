@@ -9,7 +9,7 @@ import 'package:getx_drift_app/features/widgets/cards/bills_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeView extends GetView<HomeController> {

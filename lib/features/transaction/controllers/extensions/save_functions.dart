@@ -10,7 +10,7 @@ import 'package:getx_drift_app/features/transaction/controllers/extensions/trans
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 
 enum DebtManagementType { splitExpense, receiveMoney, giveMoney }
 

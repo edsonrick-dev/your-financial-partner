@@ -15,7 +15,7 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 
 class NetWorthDetailsPage extends GetView<NetWorthController> {
   const NetWorthDetailsPage({super.key});

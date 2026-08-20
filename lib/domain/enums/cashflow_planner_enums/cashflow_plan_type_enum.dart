@@ -1,0 +1,1 @@
+enum CashFlowPlanType { income, budget }

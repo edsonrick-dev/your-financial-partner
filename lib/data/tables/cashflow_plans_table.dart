@@ -1,36 +1,36 @@
-import 'package:drift/drift.dart';
-import 'package:getx_drift_app/data/tables/cashflow_categories_table.dart';
+// import 'package:drift/drift.dart';
+// import 'package:getx_drift_app/data/tables/cashflow_categories_table.dart';
 
-class CashflowPlansTable extends Table {
-  IntColumn get id => integer().autoIncrement()();
+// class CashflowPlansTable extends Table {
+//   IntColumn get id => integer().autoIncrement()();
 
-  TextColumn get name => text()();
+//   TextColumn get name => text()();
 
-  TextColumn get planType => text()();
+//   TextColumn get planType => text()();
 
-  TextColumn get expenseMode => text().nullable()();
+//   TextColumn get expenseMode => text().nullable()();
 
-  IntColumn get categoryId =>
-      integer().nullable().references(CashflowCategoriesTable, #id)();
+//   IntColumn get categoryId =>
+//       integer().nullable().references(CashflowCategoriesTable, #id)();
 
-  IntColumn get debtId => integer().nullable()();
+//   IntColumn get debtId => integer().nullable()();
 
-  RealColumn get amount => real().nullable()();
+//   RealColumn get amount => real().nullable()();
 
-  TextColumn get customAmountsJson => text().nullable()();
+//   TextColumn get customAmountsJson => text().nullable()();
 
-  TextColumn get frequency => text()();
+//   TextColumn get frequency => text()();
 
-  IntColumn get monthMask => integer().nullable()();
+//   // IntColumn get monthMask => integer().nullable()();
 
-  TextColumn get occurrenceDaysJson => text().nullable()();
+//   // TextColumn get occurrenceDaysJson => text().nullable()();
 
-  DateTimeColumn get anchorDate => dateTime().nullable()();
+//   DateTimeColumn get anchorDate => dateTime().nullable()();
 
-  RealColumn get dependentSurvivalFactor =>
-      real().withDefault(const Constant(0))();
+//   // RealColumn get dependentSurvivalFactor =>
+//   //     real().withDefault(const Constant(0))();
 
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+//   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
-  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
-}
+//   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+// }

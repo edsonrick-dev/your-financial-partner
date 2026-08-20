@@ -68,3 +68,41 @@ extension BudgetPeriodExtension on BudgetPeriod {
     }
   }
 }
+
+
+
+
+
+              //       Categories
+              //           │
+              //           │
+              //           ▼
+              //    CashFlowPlans
+              //    ┌───────────────┐
+              //    │ id            │
+              //    │ categoryId    │
+              //    │ planType      │
+              //    │ amount        │
+              //    │ period        │
+              //    │ distribution  │
+              //    │ createdAt     │
+              //    │ updatedAt     │
+              //    └───────┬───────┘
+              //            │
+              //            │ 1:N
+              //            ▼
+              // CashFlowPlanAllocations
+              //    ┌───────────────┐
+              //    │ id            │
+              //    │ planId        │
+              //    │ allocationKey │
+              //    │ amount        │
+              //    └───────────────┘
+
+      //          CASHFLOW PLAN
+      //                 │
+      //     ┌───────────┼───────────┐
+      //     ▼           ▼           ▼
+      //  INCOME      EXPENSE     DEBT REPAYMENT
+      //     │           │           │
+      //  source       category      debt

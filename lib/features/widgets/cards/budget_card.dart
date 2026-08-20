@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:getx_drift_app/organize_THIS/num_extension.dart';
-import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
@@ -36,7 +35,7 @@ class BudgetCard extends StatelessWidget {
     }
     return GestureDetector(
       onTap: () {
-        AppSheets.budgetSheets();
+        // AppSheets.budgetSheets();
       },
       child: Container(
         decoration: BoxDecoration(
