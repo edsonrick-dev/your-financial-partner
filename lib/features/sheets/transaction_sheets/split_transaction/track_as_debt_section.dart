@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
@@ -7,8 +6,8 @@ import 'package:getx_drift_app/features/transaction/controllers/transaction_cont
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class ApplyToDebtSection extends GetView<TransactionController> {
-  const ApplyToDebtSection({super.key, required this.transactionType});
+class TrackAsDebtSection extends GetView<TransactionController> {
+  const TrackAsDebtSection({super.key, required this.transactionType});
 
   final TransactionType transactionType;
 
