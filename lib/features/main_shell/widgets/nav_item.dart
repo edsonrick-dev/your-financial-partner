@@ -42,7 +42,7 @@ class NavItem extends StatelessWidget {
                   // const SizedBox(height: 2),
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 150),
-                    opacity: isActive ? 1 : 0,
+                    opacity: isActive ? 1 : 0.4,
                     child: Text(
                       label,
                       style: TextStyle(

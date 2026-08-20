@@ -14,72 +14,102 @@ class FundSummaryCard extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    return AdaptivePressable(
-      onTap: controller.toggleIsFundHidden,
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          gradient: AppGradient.gradientA(colorScheme),
-        ),
-        padding: EdgeInsets.only(top: 24, bottom: 24, left: 24, right: 12),
-        child: Column(
-          spacing: 12,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Available Funds',
-              style: AppTextStyle.titleL.copyWith(
-                color: colorScheme.appInversedtextMuted,
-              ),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: AppGradient.gradientA(colorScheme),
+      ),
+      padding: EdgeInsets.only(top: 24, bottom: 24, left: 24, right: 12),
+      child: Column(
+        spacing: 12,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Available Funds',
+            style: AppTextStyle.titleL.copyWith(
+              color: colorScheme.appInversedtextMuted,
             ),
-            StreamBuilder<double>(
-              stream: controller.availableFundsStream,
-              builder: (context, snapshot) {
-                final availableFunds = snapshot.data ?? 0.0;
-                return Row(
-                  children: [
-                    Obx(
-                      () => TweenAnimationBuilder<double>(
-                        tween: Tween(
-                          begin: 0,
-                          end: controller.isFundHidden.value ? 8 : 0,
-                        ),
-                        duration: const Duration(milliseconds: 220),
-                        curve: Curves.easeOutCubic,
-                        builder: (context, blur, child) {
-                          return AnimatedOpacity(
+          ),
+          StreamBuilder<double>(
+            stream: controller.availableFundsStream,
+            builder: (context, snapshot) {
+              final availableFunds = snapshot.data ?? 0.0;
+              return Row(
+                children: [
+                  // Obx(
+                  //   () => AnimatedSwitcher(
+                  //     duration: const Duration(milliseconds: 250),
+                  //     // switchInCurve: Curves.easeOut,
+                  //     // switchOutCurve: Curves.easeIn,
+                  //     // transitionBuilder: (child, animation) {
+                  //     //   return FadeTransition(
+                  //     //     opacity: animation,
+                  //     //     child: SlideTransition(
+                  //     //       position: Tween<Offset>(
+                  //     //         // begin: const Offset(0, 0.15),
+                  //     //         end: Offset.zero,
+                  //     //       ).animate(animation),
+                  //     //       child: child,
+                  //     //     ),
+                  //     //   );
+                  //     // },
+                  //     child: Text(
+                  //       controller.isFundHidden.value
+                  //           ? '••••••'
+                  //           : availableFunds.abs().toCurrency(),
+                  //       key: ValueKey(controller.isFundHidden.value),
+                  //       style: AppTextStyle.amountXL.copyWith(
+                  //         color: availableFunds.isNegative
+                  //             ? colorScheme.appOutflow
+                  //             : colorScheme.appInversedtext,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  Obx(
+                    () => SizedBox(
+                      height: 40, // match your amount text height
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          AnimatedOpacity(
+                            opacity: controller.isFundHidden.value ? 0 : 1,
                             duration: const Duration(milliseconds: 180),
-                            opacity: controller.isFundHidden.value ? 1 : 1,
-                            child: ImageFiltered(
-                              imageFilter: ImageFilter.blur(
-                                sigmaX: blur,
-                                sigmaY: blur,
+                            child: Text(
+                              availableFunds.abs().toCurrency(),
+                              style: AppTextStyle.amountXL.copyWith(
+                                color: availableFunds.isNegative
+                                    ? colorScheme.appOutflow
+                                    : colorScheme.appInversedtext,
                               ),
-                              child: child,
                             ),
-                          );
-                        },
-
-                        child: Text(
-                          availableFunds.abs().toCurrency(),
-                          style: AppTextStyle.amountXL.copyWith(
-                            color: availableFunds.isNegative
-                                ? colorScheme.appOutflow
-                                : colorScheme.appInversedtext,
                           ),
-                        ),
+
+                          AnimatedOpacity(
+                            opacity: controller.isFundHidden.value ? 1 : 0,
+                            duration: const Duration(milliseconds: 180),
+                            child: Text(
+                              '••••••',
+                              style: AppTextStyle.amountXL.copyWith(
+                                color: colorScheme.appInversedtext,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                  ),
+                  const Spacer(),
 
-                    const Spacer(),
+                  SizedBox(
+                    width: 44,
+                    height: 44,
 
-                    SizedBox(
-                      width: 44,
-                      height: 44,
-
-                      child: Obx(
-                        () => Icon(
+                    child: Obx(
+                      () => AdaptivePressable(
+                        onTap: controller.toggleIsFundHidden,
+                        child: Icon(
                           controller.isFundHidden.value
                               ? Icons.visibility_off
                               : Icons.remove_red_eye,
@@ -92,12 +122,12 @@ class FundSummaryCard extends GetView<HomeController> {
                         ),
                       ),
                     ),
-                  ],
-                );
-              },
-            ),
-          ],
-        ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }
