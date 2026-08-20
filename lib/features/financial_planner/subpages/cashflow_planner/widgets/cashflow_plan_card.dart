@@ -30,6 +30,7 @@ class CashflowPlanCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: colorScheme.bgLight,
           borderRadius: BorderRadius.circular(16),
+
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.06),

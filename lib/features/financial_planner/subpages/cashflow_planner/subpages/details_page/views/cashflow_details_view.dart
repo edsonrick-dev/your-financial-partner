@@ -41,7 +41,7 @@ class CashflowDetailsView extends GetView<CashflowController> {
                             ),
                           ),
                           Text(
-                            'Planned Income',
+                            'Annual Income',
                             style: AppTextStyle.titleM.copyWith(
                               color: colorScheme.inversePrimary.withAlpha(150),
                             ),
@@ -59,7 +59,7 @@ class CashflowDetailsView extends GetView<CashflowController> {
                             ),
                           ),
                           Text(
-                            'Budget Allocation',
+                            'Annual Budget',
                             style: AppTextStyle.titleM.copyWith(
                               color: colorScheme.inversePrimary.withAlpha(150),
                             ),

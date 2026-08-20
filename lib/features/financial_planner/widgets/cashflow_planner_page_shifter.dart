@@ -19,29 +19,27 @@ class CashflowPlannerPageShifter extends GetView<FinancialPlannerController> {
     return Obx(() {
       final isSelected = controller.selectedTabIndex.value == index;
       return AdaptivePressable(
-        child: GestureDetector(
-          onTap: () {
-            controller.selectTab(index);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? colorScheme.primary
-                  : colorScheme.inversePrimary,
-              borderRadius: BorderRadius.circular(999),
-              border: Border.all(
-                color: colorScheme.text,
-                width: isSelected ? 0.5 : 1,
-              ),
+        onTap: () {
+          controller.selectTab(index);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: isSelected
+                ? colorScheme.primary
+                : colorScheme.inversePrimary,
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(
+              color: colorScheme.text,
+              width: isSelected ? 0.5 : 1,
             ),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              title,
-              style: TextStyle(
-                color: colorScheme.text,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                // fontSize: 1,
-              ),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Text(
+            title,
+            style: TextStyle(
+              color: colorScheme.text,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              // fontSize: 1,
             ),
           ),
         ),

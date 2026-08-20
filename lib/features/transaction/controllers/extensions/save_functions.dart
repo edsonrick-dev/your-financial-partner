@@ -42,6 +42,9 @@ extension SaveTransactionFunctions on TransactionController {
       int? transactionId = editingTransaction.value?.transaction.id;
 
       if (transactionId != null) {
+        // Remove data derived from the old version of this transaction.
+        await database.deleteParticipantsByTransaction(transactionId);
+        await database.deleteFinancialObligationsByTransaction(transactionId);
         await database.transactionsDao.updateTransaction(
           transactionId,
           TransactionsTableCompanion(
@@ -70,15 +73,8 @@ extension SaveTransactionFunctions on TransactionController {
 
       ///SPLIT EXPENSE LOGIC
       if (isSharedExpense.value) {
-        // final hasCurrentUser = participants.any(
-        //   (participant) => participant.entityId == currentUserEntityId.value,
-        // );
-        final participantList = [...participants];
-
-        if (!participantList.any(
-          (p) => p.entityId == currentUserEntityId.value,
-        )) {
-          participantList.insert(
+        if (!participants.any((p) => p.entityId == currentUserEntityId.value)) {
+          participants.insert(
             0,
             ParticipantModel(
               entityId: currentUserEntityId.value!,
@@ -88,21 +84,12 @@ extension SaveTransactionFunctions on TransactionController {
             ),
           );
         }
-        // if (!hasCurrentUser) {
-        //   participants.insert(
-        //     0,
-        //     ParticipantModel(
-        //       entityId: currentUserEntityId.value!,
-        //       name: 'Me',
-        //       amount: 0,
-        //       percentage: 0,
-        //     ),
-        //   );
-        // }
+
         if (splitMode.value == SplitMode.equal) {
           recalculateEqualSplit();
         }
-        for (final participant in participantList) {
+
+        for (final participant in participants) {
           await database.transactionsDao.insertTransactionParticipant(
             TransactionParticipantsTableCompanion.insert(
               transactionId: transactionId,
@@ -115,6 +102,7 @@ extension SaveTransactionFunctions on TransactionController {
               displayNameSnapshot: d.Value(participant.name),
             ),
           );
+
           if (participant.entityId != currentUserEntityId.value) {
             await database.transactionsDao.insertFinancialObligation(
               FinancialObligationsTableCompanion.insert(
@@ -128,6 +116,65 @@ extension SaveTransactionFunctions on TransactionController {
           }
         }
       }
+      // if (isSharedExpense.value) {
+      //   // final hasCurrentUser = participants.any(
+      //   //   (participant) => participant.entityId == currentUserEntityId.value,
+      //   // );
+      //   final participantList = [...participants];
+
+      //   if (!participantList.any(
+      //     (p) => p.entityId == currentUserEntityId.value,
+      //   )) {
+      //     participantList.insert(
+      //       0,
+      //       ParticipantModel(
+      //         entityId: currentUserEntityId.value!,
+      //         name: 'Me',
+      //         amount: 0,
+      //         percentage: 0,
+      //       ),
+      //     );
+      //   }
+      //   // if (!hasCurrentUser) {
+      //   //   participants.insert(
+      //   //     0,
+      //   //     ParticipantModel(
+      //   //       entityId: currentUserEntityId.value!,
+      //   //       name: 'Me',
+      //   //       amount: 0,
+      //   //       percentage: 0,
+      //   //     ),
+      //   //   );
+      //   // }
+      //   if (splitMode.value == SplitMode.equal) {
+      //     recalculateEqualSplit();
+      //   }
+      //   for (final participant in participantList) {
+      //     await database.transactionsDao.insertTransactionParticipant(
+      //       TransactionParticipantsTableCompanion.insert(
+      //         transactionId: transactionId,
+      //         entityId: participant.entityId,
+      //         allocatedAmount: participant.amount.value,
+      //         allocationPercentage: d.Value(participant.percentage.value),
+      //         isPayer: d.Value(
+      //           participant.entityId == currentUserEntityId.value,
+      //         ),
+      //         displayNameSnapshot: d.Value(participant.name),
+      //       ),
+      //     );
+      //     if (participant.entityId != currentUserEntityId.value) {
+      //       await database.transactionsDao.insertFinancialObligation(
+      //         FinancialObligationsTableCompanion.insert(
+      //           transactionId: transactionId,
+      //           debtorEntityId: participant.entityId,
+      //           creditorEntityId: currentUserEntityId.value!,
+      //           amount: participant.amount.value,
+      //           type: DebtManagementType.splitExpense.name,
+      //         ),
+      //       );
+      //     }
+      //   }
+      // }
     });
 
     await database.accountsDao.rebuildAccountBalance(account.id);
