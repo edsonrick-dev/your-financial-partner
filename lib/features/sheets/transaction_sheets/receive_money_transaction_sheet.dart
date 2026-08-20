@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/apply_to_debt_section.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/save_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -136,7 +137,6 @@ class ReceiveMoneyTransactionSheet extends GetView<TransactionController> {
                       ),
 
                       ApplyToDebtSection(
-                        controller: controller,
                         transactionType: TransactionType.receive,
                       ),
                       AppTextField(
@@ -153,196 +153,6 @@ class ReceiveMoneyTransactionSheet extends GetView<TransactionController> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ApplyToDebtSection extends StatelessWidget {
-  const ApplyToDebtSection({
-    super.key,
-    required this.controller,
-    required this.transactionType,
-  });
-
-  final TransactionController controller;
-  final TransactionType transactionType;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return Obx(
-      () => AnimatedContainer(
-        duration: Duration(milliseconds: 180),
-        width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: colorScheme.appInfoSoft,
-          borderRadius: BorderRadius.circular(
-            controller.isDebt.value == true ? 24 : 12,
-          ),
-          border: Border.all(color: colorScheme.appInfo),
-        ),
-        child: Column(
-          spacing: 8,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        spacing: 4,
-                        children: [
-                          Icon(
-                            PhosphorIconsRegular.coins,
-                            color: colorScheme.appInfo,
-                          ),
-                          Text(
-                            'Apply to Debt',
-                            style: TextStyle(
-                              // fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: colorScheme.appInfo,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      Text(
-                        'Balance automatically adjust with this person',
-                        style: TextStyle(
-                          color: colorScheme.appInfo,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Obx(
-                  () => Opacity(
-                    opacity: controller.canEnableDebt ? 1 : .4,
-                    child: IgnorePointer(
-                      ignoring: !controller.canEnableDebt,
-                      child: CupertinoSwitch(
-                        value: controller.isDebt.value,
-                        onChanged: (value) {
-                          controller.isDebt.value = value;
-
-                          // if (!value) {
-                          //   controller.participants.clear();
-                          // }
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Obx(() {
-              // debugPrint(
-              //   'Widget balance: '
-              //   '${controller.selectedPersonBalance.value?.netBalance}',
-              // );
-
-              if (controller.isDebt.value == true) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _BalanceSection(
-                      controller: controller,
-                      label: controller.currentBalanceLabel,
-                      sectionTitle: 'Current Balance',
-                      amount:
-                          (controller.selectedPersonBalance.value?.netBalance ??
-                          0),
-                    ),
-                    Spacer(),
-                    Icon(
-                      PhosphorIconsRegular.arrowRight,
-                      color: colorScheme.appInfo,
-                      size: 24,
-                    ),
-                    Spacer(),
-                    _BalanceSection(
-                      controller: controller,
-                      label: controller.projectedBalanceLabel(transactionType),
-                      sectionTitle: 'Balance After',
-                      amount: controller.projectedBalance(transactionType),
-                    ),
-                  ],
-                );
-              }
-              return const SizedBox.shrink();
-            }),
-            // Obx(() {
-            //   final person = controller.selectedPerson.value;
-
-            //   if (person == null) {
-            //     return const SizedBox.shrink();
-            //   }
-
-            //   return Text(
-            //     controller.selectedPersonBalance.value?.netBalance
-            //             .toCurrency() ??
-            //         '',
-            //   );
-            // }),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BalanceSection extends StatelessWidget {
-  const _BalanceSection({
-    required this.controller,
-    required this.sectionTitle,
-    required this.label,
-    this.amount = 0,
-  });
-  final String sectionTitle;
-  final String label;
-  final TransactionController controller;
-  final double amount;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.onPrimary,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: EdgeInsets.all(12),
-      child: Column(
-        spacing: 8,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-            spacing: 4,
-            children: [
-              Text(
-                label,
-                style: TextStyle(color: colorScheme.appInfo, fontSize: 12),
-              ),
-              Text(
-                amount.abs().toCurrency(),
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: amount.isNegative
-                      ? colorScheme.appOutflow
-                      : colorScheme.appInflow,
-                ),
-              ),
-            ],
-          ),
-
-          Text(sectionTitle, style: TextStyle(color: colorScheme.appInfo)),
-        ],
       ),
     );
   }

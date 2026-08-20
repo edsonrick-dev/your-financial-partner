@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/apply_to_debt_section.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/save_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -131,10 +132,7 @@ class GiveMoneyTransactionSheet extends GetView<TransactionController> {
                               controller.selectAccount(transactionType),
                         ),
                       ),
-                      ApplyToDebtSection(
-                        controller: controller,
-                        transactionType: TransactionType.give,
-                      ),
+                      ApplyToDebtSection(transactionType: TransactionType.give),
                       AppTextField(
                         optional: true,
                         label: 'Notes',

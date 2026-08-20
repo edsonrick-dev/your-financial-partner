@@ -16,7 +16,6 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_a
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
 
 class NetWorthDetailsPage extends GetView<NetWorthController> {
   const NetWorthDetailsPage({super.key});

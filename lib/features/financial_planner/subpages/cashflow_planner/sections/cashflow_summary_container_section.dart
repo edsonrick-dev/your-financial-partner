@@ -16,7 +16,7 @@ class CashflowSummaryContainerSection extends GetView<CashflowController> {
 
     Color debtColor = colorScheme.appOutflow;
     Color expenseColor = colorScheme.appAccent;
-    Color savingsColor = colorScheme.appInflow;
+    Color savingsColor = colorScheme.appInfo;
 
     return AppSection(
       // sectionTitle: 'Annual Cashflow',
