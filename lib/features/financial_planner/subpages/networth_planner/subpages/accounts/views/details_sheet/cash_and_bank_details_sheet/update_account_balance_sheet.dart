@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/create_account_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
+import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/organize_THIS/num_extension.dart';
 
 class UpdateAccountBalanceSheet extends GetView<AccountController> {
@@ -11,37 +13,15 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
+    return AppSheet(
+      adaptiveHeight: true,
+      title: 'Update Balance',
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(99),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            Text(
-              'Update Balance',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-
-            const SizedBox(height: 24),
-
             Text(
               'Current Balance',
               style: Theme.of(context).textTheme.bodyMedium,
@@ -55,24 +35,11 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
             ),
 
             const SizedBox(height: 20),
-
-            Text(
-              'Actual Balance',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-
-            const SizedBox(height: 8),
-
-            TextField(
-              controller: controller.balanceController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              decoration: const InputDecoration(
-                prefixText: '₱',
-                hintText: 'Enter actual balance',
-              ),
+            AppTextField(
               onChanged: controller.onBalanceChanged,
+              label: 'Actual Balance',
+              focusNode: controller.balanceFocusNode,
+              controller: controller.balanceController,
             ),
 
             const SizedBox(height: 20),
@@ -107,6 +74,7 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
                 child: const Text('Update Balance'),
               ),
             ),
+            const SizedBox(height: 24),
           ],
         ),
       ),

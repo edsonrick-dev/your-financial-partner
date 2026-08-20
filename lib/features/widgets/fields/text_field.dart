@@ -9,6 +9,8 @@ class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool multiLine;
   final bool optional;
+  final ValueChanged<String>? onChanged;
+  final String? prefixText;
   final TextInputType? keyboardType;
 
   const AppTextField({
@@ -17,6 +19,8 @@ class AppTextField extends StatelessWidget {
     this.multiLine = false,
     this.optional = false,
     this.keyboardType,
+    this.prefixText,
+    this.onChanged,
     required this.label,
     required this.focusNode,
     required this.controller,
@@ -30,7 +34,7 @@ class AppTextField extends StatelessWidget {
         children: [
           Text('$label ${optional ? '(Optional)' : ''}'),
           TextField(
-            inputFormatters: [LengthLimitingTextInputFormatter(12)],
+            // inputFormatters: [LengthLimitingTextInputFormatter(12)],
             controller: controller,
             focusNode: focusNode,
 
@@ -45,6 +49,7 @@ class AppTextField extends StatelessWidget {
             style: const TextStyle(fontSize: 17, height: 24 / 17),
 
             decoration: InputDecoration(
+              prefixText: prefixText ?? '',
               isDense: true,
               contentPadding: EdgeInsets.zero,
               border: InputBorder.none,
@@ -58,9 +63,11 @@ class AppTextField extends StatelessWidget {
                   required isFocused,
                   required maxLength,
                 }) => null,
+            onChanged: onChanged,
           ),
         ],
       ),
+
       onTap: () {
         focusNode.requestFocus();
       },

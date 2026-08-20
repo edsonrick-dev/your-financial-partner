@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/create_account_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/icon_picker_field.dart';

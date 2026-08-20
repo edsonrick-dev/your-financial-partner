@@ -18,27 +18,30 @@ class CashAndBankDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final RxInt selectedIndex = 0.obs;
 
-    return AppSheet(
-      height: AppSheetHeight.full,
-      title: account.name,
-      child: StreamBuilder<AccountsTableData?>(
-        stream: database.accountsDao.watchAccount(account.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return StreamBuilder<AccountsTableData?>(
+      stream: database.accountsDao.watchAccount(account.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          if (snapshot.hasError) {
-            return const Center(child: Text('Unable to load account.'));
-          }
+        if (snapshot.hasError) {
+          return const Center(child: Text('Unable to load account.'));
+        }
 
-          final currentAccount = snapshot.data;
+        final currentAccount = snapshot.data;
 
-          if (currentAccount == null) {
-            return const Center(child: Text('Account no longer exists.'));
-          }
+        if (currentAccount == null) {
+          return const Center(child: Text('Account no longer exists.'));
+        }
 
-          return Column(
+        return AppSheet(
+          height: AppSheetHeight.full,
+
+          // ✅ This now comes from the streamed account
+          title: currentAccount.name,
+
+          child: Column(
             children: [
               CashAndBankSummarySection(account: currentAccount),
 
@@ -54,16 +57,15 @@ class CashAndBankDetailsSheet extends StatelessWidget {
                     index: selectedIndex.value,
                     children: [
                       CashAndBankTransactionsView(accountId: currentAccount.id),
-
                       CashAndBankReservationView(accountId: currentAccount.id),
                     ],
                   ),
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

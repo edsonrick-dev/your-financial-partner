@@ -29,7 +29,10 @@ class CreditCardAccountCard extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: colorScheme.appBorder),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -80,6 +83,9 @@ class CreditCardAccountCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
+                  color: colorScheme.appOutflow,
+                  backgroundColor: colorScheme.bgDark,
+                  borderRadius: BorderRadius.circular(999),
                   value: utilization.clamp(0.0, 1.0),
                   minHeight: 6,
                 ),

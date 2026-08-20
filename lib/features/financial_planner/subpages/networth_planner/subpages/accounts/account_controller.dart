@@ -8,7 +8,25 @@ import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_acco
 import 'package:drift/drift.dart' as drift;
 
 class AccountController extends GetxController {
+  void initializeEditAccount(AccountsTableData account) {
+    nameController.text = account.name;
+
+    // bankNameController.text = account.bankName ?? '';
+
+    creditLimitController.text = account.creditLimit?.toStringAsFixed(2) ?? '';
+
+    balanceController.clear();
+  }
+
+  double get initialBalance {
+    return double.tryParse(balanceController.text.trim().replaceAll(',', '')) ??
+        0;
+  }
+
   final TextEditingController balanceController = TextEditingController();
+  final TextEditingController bankNameController = TextEditingController();
+  final FocusNode bankNameFocusNode = FocusNode();
+  final FocusNode balanceFocusNode = FocusNode();
   final RxDouble enteredBalance = 0.0.obs;
   void onBalanceChanged(String value) {
     enteredBalance.value =
@@ -19,6 +37,24 @@ class AccountController extends GetxController {
 
   double getBalanceAdjustment(double currentBalance) {
     return actualBalance - currentBalance;
+  }
+
+  Future<void> updateAccountDetails(AccountsTableData account) async {
+    final name = nameController.text.trim();
+
+    if (name.isEmpty) {
+      Get.snackbar('Missing Account Name', 'Enter an account name.');
+      return;
+    }
+
+    await database.accountsDao.updateAccount(
+      account.id,
+      AccountsTableCompanion(name: drift.Value(name)),
+    );
+
+    nameController.clear();
+
+    Get.back();
   }
 
   Future<void> updateAccountBalance(AccountsTableData account) async {
@@ -64,6 +100,34 @@ class AccountController extends GetxController {
   final nameFocusNode = FocusNode();
 
   final selectedAccountType = Rxn<AccountType>();
+  Future<void> updateCreditCardDetails(AccountsTableData account) async {
+    final name = nameController.text.trim();
+    final creditLimitValue = creditLimit;
+
+    if (name.isEmpty) {
+      Get.snackbar('Missing Account Name', 'Enter an account name.');
+      return;
+    }
+
+    if (creditLimitValue == null || creditLimitValue <= 0) {
+      Get.snackbar('Invalid Credit Limit', 'Enter a valid credit limit.');
+      return;
+    }
+
+    await database.accountsDao.updateAccount(
+      account.id,
+      AccountsTableCompanion(
+        name: drift.Value(name),
+        creditLimit: drift.Value(creditLimitValue),
+      ),
+    );
+
+    nameController.clear();
+    creditLimitController.clear();
+    bankNameController.clear();
+
+    Get.back();
+  }
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController creditLimitController = TextEditingController();
@@ -88,7 +152,7 @@ class AccountController extends GetxController {
     buttonState.value = AddButtonState.collapsed;
   }
 
-  Future<AccountsTableData?> saveAccount() async {
+  Future<AccountsTableData?> saveAccount({double initialBalance = 0}) async {
     final name = nameController.text.trim();
 
     if (name.isEmpty) return null;
@@ -96,6 +160,11 @@ class AccountController extends GetxController {
     final type = selectedAccountType.value;
 
     if (type == null) return null;
+
+    if (initialBalance < 0) {
+      Get.snackbar('Invalid Balance', 'Initial balance cannot be negative.');
+      return null;
+    }
 
     final parsedCreditLimit = double.tryParse(
       creditLimitController.text.trim().replaceAll(',', ''),
@@ -106,24 +175,47 @@ class AccountController extends GetxController {
       return null;
     }
 
-    final insertedId = await database.accountsDao.insertAccount(
-      AccountsTableCompanion.insert(
-        name: name,
-        icon: selectedIconKey.value,
-        accountType: type.name,
-        creditLimit: type == AccountType.creditCard
-            ? drift.Value<double?>(parsedCreditLimit)
-            : const drift.Value<double?>(null),
-      ),
-    );
+    return await database.transaction(() async {
+      // 1. Create account
+      final insertedId = await database.accountsDao.insertAccount(
+        AccountsTableCompanion.insert(
+          name: name,
+          icon: selectedIconKey.value,
+          accountType: type.name,
+          creditLimit: type == AccountType.creditCard
+              ? drift.Value<double?>(parsedCreditLimit)
+              : const drift.Value<double?>(null),
+        ),
+      );
 
-    final createdAccount = await (database.select(
-      database.accountsTable,
-    )..where((tbl) => tbl.id.equals(insertedId))).getSingleOrNull();
+      // 2. Create initial balance transaction
+      if (initialBalance > 0) {
+        await database.transactionsDao.insertTransaction(
+          TransactionsTableCompanion.insert(
+            amount: initialBalance,
+            date: DateTime.now(),
+            transactionType: TransactionType.balanceUpdate.name,
+            accountId: insertedId,
+            categoryId: const drift.Value(null),
+            note: const drift.Value('Initial balance'),
+            createdAt: drift.Value(DateTime.now()),
+            updatedAt: drift.Value(DateTime.now()),
+          ),
+        );
+      }
 
-    collapseButton();
+      // 3. Rebuild calculated balance
+      await database.accountsDao.rebuildAccountBalance(insertedId);
 
-    return createdAccount;
+      // 4. Return created account
+      final createdAccount = await (database.select(
+        database.accountsTable,
+      )..where((tbl) => tbl.id.equals(insertedId))).getSingleOrNull();
+
+      collapseButton();
+
+      return createdAccount;
+    });
   }
 
   void selectIcon(String iconKey) {
@@ -134,7 +226,12 @@ class AccountController extends GetxController {
   void onClose() {
     nameController.dispose();
     creditLimitController.dispose();
+    bankNameController.dispose();
+
     nameFocusNode.dispose();
+    creditLimitFocusNode.dispose();
+    bankNameFocusNode.dispose();
+
     balanceController.dispose();
 
     super.onClose();
