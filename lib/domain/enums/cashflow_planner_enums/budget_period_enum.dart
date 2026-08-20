@@ -67,6 +67,14 @@ extension BudgetPeriodExtension on BudgetPeriod {
         return 'Total amount for the year';
     }
   }
+
+  bool get supportsCustomization => switch (this) {
+    BudgetPeriod.weekly => true,
+    BudgetPeriod.fortnightly => true,
+    BudgetPeriod.twiceAMonth => true,
+    BudgetPeriod.monthly => false,
+    BudgetPeriod.yearly => true,
+  };
 }
 
 
@@ -106,3 +114,22 @@ extension BudgetPeriodExtension on BudgetPeriod {
       //  INCOME      EXPENSE     DEBT REPAYMENT
       //     │           │           │
       //  source       category      debt
+
+// Weekly
+// allocation 1–7
+// Mon → Sun
+
+// Fortnightly
+// allocation 1–N
+// repeating cycle pattern
+
+// Twice a month
+// allocation 1–2
+// first / second occurrence
+
+// Monthly
+// no allocation rows
+
+// Yearly
+// allocation 1–12
+// Jan → Dec

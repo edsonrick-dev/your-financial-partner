@@ -1,1 +1,0 @@
-enum BudgetDistribution { even, custom }
