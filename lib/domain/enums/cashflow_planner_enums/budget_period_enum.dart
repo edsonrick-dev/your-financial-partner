@@ -24,7 +24,7 @@ extension BudgetPeriodExtension on BudgetPeriod {
       case BudgetPeriod.weekly:
         return 'Weekly';
       case BudgetPeriod.fortnightly:
-        return 'Every 2 weeks';
+        return 'Fortnightly';
       case BudgetPeriod.twiceAMonth:
         return 'Twice a month';
       case BudgetPeriod.monthly:
@@ -55,7 +55,7 @@ extension BudgetPeriodExtension on BudgetPeriod {
         return 'Repeats every week';
 
       case BudgetPeriod.fortnightly:
-        return 'Repeats every 2 weeks';
+        return 'Repeats every 14 days or 2 weeks';
 
       case BudgetPeriod.twiceAMonth:
         return 'Occurs twice each month';
@@ -68,12 +68,38 @@ extension BudgetPeriodExtension on BudgetPeriod {
     }
   }
 
+  /// Number of times the period occurs in one year
+  /// when using an even distribution.
+  int get occurrencesPerYear => switch (this) {
+    BudgetPeriod.weekly => 52,
+    BudgetPeriod.fortnightly => 26,
+    BudgetPeriod.twiceAMonth => 24,
+    BudgetPeriod.monthly => 12,
+    BudgetPeriod.yearly => 1,
+  };
+
+  /// Number of custom distribution patterns that
+  /// repeat within one year.
+  int get distributionCyclesPerYear => switch (this) {
+    BudgetPeriod.weekly => 52,
+    BudgetPeriod.fortnightly => 13,
+    BudgetPeriod.twiceAMonth => 12,
+    BudgetPeriod.monthly => 12,
+    BudgetPeriod.yearly => 1,
+  };
   bool get supportsCustomization => switch (this) {
     BudgetPeriod.weekly => true,
     BudgetPeriod.fortnightly => true,
     BudgetPeriod.twiceAMonth => true,
     BudgetPeriod.monthly => false,
     BudgetPeriod.yearly => true,
+  };
+  String get annualizationLabel => switch (this) {
+    BudgetPeriod.weekly => 'Weeks',
+    BudgetPeriod.fortnightly => 'Fortnightly periods',
+    BudgetPeriod.twiceAMonth => 'Occurrences',
+    BudgetPeriod.monthly => 'Months',
+    BudgetPeriod.yearly => 'Year',
   };
 }
 

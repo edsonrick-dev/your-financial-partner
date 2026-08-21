@@ -59,31 +59,17 @@ class CashflowController extends GetxController {
   final TextEditingController amountController = TextEditingController();
   final FocusNode amountFocusNode = FocusNode();
   double get annualizedAmount {
-    distributionRevision.value;
-
     final period = selectedPeriod.value;
 
     if (period == null) return 0;
 
     if (selectedDistribution.value == CashFlowDistribution.custom) {
-      return switch (period) {
-        BudgetPeriod.weekly => distributionTotal * 52,
-        BudgetPeriod.fortnightly => distributionTotal * 13,
-        BudgetPeriod.twiceAMonth => distributionTotal * 12,
-        BudgetPeriod.monthly => 0,
-        BudgetPeriod.yearly => distributionTotal,
-      };
+      return distributionTotal * period.distributionCyclesPerYear;
     }
 
     if (amount.value <= 0) return 0;
 
-    return switch (period) {
-      BudgetPeriod.weekly => amount.value * 52,
-      BudgetPeriod.fortnightly => amount.value * 26,
-      BudgetPeriod.twiceAMonth => amount.value * 24,
-      BudgetPeriod.monthly => amount.value * 12,
-      BudgetPeriod.yearly => amount.value,
-    };
+    return amount.value * period.occurrencesPerYear;
   }
 
   final Rx<CashFlowDistribution> selectedDistribution =
@@ -106,25 +92,44 @@ class CashflowController extends GetxController {
   }
 
   void selectDistribution(CashFlowDistribution distribution) {
+    if (distribution == selectedDistribution.value) return;
+
     if (distribution == CashFlowDistribution.custom) {
-      final currentAmount = amount.value;
+      final periodAmount = amount.value;
 
       initializeDistributionFields();
-
       selectedDistribution.value = distribution;
 
-      distributeAmountEvenly(currentAmount);
+      final patternTotal = switch (selectedPeriod.value) {
+        BudgetPeriod.fortnightly => periodAmount * 2,
+        BudgetPeriod.twiceAMonth => periodAmount * 2,
+        BudgetPeriod.weekly => periodAmount * 7,
+        BudgetPeriod.yearly => periodAmount * 12,
+        BudgetPeriod.monthly => 0,
+        null => 0,
+      };
+
+      distributeAmountEvenly(patternTotal);
 
       return;
     }
 
     // Custom → Evenly
-    amount.value = distributionTotal;
+    final patternTotal = distributionTotal;
 
-    amountController.text = amount.value.toStringAsFixed(2);
+    final periodAmount = switch (selectedPeriod.value) {
+      BudgetPeriod.fortnightly => patternTotal / 2,
+      BudgetPeriod.twiceAMonth => patternTotal / 2,
+      BudgetPeriod.weekly => patternTotal / 7,
+      BudgetPeriod.yearly => patternTotal / 12,
+      BudgetPeriod.monthly => patternTotal,
+      null => 0,
+    };
+
+    amount.value = periodAmount;
+    amountController.text = periodAmount.toStringAsFixed(2);
 
     selectedDistribution.value = distribution;
-
     disposeDistributionFields();
   }
 

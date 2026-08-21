@@ -154,56 +154,11 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
                   ],
                 );
               }),
+
               SizedBox(height: spacingHeight),
 
-              // // Custom distribution fields
-              // Obx(() {
-              //   final period = controller.selectedPeriod.value;
-
-              //   if (period == null ||
-              //       !period.supportsCustomization ||
-              //       controller.selectedDistribution.value !=
-              //           CashFlowDistribution.custom) {
-              //     return const SizedBox.shrink();
-              //   }
-
-              //   return const CashFlowDistributionFields();
-              // }),
-              // SizedBox(height: spacingHeight),
-              // Obx(() {
-              //   final isCustom =
-              //       controller.selectedDistribution.value ==
-              //       CashFlowDistribution.custom;
-
-              //   if (isCustom) {
-              //     return AppFieldContainer(
-              //       onTap: () {},
-              //       child: Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           Text('${controller.selectedPeriod.value?.label} total'),
-              //           Text(
-              //             controller.plannedPeriodAmount.toCurrency(),
-              //             style: Theme.of(context).textTheme.titleMedium,
-              //           ),
-              //         ],
-              //       ),
-              //     );
-              //   }
-
-              //   return AppTextField(
-              //     label: 'Amount',
-              //     onChanged: (_) => controller.amountChanged(),
-              //     prefixText: '₱',
-              //     keyboardType: const TextInputType.numberWithOptions(
-              //       decimal: true,
-              //     ),
-              //     focusNode: controller.amountFocusNode,
-              //     controller: controller.amountController,
-              //   );
-              // }),
-              SizedBox(height: spacingHeight),
               // Annual projection
+              SizedBox(height: spacingHeight),
               Obx(() {
                 final period = controller.selectedPeriod.value;
 
@@ -211,20 +166,62 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
                   return const SizedBox.shrink();
                 }
 
-                return AppFieldContainer(
-                  onTap: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Expected Annual Income'),
-                      Text(
-                        controller.annualizedAmount.toCurrency(),
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ],
-                  ),
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${period.label} total'),
+                    Text(
+                      controller.plannedPeriodAmount.toCurrency(),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ],
                 );
               }),
+              Obx(() {
+                final period = controller.selectedPeriod.value;
+
+                if (period == null) {
+                  return const SizedBox.shrink();
+                }
+
+                final isCustom =
+                    controller.selectedDistribution.value ==
+                    CashFlowDistribution.custom;
+
+                final multiplier = isCustom
+                    ? period.distributionCyclesPerYear
+                    : period.occurrencesPerYear;
+
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('× No. of ${period.annualizationLabel}'),
+                    Text('$multiplier'),
+                  ],
+                );
+              }),
+
+              Divider(),
+
+              Obx(() {
+                final period = controller.selectedPeriod.value;
+
+                if (period == null) {
+                  return const SizedBox.shrink();
+                }
+
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Expected Annual Income'),
+                    Text(
+                      controller.annualizedAmount.toCurrency(),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ],
+                );
+              }),
+              SizedBox(height: spacingHeight * 4),
             ],
           ),
         ),
