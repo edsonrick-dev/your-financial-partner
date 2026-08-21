@@ -34,7 +34,7 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
               // Category
               Obx(
                 () => AppDropdownField(
-                  label: 'Category',
+                  label: 'Income Source',
                   iconKey:
                       transactionController.selectedCategory.value?.icon ??
                       'category',

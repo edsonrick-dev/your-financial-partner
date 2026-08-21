@@ -46,7 +46,11 @@ class SelectCategorySheet extends StatelessWidget {
               Column(
                 children: [
                   AppGrabber(),
-                  AppToolbar(title: 'Select Category'),
+                  AppToolbar(
+                    title: transactionType == TransactionType.earn
+                        ? 'Select Income Source'
+                        : 'Select Category',
+                  ),
                 ],
               ),
 
