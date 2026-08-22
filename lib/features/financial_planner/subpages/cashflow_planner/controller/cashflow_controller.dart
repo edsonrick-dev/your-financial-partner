@@ -758,28 +758,36 @@ class CashflowController extends GetxController {
       case BudgetPeriod.fortnightly:
         final distribution = List<double>.filled(12, 0);
 
-        var occurrence = occurrenceDate.value;
+        final yearStart = DateTime(year, 1, 1);
+        final yearEnd = DateTime(year, 12, 31);
 
-        while (occurrence.year < year) {
-          occurrence = occurrence.add(const Duration(days: 14));
+        // Temporary recurrence anchor.
+        // Later, this can become the user's selected occurrenceDate.
+        var occurrence = DateTime.now();
+
+        // Move backward through the same 14-day cycle
+        // until we reach the first occurrence that can affect this year.
+        while (occurrence
+            .subtract(const Duration(days: 14))
+            .isAfter(yearStart)) {
+          occurrence = occurrence.subtract(const Duration(days: 14));
         }
 
-        while (occurrence.year == year) {
-          distribution[occurrence.month - 1] += amount.value;
+        // Move forward through the entire current year.
+        while (!occurrence.isAfter(yearEnd)) {
+          if (!occurrence.isBefore(yearStart)) {
+            distribution[occurrence.month - 1] += amount.value;
+          }
 
           occurrence = occurrence.add(const Duration(days: 14));
         }
 
         return distribution;
-
       case BudgetPeriod.monthly:
         return List.filled(12, amount.value);
 
       case BudgetPeriod.yearly:
-        return [
-          for (var i = 0; i < 12; i++)
-            i == occurrenceDate.value.month - 1 ? amount.value : 0,
-        ];
+        return List.filled(12, amount.value / 12);
     }
   }
 
@@ -814,11 +822,92 @@ class CashflowController extends GetxController {
         }
 
         return distribution;
+      case BudgetPeriod.fortnightly:
+        final distribution = List<double>.filled(12, 0);
 
+        final year = DateTime.now().year;
+        final yearStart = DateTime(year, 1, 1);
+        final yearEnd = DateTime(year, 12, 31);
+
+        if (distributionControllers.length < 2) {
+          return distribution;
+        }
+
+        final amountA =
+            double.tryParse(
+              distributionControllers[0].text.replaceAll(',', '').trim(),
+            ) ??
+            0.0;
+
+        final amountB =
+            double.tryParse(
+              distributionControllers[1].text.replaceAll(',', '').trim(),
+            ) ??
+            0.0;
+
+        // Temporary anchor.
+        // Later this becomes occurrenceDate.value.
+        var occurrence = DateTime.now();
+
+        // 0 = first custom amount
+        // 1 = second custom amount
+        var allocationIndex = 0;
+
+        // Move backward through the same 14-day cycle
+        // until we reach the beginning of the year.
+        while (occurrence
+            .subtract(const Duration(days: 14))
+            .isAfter(yearStart)) {
+          occurrence = occurrence.subtract(const Duration(days: 14));
+
+          allocationIndex = allocationIndex == 0 ? 1 : 0;
+        }
+
+        // Calculate every occurrence through December.
+        while (!occurrence.isAfter(yearEnd)) {
+          if (!occurrence.isBefore(yearStart)) {
+            final amount = allocationIndex == 0 ? amountA : amountB;
+
+            distribution[occurrence.month - 1] += amount;
+          }
+
+          occurrence = occurrence.add(const Duration(days: 14));
+
+          allocationIndex = allocationIndex == 0 ? 1 : 0;
+        }
+
+        return distribution;
       case BudgetPeriod.monthly:
-        return List.filled(12, amount.value);
-      default:
-        return List.empty();
+        final distribution = List<double>.filled(12, 0);
+
+        final firstHalf =
+            double.tryParse(
+              distributionControllers[0].text.replaceAll(',', '').trim(),
+            ) ??
+            0.0;
+
+        final secondHalf =
+            double.tryParse(
+              distributionControllers[1].text.replaceAll(',', '').trim(),
+            ) ??
+            0.0;
+
+        for (var month = 1; month <= 12; month++) {
+          // Both halves occur every month.
+          distribution[month - 1] = firstHalf + secondHalf;
+        }
+
+        return distribution;
+      case BudgetPeriod.yearly:
+        return List<double>.from(
+          distributionControllers.map(
+            (controller) =>
+                double.tryParse(controller.text.replaceAll(',', '').trim()) ??
+                0.0,
+          ),
+        );
+      // default:
+      //   return List.empty();
       // return switch (period) {
       //   // 7 daily allocations = one weekly pattern.
       //   // Convert the annual weekly total into an average monthly amount.
