@@ -297,6 +297,20 @@ class AppCalculatorController extends GetxController {
   bool _isEnteringNewValue = false;
   bool _isDecimal = false;
   int _decimalPlaces = 0;
+  void initialize(double value) {
+    _currentValue = value;
+    display.value = value;
+    expression.value = '';
+
+    _storedValue = null;
+    _operator = null;
+
+    // If user starts typing a digit, replace the existing amount.
+    _isEnteringNewValue = value != 0;
+
+    _isDecimal = value % 1 != 0;
+    _decimalPlaces = _isDecimal ? value.toString().split('.').last.length : 0;
+  }
 
   void input(String value) {
     if (_isOperator(value)) {

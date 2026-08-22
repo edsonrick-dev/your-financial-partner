@@ -83,7 +83,7 @@ class AppDropdownField extends StatelessWidget {
 
                         overflow: TextOverflow.ellipsis,
 
-                        style: AppTextStyle.titleM,
+                        style: AppTextStyle.titleM.copyWith(color: textColor),
                       ),
                     ],
                   ),

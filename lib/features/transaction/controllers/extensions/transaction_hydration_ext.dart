@@ -15,7 +15,7 @@ extension TransactionHydration on TransactionController {
     selectedAccount.value = null;
 
     selectedLinkedAccount.value = null;
-
+    noteController.clear();
     amount.value = 0;
     selectedPerson.value = null;
     selectedPersonBalance.value = null;

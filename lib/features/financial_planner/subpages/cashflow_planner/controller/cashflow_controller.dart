@@ -261,8 +261,8 @@ class CashflowController extends GetxController {
   void onClose() {
     disposeDistributionFields();
 
-    amountController.dispose();
-    amountFocusNode.dispose();
+    // amountController.dispose();
+    // amountFocusNode.dispose();
 
     super.onClose();
   }
@@ -323,16 +323,17 @@ class CashflowController extends GetxController {
   /// Yearly:
   ///   ₱480,000 = ₱480,000 for the calendar year
   final RxDouble amount = 0.0.obs;
+  final RxList<RxDouble> distributionAmounts = <RxDouble>[].obs;
   final Rx<DateTime> occurrenceDate = DateTime.now().obs;
-  final TextEditingController amountController = TextEditingController();
+  // final TextEditingController amountController = TextEditingController();
 
-  final FocusNode amountFocusNode = FocusNode();
+  // final FocusNode amountFocusNode = FocusNode();
 
   /// Updates [amount] from the amount text field.
-  void amountChanged() {
-    amount.value =
-        double.tryParse(amountController.text.replaceAll(',', '').trim()) ?? 0;
-  }
+  // void amountChanged() {
+  // amount.value =
+  //     double.tryParse(amountController.text.replaceAll(',', '').trim()) ?? 0;
+  // }
 
   // ===========================================================================
   // Distribution
@@ -348,12 +349,12 @@ class CashflowController extends GetxController {
   ///
   /// TextEditingController itself is not reactive, so changing its text
   /// does not automatically trigger an Obx rebuild.
-  final RxInt distributionRevision = 0.obs;
+  // final RxInt distributionRevision = 0.obs;
 
   /// Notifies reactive widgets that a custom distribution value changed.
-  void distributionChanged(String value) {
-    distributionRevision.value++;
-  }
+  // void distributionChanged(String value) {
+  //   distributionRevision.value++;
+  // }
 
   // ===========================================================================
   // Distribution Totals
@@ -375,10 +376,10 @@ class CashflowController extends GetxController {
   /// Yearly:
   ///   Total of the 12 monthly allocations = one yearly amount.
   double get distributionTotal {
-    return distributionControllers.fold(0, (total, controller) {
-      return total +
-          (double.tryParse(controller.text.replaceAll(',', '').trim()) ?? 0);
-    });
+    return distributionAmounts.fold(
+      0.0,
+      (total, amount) => total + amount.value,
+    );
   }
 
   /// Returns the amount represented by one occurrence of the selected
@@ -398,9 +399,6 @@ class CashflowController extends GetxController {
   ///
   ///   ₱1,200 / 2 = ₱600
   double get plannedPeriodAmount {
-    // Makes this getter reactive to changes in custom allocation fields.
-    distributionRevision.value;
-
     if (selectedDistribution.value == CashFlowDistribution.custom) {
       final period = selectedPeriod.value;
 
@@ -549,15 +547,13 @@ class CashflowController extends GetxController {
 
     amount.value = periodAmount;
 
-    amountController.text = periodAmount > 0
-        ? periodAmount.toStringAsFixed(2)
-        : '';
+    // amountController.text = periodAmount > 0
+    //     ? periodAmount.toStringAsFixed(2)
+    //     : '';
 
     selectedDistribution.value = CashFlowDistribution.defaultDistribution;
 
     disposeDistributionFields();
-
-    distributionRevision.value++;
   }
 
   // ===========================================================================
@@ -579,10 +575,10 @@ class CashflowController extends GetxController {
   ///
   /// Yearly:
   ///   12 fields → January through December
-  final List<TextEditingController> distributionControllers = [];
+  // final List<TextEditingController> distributionControllers = [];
 
   /// Focus nodes corresponding to [distributionControllers].
-  final List<FocusNode> distributionFocusNodes = [];
+  // final List<FocusNode> distributionFocusNodes = [];
 
   /// Creates the custom allocation fields for the selected period.
   void initializeDistributionFields() {
@@ -595,27 +591,13 @@ class CashflowController extends GetxController {
 
     disposeDistributionFields();
 
-    distributionControllers.addAll(
-      List.generate(period.allocationCount, (_) => TextEditingController()),
-    );
-
-    distributionFocusNodes.addAll(
-      List.generate(period.allocationCount, (_) => FocusNode()),
+    distributionAmounts.assignAll(
+      List.generate(period.allocationCount, (_) => 0.0.obs),
     );
   }
 
-  /// Disposes all custom distribution controllers and focus nodes.
   void disposeDistributionFields() {
-    for (final controller in distributionControllers) {
-      controller.dispose();
-    }
-
-    for (final focusNode in distributionFocusNodes) {
-      focusNode.dispose();
-    }
-
-    distributionControllers.clear();
-    distributionFocusNodes.clear();
+    distributionAmounts.clear();
   }
 
   // ===========================================================================
@@ -636,12 +618,12 @@ class CashflowController extends GetxController {
   /// The remainder centavos are distributed across the first
   /// allocation fields so that the final total remains exactly ₱1,000.
   void distributeAmountEvenly(double total) {
-    if (total <= 0 || distributionControllers.isEmpty) {
+    if (total <= 0 || distributionAmounts.isEmpty) {
       return;
     }
 
     final totalCents = (total * 100).round();
-    final count = distributionControllers.length;
+    final count = distributionAmounts.length;
 
     final baseCents = totalCents ~/ count;
     final remainderCents = totalCents % count;
@@ -649,10 +631,8 @@ class CashflowController extends GetxController {
     for (var i = 0; i < count; i++) {
       final cents = baseCents + (i < remainderCents ? 1 : 0);
 
-      distributionControllers[i].text = (cents / 100).toStringAsFixed(2);
+      distributionAmounts[i].value = cents / 100;
     }
-
-    distributionRevision.value++;
   }
 
   void resetIncomePlan() {
@@ -664,13 +644,13 @@ class CashflowController extends GetxController {
 
     // Reset amount
     amount.value = 0;
-    amountController.clear();
+    // amountController.clear();
 
     // Reset custom allocation fields
     disposeDistributionFields();
 
     // Reset revision
-    distributionRevision.value++;
+    // distributionRevision.value++;
   }
   // ===========================================================================
   // Financial Stability — Temporary Values
@@ -805,23 +785,17 @@ class CashflowController extends GetxController {
 
             final allocationIndex = date.weekday - 1;
 
-            if (allocationIndex >= distributionControllers.length) {
+            if (allocationIndex >= distributionAmounts.length) {
               continue;
             }
 
-            final value =
-                double.tryParse(
-                  distributionControllers[allocationIndex].text
-                      .replaceAll(',', '')
-                      .trim(),
-                ) ??
-                0.0;
-
-            distribution[month - 1] += value;
+            distribution[month - 1] +=
+                distributionAmounts[allocationIndex].value;
           }
         }
 
         return distribution;
+
       case BudgetPeriod.fortnightly:
         final distribution = List<double>.filled(12, 0);
 
@@ -829,32 +803,17 @@ class CashflowController extends GetxController {
         final yearStart = DateTime(year, 1, 1);
         final yearEnd = DateTime(year, 12, 31);
 
-        if (distributionControllers.length < 2) {
+        if (distributionAmounts.length < 2) {
           return distribution;
         }
 
-        final amountA =
-            double.tryParse(
-              distributionControllers[0].text.replaceAll(',', '').trim(),
-            ) ??
-            0.0;
+        final amountA = distributionAmounts[0].value;
+        final amountB = distributionAmounts[1].value;
 
-        final amountB =
-            double.tryParse(
-              distributionControllers[1].text.replaceAll(',', '').trim(),
-            ) ??
-            0.0;
-
-        // Temporary anchor.
-        // Later this becomes occurrenceDate.value.
         var occurrence = DateTime.now();
 
-        // 0 = first custom amount
-        // 1 = second custom amount
         var allocationIndex = 0;
 
-        // Move backward through the same 14-day cycle
-        // until we reach the beginning of the year.
         while (occurrence
             .subtract(const Duration(days: 14))
             .isAfter(yearStart)) {
@@ -863,12 +822,11 @@ class CashflowController extends GetxController {
           allocationIndex = allocationIndex == 0 ? 1 : 0;
         }
 
-        // Calculate every occurrence through December.
         while (!occurrence.isAfter(yearEnd)) {
           if (!occurrence.isBefore(yearStart)) {
-            final amount = allocationIndex == 0 ? amountA : amountB;
+            final occurrenceAmount = allocationIndex == 0 ? amountA : amountB;
 
-            distribution[occurrence.month - 1] += amount;
+            distribution[occurrence.month - 1] += occurrenceAmount;
           }
 
           occurrence = occurrence.add(const Duration(days: 14));
@@ -877,34 +835,23 @@ class CashflowController extends GetxController {
         }
 
         return distribution;
+
       case BudgetPeriod.monthly:
-        final distribution = List<double>.filled(12, 0);
-
-        final firstHalf =
-            double.tryParse(
-              distributionControllers[0].text.replaceAll(',', '').trim(),
-            ) ??
-            0.0;
-
-        final secondHalf =
-            double.tryParse(
-              distributionControllers[1].text.replaceAll(',', '').trim(),
-            ) ??
-            0.0;
-
-        for (var month = 1; month <= 12; month++) {
-          // Both halves occur every month.
-          distribution[month - 1] = firstHalf + secondHalf;
+        if (distributionAmounts.length < 2) {
+          return List<double>.filled(12, 0);
         }
 
-        return distribution;
+        final firstHalf = distributionAmounts[0].value;
+        final secondHalf = distributionAmounts[1].value;
+
+        return List<double>.filled(12, firstHalf + secondHalf);
+
       case BudgetPeriod.yearly:
-        return List<double>.from(
-          distributionControllers.map(
-            (controller) =>
-                double.tryParse(controller.text.replaceAll(',', '').trim()) ??
-                0.0,
-          ),
+        return List<double>.generate(
+          12,
+          (index) => index < distributionAmounts.length
+              ? distributionAmounts[index].value
+              : 0.0,
         );
       // default:
       //   return List.empty();

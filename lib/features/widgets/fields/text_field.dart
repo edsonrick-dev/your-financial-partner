@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 
@@ -30,6 +29,10 @@ class AppTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppFieldContainer(
+      fixedHeight: !multiLine,
+      onTap: () {
+        focusNode.requestFocus();
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,20 +41,18 @@ class AppTextField extends StatelessWidget {
             style: AppTextStyle.titleM,
           ),
           TextField(
-            // inputFormatters: [LengthLimitingTextInputFormatter(12)],
             controller: controller,
             focusNode: focusNode,
-
             keyboardType:
                 keyboardType ??
                 (multiLine ? TextInputType.multiline : TextInputType.text),
-
-            minLines: multiLine ? 2 : 1,
-            maxLines: multiLine ? 4 : 1,
+            minLines: multiLine ? 3 : 1,
+            maxLines: multiLine ? 6 : 1,
             maxLength: 250,
-
+            textInputAction: multiLine
+                ? TextInputAction.newline
+                : TextInputAction.done,
             style: AppTextStyle.titleM,
-
             decoration: InputDecoration(
               prefixText: prefixText ?? '',
               isDense: true,
@@ -59,7 +60,6 @@ class AppTextField extends StatelessWidget {
               border: InputBorder.none,
               hintText: hintText,
             ),
-
             buildCounter:
                 (
                   context, {
@@ -71,10 +71,6 @@ class AppTextField extends StatelessWidget {
           ),
         ],
       ),
-
-      onTap: () {
-        focusNode.requestFocus();
-      },
     );
   }
 }

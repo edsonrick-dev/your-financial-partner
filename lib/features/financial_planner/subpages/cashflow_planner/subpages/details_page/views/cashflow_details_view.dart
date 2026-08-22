@@ -8,6 +8,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/budget_list.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/create_income_plan_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/planned_income_list.dart';
+import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
@@ -195,13 +196,14 @@ class _WeeklyFields extends GetView<CashflowController> {
         ),
         ...List.generate(
           days.length,
-          (index) => AppTextField(
-            label: days[index],
-            onChanged: controller.distributionChanged,
-            prefixText: '₱',
-            controller: controller.distributionControllers[index],
-            focusNode: controller.distributionFocusNodes[index],
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          (index) => Obx(
+            () => AppAmountField(
+              label: days[index],
+              amount: controller.distributionAmounts[index].value,
+              onChanged: (value) {
+                controller.distributionAmounts[index].value = value;
+              },
+            ),
           ),
         ),
       ],
@@ -220,22 +222,24 @@ class _FortnightlyFields extends GetView<CashflowController> {
       children: [
         Text('Every 2 Weeks', style: Theme.of(context).textTheme.titleMedium),
 
-        AppTextField(
-          label: 'Cycle 1',
-          onChanged: controller.distributionChanged,
-          prefixText: '₱',
-          controller: controller.distributionControllers[0],
-          focusNode: controller.distributionFocusNodes[0],
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        Obx(
+          () => AppAmountField(
+            label: 'Cycle 1',
+            amount: controller.distributionAmounts[0].value,
+            onChanged: (value) {
+              controller.distributionAmounts[0].value = value;
+            },
+          ),
         ),
 
-        AppTextField(
-          label: 'Cycle 2',
-          onChanged: controller.distributionChanged,
-          prefixText: '₱',
-          controller: controller.distributionControllers[1],
-          focusNode: controller.distributionFocusNodes[1], // FIXED
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        Obx(
+          () => AppAmountField(
+            label: 'Cycle 2',
+            amount: controller.distributionAmounts[1].value,
+            onChanged: (value) {
+              controller.distributionAmounts[1].value = value;
+            },
+          ),
         ),
       ],
     );
@@ -270,15 +274,17 @@ class _YearlyFields extends GetView<CashflowController> {
           'Yearly Distribution',
           style: Theme.of(context).textTheme.titleMedium,
         ),
+
         ...List.generate(
           months.length,
-          (index) => AppTextField(
-            label: months[index],
-            prefixText: '₱',
-            onChanged: controller.distributionChanged,
-            controller: controller.distributionControllers[index],
-            focusNode: controller.distributionFocusNodes[index],
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          (index) => Obx(
+            () => AppAmountField(
+              label: months[index],
+              amount: controller.distributionAmounts[index].value,
+              onChanged: (value) {
+                controller.distributionAmounts[index].value = value;
+              },
+            ),
           ),
         ),
       ],
@@ -297,22 +303,24 @@ class _TwiceAMonthFields extends GetView<CashflowController> {
       children: [
         Text('Distribution', style: Theme.of(context).textTheme.titleMedium),
 
-        AppTextField(
-          label: 'First Occurrence',
-          prefixText: '₱',
-          onChanged: controller.distributionChanged,
-          controller: controller.distributionControllers[0],
-          focusNode: controller.distributionFocusNodes[0],
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        Obx(
+          () => AppAmountField(
+            label: 'First Occurrence',
+            amount: controller.distributionAmounts[0].value,
+            onChanged: (value) {
+              controller.distributionAmounts[0].value = value;
+            },
+          ),
         ),
 
-        AppTextField(
-          label: 'Second Occurrence',
-          prefixText: '₱',
-          onChanged: controller.distributionChanged,
-          controller: controller.distributionControllers[1],
-          focusNode: controller.distributionFocusNodes[1],
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        Obx(
+          () => AppAmountField(
+            label: 'Second Occurrence',
+            amount: controller.distributionAmounts[1].value,
+            onChanged: (value) {
+              controller.distributionAmounts[1].value = value;
+            },
+          ),
         ),
       ],
     );

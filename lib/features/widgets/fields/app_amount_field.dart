@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/domain/app_calculator.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 
@@ -24,6 +23,9 @@ class AppAmountField extends StatelessWidget {
   });
 
   Future<void> _openCalculator(BuildContext context) async {
+    final calculatorController = Get.find<AppCalculatorController>();
+    calculatorController.initialize(amount);
+
     final result = await Get.bottomSheet<double>(
       const AppCalculator(),
       isScrollControlled: true,

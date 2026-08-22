@@ -119,7 +119,6 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
                   amount: controller.amount.value,
                   onChanged: (amount) {
                     controller.amount.value = amount;
-                    controller.amountChanged();
                   },
                 );
                 // return AppTextField(

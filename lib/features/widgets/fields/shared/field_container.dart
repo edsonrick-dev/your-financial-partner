@@ -9,8 +9,9 @@ class AppFieldContainer extends StatelessWidget {
   final String? value;
   final VoidCallback onTap;
   final double trailingPadding;
-
   final double padding;
+  final bool fixedHeight;
+
   const AppFieldContainer({
     super.key,
     required this.child,
@@ -19,6 +20,7 @@ class AppFieldContainer extends StatelessWidget {
     this.padding = 12,
     this.state,
     this.value,
+    this.fixedHeight = true,
   });
 
   bool get isFilled => value != null && value!.isNotEmpty;
@@ -38,6 +40,7 @@ class AppFieldContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final borderColor = FieldColors.border(effectiveState);
     final colorScheme = context.colors;
+
     return Opacity(
       opacity: isDisabled ? 0.6 : 1,
       child: IgnorePointer(
@@ -55,9 +58,8 @@ class AppFieldContainer extends StatelessWidget {
                   left: 12,
                   right: trailingPadding,
                 ),
-
                 width: double.infinity,
-                height: 60,
+                height: fixedHeight ? 60 : null,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: borderColor, width: 1),
