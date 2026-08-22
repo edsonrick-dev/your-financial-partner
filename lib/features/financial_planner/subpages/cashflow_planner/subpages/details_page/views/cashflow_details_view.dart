@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
@@ -90,9 +91,12 @@ class CashflowDetailsView extends GetView<CashflowController> {
             onAdd: () {
               controller.seletectedDetailsTabIndex.value == 0
                   ? Get.bottomSheet(
-                      CreateIncomePlanSheet(),
+                      const CreateIncomePlanSheet(),
+                      backgroundColor: Colors.transparent,
                       isScrollControlled: true,
-                    )
+                    ).whenComplete(() {
+                      controller.resetIncomePlan();
+                    })
                   : Get.bottomSheet(SelectBudgetTypeSheet());
             },
           ),
@@ -120,12 +124,14 @@ class BudgetPeriodSelectionSheet extends StatelessWidget {
       adaptiveHeight: false,
       child: Column(
         children: BudgetPeriod.values.map((period) {
-          return ListTile(
-            title: Text(period.label),
-            subtitle: Text(period.description),
+          return AdaptivePressable(
             onTap: () {
               Get.back(result: period);
             },
+            child: ListTile(
+              title: Text(period.label),
+              subtitle: Text(period.description),
+            ),
           );
         }).toList(),
       ),
@@ -155,11 +161,10 @@ class CashFlowDistributionFields extends GetView<CashflowController> {
       }
 
       return switch (period) {
-        BudgetPeriod.weekly => _WeeklyFields(),
-        BudgetPeriod.fortnightly => _FortnightlyFields(),
-        BudgetPeriod.twiceAMonth => _TwiceAMonthFields(),
-        BudgetPeriod.monthly => const SizedBox.shrink(),
-        BudgetPeriod.yearly => _YearlyFields(),
+        BudgetPeriod.weekly => const _WeeklyFields(),
+        BudgetPeriod.fortnightly => const _FortnightlyFields(),
+        BudgetPeriod.monthly => const _TwiceAMonthFields(),
+        BudgetPeriod.yearly => const _YearlyFields(),
       };
     });
   }
@@ -188,7 +193,6 @@ class _WeeklyFields extends GetView<CashflowController> {
           'Weekly Distribution',
           style: Theme.of(context).textTheme.titleMedium,
         ),
-
         ...List.generate(
           days.length,
           (index) => AppTextField(
@@ -227,10 +231,10 @@ class _FortnightlyFields extends GetView<CashflowController> {
 
         AppTextField(
           label: 'Cycle 2',
-          prefixText: '₱',
           onChanged: controller.distributionChanged,
+          prefixText: '₱',
           controller: controller.distributionControllers[1],
-          focusNode: controller.distributionFocusNodes[0],
+          focusNode: controller.distributionFocusNodes[1], // FIXED
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
         ),
       ],
@@ -266,7 +270,6 @@ class _YearlyFields extends GetView<CashflowController> {
           'Yearly Distribution',
           style: Theme.of(context).textTheme.titleMedium,
         ),
-
         ...List.generate(
           months.length,
           (index) => AppTextField(
@@ -311,36 +314,6 @@ class _TwiceAMonthFields extends GetView<CashflowController> {
           focusNode: controller.distributionFocusNodes[1],
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
         ),
-
-        Obx(() {
-          controller.distributionRevision.value;
-
-          return _DistributionTotal(
-            total: controller.distributionTotal,
-            expected: controller.amount.value,
-          );
-        }),
-      ],
-    );
-  }
-}
-
-class _DistributionTotal extends StatelessWidget {
-  final double total;
-  final double expected;
-
-  const _DistributionTotal({required this.total, required this.expected});
-
-  @override
-  Widget build(BuildContext context) {
-    final difference = total - expected;
-    final isValid = difference.abs() < 0.01;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text('Distribution Total'),
-        Text(total.toCurrency(), style: TextStyle(fontWeight: FontWeight.w600)),
       ],
     );
   }

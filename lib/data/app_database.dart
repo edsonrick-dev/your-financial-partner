@@ -22,6 +22,7 @@ import 'package:getx_drift_app/data/database/daos/transactions_dao/transactions_
 import 'package:getx_drift_app/data/database/daos/accounts_dao/accounts_dao.dart';
 import 'package:getx_drift_app/data/database/daos/people_balance_dao/people_balance_dao.dart';
 import 'package:getx_drift_app/data/database/daos/entities_dao/entities_dao.dart';
+import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -37,7 +38,13 @@ part 'app_database.g.dart';
     CashFlowPlanAllocations,
     CashFlowPlans,
   ],
-  daos: [TransactionsDao, AccountsDao, PeopleBalanceDao, EntitiesDao],
+  daos: [
+    TransactionsDao,
+    AccountsDao,
+    PeopleBalanceDao,
+    EntitiesDao,
+    CashflowPlanDao,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());

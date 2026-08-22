@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_chart_widget.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_details_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_plan_annual_summary.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
-import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
@@ -51,6 +55,7 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
               // Period
               Obx(
                 () => AppDropdownField(
+                  iconKey: 'caretDown',
                   label: 'Period',
                   value: controller.selectedPeriod.value?.label,
                   hint: 'Select period',
@@ -135,92 +140,127 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
 
                 return Column(
                   spacing: 12,
-                  children: [
-                    const CashFlowDistributionFields(),
-
-                    AppFieldContainer(
-                      onTap: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('${period.label} total'),
-                          Text(
-                            controller.plannedPeriodAmount.toCurrency(),
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  children: [const CashFlowDistributionFields()],
                 );
               }),
 
               SizedBox(height: spacingHeight),
-
               // Annual projection
-              SizedBox(height: spacingHeight),
-              Obx(() {
-                final period = controller.selectedPeriod.value;
+              CashflowPlanAnnualSummary(transactionType: transactionType),
+              const SizedBox(height: 20),
 
-                if (period == null) {
-                  return const SizedBox.shrink();
-                }
+              // Monthly distribution
+              FutureBuilder<List<double>>(
+                future: controller.calculateCurrentMonthlyDistribution(
+                  transactionType: transactionType,
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                      height: 220,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
 
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('${period.label} total'),
-                    Text(
-                      controller.plannedPeriodAmount.toCurrency(),
-                      style: Theme.of(context).textTheme.titleMedium,
+                  if (snapshot.hasError) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return Obx(
+                    () => CashflowPlanMonthlyDistribution(
+                      transactionType: transactionType,
+                      currentDistribution:
+                          snapshot.data ?? List<double>.filled(12, 0),
+                      plannedDistribution:
+                          controller.monthlyPlannedDistribution,
                     ),
-                  ],
-                );
-              }),
-              Obx(() {
-                final period = controller.selectedPeriod.value;
+                  );
+                },
+              ),
 
-                if (period == null) {
-                  return const SizedBox.shrink();
-                }
+              CashflowPlanValueCreation(transactionType: transactionType),
+              // // Annual projection
+              // Obx(() {
+              //   final period = controller.selectedPeriod.value;
 
-                final isCustom =
-                    controller.selectedDistribution.value ==
-                    CashFlowDistribution.custom;
+              //   if (period == null) {
+              //     return const SizedBox.shrink();
+              //   }
+              //   final periodLabel =
+              //       (controller.selectedPeriod.value ==
+              //               BudgetPeriod.fortnightly &&
+              //           controller.selectedDistribution.value ==
+              //               CashFlowDistribution.custom)
+              //       ? '4-week period'
+              //       : period.label;
+              //   return Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Text('$periodLabel total'),
+              //       Text(
+              //         controller.selectedDistribution.value ==
+              //                 CashFlowDistribution.custom
+              //             ? controller.distributionTotal.toCurrency()
+              //             : controller.plannedPeriodAmount.toCurrency(),
+              //         style: Theme.of(context).textTheme.titleMedium,
+              //       ),
+              //     ],
+              //   );
+              // }),
+              // Obx(() {
+              //   final period = controller.selectedPeriod.value;
 
-                final multiplier = isCustom
-                    ? period.distributionCyclesPerYear
-                    : period.occurrencesPerYear;
+              //   if (period == null) {
+              //     return const SizedBox.shrink();
+              //   }
 
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('× No. of ${period.annualizationLabel}'),
-                    Text('$multiplier'),
-                  ],
-                );
-              }),
+              //   final isCustom =
+              //       controller.selectedDistribution.value ==
+              //       CashFlowDistribution.custom;
 
-              Divider(),
+              //   final multiplier = isCustom
+              //       ? period.customPatternsPerYear
+              //       : period.occurrencesPerYear;
+              //   final annualizationLabel =
+              //       (controller.selectedPeriod.value ==
+              //               BudgetPeriod.fortnightly &&
+              //           controller.selectedDistribution.value ==
+              //               CashFlowDistribution.custom)
+              //       ? '4-week periods'
+              //       : period.annualizationLabel;
+              //   return controller.selectedPeriod.value != BudgetPeriod.yearly
+              //       ? Row(
+              //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //           children: [
+              //             Text('× No. of $annualizationLabel'),
+              //             Text('$multiplier'),
+              //           ],
+              //         )
+              //       : SizedBox.shrink();
+              // }),
 
-              Obx(() {
-                final period = controller.selectedPeriod.value;
+              // controller.selectedPeriod.value == null
+              //     ? SizedBox.shrink()
+              //     : Divider(),
 
-                if (period == null) {
-                  return const SizedBox.shrink();
-                }
+              // Obx(() {
+              //   final period = controller.selectedPeriod.value;
 
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Expected Annual Income'),
-                    Text(
-                      controller.annualizedAmount.toCurrency(),
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
-                );
-              }),
+              //   if (period == null) {
+              //     return const SizedBox.shrink();
+              //   }
+
+              //   return Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       const Text('Expected Annual Income'),
+              //       Text(
+              //         controller.annualizedAmount.toCurrency(),
+              //         style: Theme.of(context).textTheme.titleMedium,
+              //       ),
+              //     ],
+              //   );
+              // }),
               SizedBox(height: spacingHeight * 4),
             ],
           ),
@@ -228,4 +268,56 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
       ),
     );
   }
+}
+
+class CashflowPlanValueCreation extends GetView<CashflowController> {
+  final TransactionType transactionType;
+
+  const CashflowPlanValueCreation({super.key, required this.transactionType});
+
+  @override
+  Widget build(BuildContext context) {
+    final isIncome = transactionType == TransactionType.earn;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        // your semantic styling
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Value Created', style: AppTextStyle.headlineS),
+
+          const SizedBox(height: 12),
+
+          Text(isIncome ? 'Expected Annual Income' : 'Annual Planned Spending'),
+
+          Text(
+            controller.annualizedAmount.toCurrency(),
+            style: AppTextStyle.amountL,
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            isIncome
+                ? 'This plan adds to your expected annual income and gives you a clearer amount to allocate toward your financial goals.'
+                : 'This plan gives you a defined spending limit, helping make your monthly budget more predictable.',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CashflowPlanWithAllocations {
+  final CashFlowPlan plan;
+  final List<CashFlowPlanAllocation> allocations;
+
+  const CashflowPlanWithAllocations({
+    required this.plan,
+    required this.allocations,
+  });
 }

@@ -4628,12 +4628,12 @@ class $CashFlowPlanAllocationsTable extends CashFlowPlanAllocations
       'REFERENCES cash_flow_plans (id) ON DELETE CASCADE',
     ),
   );
-  static const VerificationMeta _allocationKeyMeta = const VerificationMeta(
-    'allocationKey',
+  static const VerificationMeta _allocationIndexMeta = const VerificationMeta(
+    'allocationIndex',
   );
   @override
-  late final GeneratedColumn<int> allocationKey = GeneratedColumn<int>(
-    'allocation_key',
+  late final GeneratedColumn<int> allocationIndex = GeneratedColumn<int>(
+    'allocation_index',
     aliasedName,
     false,
     type: DriftSqlType.int,
@@ -4649,7 +4649,7 @@ class $CashFlowPlanAllocationsTable extends CashFlowPlanAllocations
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, planId, allocationKey, amount];
+  List<GeneratedColumn> get $columns => [id, planId, allocationIndex, amount];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -4673,16 +4673,16 @@ class $CashFlowPlanAllocationsTable extends CashFlowPlanAllocations
     } else if (isInserting) {
       context.missing(_planIdMeta);
     }
-    if (data.containsKey('allocation_key')) {
+    if (data.containsKey('allocation_index')) {
       context.handle(
-        _allocationKeyMeta,
-        allocationKey.isAcceptableOrUnknown(
-          data['allocation_key']!,
-          _allocationKeyMeta,
+        _allocationIndexMeta,
+        allocationIndex.isAcceptableOrUnknown(
+          data['allocation_index']!,
+          _allocationIndexMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_allocationKeyMeta);
+      context.missing(_allocationIndexMeta);
     }
     if (data.containsKey('amount')) {
       context.handle(
@@ -4698,6 +4698,10 @@ class $CashFlowPlanAllocationsTable extends CashFlowPlanAllocations
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {planId, allocationIndex},
+  ];
+  @override
   CashFlowPlanAllocation map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return CashFlowPlanAllocation(
@@ -4709,9 +4713,9 @@ class $CashFlowPlanAllocationsTable extends CashFlowPlanAllocations
         DriftSqlType.int,
         data['${effectivePrefix}plan_id'],
       )!,
-      allocationKey: attachedDatabase.typeMapping.read(
+      allocationIndex: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}allocation_key'],
+        data['${effectivePrefix}allocation_index'],
       )!,
       amount: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
@@ -4730,12 +4734,12 @@ class CashFlowPlanAllocation extends DataClass
     implements Insertable<CashFlowPlanAllocation> {
   final int id;
   final int planId;
-  final int allocationKey;
+  final int allocationIndex;
   final double amount;
   const CashFlowPlanAllocation({
     required this.id,
     required this.planId,
-    required this.allocationKey,
+    required this.allocationIndex,
     required this.amount,
   });
   @override
@@ -4743,7 +4747,7 @@ class CashFlowPlanAllocation extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['plan_id'] = Variable<int>(planId);
-    map['allocation_key'] = Variable<int>(allocationKey);
+    map['allocation_index'] = Variable<int>(allocationIndex);
     map['amount'] = Variable<double>(amount);
     return map;
   }
@@ -4752,7 +4756,7 @@ class CashFlowPlanAllocation extends DataClass
     return CashFlowPlanAllocationsCompanion(
       id: Value(id),
       planId: Value(planId),
-      allocationKey: Value(allocationKey),
+      allocationIndex: Value(allocationIndex),
       amount: Value(amount),
     );
   }
@@ -4765,7 +4769,7 @@ class CashFlowPlanAllocation extends DataClass
     return CashFlowPlanAllocation(
       id: serializer.fromJson<int>(json['id']),
       planId: serializer.fromJson<int>(json['planId']),
-      allocationKey: serializer.fromJson<int>(json['allocationKey']),
+      allocationIndex: serializer.fromJson<int>(json['allocationIndex']),
       amount: serializer.fromJson<double>(json['amount']),
     );
   }
@@ -4775,7 +4779,7 @@ class CashFlowPlanAllocation extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'planId': serializer.toJson<int>(planId),
-      'allocationKey': serializer.toJson<int>(allocationKey),
+      'allocationIndex': serializer.toJson<int>(allocationIndex),
       'amount': serializer.toJson<double>(amount),
     };
   }
@@ -4783,12 +4787,12 @@ class CashFlowPlanAllocation extends DataClass
   CashFlowPlanAllocation copyWith({
     int? id,
     int? planId,
-    int? allocationKey,
+    int? allocationIndex,
     double? amount,
   }) => CashFlowPlanAllocation(
     id: id ?? this.id,
     planId: planId ?? this.planId,
-    allocationKey: allocationKey ?? this.allocationKey,
+    allocationIndex: allocationIndex ?? this.allocationIndex,
     amount: amount ?? this.amount,
   );
   CashFlowPlanAllocation copyWithCompanion(
@@ -4797,9 +4801,9 @@ class CashFlowPlanAllocation extends DataClass
     return CashFlowPlanAllocation(
       id: data.id.present ? data.id.value : this.id,
       planId: data.planId.present ? data.planId.value : this.planId,
-      allocationKey: data.allocationKey.present
-          ? data.allocationKey.value
-          : this.allocationKey,
+      allocationIndex: data.allocationIndex.present
+          ? data.allocationIndex.value
+          : this.allocationIndex,
       amount: data.amount.present ? data.amount.value : this.amount,
     );
   }
@@ -4809,21 +4813,21 @@ class CashFlowPlanAllocation extends DataClass
     return (StringBuffer('CashFlowPlanAllocation(')
           ..write('id: $id, ')
           ..write('planId: $planId, ')
-          ..write('allocationKey: $allocationKey, ')
+          ..write('allocationIndex: $allocationIndex, ')
           ..write('amount: $amount')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, planId, allocationKey, amount);
+  int get hashCode => Object.hash(id, planId, allocationIndex, amount);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is CashFlowPlanAllocation &&
           other.id == this.id &&
           other.planId == this.planId &&
-          other.allocationKey == this.allocationKey &&
+          other.allocationIndex == this.allocationIndex &&
           other.amount == this.amount);
 }
 
@@ -4831,32 +4835,32 @@ class CashFlowPlanAllocationsCompanion
     extends UpdateCompanion<CashFlowPlanAllocation> {
   final Value<int> id;
   final Value<int> planId;
-  final Value<int> allocationKey;
+  final Value<int> allocationIndex;
   final Value<double> amount;
   const CashFlowPlanAllocationsCompanion({
     this.id = const Value.absent(),
     this.planId = const Value.absent(),
-    this.allocationKey = const Value.absent(),
+    this.allocationIndex = const Value.absent(),
     this.amount = const Value.absent(),
   });
   CashFlowPlanAllocationsCompanion.insert({
     this.id = const Value.absent(),
     required int planId,
-    required int allocationKey,
+    required int allocationIndex,
     required double amount,
   }) : planId = Value(planId),
-       allocationKey = Value(allocationKey),
+       allocationIndex = Value(allocationIndex),
        amount = Value(amount);
   static Insertable<CashFlowPlanAllocation> custom({
     Expression<int>? id,
     Expression<int>? planId,
-    Expression<int>? allocationKey,
+    Expression<int>? allocationIndex,
     Expression<double>? amount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (planId != null) 'plan_id': planId,
-      if (allocationKey != null) 'allocation_key': allocationKey,
+      if (allocationIndex != null) 'allocation_index': allocationIndex,
       if (amount != null) 'amount': amount,
     });
   }
@@ -4864,13 +4868,13 @@ class CashFlowPlanAllocationsCompanion
   CashFlowPlanAllocationsCompanion copyWith({
     Value<int>? id,
     Value<int>? planId,
-    Value<int>? allocationKey,
+    Value<int>? allocationIndex,
     Value<double>? amount,
   }) {
     return CashFlowPlanAllocationsCompanion(
       id: id ?? this.id,
       planId: planId ?? this.planId,
-      allocationKey: allocationKey ?? this.allocationKey,
+      allocationIndex: allocationIndex ?? this.allocationIndex,
       amount: amount ?? this.amount,
     );
   }
@@ -4884,8 +4888,8 @@ class CashFlowPlanAllocationsCompanion
     if (planId.present) {
       map['plan_id'] = Variable<int>(planId.value);
     }
-    if (allocationKey.present) {
-      map['allocation_key'] = Variable<int>(allocationKey.value);
+    if (allocationIndex.present) {
+      map['allocation_index'] = Variable<int>(allocationIndex.value);
     }
     if (amount.present) {
       map['amount'] = Variable<double>(amount.value);
@@ -4898,7 +4902,7 @@ class CashFlowPlanAllocationsCompanion
     return (StringBuffer('CashFlowPlanAllocationsCompanion(')
           ..write('id: $id, ')
           ..write('planId: $planId, ')
-          ..write('allocationKey: $allocationKey, ')
+          ..write('allocationIndex: $allocationIndex, ')
           ..write('amount: $amount')
           ..write(')'))
         .toString();
@@ -4930,6 +4934,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this as AppDatabase,
   );
   late final EntitiesDao entitiesDao = EntitiesDao(this as AppDatabase);
+  late final CashflowPlanDao cashflowPlanDao = CashflowPlanDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -9399,14 +9406,14 @@ typedef $$CashFlowPlanAllocationsTableCreateCompanionBuilder =
     CashFlowPlanAllocationsCompanion Function({
       Value<int> id,
       required int planId,
-      required int allocationKey,
+      required int allocationIndex,
       required double amount,
     });
 typedef $$CashFlowPlanAllocationsTableUpdateCompanionBuilder =
     CashFlowPlanAllocationsCompanion Function({
       Value<int> id,
       Value<int> planId,
-      Value<int> allocationKey,
+      Value<int> allocationIndex,
       Value<double> amount,
     });
 
@@ -9460,8 +9467,8 @@ class $$CashFlowPlanAllocationsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get allocationKey => $composableBuilder(
-    column: $table.allocationKey,
+  ColumnFilters<int> get allocationIndex => $composableBuilder(
+    column: $table.allocationIndex,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9508,8 +9515,8 @@ class $$CashFlowPlanAllocationsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get allocationKey => $composableBuilder(
-    column: $table.allocationKey,
+  ColumnOrderings<int> get allocationIndex => $composableBuilder(
+    column: $table.allocationIndex,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -9554,8 +9561,8 @@ class $$CashFlowPlanAllocationsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get allocationKey => $composableBuilder(
-    column: $table.allocationKey,
+  GeneratedColumn<int> get allocationIndex => $composableBuilder(
+    column: $table.allocationIndex,
     builder: (column) => column,
   );
 
@@ -9627,24 +9634,24 @@ class $$CashFlowPlanAllocationsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<int> planId = const Value.absent(),
-                Value<int> allocationKey = const Value.absent(),
+                Value<int> allocationIndex = const Value.absent(),
                 Value<double> amount = const Value.absent(),
               }) => CashFlowPlanAllocationsCompanion(
                 id: id,
                 planId: planId,
-                allocationKey: allocationKey,
+                allocationIndex: allocationIndex,
                 amount: amount,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required int planId,
-                required int allocationKey,
+                required int allocationIndex,
                 required double amount,
               }) => CashFlowPlanAllocationsCompanion.insert(
                 id: id,
                 planId: planId,
-                allocationKey: allocationKey,
+                allocationIndex: allocationIndex,
                 amount: amount,
               ),
           withReferenceMapper: (p0) => p0
