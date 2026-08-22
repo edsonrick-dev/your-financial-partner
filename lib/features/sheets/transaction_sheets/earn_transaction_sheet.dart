@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/domain/app_calculator.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/save_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -152,10 +154,27 @@ class EarnTransactionSheet extends GetView<TransactionController> {
 
 class TransactionAmountHolder extends GetView<TransactionController> {
   const TransactionAmountHolder({super.key});
+  Future<void> _openCalculator(BuildContext context) async {
+    final calculatorController = Get.put(AppCalculatorController());
+
+    calculatorController.clear();
+
+    final amount = await Get.bottomSheet<double>(
+      const AppCalculator(),
+      isScrollControlled: true,
+    );
+
+    if (amount == null) {
+      return;
+    }
+
+    controller.amount.value = amount;
+    controller.amountController.text = amount.toCurrency(symbol: '');
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final colorScheme = context.colors;
+    final colorScheme = context.colors;
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 6, bottom: 24),
 
@@ -183,39 +202,19 @@ class TransactionAmountHolder extends GetView<TransactionController> {
               Expanded(
                 child: TextField(
                   controller: controller.amountController,
-
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-
+                  readOnly: true,
+                  onTap: () => _openCalculator(context),
                   textAlign: TextAlign.center,
-
-                  style: const TextStyle(
-                    color: Colors.white,
-
-                    fontSize: 32,
-
-                    fontWeight: FontWeight.w700,
+                  style: AppTextStyle.amountXL.copyWith(
+                    color: colorScheme.textInversed,
                   ),
-
                   decoration: InputDecoration(
                     border: InputBorder.none,
-
-                    hintText: 0.toCurrency(),
-
-                    hintStyle: TextStyle(color: Colors.white38),
+                    hintText: 0.toCurrency(symbol: ''),
+                    hintStyle: const TextStyle(color: Colors.white38),
                   ),
                   cursorColor: Colors.white,
                   cursorHeight: 32,
-                  onChanged: (value) {
-                    final cleaned = value
-                        .replaceAll('₱', '')
-                        .replaceAll(',', '');
-
-                    final parsed = double.tryParse(cleaned) ?? 0;
-
-                    controller.amount.value = parsed;
-                  },
                 ),
               ),
             ],

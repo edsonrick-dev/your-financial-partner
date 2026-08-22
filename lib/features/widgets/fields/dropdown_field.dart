@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/field_themes/field_color.dart';
 import 'package:getx_drift_app/data/enums/field_states.dart';
+import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 
 class AppDropdownField extends StatelessWidget {
   const AppDropdownField({
@@ -51,6 +53,7 @@ class AppDropdownField extends StatelessWidget {
 
     return AdaptivePressable(
       child: AppFieldContainer(
+        trailingPadding: 16,
         state: effectiveState,
         onTap: onTap,
         child: Column(
@@ -70,12 +73,7 @@ class AppDropdownField extends StatelessWidget {
                       Text(
                         label,
 
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-
-                          height: 16 / 13,
-
+                        style: AppTextStyle.titleM.copyWith(
                           color: FieldColors.label(effectiveState),
                         ),
                       ),
@@ -85,29 +83,22 @@ class AppDropdownField extends StatelessWidget {
 
                         overflow: TextOverflow.ellipsis,
 
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: textColor,
-                          fontWeight: isFilled
-                              ? FontWeight.w600
-                              : FontWeight.w400,
-                          height: 24 / 16,
-                        ),
+                        style: AppTextStyle.titleM,
                       ),
                     ],
                   ),
                 ),
                 if (showIcon == true)
                   SizedBox(
-                    width: 28,
-                    height: 44,
+                    // width: 28,
+                    height: 42,
 
                     child: Row(
                       children: [
                         defaultIcon ??
                             Icon(
                               AppIcons.categories.resolve(iconKey ?? ''),
-                              size: 18,
+                              size: 16,
                               color: FieldColors.icon(effectiveState),
                             ),
                       ],

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:getx_drift_app/domain/app_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/controller/insurance_planner_controller.dart';
@@ -26,6 +27,10 @@ class HomeBinding extends Bindings {
     Get.lazyPut<InsurancePlannerController>(() => InsurancePlannerController());
     Get.lazyPut<CashflowController>(() => CashflowController());
     Get.lazyPut<AccountController>(() => AccountController(), fenix: true);
+    Get.lazyPut<AppCalculatorController>(
+      () => AppCalculatorController(),
+      fenix: true,
+    );
     Get.lazyPut<TransactionController>(
       () => TransactionController(),
       fenix: true,

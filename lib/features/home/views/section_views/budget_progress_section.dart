@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
+import 'package:getx_drift_app/domain/app_calculator.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_progress_indicator.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -20,7 +22,9 @@ class BudgetProgressSection extends StatelessWidget {
       sectionTitle: 'Budget Progress',
       trailingText: 'View All',
       trailingType: SectionTrailingType.textButton,
-      onTrailingPressed: () {},
+      onTrailingPressed: () {
+        Get.bottomSheet(AppCalculator());
+      },
       child: Container(
         // padding: EdgeInsets.all(16),
         constraints: BoxConstraints(minHeight: 44),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 
 class AppTextField extends StatelessWidget {
@@ -32,7 +33,10 @@ class AppTextField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$label ${optional ? '(Optional)' : ''}'),
+          Text(
+            '$label ${optional ? '(Optional)' : ''}',
+            style: AppTextStyle.titleM,
+          ),
           TextField(
             // inputFormatters: [LengthLimitingTextInputFormatter(12)],
             controller: controller,
@@ -46,7 +50,7 @@ class AppTextField extends StatelessWidget {
             maxLines: multiLine ? 4 : 1,
             maxLength: 250,
 
-            style: const TextStyle(fontSize: 17, height: 24 / 17),
+            style: AppTextStyle.titleM,
 
             decoration: InputDecoration(
               prefixText: prefixText ?? '',

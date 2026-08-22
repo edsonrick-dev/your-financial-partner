@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
@@ -14,8 +13,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_plan_annual_summary.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
-import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
@@ -72,6 +71,7 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
                   },
                 ),
               ),
+
               SizedBox(height: spacingHeight),
               // Distribution mode
               Obx(() {
@@ -114,17 +114,24 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
                 if (isCustom) {
                   return const SizedBox.shrink();
                 }
-
-                return AppTextField(
+                return AppAmountField(
                   label: 'Amount',
-                  onChanged: (_) => controller.amountChanged(),
-                  prefixText: '₱',
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  focusNode: controller.amountFocusNode,
-                  controller: controller.amountController,
+                  amount: controller.amount.value,
+                  onChanged: (amount) {
+                    controller.amount.value = amount;
+                    controller.amountChanged();
+                  },
                 );
+                // return AppTextField(
+                //   label: 'Amount',
+                // onChanged: (_) => controller.amountChanged(),
+                //   prefixText: '₱',
+                //   keyboardType: const TextInputType.numberWithOptions(
+                //     decimal: true,
+                //   ),
+                // focusNode: controller.amountFocusNode,
+                //   controller: controller.amountController,
+                // );
               }),
 
               // Custom allocations
