@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/budget_list.dart';
@@ -38,14 +39,22 @@ class CashflowDetailsView extends GetView<CashflowController> {
                     Expanded(
                       child: Column(
                         children: [
-                          Obx(
-                            () => Text(
-                              controller.annualPlannedIncome.value.toCurrency(),
-                              style: AppTextStyle.amountL.copyWith(
-                                color: colorScheme.appInflow,
-                              ),
+                          FutureBuilder<double>(
+                            future: controller.calculateRecurringAnnualTotal(
+                              transactionType: TransactionType.earn,
                             ),
+                            builder: (context, snapshot) {
+                              final annualIncome = snapshot.data ?? 0;
+
+                              return Text(
+                                annualIncome.toCurrency(),
+                                style: AppTextStyle.amountL.copyWith(
+                                  color: colorScheme.appInflow,
+                                ),
+                              );
+                            },
                           ),
+
                           Text(
                             'Annual Income',
                             style: AppTextStyle.titleM.copyWith(

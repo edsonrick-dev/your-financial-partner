@@ -13,6 +13,16 @@ import 'package:getx_drift_app/features/transaction/controllers/transaction_cont
 import 'package:drift/drift.dart' as d;
 
 class CashflowController extends GetxController {
+  Future<double> calculateRecurringAnnualTotal({
+    required TransactionType transactionType,
+  }) async {
+    final distribution = await calculateRecurringMonthlyDistribution(
+      transactionType: transactionType,
+    );
+
+    return distribution.reduce((a, b) => a + b);
+  }
+
   final CashflowPlanDao cashflowPlanDao = database.cashflowPlanDao;
   final transactionController = Get.find<TransactionController>();
   Future<void> debugSavedPlanDistributions() async {
@@ -158,7 +168,15 @@ class CashflowController extends GetxController {
   Future<List<double>> calculateRecurringMonthlyDistribution({
     required TransactionType transactionType,
   }) async {
-    final plans = await cashflowPlanDao.getAllPlans();
+    final allPlans = await cashflowPlanDao.getAllPlans();
+
+    final plans = allPlans.where((plan) {
+      if (transactionType == TransactionType.earn) {
+        return plan.planType == 'income';
+      }
+
+      return plan.planType != 'income';
+    }).toList();
 
     final result = List<double>.filled(12, 0);
     final year = DateTime.now().year;
