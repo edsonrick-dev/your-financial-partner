@@ -14,7 +14,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/profile/controller/profile_controller.dart';
 import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/shell/financial_stability_sheet_shell.dart';
-import 'package:getx_drift_app/features/sheets/selection_sheets/select_cashflow_plan_type.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_sheet.dart';
 
 import 'package:getx_drift_app/features/widgets/cards/category_card.dart';

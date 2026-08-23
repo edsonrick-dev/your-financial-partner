@@ -3,7 +3,6 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
-import 'dart:math' as math;
 
 class CashflowPlanMonthlyDistribution extends StatelessWidget {
   const CashflowPlanMonthlyDistribution({

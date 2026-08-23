@@ -37,7 +37,7 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
           AppSection(
             sectionTitle: 'Wealth Overview',
             trailingType: SectionTrailingType.textButton,
-            trailingText: 'See more',
+            trailingText: 'View Accounts',
             onTrailingPressed: () {
               Get.toNamed(Routes.NETWORTHDETAILS);
             },

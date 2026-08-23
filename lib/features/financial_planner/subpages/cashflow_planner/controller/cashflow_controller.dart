@@ -8,9 +8,127 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
+import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
+import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
+import 'package:drift/drift.dart' as d;
 
 class CashflowController extends GetxController {
   final CashflowPlanDao cashflowPlanDao = database.cashflowPlanDao;
+  final transactionController = Get.find<TransactionController>();
+  Future<void> debugSavedPlanDistributions() async {
+    final plans = await cashflowPlanDao.getAllPlans();
+    final year = DateTime.now().year;
+
+    debugPrint('');
+    debugPrint('========== SAVED PLAN DISTRIBUTIONS ==========');
+    debugPrint('YEAR: $year');
+    debugPrint('');
+
+    for (final plan in plans) {
+      final allocations = await cashflowPlanDao.getAllocationsForPlan(plan.id);
+
+      final monthly = calculateSavedPlanMonthlyDistribution(
+        plan: plan,
+        allocations: allocations,
+        year: year,
+      );
+
+      debugPrint('PLAN ${plan.id}');
+      debugPrint('  Period: ${plan.period}');
+      debugPrint('  Distribution: ${plan.distributionType}');
+      debugPrint('  Amount: ${plan.amount}');
+      debugPrint('  Start date: ${plan.startDate}');
+      debugPrint('  Allocations:');
+
+      for (final allocation in allocations) {
+        debugPrint('    ${allocation.allocationIndex}: ${allocation.amount}');
+      }
+
+      debugPrint('  MONTHLY:');
+
+      for (var i = 0; i < monthly.length; i++) {
+        debugPrint('    ${AppMonth.values[i].fullName}: ${monthly[i]}');
+      }
+
+      debugPrint(
+        '  ANNUAL TOTAL: '
+        '${monthly.fold<double>(0, (sum, value) => sum + value)}',
+      );
+
+      debugPrint('');
+    }
+
+    debugPrint('==============================================');
+  }
+
+  Future<void> saveIncomePlan() async {
+    final category = transactionController.selectedCategory.value;
+    final period = selectedPeriod.value;
+
+    if (category == null || period == null) {
+      return;
+    }
+
+    final isCustom = selectedDistribution.value == CashFlowDistribution.custom;
+
+    if (!isCustom && amount.value <= 0) {
+      return;
+    }
+
+    if (isCustom && distributionTotal <= 0) {
+      return;
+    }
+
+    final now = DateTime.now();
+    final planId = await cashflowPlanDao.insertPlan(
+      CashFlowPlansCompanion.insert(
+        categoryId: d.Value<int?>(category.id),
+        loanId: const d.Value<int?>(null),
+        planType: 'income',
+        amount: isCustom ? 0 : amount.value,
+        period: period.name,
+        distributionType: selectedDistribution.value.name,
+        startDate: occurrenceDate.value,
+        endDate: const d.Value<DateTime?>(null),
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
+
+    if (isCustom) {
+      final allocations = List.generate(
+        distributionAmounts.length,
+        (index) => CashFlowPlanAllocationsCompanion.insert(
+          planId: planId,
+          allocationIndex: index,
+          amount: distributionAmounts[index].value,
+        ),
+      );
+
+      await cashflowPlanDao.insertAllocations(allocations);
+      final savedAllocations = await cashflowPlanDao.getAllocationsForPlan(
+        planId,
+      );
+
+      for (final allocation in savedAllocations) {
+        debugPrint('ALLOC ${allocation.allocationIndex}: ${allocation.amount}');
+      }
+    }
+    debugPrint('SAVED PLAN ID: $planId');
+
+    final savedPlans = await cashflowPlanDao.getAllPlans();
+
+    for (final plan in savedPlans) {
+      debugPrint(
+        'PLAN ${plan.id}: '
+        '${plan.period} / '
+        '${plan.distributionType} / '
+        '${plan.amount}',
+      );
+    }
+    await debugSavedPlanDistributions();
+    Get.back();
+  }
 
   Future<List<double>> calculateCurrentMonthlyDistribution({
     required TransactionType transactionType,
@@ -35,6 +153,158 @@ class CashflowController extends GetxController {
     }
 
     return result;
+  }
+
+  Future<List<double>> calculateRecurringMonthlyDistribution({
+    required TransactionType transactionType,
+  }) async {
+    final plans = await cashflowPlanDao.getAllPlans();
+
+    final result = List<double>.filled(12, 0);
+    final year = DateTime.now().year;
+
+    for (final plan in plans) {
+      final allocations = await cashflowPlanDao.getAllocationsForPlan(plan.id);
+
+      final monthly = calculateSavedPlanRecurringMonthlyDistribution(
+        plan: plan,
+        allocations: allocations,
+        year: year,
+      );
+
+      for (var i = 0; i < 12; i++) {
+        result[i] += monthly[i];
+      }
+    }
+
+    return result;
+  }
+
+  List<double> calculateSavedPlanRecurringMonthlyDistribution({
+    required CashFlowPlan plan,
+    required List<CashFlowPlanAllocation> allocations,
+    required int year,
+  }) {
+    final monthlyDistribution = List<double>.filled(12, 0);
+
+    final isCustom = plan.distributionType == CashFlowDistribution.custom.name;
+
+    switch (plan.period) {
+      // -------------------------------------------------------------------------
+      // Weekly
+      // -------------------------------------------------------------------------
+      case 'weekly':
+        final recurringWeekday = plan.startDate.weekday;
+
+        for (var month = 1; month <= 12; month++) {
+          final daysInMonth = DateTime(year, month + 1, 0).day;
+
+          for (var day = 1; day <= daysInMonth; day++) {
+            final date = DateTime(year, month, day);
+
+            if (date.weekday != recurringWeekday) {
+              continue;
+            }
+
+            if (isCustom) {
+              final allocationIndex = date.weekday - 1;
+
+              if (allocationIndex >= allocations.length) {
+                continue;
+              }
+
+              monthlyDistribution[month - 1] +=
+                  allocations[allocationIndex].amount;
+            } else {
+              monthlyDistribution[month - 1] += plan.amount;
+            }
+          }
+        }
+        break;
+
+      // -------------------------------------------------------------------------
+      // Fortnightly
+      // -------------------------------------------------------------------------
+      case 'fortnightly':
+        if (isCustom && allocations.length < 2) {
+          break;
+        }
+
+        final yearStart = DateTime(year, 1, 1);
+        final yearEnd = DateTime(year, 12, 31);
+
+        var cycleDate = plan.startDate;
+
+        while (cycleDate.isAfter(yearEnd)) {
+          cycleDate = cycleDate.subtract(const Duration(days: 14));
+        }
+
+        while (cycleDate.isBefore(yearStart)) {
+          cycleDate = cycleDate.add(const Duration(days: 14));
+        }
+
+        var cycleIndex = 0;
+
+        while (!cycleDate.isAfter(yearEnd)) {
+          if (isCustom) {
+            monthlyDistribution[cycleDate.month - 1] +=
+                allocations[cycleIndex].amount;
+
+            cycleIndex = (cycleIndex + 1) % 2;
+          } else {
+            monthlyDistribution[cycleDate.month - 1] += plan.amount;
+          }
+
+          cycleDate = cycleDate.add(const Duration(days: 14));
+        }
+        break;
+
+      // -------------------------------------------------------------------------
+      // Monthly
+      // -------------------------------------------------------------------------
+      case 'monthly':
+        if (isCustom) {
+          if (allocations.length < 2) {
+            break;
+          }
+
+          final monthlyAmount = allocations[0].amount + allocations[1].amount;
+
+          for (var month = 0; month < 12; month++) {
+            monthlyDistribution[month] = monthlyAmount;
+          }
+        } else {
+          for (var month = 0; month < 12; month++) {
+            monthlyDistribution[month] = plan.amount;
+          }
+        }
+        break;
+
+      // -------------------------------------------------------------------------
+      // Yearly
+      // -------------------------------------------------------------------------
+      case 'yearly':
+        if (isCustom) {
+          for (final allocation in allocations) {
+            final monthIndex = allocation.allocationIndex;
+
+            if (monthIndex < 0 || monthIndex >= 12) {
+              continue;
+            }
+
+            monthlyDistribution[monthIndex] += allocation.amount;
+          }
+        } else {
+          final monthlyAmount = plan.amount / 12;
+
+          for (var month = 0; month < 12; month++) {
+            monthlyDistribution[month] = monthlyAmount;
+          }
+        }
+        break;
+    }
+
+    return monthlyDistribution;
   }
 
   List<double> calculateSavedPlanMonthlyDistribution({
@@ -160,9 +430,9 @@ class CashflowController extends GetxController {
       //
       case 'fortnightly':
         debugPrint('>>> ENTERED FORTNIGHTLY CASE <<<');
-        if (allocations.length < 2) {
-          break;
-        }
+
+        final isCustom =
+            plan.distributionType == CashFlowDistribution.custom.name;
 
         var cycleDate = plan.startDate;
         var cycleIndex = 0;
@@ -173,14 +443,25 @@ class CashflowController extends GetxController {
           }
 
           if (cycleDate.year == year) {
-            monthlyDistribution[cycleDate.month - 1] +=
-                allocations[cycleIndex].amount;
+            if (isCustom) {
+              if (allocations.length < 2) {
+                break;
+              }
+
+              monthlyDistribution[cycleDate.month - 1] +=
+                  allocations[cycleIndex].amount;
+            } else {
+              monthlyDistribution[cycleDate.month - 1] += plan.amount;
+            }
           }
 
           cycleDate = cycleDate.add(const Duration(days: 14));
 
-          cycleIndex = (cycleIndex + 1) % 2;
+          if (isCustom) {
+            cycleIndex = (cycleIndex + 1) % 2;
+          }
         }
+
         break;
 
       // -------------------------------------------------------------------------
@@ -194,6 +475,10 @@ class CashflowController extends GetxController {
       //
       case 'monthly':
         debugPrint('>>> ENTERED MONTHLY CASE <<<');
+
+        final isCustom =
+            plan.distributionType == CashFlowDistribution.custom.name;
+
         for (var month = 1; month <= 12; month++) {
           final daysInMonth = DateTime(year, month + 1, 0).day;
 
@@ -207,8 +492,18 @@ class CashflowController extends GetxController {
             continue;
           }
 
-          monthlyDistribution[month - 1] += plan.amount;
+          if (isCustom) {
+            if (allocations.length < 2) {
+              continue;
+            }
+
+            monthlyDistribution[month - 1] +=
+                allocations[0].amount + allocations[1].amount;
+          } else {
+            monthlyDistribution[month - 1] += plan.amount;
+          }
         }
+
         break;
 
       // -------------------------------------------------------------------------
@@ -222,21 +517,28 @@ class CashflowController extends GetxController {
       //
       case 'yearly':
         debugPrint('>>> ENTERED YEARLY CASE <<<');
-        for (final allocation in allocations) {
-          final monthIndex = allocation.allocationIndex;
 
-          if (monthIndex < 0 || monthIndex >= 12) {
-            continue;
+        final isCustom =
+            plan.distributionType == CashFlowDistribution.custom.name;
+
+        if (!isCustom) {
+          final monthlyAmount = plan.amount / 12;
+
+          for (var month = 1; month <= 12; month++) {
+            monthlyDistribution[month - 1] += monthlyAmount;
           }
+        } else {
+          for (final allocation in allocations) {
+            final monthIndex = allocation.allocationIndex;
 
-          final date = DateTime(year, monthIndex + 1, 1);
+            if (monthIndex < 0 || monthIndex >= 12) {
+              continue;
+            }
 
-          if (!_isPlanActive(plan, date)) {
-            continue;
+            monthlyDistribution[monthIndex] += allocation.amount;
           }
-
-          monthlyDistribution[monthIndex] += allocation.amount;
         }
+
         break;
     }
 
@@ -244,16 +546,33 @@ class CashflowController extends GetxController {
   }
 
   bool _isPlanActive(CashFlowPlan plan, DateTime date) {
-    if (date.isBefore(plan.startDate)) {
+    final startDate = DateTime(
+      plan.startDate.year,
+      plan.startDate.month,
+      plan.startDate.day,
+    );
+
+    final currentDate = DateTime(date.year, date.month, date.day);
+
+    if (currentDate.isBefore(startDate)) {
       return false;
     }
 
-    if (plan.endDate != null && date.isAfter(plan.endDate!)) {
-      return false;
+    if (plan.endDate != null) {
+      final endDate = DateTime(
+        plan.endDate!.year,
+        plan.endDate!.month,
+        plan.endDate!.day,
+      );
+
+      if (currentDate.isAfter(endDate)) {
+        return false;
+      }
     }
 
     return true;
-  } // ===========================================================================
+  }
+  // ===========================================================================
   // Lifecycle
   // ===========================================================================
 

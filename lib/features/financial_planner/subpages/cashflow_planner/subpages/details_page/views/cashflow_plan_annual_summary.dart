@@ -49,15 +49,15 @@ class CashflowPlanAnnualSummary extends GetView<CashflowController> {
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: colorScheme.appInfoSoft,
+          // color: colorScheme.appInfoSoft,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: colorScheme.appInfo),
+          border: Border.all(color: colorScheme.appText),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Plan Summary', style: AppTextStyle.headlineS),
-            SizedBox(height: 8),
+            // Text('Plan Summary', style: AppTextStyle.headlineS),
+            // SizedBox(height: 8),
             // Period / pattern total
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

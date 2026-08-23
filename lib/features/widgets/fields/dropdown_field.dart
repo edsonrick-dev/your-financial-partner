@@ -5,7 +5,6 @@ import 'package:getx_drift_app/features/widgets/fields/shared/field_container.da
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/field_themes/field_color.dart';
 import 'package:getx_drift_app/data/enums/field_states.dart';
-import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 
 class AppDropdownField extends StatelessWidget {
   const AppDropdownField({

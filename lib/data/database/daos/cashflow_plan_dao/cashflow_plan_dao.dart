@@ -22,6 +22,9 @@ class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
     return select(cashFlowPlans).watch();
   }
 
+  Future<int> insertPlan(CashFlowPlansCompanion entry) {
+    return into(cashFlowPlans).insert(entry);
+  }
   // -----------------------------
   // Allocations
   // -----------------------------
@@ -38,5 +41,13 @@ class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
           ..where((tbl) => tbl.planId.equals(planId))
           ..orderBy([(tbl) => OrderingTerm.asc(tbl.allocationIndex)]))
         .watch();
+  }
+
+  Future<void> insertAllocations(
+    List<CashFlowPlanAllocationsCompanion> entries,
+  ) async {
+    await batch((batch) {
+      batch.insertAll(cashFlowPlanAllocations, entries);
+    });
   }
 }

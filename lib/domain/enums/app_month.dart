@@ -23,26 +23,10 @@ enum AppMonth {
   });
 }
 
-enum AppDays {
-  mon(number: 1, fullName: 'Monday', shortName: 'Mon'),
-  tue(number: 2, fullName: 'Tuesday', shortName: 'Tue'),
-  wed(number: 3, fullName: 'Wednesday', shortName: 'Wed'),
-  thu(number: 4, fullName: 'Thursday', shortName: 'Thu'),
-  fri(number: 5, fullName: 'Friday', shortName: 'Fri'),
-  sat(number: 6, fullName: 'Saturday', shortName: 'Sat'),
-  sun(number: 7, fullName: 'Sunday', shortName: 'Sun');
-
-  final int number;
-  final String fullName;
-  final String shortName;
-
-  const AppDays({
-    required this.number,
-    required this.fullName,
-    required this.shortName,
-  });
-}
-
 extension DateTimeMonthExtension on DateTime {
   AppMonth get appMonth => AppMonth.values[month - 1];
+}
+
+extension AppMonthExtension on AppMonth {
+  int get index => number - 1;
 }

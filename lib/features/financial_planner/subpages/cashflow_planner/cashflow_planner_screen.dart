@@ -30,7 +30,7 @@ class CashflowPlannerScreen extends GetView<CashflowController> {
           CashflowSummaryContainerSection(),
 
           AppSection(
-            sectionTitle: 'Overview',
+            sectionTitle: 'Plan Overview',
             trailingType: SectionTrailingType.textButton,
             trailingText: 'See more',
             onTrailingPressed: () {
