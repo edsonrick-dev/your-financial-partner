@@ -4,6 +4,7 @@ import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
+import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/icon_picker_field.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -138,12 +139,13 @@ class _BuildExpanded extends StatelessWidget {
               ),
 
               if (type == AccountType.creditCard)
-                AppTextField(
-                  label: 'Credit Limit',
-                  controller: controller.creditLimitController,
-                  focusNode: controller.creditLimitFocusNode,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
+                Obx(
+                  () => AppAmountField(
+                    label: 'Credit Limit',
+                    amount: controller.enteredCreditLimit.value,
+                    onChanged: (value) {
+                      controller.enteredCreditLimit.value = value;
+                    },
                   ),
                 ),
             ],

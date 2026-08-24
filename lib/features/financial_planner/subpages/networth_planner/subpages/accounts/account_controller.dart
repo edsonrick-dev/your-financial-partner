@@ -8,29 +8,40 @@ import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_acco
 import 'package:drift/drift.dart' as drift;
 
 class AccountController extends GetxController {
-  void initializeEditAccount(AccountsTableData account) {
-    nameController.text = account.name;
+  // ============================================================
+  // FORM STATE
+  // ============================================================
 
-    // bankNameController.text = account.bankName ?? '';
+  final TextEditingController nameController = TextEditingController();
 
-    creditLimitController.text = account.creditLimit?.toStringAsFixed(2) ?? '';
-
-    balanceController.clear();
-  }
-
-  double get initialBalance {
-    return double.tryParse(balanceController.text.trim().replaceAll(',', '')) ??
-        0;
-  }
-
-  final TextEditingController balanceController = TextEditingController();
   final TextEditingController bankNameController = TextEditingController();
+
+  final FocusNode nameFocusNode = FocusNode();
+
   final FocusNode bankNameFocusNode = FocusNode();
-  final FocusNode balanceFocusNode = FocusNode();
+
+  final selectedAccountType = Rxn<AccountType>();
+
+  final RxString selectedIconKey = 'wallet'.obs;
+
+  final Rx<AddButtonState> buttonState = AddButtonState.collapsed.obs;
+
+  // ============================================================
+  // MONETARY STATE
+  // ============================================================
+
+  /// Initial/current balance entered through AppAmountField.
   final RxDouble enteredBalance = 0.0.obs;
-  void onBalanceChanged(String value) {
-    enteredBalance.value =
-        double.tryParse(value.replaceAll(',', '').trim()) ?? 0;
+
+  /// Credit limit entered through AppAmountField.
+  final RxDouble enteredCreditLimit = 0.0.obs;
+
+  // ============================================================
+  // BALANCE UPDATE
+  // ============================================================
+
+  void initializeBalanceUpdate(AccountsTableData account) {
+    enteredBalance.value = account.currentValue;
   }
 
   double get actualBalance => enteredBalance.value;
@@ -38,6 +49,40 @@ class AccountController extends GetxController {
   double getBalanceAdjustment(double currentBalance) {
     return actualBalance - currentBalance;
   }
+
+  // ============================================================
+  // ACCOUNT EDITING
+  // ============================================================
+
+  void initializeEditAccount(AccountsTableData account) {
+    nameController.text = account.name;
+
+    enteredCreditLimit.value = account.creditLimit ?? 0;
+  }
+
+  // ============================================================
+  // ACCOUNT TYPE
+  // ============================================================
+
+  void selectAccountType(AccountType type) {
+    selectedAccountType.value = type;
+  }
+
+  // ============================================================
+  // ACCOUNT BUTTON
+  // ============================================================
+
+  void expandButton() {
+    buttonState.value = AddButtonState.expanded;
+  }
+
+  void collapseButton() {
+    buttonState.value = AddButtonState.collapsed;
+  }
+
+  // ============================================================
+  // UPDATE ACCOUNT DETAILS
+  // ============================================================
 
   Future<void> updateAccountDetails(AccountsTableData account) async {
     final name = nameController.text.trim();
@@ -56,6 +101,10 @@ class AccountController extends GetxController {
 
     Get.back();
   }
+
+  // ============================================================
+  // UPDATE ACCOUNT BALANCE
+  // ============================================================
 
   Future<void> updateAccountBalance(AccountsTableData account) async {
     final actual = actualBalance;
@@ -88,28 +137,25 @@ class AccountController extends GetxController {
       await database.accountsDao.rebuildAccountBalance(account.id);
     });
 
-    balanceController.clear();
+    enteredBalance.value = 0;
 
     Get.back();
   }
 
-  final RxString selectedIconKey = 'wallet'.obs;
+  // ============================================================
+  // UPDATE CREDIT CARD
+  // ============================================================
 
-  final Rx<AddButtonState> buttonState = AddButtonState.collapsed.obs;
-
-  final nameFocusNode = FocusNode();
-
-  final selectedAccountType = Rxn<AccountType>();
   Future<void> updateCreditCardDetails(AccountsTableData account) async {
     final name = nameController.text.trim();
-    final creditLimitValue = creditLimit;
+    final creditLimit = enteredCreditLimit.value;
 
     if (name.isEmpty) {
       Get.snackbar('Missing Account Name', 'Enter an account name.');
       return;
     }
 
-    if (creditLimitValue == null || creditLimitValue <= 0) {
+    if (creditLimit <= 0) {
       Get.snackbar('Invalid Credit Limit', 'Enter a valid credit limit.');
       return;
     }
@@ -118,60 +164,43 @@ class AccountController extends GetxController {
       account.id,
       AccountsTableCompanion(
         name: drift.Value(name),
-        creditLimit: drift.Value(creditLimitValue),
+        creditLimit: drift.Value(creditLimit),
       ),
     );
 
     nameController.clear();
-    creditLimitController.clear();
-    bankNameController.clear();
+    enteredCreditLimit.value = 0;
 
     Get.back();
   }
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController creditLimitController = TextEditingController();
-  final FocusNode creditLimitFocusNode = FocusNode();
-  double? get creditLimit {
-    final value = double.tryParse(
-      creditLimitController.text.trim().replaceAll(',', ''),
-    );
+  // ============================================================
+  // CREATE ACCOUNT
+  // ============================================================
 
-    return value;
-  }
-
-  void selectAccountType(AccountType type) {
-    selectedAccountType.value = type;
-  }
-
-  void expandButton() {
-    buttonState.value = AddButtonState.expanded;
-  }
-
-  void collapseButton() {
-    buttonState.value = AddButtonState.collapsed;
-  }
-
-  Future<AccountsTableData?> saveAccount({double initialBalance = 0}) async {
+  Future<AccountsTableData?> saveAccount() async {
     final name = nameController.text.trim();
 
-    if (name.isEmpty) return null;
+    if (name.isEmpty) {
+      return null;
+    }
 
     final type = selectedAccountType.value;
 
-    if (type == null) return null;
+    if (type == null) {
+      return null;
+    }
+
+    final initialBalance = enteredBalance.value;
+    final creditLimit = enteredCreditLimit.value;
 
     if (initialBalance < 0) {
       Get.snackbar('Invalid Balance', 'Initial balance cannot be negative.');
       return null;
     }
 
-    final parsedCreditLimit = double.tryParse(
-      creditLimitController.text.trim().replaceAll(',', ''),
-    );
-
-    if (type == AccountType.creditCard &&
-        (parsedCreditLimit == null || parsedCreditLimit <= 0)) {
+    if (type == AccountType.creditCard && creditLimit <= 0) {
+      Get.snackbar('Invalid Credit Limit', 'Enter a valid credit limit.');
       return null;
     }
 
@@ -183,7 +212,7 @@ class AccountController extends GetxController {
           icon: selectedIconKey.value,
           accountType: type.name,
           creditLimit: type == AccountType.creditCard
-              ? drift.Value<double?>(parsedCreditLimit)
+              ? drift.Value<double?>(creditLimit)
               : const drift.Value<double?>(null),
         ),
       );
@@ -218,24 +247,43 @@ class AccountController extends GetxController {
     });
   }
 
+  // ============================================================
+  // ICON
+  // ============================================================
+
   void selectIcon(String iconKey) {
     selectedIconKey.value = iconKey;
   }
 
+  // ============================================================
+  // RESET
+  // ============================================================
+
+  void resetForm() {
+    nameController.clear();
+    bankNameController.clear();
+
+    enteredBalance.value = 0;
+    enteredCreditLimit.value = 0;
+
+    selectedAccountType.value = null;
+    selectedIconKey.value = 'wallet';
+
+    collapseButton();
+  }
+
+  // ============================================================
+  // LIFECYCLE
+  // ============================================================
+
   @override
   void onClose() {
     nameController.dispose();
-    creditLimitController.dispose();
     bankNameController.dispose();
 
     nameFocusNode.dispose();
-    creditLimitFocusNode.dispose();
     bankNameFocusNode.dispose();
-
-    balanceController.dispose();
 
     super.onClose();
   }
-
-  final TextEditingController amountController = TextEditingController();
 }

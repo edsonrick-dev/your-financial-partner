@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/transaction_card_shell.dart';
+import 'package:getx_drift_app/features/widgets/cards/transaction_cards/update_balance_transaction_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class CreditCardTransactionsView extends StatelessWidget {
@@ -44,9 +46,17 @@ class CreditCardTransactionsView extends StatelessWidget {
               sectionTitle: sectionTitle,
               child: Column(
                 spacing: 12,
-                children: transactions
-                    .map((item) => TransactionCard(item: item))
-                    .toList(),
+                children: transactions.map((item) {
+                  if (item.transaction.transactionType ==
+                      TransactionType.balanceUpdate.name) {
+                    return UpdateBalanceTransactionCard(
+                      item: item,
+                      isCreditCard: true,
+                    );
+                  }
+
+                  return TransactionCard(item: item);
+                }).toList(),
               ),
             );
           }).toList(),

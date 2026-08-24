@@ -112,6 +112,83 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  Stream<Map<int, double>> watchCurrentMonthExpensesByCategory({
+    required DateTime month,
+  }) {
+    final start = DateTime(month.year, month.month, 1);
+    final end = DateTime(month.year, month.month + 1, 1);
+
+    final query = select(transactionsTable)
+      ..where(
+        (t) =>
+            t.transactionType.equals(TransactionType.spend.name) &
+            t.date.isBiggerOrEqualValue(start) &
+            t.date.isSmallerThanValue(end),
+      );
+
+    return query.watch().map((transactions) {
+      final result = <int, double>{};
+
+      for (final transaction in transactions) {
+        final categoryId = transaction.categoryId;
+
+        if (categoryId == null) {
+          continue;
+        }
+
+        result[categoryId] = (result[categoryId] ?? 0) + transaction.amount;
+      }
+
+      return result;
+    });
+  }
+
+  Stream<double> watchMonthlyExpenseForCategory({
+    required int categoryId,
+    required DateTime month,
+  }) {
+    final start = DateTime(month.year, month.month, 1);
+    final end = DateTime(month.year, month.month + 1, 1);
+
+    final query = selectOnly(transactionsTable)
+      ..addColumns([transactionsTable.amount.sum()])
+      ..where(
+        transactionsTable.categoryId.equals(categoryId) &
+            transactionsTable.transactionType.equals(
+              TransactionType.spend.name,
+            ) &
+            transactionsTable.date.isBiggerOrEqualValue(start) &
+            transactionsTable.date.isSmallerThanValue(end),
+      );
+
+    return query.watchSingle().map(
+      (row) => row.read(transactionsTable.amount.sum()) ?? 0,
+    );
+  }
+
+  Future<double> getMonthlyExpenseForCategory({
+    required int categoryId,
+    required DateTime month,
+  }) async {
+    final start = DateTime(month.year, month.month, 1);
+    final end = DateTime(month.year, month.month + 1, 1);
+
+    final query = selectOnly(transactionsTable)
+      ..addColumns([transactionsTable.amount.sum()])
+      ..where(
+        transactionsTable.categoryId.equals(categoryId) &
+            transactionsTable.transactionType.equals(
+              TransactionType.spend.name,
+            ) &
+            transactionsTable.date.isBiggerOrEqualValue(start) &
+            transactionsTable.date.isSmallerThanValue(end),
+      );
+
+    final row = await query.getSingle();
+
+    return row.read(transactionsTable.amount.sum()) ?? 0;
+  }
+
   Stream<MonthlyCashFlowSummary> watchMonthlySummary({
     required DateTime month,
   }) {

@@ -5,6 +5,8 @@ import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/domain/app_calculator.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/app_date_picker.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/transaction_amount_holder.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/save_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -148,108 +150,6 @@ class EarnTransactionSheet extends GetView<TransactionController> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class TransactionAmountHolder extends GetView<TransactionController> {
-  const TransactionAmountHolder({super.key});
-
-  Future<void> _openCalculator(BuildContext context) async {
-    final calculatorController = Get.find<AppCalculatorController>();
-
-    calculatorController.initialize(controller.amount.value);
-
-    final amount = await Get.bottomSheet<double>(
-      const AppCalculator(),
-      isScrollControlled: true,
-    );
-
-    if (amount == null) return;
-
-    controller.amount.value = amount;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return AdaptivePressable(
-      onTap: () => _openCalculator(context),
-      child: SizedBox(
-        width: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 6,
-            bottom: 24,
-          ),
-          child: Column(
-            children: [
-              Text(
-                'Amount',
-                style: TextStyle(
-                  color: Colors.white60,
-                  fontSize: 15,
-                  height: 20 / 15,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-
-              const SizedBox(height: 4),
-
-              Obx(
-                () => Text(
-                  controller.amount.value.toStringAsFixed(2),
-                  style: AppTextStyle.amountXL.copyWith(
-                    color: colorScheme.textInversed,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class AppDatePicker {
-  static Future<void> show({
-    required BuildContext context,
-    required ValueChanged<DateTime> onChanged,
-
-    DateTime? initialDate,
-
-    DateTime? minimumDate,
-
-    DateTime? maximumDate,
-
-    CupertinoDatePickerMode mode = CupertinoDatePickerMode.date,
-  }) async {
-    showCupertinoModalPopup(
-      context: context,
-
-      builder: (_) {
-        return Container(
-          height: 240,
-
-          color: CupertinoColors.systemBackground,
-
-          child: CupertinoDatePicker(
-            mode: mode,
-
-            initialDateTime: initialDate ?? DateTime.now(),
-
-            minimumDate: minimumDate,
-
-            maximumDate: maximumDate,
-
-            onDateTimeChanged: onChanged,
-          ),
-        );
-      },
     );
   }
 }

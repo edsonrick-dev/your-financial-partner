@@ -2,6 +2,7 @@ import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period
 
 class SavedCashflowPlanData {
   final int planId;
+  final int categoryId;
   final String category;
   final double amount;
   final BudgetPeriod budgetPeriod;
@@ -12,6 +13,7 @@ class SavedCashflowPlanData {
 
   const SavedCashflowPlanData({
     required this.planId,
+    required this.categoryId,
     required this.category,
     required this.amount,
     required this.budgetPeriod,

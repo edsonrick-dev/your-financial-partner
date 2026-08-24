@@ -27,10 +27,27 @@ class CashflowDetailsView extends GetView<CashflowController> {
             title: 'Cash Flow',
             child: Column(
               children: [
-                Text(
-                  'What to put here',
-                  style: AppTextStyle.amountXL.copyWith(
-                    color: colorScheme.appOutflow,
+                Obx(
+                  () => Column(
+                    children: [
+                      Text(
+                        controller.annualCashflowDifference.abs().toCurrency(),
+                        style: AppTextStyle.amountXL.copyWith(
+                          color: controller.hasAnnualSurplus
+                              ? colorScheme.appInversedtext
+                              : colorScheme.appOutflowInversed,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        controller.hasAnnualSurplus
+                            ? 'Annual Surplus'
+                            : 'Annual Deficit',
+                        style: AppTextStyle.titleM.copyWith(
+                          color: colorScheme.inversePrimary.withAlpha(180),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 16),
@@ -43,7 +60,7 @@ class CashflowDetailsView extends GetView<CashflowController> {
                             () => Text(
                               controller.plannedAnnualIncome.value.toCurrency(),
                               style: AppTextStyle.amountL.copyWith(
-                                color: colorScheme.appInflow,
+                                color: colorScheme.appInflowInverse,
                               ),
                             ),
                           ),
@@ -63,7 +80,7 @@ class CashflowDetailsView extends GetView<CashflowController> {
                             () => Text(
                               controller.annualBudget.value.toCurrency(),
                               style: AppTextStyle.amountL.copyWith(
-                                color: colorScheme.appOutflow,
+                                color: colorScheme.appOutflowInversed,
                               ),
                             ),
                           ),

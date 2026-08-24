@@ -32,7 +32,7 @@ class AccountActionsSheet extends GetView<AccountController> {
               subtitle: const Text('Adjust the recorded balance'),
               onTap: () {
                 Get.back();
-
+                controller.initializeBalanceUpdate(account);
                 Get.bottomSheet(
                   UpdateAccountBalanceSheet(account: account),
                   backgroundColor: Colors.transparent,

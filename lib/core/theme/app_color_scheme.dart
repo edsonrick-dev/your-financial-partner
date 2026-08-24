@@ -45,6 +45,7 @@ extension AppColorScheme on ColorScheme {
 extension FinanceColors on ColorScheme {
   /// FLOW
   Color get appInflow => const Color(0xFF16A34A);
+  Color get appInflowInverse => const Color(0xFF4ADE80);
   Color get appOutflow => const Color(0xFFDC2626);
   Color get appOutflowInversed => const Color(0xFFFF6B6B);
   Color get appAccent => const Color(0xFFF59E0B);

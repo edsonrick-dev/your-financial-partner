@@ -9,6 +9,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_page/subpages/assets_list.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_page/subpages/liabilities_list.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
+import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
@@ -173,23 +174,26 @@ class AddAccountSheet extends GetView<NetWorthController> {
                             focusNode: accountController.nameFocusNode,
                             controller: accountController.nameController,
                           ),
-                          AppTextField(
-                            label: 'Initial Balance',
-                            prefixText: '₱',
-                            keyboardType: TextInputType.numberWithOptions(),
-                            focusNode: accountController.balanceFocusNode,
-                            controller: accountController.balanceController,
+                          Obx(
+                            () => AppAmountField(
+                              label: 'Initial Balance',
+                              amount: accountController.enteredBalance.value,
+                              onChanged: (value) {
+                                accountController.enteredBalance.value = value;
+                              },
+                            ),
                           ),
                           if (type == AccountType.creditCard)
-                            AppTextField(
-                              label: 'Credit Limit',
-                              controller:
-                                  accountController.creditLimitController,
-                              focusNode: accountController.creditLimitFocusNode,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
+                            Obx(
+                              () => AppAmountField(
+                                label: 'Credit Limit',
+                                amount:
+                                    accountController.enteredCreditLimit.value,
+                                onChanged: (value) {
+                                  accountController.enteredCreditLimit.value =
+                                      value;
+                                },
+                              ),
                             ),
                         ],
                       );
@@ -200,9 +204,7 @@ class AddAccountSheet extends GetView<NetWorthController> {
               SizedBox(height: 24),
               AdaptivePressable(
                 onTap: () async {
-                  final createdAccount = await accountController.saveAccount(
-                    initialBalance: accountController.initialBalance,
-                  );
+                  final createdAccount = await accountController.saveAccount();
 
                   if (createdAccount == null) return;
 

@@ -5,6 +5,10 @@ import 'package:getx_drift_app/domain/enums/net_worth_comparison_enum.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 
 class NetWorthController extends GetxController {
+  Future<void> deleteAccount(AccountsTableData account) async {
+    await database.accountsDao.deleteAccount(account.id);
+  }
+
   final netWorthComparison = NetWorthComparison.mtd.obs;
 
   DateTime get baselineDate {

@@ -40,9 +40,15 @@ class CashflowSummaryContainerSection extends GetView<CashflowController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _LegendItem(color: colorScheme.appInflow, label: 'Income'),
+                _LegendItem(
+                  color: colorScheme.appInflowInverse,
+                  label: 'Income',
+                ),
                 const SizedBox(width: 16),
-                _LegendItem(color: colorScheme.appOutflow, label: 'Budget'),
+                _LegendItem(
+                  color: colorScheme.appOutflowInversed,
+                  label: 'Budget',
+                ),
                 const SizedBox(width: 16),
                 _LegendItem(
                   color: colorScheme.appInfo,
@@ -191,13 +197,13 @@ BarChartData _barChartData(
           BarChartRodData(
             toY: income[index],
             width: 7,
-            color: colorScheme.appInflow,
+            color: colorScheme.appInflowInverse,
             borderRadius: BorderRadius.circular(3),
           ),
           BarChartRodData(
             toY: budget[index],
             width: 7,
-            color: colorScheme.appOutflow,
+            color: colorScheme.appOutflowInversed,
             borderRadius: BorderRadius.circular(3),
           ),
         ],

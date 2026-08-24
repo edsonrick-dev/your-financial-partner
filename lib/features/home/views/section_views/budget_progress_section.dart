@@ -4,20 +4,21 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/domain/app_calculator.dart';
+import 'package:getx_drift_app/domain/enums/app_month.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_progress_indicator.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 
-class BudgetProgressSection extends StatelessWidget {
+class BudgetProgressSection extends GetView<CashflowController> {
   const BudgetProgressSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    double spentAmount = 4200;
-    double budgetAmount = 10000;
-    double progress = spentAmount / budgetAmount;
     final colorScheme = context.colors;
+
     return AppSection(
       sectionTitle: 'Budget Progress',
       trailingText: 'View All',
@@ -25,31 +26,72 @@ class BudgetProgressSection extends StatelessWidget {
       onTrailingPressed: () {
         Get.bottomSheet(AppCalculator());
       },
-      child: Container(
-        // padding: EdgeInsets.all(16),
-        constraints: BoxConstraints(minHeight: 44),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: colorScheme.bgLight,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Column(
-          children: [
-            //Header
-            Column(
+      child: StreamBuilder<List<CurrentMonthBudgetItem>>(
+        stream: controller.watchCurrentMonthBudgetItems(),
+        builder: (context, snapshot) {
+          debugPrint(
+            'BUDGET UI STREAM: '
+            'hasData=${snapshot.hasData} '
+            'items=${snapshot.data?.length} '
+            'error=${snapshot.error}',
+          );
+
+          final items = snapshot.data ?? [];
+
+          final now = DateTime.now();
+          final currentMonthIndex = now.month - 1;
+
+          final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+
+          final daysLeft = daysInMonth - now.day;
+
+          final budgetAmount = items.fold<double>(
+            0,
+            (sum, item) => sum + item.budget,
+          );
+
+          final spentAmount = items.fold<double>(
+            0,
+            (sum, item) => sum + item.spent,
+          );
+
+          final progress = budgetAmount <= 0 ? 0.0 : spentAmount / budgetAmount;
+
+          final expectedSpent = budgetAmount <= 0
+              ? 0.0
+              : budgetAmount * (now.day / daysInMonth);
+
+          final isOverBudget = spentAmount > budgetAmount;
+
+          final isOnTrack = !isOverBudget && spentAmount <= expectedSpent;
+          final statusText = isOverBudget
+              ? 'Over Budget'
+              : isOnTrack
+              ? 'On Track'
+              : 'Over Pace';
+
+          final statusColor = isOverBudget
+              ? colorScheme.appOutflow
+              : isOnTrack
+              ? colorScheme.appSuccess
+              : colorScheme.appAccent;
+          return Container(
+            constraints: const BoxConstraints(minHeight: 44),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: colorScheme.bgLight,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16.0,
-                    top: 16,
-                    right: 16,
-                  ),
+                  padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
                   child: Row(
                     spacing: 16,
                     children: [
                       BudgetProgressIndicator(
-                        progress: progress,
-                        progressColor: Colors.green,
+                        progress: progress.clamp(0.0, 1.0),
+                        progressColor: statusColor,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -67,13 +109,14 @@ class BudgetProgressSection extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'July Progress',
-                              style: TextStyle(
+                              '${AppMonth.values[currentMonthIndex].fullName} Progress',
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
                                 height: 24 / 20,
                               ),
                             ),
+
                             Row(
                               children: [
                                 Text(
@@ -82,12 +125,12 @@ class BudgetProgressSection extends StatelessWidget {
                                   ),
                                   style: AppTextStyle.amountM,
                                 ),
-                                Text(' spent of '),
+                                const Text(' spent of '),
                                 Text(
                                   budgetAmount.toCompactCurrency(
                                     kThreshold: 1000000,
                                   ),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFeatures: [
                                       FontFeature.tabularFigures(),
                                     ],
@@ -95,6 +138,7 @@ class BudgetProgressSection extends StatelessWidget {
                                 ),
                               ],
                             ),
+
                             Row(
                               children: [
                                 Row(
@@ -105,14 +149,14 @@ class BudgetProgressSection extends StatelessWidget {
                                       height: 8,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: colorScheme.appSuccess,
+                                        color: statusColor,
                                       ),
                                     ),
-                                    Text('On Track'),
+                                    Text(statusText),
                                   ],
                                 ),
-                                Spacer(),
-                                Text('18 days left'),
+                                const Spacer(),
+                                Text('$daysLeft days left'),
                               ],
                             ),
                           ],
@@ -121,7 +165,9 @@ class BudgetProgressSection extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 4),
+
+                const SizedBox(height: 4),
+
                 Divider(
                   indent: 16,
                   endIndent: 16,
@@ -129,52 +175,37 @@ class BudgetProgressSection extends StatelessWidget {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(
-                    left: 8.0,
-                    right: 8,
-                    bottom: 8,
-                  ),
+                  padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                   child: Column(
                     spacing: 8,
                     children: [
-                      BudgetTile(
-                        budgetName: 'Groceries',
-                        iconKey: 'basket',
-                        consumption: 5250,
-                        budget: 8000,
-                      ),
-                      BudgetTile(
-                        budgetName: 'Dining Out',
-                        iconKey: 'hamburger',
-                        budget: 2400,
-                        consumption: 1850,
-                      ),
-                      BudgetTile(
-                        budgetName: 'Transportation',
-                        iconKey: 'car',
-                        budget: 4000,
-                        consumption: 2150,
-                      ),
-                      BudgetTile(
-                        budgetName: 'Utilities',
-                        iconKey: 'lightning',
-                        budget: 6500,
-                        consumption: 4800,
-                      ),
-                      BudgetTile(
-                        budgetName: 'Shopping',
-                        iconKey: 'gift',
-                        budget: 3000,
-                        consumption: 4200,
-                      ),
+                      for (final item in items)
+                        BudgetTile(
+                          budgetName: item.plan.category,
+                          iconKey: item.plan.iconKey,
+                          consumption: item.spent,
+                          budget: item.budget,
+                        ),
                     ],
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
+}
+
+class CurrentMonthBudgetItem {
+  final SavedCashflowPlanData plan;
+  final double budget;
+  final double spent;
+
+  const CurrentMonthBudgetItem({
+    required this.plan,
+    required this.budget,
+    required this.spent,
+  });
 }
