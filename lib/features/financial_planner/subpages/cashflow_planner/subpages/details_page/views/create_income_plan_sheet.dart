@@ -191,7 +191,12 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
 
               AppButton(
                 text: 'Save Income Plan',
-                onTap: controller.saveIncomePlan,
+
+                onTap: () async {
+                  await controller.saveCashflowPlan(
+                    transactionType: transactionType,
+                  );
+                },
               ),
               SizedBox(height: spacingHeight * 4),
             ],
@@ -392,17 +397,18 @@ class PlanSummaryDialog extends GetView<CashflowController> {
 
               const SizedBox(height: 24),
 
-              AppButton(
-                text: 'Save Income Plan',
-                onTap: () {
-                  Get.back();
+              // AppButton(
+              //   text: 'Save Income Plan',
+              //   onTap: () {
+              //     Get.back();
+              //     Get.back();
 
-                  // Your save logic here.
-                },
-              ),
+              //     // Your save logic here.
+              //     controller.saveIncomePlan;
+              //   },
+              // ),
 
-              const SizedBox(height: 8),
-
+              // const SizedBox(height: 8),
               AppButton(
                 type: ButtonType.ghost,
                 text: 'Back to Plan',

@@ -3,12 +3,12 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/budget_list.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/create_income_plan_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/planned_income_list.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/select_budget_type_sheet.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
@@ -39,22 +39,14 @@ class CashflowDetailsView extends GetView<CashflowController> {
                     Expanded(
                       child: Column(
                         children: [
-                          FutureBuilder<double>(
-                            future: controller.calculateRecurringAnnualTotal(
-                              transactionType: TransactionType.earn,
+                          Obx(
+                            () => Text(
+                              controller.plannedAnnualIncome.value.toCurrency(),
+                              style: AppTextStyle.amountL.copyWith(
+                                color: colorScheme.appInflow,
+                              ),
                             ),
-                            builder: (context, snapshot) {
-                              final annualIncome = snapshot.data ?? 0;
-
-                              return Text(
-                                annualIncome.toCurrency(),
-                                style: AppTextStyle.amountL.copyWith(
-                                  color: colorScheme.appInflow,
-                                ),
-                              );
-                            },
                           ),
-
                           Text(
                             'Annual Income',
                             style: AppTextStyle.titleM.copyWith(
@@ -144,14 +136,5 @@ class BudgetPeriodSelectionSheet extends StatelessWidget {
         }).toList(),
       ),
     );
-  }
-}
-
-class SelectBudgetTypeSheet extends StatelessWidget {
-  const SelectBudgetTypeSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppSheet(title: 'Select Budget Type', child: Column());
   }
 }

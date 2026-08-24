@@ -57,6 +57,7 @@ class AppTextStyle {
     height: 20 / 15,
     letterSpacing: 0,
   );
+
   static TextStyle get titleS => TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w500,
@@ -139,6 +140,10 @@ class AppTextStyle {
     fontFeatures: [FontFeature.tabularFigures()],
     letterSpacing: 0,
   );
+
+  static TextStyle get cardTitle => titleM;
+  static TextStyle get cardTitleSmall => titleS;
+  static TextStyle get cardAmount => amountM;
 }
 
 class AppGradient {

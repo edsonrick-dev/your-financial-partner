@@ -8,11 +8,13 @@ import 'package:getx_drift_app/features/financial_planner/controller/financial_p
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sections/cashflow_summary_container_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_overview_tile.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/networth_planner_screen.dart';
 import 'package:getx_drift_app/features/home/views/section_views/cashflow_history_section.dart';
 import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -36,59 +38,129 @@ class CashflowPlannerScreen extends GetView<CashflowController> {
             onTrailingPressed: () {
               Get.toNamed(Routes.CASHFLOWDETAILS);
             },
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: colorScheme.bgLight,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Column(
-                spacing: 16,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: colorScheme.bg,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: colorScheme.appBorder),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-
-                      child: Row(
+            child: Column(
+              spacing: 20,
+              children: [
+                Obx(
+                  () => AppSectionBody(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
                         children: [
-                          Expanded(
-                            child: TabSwitcher(label: 'Income', onTap: () {}),
+                          MetricBarRow(
+                            label: 'Income',
+                            amount: controller.plannedAnnualIncome.value,
+                            ratio: controller.annualIncomeRatio,
+                            color: colorScheme.appInflow,
                           ),
-                          Expanded(
-                            child: TabSwitcher(
-                              label: 'Allocation',
-                              isActive: false,
-                              onTap: () {},
-                            ),
+                          MetricBarRow(
+                            label: 'Budget',
+                            amount: controller.annualBudget.value,
+                            ratio: controller.annualBudgetRatio,
+                            color: colorScheme.appOutflow,
+                          ),
+                          // Row(
+                          //   children: [
+                          //     Container(
+                          //       width: 8,
+                          //       height: 8,
+                          //       decoration: BoxDecoration(
+                          //         color: colorScheme.appOutflow,
+                          //         shape: BoxShape.circle,
+                          //       ),
+                          //     ),
+                          //     const SizedBox(width: 6),
+                          //     Text(
+                          //       'Expenses ${controller.annualExpense.value.toCompactCurrency()}',
+                          //     ),
+
+                          //     const SizedBox(width: 16),
+
+                          //     Container(
+                          //       width: 8,
+                          //       height: 8,
+                          //       decoration: BoxDecoration(
+                          //         color: colorScheme.appOutflow,
+                          //         shape: BoxShape.circle,
+                          //       ),
+                          //     ),
+                          //     const SizedBox(width: 6),
+                          //     Text(
+                          //       'Debt ${controller.annualDebtRepayment.value.toCompactCurrency()}',
+                          //     ),
+                          //   ],
+                          // ),
+                          MetricBarRow(
+                            label: controller.annualBudgetDifference >= 0
+                                ? 'Surplus'
+                                : 'Deficit',
+                            amount: controller.annualBudgetDifference.abs(),
+                            ratio: controller.annualBudgetDifferenceRatio,
+                            color: controller.annualBudgetDifference >= 0
+                                ? colorScheme.appInflow
+                                : colorScheme.appOutflow,
                           ),
                         ],
                       ),
                     ),
                   ),
-                  Column(
-                    spacing: 12,
-                    children: [
-                      CashFlowOverviewTile(
-                        type: 'Active Income',
-                        amount: 540000,
-                        icon: PhosphorIconsRegular.money,
-                      ),
-                      CashFlowOverviewTile(
-                        type: 'Passive Income',
-                        amount: 12000,
-                        icon: PhosphorIconsRegular.money,
-                      ),
-                    ],
+                ),
+
+                AppSectionBody(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      spacing: 16,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: colorScheme.bg,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: colorScheme.appBorder),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TabSwitcher(
+                                    label: 'Income',
+                                    onTap: () {},
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TabSwitcher(
+                                    label: 'Allocation',
+                                    isActive: false,
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Column(
+                          spacing: 12,
+                          children: [
+                            CashFlowOverviewTile(
+                              type: 'Active Income',
+                              amount: 540000,
+                              icon: PhosphorIconsRegular.money,
+                            ),
+                            CashFlowOverviewTile(
+                              type: 'Passive Income',
+                              amount: 12000,
+                              icon: PhosphorIconsRegular.money,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           CashflowHistorySection(),

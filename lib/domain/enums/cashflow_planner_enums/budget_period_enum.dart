@@ -112,4 +112,26 @@ extension BudgetPeriodExtension on BudgetPeriod {
     BudgetPeriod.monthly => 'Months',
     BudgetPeriod.yearly => 'Year',
   };
+
+  /// Converts a base-period amount into its average monthly equivalent.
+  ///
+  /// Examples:
+  /// - ₱20,000 weekly → ~₱86,666.67 / month
+  /// - ₱20,000 fortnightly → ~₱43,333.33 / month
+  /// - ₱40,000 monthly → ₱40,000 / month
+  /// - ₱480,000 yearly → ₱40,000 / month
+  double toMonthly(double amount) {
+    return toAnnual(amount) / 12;
+  }
+
+  /// Converts a base-period amount into its annual projection.
+  ///
+  /// Examples:
+  /// - ₱20,000 weekly → ₱1,040,000 / year
+  /// - ₱20,000 fortnightly → ₱520,000 / year
+  /// - ₱40,000 monthly → ₱480,000 / year
+  /// - ₱480,000 yearly → ₱480,000 / year
+  double toAnnual(double amount) {
+    return amount * occurrencesPerYear;
+  }
 }

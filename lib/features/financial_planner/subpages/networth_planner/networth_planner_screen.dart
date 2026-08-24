@@ -51,21 +51,21 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
                       () => Column(
                         spacing: 8,
                         children: [
-                          _WealthMetricRow(
+                          MetricBarRow(
                             label: 'Assets',
                             amount: controller.totalAssets,
                             ratio: controller.assetRatio,
                             color: colorScheme.appInflow,
                           ),
 
-                          _WealthMetricRow(
+                          MetricBarRow(
                             label: 'Liabilities',
                             amount: controller.totalLiabilities,
                             ratio: controller.liabilityRatio,
                             color: colorScheme.appOutflow,
                           ),
 
-                          _WealthMetricRow(
+                          MetricBarRow(
                             label: 'Net Worth',
                             amount: controller.netWorth,
                             ratio: controller.netWorthRatio,
@@ -273,13 +273,14 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
   }
 }
 
-class _WealthMetricRow extends StatelessWidget {
+class MetricBarRow extends StatelessWidget {
   final String label;
   final double amount;
   final double ratio;
   final Color color;
 
-  const _WealthMetricRow({
+  const MetricBarRow({
+    super.key,
     required this.label,
     required this.amount,
     required this.ratio,
@@ -288,31 +289,28 @@ class _WealthMetricRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+
     return Row(
       children: [
         SizedBox(width: 80, child: Text(label)),
 
         Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: 8,
-                  width: constraints.maxWidth * ratio.clamp(0.0, 1.0),
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                ),
-              );
-            },
+          child: LinearProgressIndicator(
+            value: ratio.clamp(0.0, 1.0),
+            minHeight: 8,
+            borderRadius: BorderRadius.circular(6),
+            backgroundColor: colorScheme.bgLight,
+            valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
         ),
 
         const SizedBox(width: 8),
 
-        Text(amount.toCompactCurrency(), textAlign: TextAlign.right),
+        SizedBox(
+          width: 80,
+          child: Text(amount.toCompactCurrency(), textAlign: TextAlign.right),
+        ),
       ],
     );
   }

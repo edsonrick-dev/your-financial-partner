@@ -23,7 +23,7 @@ extension AppColorScheme on ColorScheme {
   Color get appError => Color(0xFFFF383C);
   Color get appErrorSoft => Color(0xFFF9D3D6);
 
-  Color get appWarning => Colors.green;
+  Color get appWarning => const Color(0xFFF59E0B);
   Color get appInfo => const Color(0xFF3B82F6);
   Color get appInfoSoft => appInfo.withAlpha(60);
 
@@ -46,6 +46,7 @@ extension FinanceColors on ColorScheme {
   /// FLOW
   Color get appInflow => const Color(0xFF16A34A);
   Color get appOutflow => const Color(0xFFDC2626);
+  Color get appOutflowInversed => const Color(0xFFFF6B6B);
   Color get appAccent => const Color(0xFFF59E0B);
   Color get appNeutral => const Color(0xFF94A3B8);
   Color get appNeutralSoft => const Color(0xFFE2E8F0);

@@ -69,7 +69,7 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
                   netWorth.abs().toCurrency(),
                   style: AppTextStyle.amountXL.copyWith(
                     color: netWorth < 0
-                        ? colorScheme.appOutflow
+                        ? colorScheme.appOutflowInversed
                         : colorScheme.inversePrimary,
                   ),
                 ),
