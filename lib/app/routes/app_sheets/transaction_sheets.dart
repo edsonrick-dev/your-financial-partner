@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_hydration_ext.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/earn_transaction_sheet.dart';
@@ -26,13 +28,17 @@ class TransactionSheets {
     );
   }
 
-  Future<void> spend([TransactionWithDetails? item]) async {
+  Future<void> spend({TransactionWithDetails? item, int? categoryId}) async {
     final controller = Get.find<TransactionController>();
 
     if (item != null) {
       controller.loadSpendTransaction(item);
     } else {
       controller.resetForm();
+
+      if (categoryId != null) {
+        await controller.selectCategoryById(categoryId);
+      }
     }
 
     await Get.bottomSheet(

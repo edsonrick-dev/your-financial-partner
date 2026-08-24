@@ -9,17 +9,19 @@ class AppSheet extends StatelessWidget {
   const AppSheet({
     super.key,
     required this.child,
-    required this.title,
+    this.title,
     this.height = AppSheetHeight.semiFull,
     this.adaptiveHeight = false,
     this.minHeight = 300,
+    this.showHeader = true,
   });
 
-  final String title;
+  final String? title;
   final Widget child;
   final double height;
   final bool adaptiveHeight;
   final double minHeight;
+  final bool showHeader;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +37,7 @@ class AppSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: adaptiveHeight ? MainAxisSize.min : MainAxisSize.max,
           children: [
-            AppGrabber(),
-            AppToolbar(title: title),
+            if (showHeader) ...[AppGrabber(), AppToolbar(title: title ?? '')],
 
             if (adaptiveHeight)
               Flexible(fit: FlexFit.loose, child: child)

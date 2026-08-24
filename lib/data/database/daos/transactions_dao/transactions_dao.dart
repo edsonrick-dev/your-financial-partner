@@ -126,8 +126,15 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
             t.date.isSmallerThanValue(end),
       );
 
-    return query.watch().map((transactions) {
+    return query.watch().asyncMap((transactions) async {
       final result = <int, double>{};
+
+      final currentUser = await attachedDatabase.entitiesDao
+          .getCurrentUserEntity();
+
+      if (currentUser == null) {
+        return result;
+      }
 
       for (final transaction in transactions) {
         final categoryId = transaction.categoryId;
@@ -136,7 +143,28 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
           continue;
         }
 
-        result[categoryId] = (result[categoryId] ?? 0) + transaction.amount;
+        final participants = await getParticipantsWithEntities(transaction.id);
+
+        double budgetExpense;
+
+        if (participants.isEmpty) {
+          // Normal expense:
+          // the entire transaction belongs to the user.
+          budgetExpense = transaction.amount;
+        } else {
+          // Split expense:
+          // only count the user's allocated share.
+          budgetExpense = 0;
+
+          for (final participant in participants) {
+            if (participant.entity.id == currentUser.id) {
+              budgetExpense = participant.participant.allocatedAmount;
+              break;
+            }
+          }
+        }
+
+        result[categoryId] = (result[categoryId] ?? 0) + budgetExpense;
       }
 
       return result;
@@ -150,20 +178,42 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     final start = DateTime(month.year, month.month, 1);
     final end = DateTime(month.year, month.month + 1, 1);
 
-    final query = selectOnly(transactionsTable)
-      ..addColumns([transactionsTable.amount.sum()])
+    final query = select(transactionsTable)
       ..where(
-        transactionsTable.categoryId.equals(categoryId) &
-            transactionsTable.transactionType.equals(
-              TransactionType.spend.name,
-            ) &
-            transactionsTable.date.isBiggerOrEqualValue(start) &
-            transactionsTable.date.isSmallerThanValue(end),
+        (t) =>
+            t.categoryId.equals(categoryId) &
+            t.transactionType.equals(TransactionType.spend.name) &
+            t.date.isBiggerOrEqualValue(start) &
+            t.date.isSmallerThanValue(end),
       );
 
-    return query.watchSingle().map(
-      (row) => row.read(transactionsTable.amount.sum()) ?? 0,
-    );
+    return query.watch().asyncMap((transactions) async {
+      double total = 0;
+
+      for (final transaction in transactions) {
+        final participants = await getParticipantsWithEntities(transaction.id);
+
+        if (participants.isEmpty) {
+          // Normal expense — entire transaction belongs to the user.
+          total += transaction.amount;
+          continue;
+        }
+
+        // Split expense — only count the user's allocation.
+        final myParticipant = participants
+            .cast<TransactionParticipantWithEntity?>()
+            .firstWhere(
+              (participant) => participant!.entity.id == 1,
+              orElse: () => null,
+            );
+
+        if (myParticipant != null) {
+          total += myParticipant.participant.allocatedAmount;
+        }
+      }
+
+      return total;
+    });
   }
 
   Future<double> getMonthlyExpenseForCategory({

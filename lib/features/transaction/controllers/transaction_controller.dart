@@ -13,6 +13,14 @@ import 'package:intl/intl.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
 
 class TransactionController extends GetxController {
+  Future<void> selectCategoryById(int categoryId) async {
+    final category = await database.getCategoryById(categoryId);
+
+    if (category == null) return;
+
+    selectedCategory.value = category;
+  }
+
   /// VARIABLES ✅
   /// GENERAL VARIABLES -------------
   final selectedCategory = Rxn<CashflowCategoriesTableData>();
@@ -107,11 +115,11 @@ class TransactionController extends GetxController {
     return sorted;
   }
 
-  bool get isSpendFormValid {
-    return selectedCategory.value != null &&
-        selectedAccount.value != null &&
-        amount.value > 0;
-  } //Still unused
+  // bool get isSpendFormValid {
+  //   return selectedCategory.value != null &&
+  //       selectedAccount.value != null &&
+  //       amount.value > 0;
+  // } //Still unused
 
   Future<List<int>> get excludedPersonIds async {
     final me = await database.entitiesDao.getCurrentUserEntity();

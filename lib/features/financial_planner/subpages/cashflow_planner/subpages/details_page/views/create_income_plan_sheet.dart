@@ -9,6 +9,7 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_chart_widget.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_distribution_fields.dart';
@@ -200,75 +201,6 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
               ),
               SizedBox(height: spacingHeight * 4),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-enum ButtonType { primary, outline, ghost }
-
-class AppButton extends StatelessWidget {
-  final String text;
-  final ButtonType type;
-  final VoidCallback? onTap;
-
-  const AppButton({
-    super.key,
-    this.type = ButtonType.primary,
-    this.onTap,
-    required this.text,
-  });
-
-  Color _backgroundColor(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return switch (type) {
-      ButtonType.primary => colorScheme.appText,
-      ButtonType.outline => Colors.transparent,
-      ButtonType.ghost => Colors.transparent,
-    };
-  }
-
-  Color _foregroundColor(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return switch (type) {
-      ButtonType.primary => colorScheme.bg,
-      ButtonType.outline => colorScheme.appText,
-      ButtonType.ghost => colorScheme.appText,
-    };
-  }
-
-  Border? _border(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return switch (type) {
-      ButtonType.primary => null,
-      ButtonType.outline => Border.all(color: colorScheme.appText),
-      ButtonType.ghost => null,
-    };
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AdaptivePressable(
-      onTap: onTap,
-      child: Container(
-        height: 44,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: _backgroundColor(context),
-          border: _border(context),
-          borderRadius: BorderRadius.circular(99),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: AppTextStyle.titleL.copyWith(
-              color: _foregroundColor(context),
-            ),
           ),
         ),
       ),

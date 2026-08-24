@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/app_date_picker.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/transaction_amount_holder.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/save_functions.dart';
+import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_validation_extension.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/earn_transaction_sheet.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
@@ -128,6 +129,14 @@ class TransferTransactionSheet extends GetView<TransactionController> {
                         controller: controller.noteController,
                         focusNode: controller.noteFocusNode,
                         multiLine: true,
+                      ),
+                      Obx(
+                        () => AppButton(
+                          text: 'Save Transfer Transaction',
+                          onTap: controller.isTransferTransactionValid
+                              ? controller.saveTransferTransaction
+                              : null,
+                        ),
                       ),
                     ],
                   ),

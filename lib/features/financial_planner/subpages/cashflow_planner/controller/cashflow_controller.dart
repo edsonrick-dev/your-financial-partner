@@ -97,6 +97,7 @@ class CashflowController extends GetxController {
             result.add(
               CurrentMonthBudgetItem(
                 plan: savedPlanData,
+                categoryId: plan.categoryId!,
                 budget: budget,
                 spent: spent,
               ),
@@ -164,6 +165,7 @@ class CashflowController extends GetxController {
                 : null,
             planType: plan.planType,
           ),
+          categoryId: plan.categoryId!, // <-- ADD THIS
           budget: budget,
           spent: spent,
         ),

@@ -181,6 +181,7 @@ class BudgetProgressSection extends GetView<CashflowController> {
                     children: [
                       for (final item in items)
                         BudgetTile(
+                          categoryId: item.categoryId,
                           budgetName: item.plan.category,
                           iconKey: item.plan.iconKey,
                           consumption: item.spent,
@@ -200,11 +201,13 @@ class BudgetProgressSection extends GetView<CashflowController> {
 
 class CurrentMonthBudgetItem {
   final SavedCashflowPlanData plan;
+  final int categoryId;
   final double budget;
   final double spent;
 
   const CurrentMonthBudgetItem({
     required this.plan,
+    required this.categoryId,
     required this.budget,
     required this.spent,
   });

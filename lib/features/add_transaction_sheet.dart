@@ -47,7 +47,11 @@ class AddTransactionSheet extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AppToolbar(title: 'Choose Transaction'),
+                    AppToolbar(
+                      title: 'Choose Transaction',
+                      showLeading: false,
+                      showTrailing: false,
+                    ),
                     Container(
                       padding: EdgeInsets.only(
                         top: 0,

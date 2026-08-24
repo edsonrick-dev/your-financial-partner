@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_progress_bar.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 
@@ -13,11 +15,15 @@ class BudgetTile extends StatelessWidget {
     required this.consumption,
     required this.budgetName,
     required this.iconKey,
+    required this.categoryId,
   });
+
   final double budget;
   final double consumption;
   final String budgetName;
   final String iconKey;
+  final int categoryId;
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
@@ -40,6 +46,9 @@ class BudgetTile extends StatelessWidget {
     Color iconColor = colorScheme.appInfo;
     return AdaptivePressable(
       borderRadius: BorderRadius.circular(16),
+      onTap: () {
+        AppSheets.transaction.spend(categoryId: categoryId);
+      },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         constraints: BoxConstraints(minHeight: 60),
