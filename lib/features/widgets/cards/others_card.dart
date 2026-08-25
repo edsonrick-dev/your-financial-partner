@@ -21,10 +21,17 @@ class OthersCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12),
-        constraints: BoxConstraints(minHeight: 44),
+        constraints: BoxConstraints(minHeight: 60),
         decoration: BoxDecoration(
           color: colorScheme.bgLight,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [

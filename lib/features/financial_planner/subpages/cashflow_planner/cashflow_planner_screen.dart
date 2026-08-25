@@ -8,6 +8,7 @@ import 'package:getx_drift_app/features/financial_planner/controller/financial_p
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sections/cashflow_summary_container_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_overview_tile.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/metric_bar_row.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/networth_planner_screen.dart';
 import 'package:getx_drift_app/features/home/views/section_views/cashflow_history_section.dart';
 import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
@@ -26,11 +27,10 @@ class CashflowPlannerScreen extends GetView<CashflowController> {
     final colorScheme = context.colors;
     return SingleChildScrollView(
       child: Column(
-        spacing: 12,
         children: [
-          SizedBox(height: 12),
+          SizedBox(height: 20),
           CashflowSummaryContainerSection(),
-
+          SizedBox(height: 24),
           AppSection(
             sectionTitle: 'Plan Overview',
             trailingType: SectionTrailingType.textButton,
@@ -59,37 +59,7 @@ class CashflowPlannerScreen extends GetView<CashflowController> {
                             ratio: controller.annualBudgetRatio,
                             color: colorScheme.appOutflow,
                           ),
-                          // Row(
-                          //   children: [
-                          //     Container(
-                          //       width: 8,
-                          //       height: 8,
-                          //       decoration: BoxDecoration(
-                          //         color: colorScheme.appOutflow,
-                          //         shape: BoxShape.circle,
-                          //       ),
-                          //     ),
-                          //     const SizedBox(width: 6),
-                          //     Text(
-                          //       'Expenses ${controller.annualExpense.value.toCompactCurrency()}',
-                          //     ),
 
-                          //     const SizedBox(width: 16),
-
-                          //     Container(
-                          //       width: 8,
-                          //       height: 8,
-                          //       decoration: BoxDecoration(
-                          //         color: colorScheme.appOutflow,
-                          //         shape: BoxShape.circle,
-                          //       ),
-                          //     ),
-                          //     const SizedBox(width: 6),
-                          //     Text(
-                          //       'Debt ${controller.annualDebtRepayment.value.toCompactCurrency()}',
-                          //     ),
-                          //   ],
-                          // ),
                           MetricBarRow(
                             label: controller.annualBudgetDifference >= 0
                                 ? 'Surplus'
@@ -163,52 +133,21 @@ class CashflowPlannerScreen extends GetView<CashflowController> {
               ],
             ),
           ),
-          CashflowHistorySection(),
+          SizedBox(height: 20),
+          // CashflowHistorySection(),
           AppSection(
-            sectionTitle: 'Charts',
+            sectionTitle: 'Bills Management',
 
             // showTrailing: true,
             child: Column(
               spacing: 12,
               children: [
-                // BudgetCard(
-                //   title: 'Food',
-                //   iconKey: 'bowlFood',
-                //   consumption: 250,
-                //   budget: 400,
-                // ),
-              ],
-            ),
-          ),
-          AppSection(
-            sectionTitle: 'Others',
-
-            // showTrailing: true,
-            child: Column(
-              spacing: 12,
-              children: [
-                Row(
-                  spacing: 12,
-                  children: [
-                    Expanded(
-                      child: OthersCard(
-                        icon: PhosphorIconsRegular.coins,
-                        title: 'Budgets',
-                        onTap: () {
-                          Get.toNamed(Routes.BUDGETS);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: OthersCard(
-                        icon: PhosphorIconsRegular.receipt,
-                        title: 'Bills',
-                        onTap: () {
-                          Get.toNamed(Routes.BILLS);
-                        },
-                      ),
-                    ),
-                  ],
+                OthersCard(
+                  icon: PhosphorIconsRegular.receipt,
+                  title: 'Bills',
+                  onTap: () {
+                    Get.toNamed(Routes.BILLS);
+                  },
                 ),
 
                 // BudgetCard(
@@ -220,6 +159,7 @@ class CashflowPlannerScreen extends GetView<CashflowController> {
               ],
             ),
           ),
+          SizedBox(height: 24),
           // AppSection(
           //   sectionTitle: 'Bills',
           //   trailingType: SectionTrailingType.textButton,

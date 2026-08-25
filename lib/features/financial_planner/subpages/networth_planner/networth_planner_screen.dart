@@ -4,6 +4,7 @@ import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/metric_bar_row.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/sections/networth_summary_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_group_overview_tile.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
@@ -11,8 +12,6 @@ import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
-import 'package:getx_drift_app/core/num_extension.dart';
-
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class NetworthPlannerScreen extends GetView<NetWorthController> {
@@ -23,9 +22,8 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
     final colorScheme = context.colors;
     return SingleChildScrollView(
       child: Column(
-        spacing: 12,
         children: [
-          SizedBox(height: 12),
+          SizedBox(height: 20),
           Obx(
             () => NetWorthSummaryContainerSection(
               netWorth: controller.netWorth,
@@ -34,6 +32,8 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
               onComparisonChanged: controller.setNetWorthComparison,
             ),
           ),
+
+          SizedBox(height: 24),
           AppSection(
             sectionTitle: 'Wealth Overview',
             trailingType: SectionTrailingType.textButton,
@@ -42,7 +42,7 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
               Get.toNamed(Routes.NETWORTHDETAILS);
             },
             child: Column(
-              spacing: 16,
+              spacing: 20,
               children: [
                 AppSectionBody(
                   child: Padding(
@@ -77,13 +77,8 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
                   ),
                 ),
                 AppSectionBody(
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: colorScheme.bgLight,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       spacing: 16,
                       children: [
@@ -164,154 +159,39 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
               ],
             ),
           ),
-
+          SizedBox(height: 20),
           AppSection(
             sectionTitle: 'Others',
             child: Column(
-              spacing: 12,
+              spacing: 8,
               children: [
-                Row(
-                  spacing: 12,
-                  children: [
-                    Expanded(
-                      child: OthersCard(
-                        icon: PhosphorIconsRegular.chartBar,
-                        title: 'Charts',
-                        onTap: () {
-                          Get.toNamed(Routes.NETWORTHCHARTS);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: OthersCard(
-                        icon: PhosphorIconsRegular.users,
-                        title: 'Personal Balances',
-                        onTap: () {
-                          Get.toNamed(Routes.PEOPLEBALANCES);
-                        },
-                      ),
-                    ),
-                  ],
+                OthersCard(
+                  icon: PhosphorIconsRegular.chartBar,
+                  title: 'Charts',
+                  onTap: () {
+                    Get.toNamed(Routes.NETWORTHCHARTS);
+                  },
                 ),
-                Row(
-                  spacing: 12,
-                  children: [
-                    Expanded(
-                      child: OthersCard(
-                        icon: PhosphorIconsRegular.receipt,
-                        title: 'Checks',
-                        onTap: () {
-                          Get.toNamed(Routes.CHECKMANAGEMENTS);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: OthersCard(
-                        icon: PhosphorIconsRegular.export,
-                        title: 'Export',
-                        onTap: () {
-                          Get.toNamed(Routes.NETWORTHEXPORT);
-                        },
-                      ),
-                    ),
-                  ],
+                OthersCard(
+                  icon: PhosphorIconsRegular.receipt,
+                  title: 'Checks',
+                  onTap: () {
+                    Get.toNamed(Routes.CHECKMANAGEMENTS);
+                  },
                 ),
-
-                // BudgetCard(
-                //   title: 'Food',
-                //   iconKey: 'bowlFood',
-                //   consumption: 250,
-                //   budget: 400,
-                // ),
+                OthersCard(
+                  icon: PhosphorIconsRegular.export,
+                  title: 'Export',
+                  onTap: () {
+                    Get.toNamed(Routes.NETWORTHEXPORT);
+                  },
+                ),
               ],
             ),
           ),
-          // AppSection(
-          //   sectionTitle: 'Bills',
-          //   trailingType: SectionTrailingType.textButton,
-          //   trailingText: 'View all',
-          //   onTrailingPressed: () {
-          //     Get.toNamed(Routes.TRANSACTION);
-          //   },
-          //   // showTrailing: true,
-          //   child: Column(
-          //     spacing: 12,
-          //     children: [
-          //       BillsCard(
-          //         iconKey: 'internet',
-          //         billName: 'Internet Home Fiber',
-          //         billType: 'Internet Bill',
-          //         dueDate: DateTime(2026, 6, 4),
-          //         amountDue: 6000,
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
-          // ListView.builder(
-          //   shrinkWrap: true,
-          //   physics: const NeverScrollableScrollPhysics(),
-          //   itemCount: controller.projections.length,
-          //   itemBuilder: (_, index) {
-          //     final item = controller.projections[index];
-
-          //     return Card(
-          //       child: ListTile(
-          //         title: Text(item.month.fullName),
-          //         subtitle: Text(
-          //           'Income: ${item.income}'
-          //           '\nAllocated: ${item.allocated}'
-          //           '\nSurplus: ${item.surplus}',
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // ),
+          SizedBox(height: 24),
         ],
       ),
-    );
-  }
-}
-
-class MetricBarRow extends StatelessWidget {
-  final String label;
-  final double amount;
-  final double ratio;
-  final Color color;
-
-  const MetricBarRow({
-    super.key,
-    required this.label,
-    required this.amount,
-    required this.ratio,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return Row(
-      children: [
-        SizedBox(width: 80, child: Text(label)),
-
-        Expanded(
-          child: LinearProgressIndicator(
-            value: ratio.clamp(0.0, 1.0),
-            minHeight: 8,
-            borderRadius: BorderRadius.circular(6),
-            backgroundColor: colorScheme.bgDark,
-            valueColor: AlwaysStoppedAnimation<Color>(color),
-          ),
-        ),
-
-        const SizedBox(width: 8),
-
-        SizedBox(
-          width: 60,
-          child: Text(amount.toCompactCurrency(), textAlign: TextAlign.right),
-        ),
-      ],
     );
   }
 }

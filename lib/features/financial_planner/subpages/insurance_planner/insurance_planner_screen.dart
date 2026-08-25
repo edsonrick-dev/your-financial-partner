@@ -18,15 +18,15 @@ class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        spacing: 12,
         children: [
-          SizedBox(height: 12),
+          SizedBox(height: 20),
           Obx(
             () => ProtectionScoreContainerSection(
               profile: controller.protectionProfile,
               unmetGoals: controller.unmetProtectionGoals,
             ),
           ),
+          SizedBox(height: 24),
           AppSection(
             sectionTitle: 'Protection Breakdown',
             child: Column(
@@ -64,6 +64,7 @@ class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
               ],
             ),
           ),
+          SizedBox(height: 20),
           AppSection(
             sectionTitle: 'Recommended Policies',
             isHorizontalScrolling: true,
@@ -77,34 +78,26 @@ class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
                   .toList(),
             ),
           ),
+          SizedBox(height: 20),
           AppSection(
             sectionTitle: 'Others',
             // showTrailing: true,
             child: Column(
               spacing: 12,
               children: [
-                Row(
-                  spacing: 12,
-                  children: [
-                    Expanded(
-                      child: OthersCard(
-                        icon: PhosphorIconsRegular.article,
-                        title: 'My Policies',
-                        onTap: () {
-                          Get.toNamed(Routes.INSURANCEPOLICIES);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: OthersCard(
-                        icon: PhosphorIconsRegular.users,
-                        title: 'Beneficiaries',
-                        onTap: () {
-                          Get.toNamed(Routes.BENEFICIARIES);
-                        },
-                      ),
-                    ),
-                  ],
+                OthersCard(
+                  icon: PhosphorIconsRegular.article,
+                  title: 'My Policies',
+                  onTap: () {
+                    Get.toNamed(Routes.INSURANCEPOLICIES);
+                  },
+                ),
+                OthersCard(
+                  icon: PhosphorIconsRegular.users,
+                  title: 'Beneficiaries',
+                  onTap: () {
+                    Get.toNamed(Routes.BENEFICIARIES);
+                  },
                 ),
 
                 // BudgetCard(
@@ -116,6 +109,7 @@ class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
               ],
             ),
           ),
+          SizedBox(height: 24),
           // AppSection(
           //   sectionTitle: 'Bills',
           //   trailingType: SectionTrailingType.textButton,
