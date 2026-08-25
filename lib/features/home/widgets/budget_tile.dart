@@ -4,7 +4,6 @@ import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_progress_bar.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 

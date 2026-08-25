@@ -9,7 +9,6 @@ import 'package:getx_drift_app/features/transaction/controllers/extensions/dropd
 import 'package:getx_drift_app/features/transaction/controllers/extensions/save_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_validation_extension.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/earn_transaction_sheet.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/split_expense_section.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';

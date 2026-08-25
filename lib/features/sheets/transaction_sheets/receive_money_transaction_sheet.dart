@@ -11,7 +11,6 @@ import 'package:getx_drift_app/features/transaction/controllers/extensions/save_
 import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_validation_extension.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/earn_transaction_sheet.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
