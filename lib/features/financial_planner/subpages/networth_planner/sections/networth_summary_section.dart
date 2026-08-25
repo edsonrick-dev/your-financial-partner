@@ -82,8 +82,8 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
                             ? PhosphorIconsFill.caretUp
                             : PhosphorIconsFill.caretDown,
                         color: isGrowth
-                            ? colorScheme.appInflow
-                            : colorScheme.appOutflow,
+                            ? colorScheme.appInflowInverse
+                            : colorScheme.appOutflowInversed,
                         size: 16,
                       ),
 
@@ -92,8 +92,8 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
                           text: '${(change.abs() * 100).toStringAsFixed(1)}%',
                           style: AppTextStyle.amountM.copyWith(
                             color: isGrowth
-                                ? colorScheme.appInflow
-                                : colorScheme.appOutflow,
+                                ? colorScheme.appInflowInverse
+                                : colorScheme.appOutflowInversed,
                           ),
                           children: [
                             TextSpan(

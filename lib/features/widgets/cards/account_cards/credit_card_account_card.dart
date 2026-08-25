@@ -6,6 +6,7 @@ import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 
 class CreditCardAccountCard extends StatelessWidget {
   final AccountsTableData account;
@@ -23,84 +24,157 @@ class CreditCardAccountCard extends StatelessWidget {
         ? account.currentValue / creditLimit
         : null;
 
-    return AdaptivePressable(
-      borderRadius: BorderRadius.circular(12),
+    return AppCard(
       onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: colorScheme.appBorder),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: _CardDesign2(
+        account: account,
+        colorScheme: colorScheme,
+        availableCredit: availableCredit,
+        creditLimit: creditLimit,
+        utilization: utilization,
+      ),
+    );
+  }
+}
+
+class _CardDesign2 extends StatelessWidget {
+  const _CardDesign2({
+    required this.account,
+    required this.colorScheme,
+    required this.availableCredit,
+    required this.creditLimit,
+    required this.utilization,
+  });
+
+  final AccountsTableData account;
+  final ColorScheme colorScheme;
+  final double? availableCredit;
+  final double? creditLimit;
+  final double? utilization;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header
+        Row(
           children: [
-            // Header
             Row(
               children: [
                 Icon(AppIcons.categories.resolve(account.icon), size: 24),
                 const SizedBox(width: 12),
-                Expanded(child: Text(account.name, style: AppTextStyle.titleM)),
+                Text(account.name, style: AppTextStyle.titleM),
               ],
             ),
-
-            const SizedBox(height: 16),
-
-            // Current payable
-            Text('Current payable', style: AppTextStyle.bodyS),
-            const SizedBox(height: 2),
+            Spacer(),
             Text(
               account.currentValue.toCurrency(),
               style: AppTextStyle.amountL.copyWith(
                 color: colorScheme.appOutflow,
               ),
             ),
-
-            const SizedBox(height: 16),
-
-            // Available / limit
-            Row(
-              children: [
-                Expanded(
-                  child: _CreditMetric(
-                    label: 'Available credit',
-                    value: availableCredit?.toCurrency() ?? '—',
-                  ),
-                ),
-                Expanded(
-                  child: _CreditMetric(
-                    label: 'Credit limit',
-                    value: creditLimit?.toCurrency() ?? '—',
-                  ),
-                ),
-              ],
-            ),
-
-            if (utilization != null) ...[
-              const SizedBox(height: 16),
-
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  color: colorScheme.appOutflow,
-                  backgroundColor: colorScheme.bgDark,
-                  borderRadius: BorderRadius.circular(999),
-                  value: utilization.clamp(0.0, 1.0),
-                  minHeight: 6,
-                ),
-              ),
-
-              const SizedBox(height: 6),
-
-              Text(
-                '${(utilization * 100).toStringAsFixed(1)}% utilized',
-                style: AppTextStyle.bodyS,
-              ),
-            ],
           ],
         ),
-      ),
+      ],
+    );
+  }
+}
+
+class _CardDesign1 extends StatelessWidget {
+  const _CardDesign1({
+    required this.account,
+    required this.colorScheme,
+    required this.availableCredit,
+    required this.creditLimit,
+    required this.utilization,
+  });
+
+  final AccountsTableData account;
+  final ColorScheme colorScheme;
+  final double? availableCredit;
+  final double? creditLimit;
+  final double? utilization;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header
+        Row(
+          children: [
+            Row(
+              children: [
+                Icon(AppIcons.categories.resolve(account.icon), size: 24),
+                const SizedBox(width: 12),
+                Text(account.name, style: AppTextStyle.titleM),
+              ],
+            ),
+            Spacer(),
+            // Text(
+            //   account.currentValue.toCurrency(),
+            //   style: AppTextStyle.amountL.copyWith(
+            //     color: colorScheme.appOutflow,
+            //   ),
+            // ),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        // Current payable
+        Text('Current payable', style: AppTextStyle.bodyS),
+        const SizedBox(height: 2),
+        Text(
+          account.currentValue.toCurrency(),
+          style: AppTextStyle.amountL.copyWith(color: colorScheme.appOutflow),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Available / limit
+        Row(
+          children: [
+            Expanded(
+              child: _CreditMetric(
+                label: 'Available credit',
+                value: availableCredit?.toCurrency() ?? '—',
+              ),
+            ),
+            Expanded(
+              child: _CreditMetric(
+                label: 'Credit limit',
+                value: creditLimit?.toCurrency() ?? '—',
+              ),
+            ),
+          ],
+        ),
+
+        if (utilization != null) ...[
+          const SizedBox(height: 16),
+
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              color: colorScheme.appOutflow,
+              backgroundColor: colorScheme.bgDark,
+              borderRadius: BorderRadius.circular(999),
+              value: utilization!.clamp(0.0, 1.0),
+              minHeight: 6,
+            ),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(
+            '${(utilization! * 100).toStringAsFixed(1)}% utilized',
+            style: AppTextStyle.bodyS,
+          ),
+        ],
+      ],
     );
   }
 }

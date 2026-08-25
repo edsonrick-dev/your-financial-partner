@@ -36,8 +36,8 @@ class NetWorthDetailsPage extends GetView<NetWorthController> {
                     controller.netWorth.abs().toCurrency(),
                     style: AppTextStyle.amountXL.copyWith(
                       color: controller.netWorth <= 0
-                          ? colorScheme.appOutflow
-                          : colorScheme.appInflow,
+                          ? colorScheme.appOutflowInversed
+                          : colorScheme.appInversedtext,
                     ),
                   ),
                   SizedBox(height: 16),
@@ -49,15 +49,13 @@ class NetWorthDetailsPage extends GetView<NetWorthController> {
                             Text(
                               controller.totalAssets.toCurrency(),
                               style: AppTextStyle.amountL.copyWith(
-                                color: colorScheme.appInflow,
+                                color: colorScheme.appInflowInverse,
                               ),
                             ),
                             Text(
                               'Assets',
                               style: AppTextStyle.titleM.copyWith(
-                                color: colorScheme.inversePrimary.withAlpha(
-                                  150,
-                                ),
+                                color: colorScheme.appInversedtextMuted,
                               ),
                             ),
                           ],
@@ -69,15 +67,13 @@ class NetWorthDetailsPage extends GetView<NetWorthController> {
                             Text(
                               controller.totalLiabilities.toCurrency(),
                               style: AppTextStyle.amountL.copyWith(
-                                color: colorScheme.appOutflow,
+                                color: colorScheme.appOutflowInversed,
                               ),
                             ),
                             Text(
                               'Liabilities',
                               style: AppTextStyle.titleM.copyWith(
-                                color: colorScheme.inversePrimary.withAlpha(
-                                  150,
-                                ),
+                                color: colorScheme.appInversedtextMuted,
                               ),
                             ),
                           ],

@@ -143,11 +143,13 @@ class EarnTransactionSheet extends GetView<TransactionController> {
                       multiLine: true,
                     ),
                     SizedBox(height: 24),
-                    AppButton(
-                      text: 'Save Earn Transaction',
-                      onTap: controller.isEarnTransactionValid
-                          ? controller.saveEarnTransaction
-                          : null,
+                    Obx(
+                      () => AppButton(
+                        text: 'Save Earn Transaction',
+                        onTap: controller.isEarnTransactionValid
+                            ? controller.saveEarnTransaction
+                            : null,
+                      ),
                     ),
                   ],
                 ),

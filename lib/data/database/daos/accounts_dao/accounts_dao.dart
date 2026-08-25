@@ -5,7 +5,7 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
-
+import 'package:getx_drift_app/organize_THIS/net_worth_item.dart';
 part 'accounts_dao.g.dart';
 
 /// ============================================================================
@@ -141,15 +141,29 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
 
       return assetGroups
           .map((group) {
-            final groupAccounts = accounts.where((account) {
-              final accountType = AccountType.fromName(account.accountType);
+            final groupItems = accounts
+                .where((account) {
+                  final accountType = AccountType.fromName(account.accountType);
 
-              return accountType.group == group;
-            }).toList();
+                  return accountType.group == group;
+                })
+                .map((account) {
+                  final accountType = AccountType.fromName(account.accountType);
 
-            return AccountGroupSummary(group: group, accounts: groupAccounts);
+                  return NetWorthItem(
+                    id: 'account_${account.id}',
+                    name: account.name,
+                    value: account.currentValue.abs(),
+                    source: NetWorthItemSource.account,
+                    group: accountType.group,
+                    account: account,
+                  );
+                })
+                .toList();
+
+            return AccountGroupSummary(group: group, items: groupItems);
           })
-          .where((summary) => summary.accounts.isNotEmpty)
+          .where((summary) => summary.items.isNotEmpty)
           .toList();
     });
   }
@@ -162,15 +176,29 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
 
       return liabilityGroups
           .map((group) {
-            final groupAccounts = accounts.where((account) {
-              final accountType = AccountType.fromName(account.accountType);
+            final groupItems = accounts
+                .where((account) {
+                  final accountType = AccountType.fromName(account.accountType);
 
-              return accountType.group == group;
-            }).toList();
+                  return accountType.group == group;
+                })
+                .map((account) {
+                  final accountType = AccountType.fromName(account.accountType);
 
-            return AccountGroupSummary(group: group, accounts: groupAccounts);
+                  return NetWorthItem(
+                    id: 'account_${account.id}',
+                    name: account.name,
+                    value: account.currentValue.abs(),
+                    source: NetWorthItemSource.account,
+                    group: accountType.group,
+                    account: account,
+                  );
+                })
+                .toList();
+
+            return AccountGroupSummary(group: group, items: groupItems);
           })
-          .where((summary) => summary.accounts.isNotEmpty)
+          .where((summary) => summary.items.isNotEmpty)
           .toList();
     });
   }

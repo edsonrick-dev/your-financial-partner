@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_card_factory.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_group/account_group_summary.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_group/account_group_summary.dart';
 
 class AccountGroupSection extends StatelessWidget {
   final AccountGroupSummary summary;
@@ -22,8 +23,8 @@ class AccountGroupSection extends StatelessWidget {
       trailingType: SectionTrailingType.custom,
       child: Column(
         children: [
-          for (final account in summary.accounts) ...[
-            AccountCardFactory.build(account),
+          for (final item in summary.items) ...[
+            AccountCardFactory.build(item),
             const SizedBox(height: 16),
           ],
         ],

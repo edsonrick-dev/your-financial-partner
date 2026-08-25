@@ -5,6 +5,7 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 
 class CashAndBankAccountCard extends StatelessWidget {
   final AccountsTableData account;
@@ -16,56 +17,48 @@ class CashAndBankAccountCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
 
-    return AdaptivePressable(
-      borderRadius: BorderRadius.circular(12),
+    return AppCard(
       onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: colorScheme.appBorder),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 16,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Icon(AppIcons.categories.resolve(account.icon), size: 24),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(account.name, style: AppTextStyle.titleM),
-                      ),
-                    ],
-                  ),
-                ), // Current payable
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16,
+            children: [
+              Expanded(
+                child: Row(
                   children: [
-                    Text(
-                      account.currentValue.toCurrency(),
-                      style: AppTextStyle.amountL.copyWith(
-                        color: colorScheme.appInflow,
-                      ),
-                    ),
-                    Text(
-                      'Total Fund',
-                      style: AppTextStyle.labelXS.copyWith(
-                        color: colorScheme.textMuted,
-                      ),
+                    Icon(AppIcons.categories.resolve(account.icon), size: 24),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(account.name, style: AppTextStyle.titleM),
                     ),
                   ],
                 ),
-              ],
-            ),
-          ],
-        ),
+              ), // Current payable
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    account.currentValue.toCurrency(),
+                    style: AppTextStyle.amountL.copyWith(
+                      color: colorScheme.appInflow,
+                    ),
+                  ),
+                  // Text(
+                  //   'Total Fund',
+                  //   style: AppTextStyle.labelXS.copyWith(
+                  //     color: colorScheme.textMuted,
+                  //   ),
+                  // ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

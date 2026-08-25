@@ -300,7 +300,7 @@ class MetricBarRow extends StatelessWidget {
             value: ratio.clamp(0.0, 1.0),
             minHeight: 8,
             borderRadius: BorderRadius.circular(6),
-            backgroundColor: colorScheme.bgLight,
+            backgroundColor: colorScheme.bgDark,
             valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
         ),
@@ -308,7 +308,7 @@ class MetricBarRow extends StatelessWidget {
         const SizedBox(width: 8),
 
         SizedBox(
-          width: 80,
+          width: 60,
           child: Text(amount.toCompactCurrency(), textAlign: TextAlign.right),
         ),
       ],

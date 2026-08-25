@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/data/models/person_balance_summary_model.dart';
 import 'package:getx_drift_app/domain/enums/net_worth_comparison_enum.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
+import 'package:getx_drift_app/organize_THIS/net_worth_item.dart';
 
 class NetWorthController extends GetxController {
   Future<void> deleteAccount(AccountsTableData account) async {
@@ -77,12 +79,50 @@ class NetWorthController extends GetxController {
   }
 
   final accounts = <AccountsTableData>[].obs;
+  final peopleBalances = <PersonBalanceSummary>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     calculateBaselineNetWorth();
     accounts.bindStream(database.accountsDao.watchAccounts());
+    peopleBalances.bindStream(
+      database.peopleBalanceDao.watchPeopleBalances(includeSettled: false),
+    );
+  }
+
+  List<NetWorthItem> get accountNetWorthItems {
+    return accounts.map((account) {
+      final accountType = AccountType.fromName(account.accountType);
+
+      return NetWorthItem(
+        id: 'account_${account.id}',
+        name: account.name,
+        value: account.currentValue.abs(),
+        source: NetWorthItemSource.account,
+        group: accountType.group,
+        account: account,
+      );
+    }).toList();
+  }
+
+  List<NetWorthItem> get personalBalanceNetWorthItems {
+    return peopleBalances.map((person) {
+      final isReceivable = person.netBalance > 0;
+
+      return NetWorthItem(
+        id: 'personal_balance_${person.entity.id}',
+        name: person.entity.name,
+        value: person.netBalance.abs(),
+        source: NetWorthItemSource.personalBalance,
+        group: isReceivable ? AccountGroup.receivable : AccountGroup.payable,
+        personBalance: person,
+      );
+    }).toList();
+  }
+
+  List<NetWorthItem> get netWorthItems {
+    return [...accountNetWorthItems, ...personalBalanceNetWorthItems];
   }
 
   final selectedView = BalanceSheetType.asset.obs;
@@ -99,6 +139,12 @@ class NetWorthController extends GetxController {
       case BalanceSheetType.liability:
         return liabilityAccounts;
     }
+  }
+
+  List<NetWorthItem> get displayedItems {
+    return selectedView.value == BalanceSheetType.asset
+        ? netWorthItems.where((item) => item.isAsset).toList()
+        : netWorthItems.where((item) => item.isLiability).toList();
   }
   // ------------------------------------------------------------
   // ASSETS
@@ -127,19 +173,16 @@ class NetWorthController extends GetxController {
   // ------------------------------------------------------------
   // TOTALS
   // ------------------------------------------------------------
-
   double get totalAssets {
-    return assetAccounts.fold<double>(
-      0,
-      (sum, account) => sum + account.currentValue,
-    );
+    return netWorthItems
+        .where((item) => item.isAsset)
+        .fold<double>(0, (sum, item) => sum + item.value);
   }
 
   double get totalLiabilities {
-    return liabilityAccounts.fold<double>(
-      0,
-      (sum, account) => sum + account.currentValue.abs(),
-    );
+    return netWorthItems
+        .where((item) => item.isLiability)
+        .fold<double>(0, (sum, item) => sum + item.value);
   }
 
   double get netWorth {
@@ -150,14 +193,12 @@ class NetWorthController extends GetxController {
   // GROUPED ASSETS
   // ------------------------------------------------------------
 
-  Map<AccountGroup, List<AccountsTableData>> get groupedAssetAccounts {
-    final grouped = <AccountGroup, List<AccountsTableData>>{};
+  Map<AccountGroup, List<NetWorthItem>> get groupedAssetItems {
+    final grouped = <AccountGroup, List<NetWorthItem>>{};
 
-    for (final account in assetAccounts) {
-      final type = AccountType.fromName(account.accountType);
-
-      grouped.putIfAbsent(type.group, () => []);
-      grouped[type.group]!.add(account);
+    for (final item in netWorthItems.where((item) => item.isAsset)) {
+      grouped.putIfAbsent(item.group, () => []);
+      grouped[item.group]!.add(item);
     }
 
     return grouped;
@@ -166,15 +207,12 @@ class NetWorthController extends GetxController {
   // ------------------------------------------------------------
   // GROUPED LIABILITIES
   // ------------------------------------------------------------
+  Map<AccountGroup, List<NetWorthItem>> get groupedLiabilityItems {
+    final grouped = <AccountGroup, List<NetWorthItem>>{};
 
-  Map<AccountGroup, List<AccountsTableData>> get groupedLiabilityAccounts {
-    final grouped = <AccountGroup, List<AccountsTableData>>{};
-
-    for (final account in liabilityAccounts) {
-      final type = AccountType.fromName(account.accountType);
-
-      grouped.putIfAbsent(type.group, () => []);
-      grouped[type.group]!.add(account);
+    for (final item in netWorthItems.where((item) => item.isLiability)) {
+      grouped.putIfAbsent(item.group, () => []);
+      grouped[item.group]!.add(item);
     }
 
     return grouped;
@@ -183,19 +221,18 @@ class NetWorthController extends GetxController {
   // ------------------------------------------------------------
   // GROUP LABELS
   // ------------------------------------------------------------
-
   Map<AccountGroup, double> get displayedGroupTotals {
     final totals = <AccountGroup, double>{};
 
-    final accounts = selectedView.value == BalanceSheetType.asset
-        ? assetAccounts
-        : liabilityAccounts;
+    final items = selectedView.value == BalanceSheetType.asset
+        ? groupedAssetItems
+        : groupedLiabilityItems;
 
-    for (final account in accounts) {
-      final type = AccountType.fromName(account.accountType);
-
-      totals[type.group] =
-          (totals[type.group] ?? 0) + account.currentValue.abs();
+    for (final entry in items.entries) {
+      totals[entry.key] = entry.value.fold<double>(
+        0,
+        (sum, item) => sum + item.value,
+      );
     }
 
     return totals;

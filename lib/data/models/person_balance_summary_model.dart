@@ -19,3 +19,19 @@ class PersonBalanceSummary {
     required this.payable,
   });
 }
+
+enum PersonalBalanceType { receivable, payable }
+
+class PersonalBalanceAccount {
+  final String entityId;
+  final String name;
+  final double balance;
+  final PersonalBalanceType type;
+
+  const PersonalBalanceAccount({
+    required this.entityId,
+    required this.name,
+    required this.balance,
+    required this.type,
+  });
+}
