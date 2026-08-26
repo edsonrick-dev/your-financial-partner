@@ -5,7 +5,7 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
-import 'package:getx_drift_app/organize_THIS/net_worth_item.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/models/net_worth_item.dart';
 part 'accounts_dao.g.dart';
 
 /// ============================================================================

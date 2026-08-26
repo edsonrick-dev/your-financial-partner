@@ -116,9 +116,11 @@ class AccountTypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
+        color: colorScheme.bgLight,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey),
       ),

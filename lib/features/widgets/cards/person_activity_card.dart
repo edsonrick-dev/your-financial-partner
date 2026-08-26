@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/constants/app_opacity.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -53,98 +54,100 @@ class PersonDebtActivityCard extends StatelessWidget {
         ? colorScheme.appInflow
         : colorScheme.appOutflow;
 
-    return Container(
-      padding: const EdgeInsets.all(8),
+    return AdaptivePressable(
+      child: Container(
+        padding: const EdgeInsets.all(8),
 
-      constraints: const BoxConstraints(minHeight: 44),
+        constraints: const BoxConstraints(minHeight: 44),
 
-      width: double.infinity,
+        width: double.infinity,
 
-      decoration: BoxDecoration(
-        color: colorScheme.bgLight,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: colorScheme.appBorder),
-      ),
+        decoration: BoxDecoration(
+          color: colorScheme.bgLight,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: colorScheme.appBorder),
+        ),
 
-      child: Row(
-        children: [
-          SizedBox(
-            width: 36,
-            height: 36,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Opacity(
-                  opacity: AppOpacity.transactionIcon,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colorScheme.appText,
-                      borderRadius: BorderRadius.circular(999),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 36,
+              height: 36,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Opacity(
+                    opacity: AppOpacity.transactionIcon,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colorScheme.appText,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
                     ),
                   ),
-                ),
-                Icon(
-                  AppIcons.categories.resolve(iconKey),
-                  size: 20,
-                  color: colorScheme.appText,
-                ),
-              ],
+                  Icon(
+                    AppIcons.categories.resolve(iconKey),
+                    size: 20,
+                    color: colorScheme.appText,
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          const SizedBox(width: 8),
+            const SizedBox(width: 8),
 
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(fontSize: 17, height: 20 / 17),
-                    ),
-
-                    Text(
-                      DateFormat('MMMM d, yyyy').format(transaction.date),
-                      style: TextStyle(
-                        fontSize: 10,
-                        height: 12 / 10,
-                        color: colorScheme.appTextMuted,
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(fontSize: 17, height: 20 / 17),
                       ),
-                    ),
-                  ],
-                ),
 
-                const Spacer(),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      amountText,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        height: 20 / 17,
-                        fontFeatures: [FontFeature.tabularFigures()],
+                      Text(
+                        DateFormat('MMMM d, yyyy').format(transaction.date),
+                        style: TextStyle(
+                          fontSize: 10,
+                          height: 12 / 10,
+                          color: colorScheme.appTextMuted,
+                        ),
                       ),
-                    ),
+                    ],
+                  ),
 
-                    Text(
-                      '$balanceLabel: ${balanceAmount.toCurrency()}',
-                      style: TextStyle(
-                        fontSize: 10,
-                        height: 12 / 10,
-                        color: balanceColor,
+                  const Spacer(),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        amountText,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          height: 20 / 17,
+                          fontFeatures: [FontFeature.tabularFigures()],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+
+                      Text(
+                        '$balanceLabel: ${balanceAmount.toCurrency()}',
+                        style: TextStyle(
+                          fontSize: 10,
+                          height: 12 / 10,
+                          color: balanceColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

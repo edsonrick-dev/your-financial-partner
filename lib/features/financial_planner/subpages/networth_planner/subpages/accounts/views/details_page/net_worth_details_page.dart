@@ -13,10 +13,10 @@ import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
 class NetWorthDetailsPage extends GetView<NetWorthController> {
   const NetWorthDetailsPage({super.key});

@@ -35,5 +35,6 @@ class HomeBinding extends Bindings {
       () => TransactionController(),
       fenix: true,
     );
+    // Get.lazyPut<PersonalBalanceController>(() => PersonalBalanceController());
   }
 }

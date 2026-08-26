@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
@@ -15,16 +16,17 @@ class SelectAccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     return AdaptivePressable(
       borderRadius: BorderRadius.circular(8),
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(12),
         width: double.infinity,
-        height: 48,
+        height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          // color: colorScheme.bgLight,
+          color: colorScheme.bgLight,
           // boxShadow: [
           //   BoxShadow(
           //     color: colorScheme.text.withValues(alpha: 0.06),

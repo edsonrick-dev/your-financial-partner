@@ -8,9 +8,12 @@ import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 
-class CashflowPlanAnnualSummary extends GetView<CashflowController> {
+class CashflowPlanAnnualSummarySection extends GetView<CashflowController> {
   final TransactionType transactionType;
-  const CashflowPlanAnnualSummary({super.key, required this.transactionType});
+  const CashflowPlanAnnualSummarySection({
+    super.key,
+    required this.transactionType,
+  });
 
   @override
   Widget build(BuildContext context) {

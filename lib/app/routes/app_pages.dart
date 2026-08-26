@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/bills/views/bills_view.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/budgets/views/budgets_view.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_details_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/cashflow_details_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/beneficiaries/views/beneficiaries_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/critical_illness_benefit_gap/views/critical_illness_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/death_benefit_gap/views/death_benefit_details_view.dart';
@@ -14,8 +13,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/exports/views/file_export_view.dart';
 import 'package:getx_drift_app/features/home/views/home_view.dart';
 import 'package:getx_drift_app/features/main_shell/views/main_shell_view.dart';
-import 'package:getx_drift_app/features/personal_balance/binding/personal_balance_binding.dart';
-import 'package:getx_drift_app/features/personal_balance/screen/personal_balance_details_page.dart';
 import 'package:getx_drift_app/features/settings/pages/notifications_page.dart';
 import 'package:getx_drift_app/features/settings/pages/preferences_page.dart';
 import '../../features/home/bindings/home_binding.dart';
@@ -28,11 +25,11 @@ import 'app_routes.dart';
 class AppPages {
   static final netWorth = [];
   static final pages = [
-    GetPage(
-      name: Routes.PERSONALBALANCE,
-      page: () => const PersonalBalanceDetailsPage(),
-      binding: PersonalBalanceBinding(),
-    ),
+    // GetPage(
+    //   name: Routes.PERSONALBALANCE,
+    //   page: () => const PersonalBalanceDetailsPage(),
+    //   binding: PersonalBalanceBinding(),
+    // ),
     GetPage(
       name: Routes.MAINVIEW,
       page: () => const MainShell(),
@@ -88,17 +85,13 @@ class AppPages {
     //CASHFLOW PAGE
     GetPage(
       name: Routes.CASHFLOWDETAILS,
-      page: () => const CashflowDetailsView(),
+      page: () => const CashflowDetailsPage(),
       // binding: TransactionBinding(),
     ),
-    GetPage(
-      name: Routes.BUDGETS,
-      page: () => const BudgetsView(),
-      // binding: TransactionBinding(),
-    ),
+
     GetPage(
       name: Routes.BILLS,
-      page: () => const BillsView(),
+      page: () => const BillsPage(),
       // binding: TransactionBinding(),
     ),
 

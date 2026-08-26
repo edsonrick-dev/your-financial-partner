@@ -6,8 +6,8 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/cash_and_bank_reservation_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/cash_and_bank_summary_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/cash_and_bank_transactions_view.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
+import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
 class CashAndBankDetailsSheet extends StatelessWidget {
   final AccountsTableData account;

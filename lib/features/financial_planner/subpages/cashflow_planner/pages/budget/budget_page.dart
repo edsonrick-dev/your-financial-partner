@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_summary_section.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_transactions_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_plan_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
+import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
-class BudgetList extends GetView<CashflowController> {
-  const BudgetList({super.key});
+class BudgetPage extends GetView<CashflowController> {
+  const BudgetPage({super.key});
 
   Future<void> _confirmDeletePlan(
     BuildContext context,
@@ -93,7 +98,7 @@ class BudgetList extends GetView<CashflowController> {
       'debtRepayment' => colorScheme.appOutflow,
       _ => colorScheme.appText,
     };
-
+    final RxInt selectedIndex = 0.obs;
     return AppSection(
       sectionTitle: title,
       trailingType: SectionTrailingType.custom,
@@ -106,6 +111,47 @@ class BudgetList extends GetView<CashflowController> {
         children: [
           for (final plan in plans)
             CashflowPlanCard(
+              onTap: () {
+                Get.bottomSheet(
+                  AppSheet(
+                    height: AppSheetHeight.full,
+                    title: '${plan.category} Budget ',
+                    child: Column(
+                      children: [
+                        CashflowPlanSummarySection(
+                          plan: plan,
+                          spent: 0, // temporary
+                          planned: plan.amount,
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        AppDetailsPageActionSection(
+                          selectedIndex: selectedIndex,
+                          actions: ['Transactions', 'Bills'],
+                          onAdd: () {},
+                        ),
+                        Expanded(
+                          child: Obx(
+                            () => IndexedStack(
+                              index: selectedIndex.value,
+                              children: [
+                                CashflowPlanTransactionsView(plan: plan),
+
+                                // Bills — implement later
+                                const SizedBox(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  backgroundColor: Colors.transparent,
+                  isDismissible: true,
+                  isScrollControlled: true,
+                );
+              },
               category: plan.category,
               color: colorScheme.appOutflow,
               amount: plan.amount,

@@ -35,10 +35,12 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
             ),
 
             const SizedBox(height: 20),
-            AppAmountField(
-              label: 'Amount',
-              amount: controller.enteredBalance.value,
-              onChanged: (value) => controller.enteredBalance.value = value,
+            Obx(
+              () => AppAmountField(
+                label: 'Amount',
+                amount: controller.enteredBalance.value,
+                onChanged: (value) => controller.enteredBalance.value = value,
+              ),
             ),
 
             // AppTextField(

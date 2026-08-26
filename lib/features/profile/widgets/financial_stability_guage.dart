@@ -26,7 +26,7 @@ class FinancialStabilityGauge extends StatelessWidget {
         children: [
           CustomPaint(
             size: const Size(80, 80),
-            painter: _FinancialStabilityGaugePainter(progress: progress),
+            painter: FinancialStabilityGaugePainter(progress: progress),
           ),
 
           // Score
@@ -57,10 +57,10 @@ class FinancialStabilityGauge extends StatelessWidget {
   }
 }
 
-class _FinancialStabilityGaugePainter extends CustomPainter {
+class FinancialStabilityGaugePainter extends CustomPainter {
   final double progress;
 
-  const _FinancialStabilityGaugePainter({required this.progress});
+  const FinancialStabilityGaugePainter({required this.progress});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -157,7 +157,7 @@ class _FinancialStabilityGaugePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _FinancialStabilityGaugePainter oldDelegate) {
+  bool shouldRepaint(covariant FinancialStabilityGaugePainter oldDelegate) {
     return oldDelegate.progress != progress;
   }
 }

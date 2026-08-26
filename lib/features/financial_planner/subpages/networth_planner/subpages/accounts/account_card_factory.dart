@@ -4,7 +4,7 @@ import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_acco
 import 'package:getx_drift_app/features/widgets/cards/account_cards/cash_and_bank_account_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/credit_card_account_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/person_balance_card.dart';
-import 'package:getx_drift_app/organize_THIS/net_worth_item.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/models/net_worth_item.dart';
 
 class AccountCardFactory {
   static Widget build(NetWorthItem item) {

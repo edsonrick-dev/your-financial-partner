@@ -20,7 +20,6 @@ class AppCalculator extends GetView<AppCalculatorController> {
     final gridSpacing = 8.0;
     return AppSheet(
       adaptiveHeight: true,
-      minHeight: 0,
       title: 'Amount',
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -288,6 +287,10 @@ class _CalculatorButton extends StatelessWidget {
 class AppCalculatorController extends GetxController {
   final display = 0.0.obs;
   final expression = ''.obs;
+  double _roundToDecimals(double value, int decimals) {
+    final factor = pow(10, decimals);
+    return (value * factor).round() / factor;
+  }
 
   double _currentValue = 0;
   double? _storedValue;
@@ -413,6 +416,8 @@ class AppCalculatorController extends GetxController {
       _decimalPlaces++;
 
       _currentValue += digit / pow(10, _decimalPlaces);
+
+      _currentValue = _roundToDecimals(_currentValue, _decimalPlaces);
 
       _updateDisplay();
 

@@ -4,7 +4,7 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/models/person_balance_summary_model.dart';
 import 'package:getx_drift_app/domain/enums/net_worth_comparison_enum.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
-import 'package:getx_drift_app/organize_THIS/net_worth_item.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/models/net_worth_item.dart';
 
 class NetWorthController extends GetxController {
   Future<void> deleteAccount(AccountsTableData account) async {

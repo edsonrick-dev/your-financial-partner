@@ -5,7 +5,7 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_category_sheet/create_category_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/category_card.dart';
-import 'package:getx_drift_app/organize_THIS/add_category_button.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/add_category_button.dart';
 
 class CategoryList extends StatelessWidget {
   final TransactionType transactionType;

@@ -4,12 +4,12 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_plan_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
-class PlannedIncomeList extends GetView<CashflowController> {
-  const PlannedIncomeList({super.key});
+class IncomePlanPage extends GetView<CashflowController> {
+  const IncomePlanPage({super.key});
   Future<void> _confirmDeletePlan(
     BuildContext context,
     SavedCashflowPlanData plan,

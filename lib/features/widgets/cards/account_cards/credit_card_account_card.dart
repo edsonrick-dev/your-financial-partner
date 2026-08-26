@@ -81,6 +81,7 @@ class _CardDesign2 extends StatelessWidget {
   }
 }
 
+// ignore: unused_element
 class _CardDesign1 extends StatelessWidget {
   const _CardDesign1({
     required this.account,

@@ -5,7 +5,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/insurance_under_construction_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/widgets/protection_gap_details_header.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
+import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
 class DeathBenefitDetailsView extends GetView<InsurancePlannerController> {
   const DeathBenefitDetailsView({super.key});

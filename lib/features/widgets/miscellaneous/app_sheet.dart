@@ -10,9 +10,9 @@ class AppSheet extends StatelessWidget {
     super.key,
     required this.child,
     this.title,
-    this.height = AppSheetHeight.semiFull,
+    this.height = AppSheetHeight.threeQuarter,
     this.adaptiveHeight = false,
-    this.minHeight = 300,
+    this.minHeightFactor = AppSheetHeight.quarter,
     this.showHeader = true,
   });
 
@@ -20,12 +20,13 @@ class AppSheet extends StatelessWidget {
   final Widget child;
   final double height;
   final bool adaptiveHeight;
-  final double minHeight;
+  final double minHeightFactor;
   final bool showHeader;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+    final screenHeight = MediaQuery.sizeOf(context).height;
 
     final content = Container(
       decoration: BoxDecoration(
@@ -51,8 +52,8 @@ class AppSheet extends StatelessWidget {
     if (adaptiveHeight) {
       return ConstrainedBox(
         constraints: BoxConstraints(
-          minHeight: minHeight,
-          maxHeight: MediaQuery.sizeOf(context).height * height,
+          minHeight: screenHeight * minHeightFactor,
+          maxHeight: screenHeight * height,
         ),
         child: content,
       );

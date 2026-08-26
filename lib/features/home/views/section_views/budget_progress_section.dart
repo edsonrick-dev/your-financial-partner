@@ -6,7 +6,7 @@ import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/domain/app_calculator.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_progress_indicator.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -83,6 +83,7 @@ class BudgetProgressSection extends GetView<CashflowController> {
               borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
@@ -173,23 +174,68 @@ class BudgetProgressSection extends GetView<CashflowController> {
                   endIndent: 16,
                   color: colorScheme.appBorderMuted,
                 ),
-
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                  child: Column(
-                    spacing: 8,
-                    children: [
-                      for (final item in items)
-                        BudgetTile(
-                          categoryId: item.categoryId,
-                          budgetName: item.plan.category,
-                          iconKey: item.plan.iconKey,
-                          consumption: item.spent,
-                          budget: item.budget,
-                        ),
-                    ],
+                Obx(
+                  () => DisplayModeToggle(
+                    value: controller.budgetDisplayMode.value,
+                    onChanged: controller.setBudgetDisplayMode,
                   ),
                 ),
+                Obx(() {
+                  final mode = controller.budgetDisplayMode.value;
+                  final isExpanded = controller.isBudgetExpanded.value;
+
+                  final previewLimit = mode == DisplayMode.grid ? 6 : 4;
+
+                  final visibleItems = isExpanded
+                      ? items
+                      : items.take(previewLimit).toList();
+
+                  final hasMore = items.length > previewLimit;
+
+                  return Column(
+                    children: [
+                      // GRID ↔ LIST
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 220),
+                        switchInCurve: Curves.easeOut,
+                        switchOutCurve: Curves.easeIn,
+                        transitionBuilder: (child, animation) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: ScaleTransition(
+                              scale: Tween<double>(
+                                begin: 0.98,
+                                end: 1.0,
+                              ).animate(animation),
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: mode == DisplayMode.grid
+                            ? _BudgetGrid(
+                                key: const ValueKey('budget-grid'),
+                                items: visibleItems,
+                              )
+                            : _BudgetList(
+                                key: const ValueKey('budget-list'),
+                                items: visibleItems,
+                              ),
+                      ),
+
+                      // SEE MORE ↔ SEE LESS
+                      if (hasMore)
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeOutCubic,
+                          alignment: Alignment.topCenter,
+                          child: TextButton(
+                            onPressed: controller.toggleBudgetExpanded,
+                            child: Text(isExpanded ? 'See less' : 'See more'),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
               ],
             ),
           );
@@ -211,4 +257,60 @@ class CurrentMonthBudgetItem {
     required this.budget,
     required this.spent,
   });
+}
+
+class _BudgetGrid extends StatelessWidget {
+  const _BudgetGrid({super.key, required this.items});
+
+  final List<CurrentMonthBudgetItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+        mainAxisExtent: 140,
+      ),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+
+        return BudgetGridView(
+          categoryId: item.categoryId,
+          budgetName: item.plan.category,
+          iconKey: item.plan.iconKey,
+          consumption: item.spent,
+          budget: item.budget,
+        );
+      },
+    );
+  }
+}
+
+class _BudgetList extends StatelessWidget {
+  const _BudgetList({super.key, required this.items});
+
+  final List<CurrentMonthBudgetItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 8,
+      children: [
+        for (final item in items)
+          BudgetListView(
+            categoryId: item.categoryId,
+            budgetName: item.plan.category,
+            iconKey: item.plan.iconKey,
+            consumption: item.spent,
+            budget: item.budget,
+          ),
+      ],
+    );
+  }
 }

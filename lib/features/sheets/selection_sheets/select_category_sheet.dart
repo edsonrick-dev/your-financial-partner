@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/app_border_radius.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
-import 'package:getx_drift_app/organize_THIS/category_list.dart';
+import 'package:getx_drift_app/features/transaction/category_list.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_toolbar.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -29,7 +29,7 @@ class SelectCategorySheet extends StatelessWidget {
       },
       child: Container(
         constraints: BoxConstraints(
-          maxHeight: Get.height * AppSheetHeight.semiFull,
+          maxHeight: Get.height * AppSheetHeight.threeQuarter,
           minHeight: 200,
         ),
         decoration: BoxDecoration(

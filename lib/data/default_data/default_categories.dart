@@ -42,59 +42,14 @@ class DefaultCategories {
   ];
 
   static var expense = [
-    DefaultCategory(
-      name: 'General',
-      iconKey: 'default',
-      type: TransactionType.spend.name,
-    ),
+    // DefaultCategory(
+    //   name: 'General',
+    //   iconKey: 'default',
+    //   type: TransactionType.spend.name,
+    // ),
     DefaultCategory(
       name: 'Groceries',
       iconKey: 'basket',
-      type: TransactionType.spend.name,
-    ),
-    DefaultCategory(
-      name: 'Kids Stuff',
-      iconKey: 'babyCarriage',
-      type: TransactionType.spend.name,
-    ),
-    DefaultCategory(
-      name: 'Rent',
-      iconKey: 'houseLine',
-      type: TransactionType.spend.name,
-    ),
-    DefaultCategory(
-      name: 'House',
-      iconKey: 'house',
-      type: TransactionType.spend.name,
-    ),
-    DefaultCategory(
-      name: 'Insurances',
-      iconKey: 'shieldPlus',
-      type: TransactionType.spend.name,
-    ),
-    DefaultCategory(
-      name: 'Health',
-      iconKey: 'heartbeat',
-      type: TransactionType.spend.name,
-    ),
-    DefaultCategory(
-      name: 'Travel',
-      iconKey: 'airplaneInFlight',
-      type: TransactionType.spend.name,
-    ),
-    DefaultCategory(
-      name: 'Leisure',
-      iconKey: 'island',
-      type: TransactionType.spend.name,
-    ),
-    DefaultCategory(
-      name: 'Pets',
-      iconKey: 'pawPrint',
-      type: TransactionType.spend.name,
-    ),
-    DefaultCategory(
-      name: 'Books',
-      iconKey: 'books',
       type: TransactionType.spend.name,
     ),
     DefaultCategory(
@@ -112,21 +67,72 @@ class DefaultCategories {
       iconKey: 'graduationCap',
       type: TransactionType.spend.name,
     ),
+    // DefaultCategory(
+    //   name: 'Kids Stuff',
+    //   iconKey: 'babyCarriage',
+    //   type: TransactionType.spend.name,
+    // ),
     DefaultCategory(
-      name: 'Sports',
-      iconKey: 'dribbbleLogo',
+      name: 'Rent',
+      iconKey: 'houseLine',
       type: TransactionType.spend.name,
     ),
     DefaultCategory(
-      name: 'Music',
-      iconKey: 'musicNotes',
+      name: 'House',
+      iconKey: 'house',
       type: TransactionType.spend.name,
     ),
     DefaultCategory(
-      name: 'Friends',
-      iconKey: 'usersThree',
+      name: 'Insurances',
+      iconKey: 'shieldPlus',
       type: TransactionType.spend.name,
     ),
+    DefaultCategory(
+      name: 'Healthcare',
+      iconKey: 'heartbeat',
+      type: TransactionType.spend.name,
+    ),
+    DefaultCategory(
+      name: 'Travel',
+      iconKey: 'airplaneInFlight',
+      type: TransactionType.spend.name,
+    ),
+    DefaultCategory(
+      name: 'Entertainment',
+      iconKey: 'island',
+      type: TransactionType.spend.name,
+    ),
+    DefaultCategory(
+      name: 'Gifts',
+      iconKey: 'gifts',
+      type: TransactionType.spend.name,
+    ),
+    DefaultCategory(
+      name: 'Pets',
+      iconKey: 'pawPrint',
+      type: TransactionType.spend.name,
+    ),
+    // DefaultCategory(
+    //   name: 'Books',
+    //   iconKey: 'books',
+    //   type: TransactionType.spend.name,
+    // ),
+
+    // DefaultCategory(
+    //   name: 'Sports',
+    //   iconKey: 'dribbbleLogo',
+    //   type: TransactionType.spend.name,
+    // ),
+    // DefaultCategory(
+    //   name: 'Music',
+    //   iconKey: 'musicNotes',
+    //   type: TransactionType.spend.name,
+    // ),
+    // DefaultCategory(
+    //   name: 'Friends',
+    //   iconKey: 'usersThree',
+    //   type: TransactionType.spend.name,
+    // ),
   ];
 
   static var all = [...income, ...expense];

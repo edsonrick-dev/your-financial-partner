@@ -11,13 +11,26 @@ import 'package:getx_drift_app/domain/enums/app_day.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
+import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:drift/drift.dart' as d;
 import 'dart:math' as math;
 
 class CashflowController extends GetxController {
+  final Rx<DisplayMode> budgetDisplayMode = DisplayMode.grid.obs;
+  final RxBool isBudgetExpanded = false.obs;
+
+  void setBudgetDisplayMode(DisplayMode mode) {
+    budgetDisplayMode.value = mode;
+    isBudgetExpanded.value = false;
+  }
+
+  void toggleBudgetExpanded() {
+    isBudgetExpanded.toggle();
+  }
+
   Stream<List<CurrentMonthBudgetItem>> watchCurrentMonthBudgetItems() {
     final now = DateTime.now();
     final monthIndex = now.month - 1;

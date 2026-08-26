@@ -17,8 +17,8 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.d
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class CashflowPlannerScreen extends GetView<CashflowController> {
-  const CashflowPlannerScreen({super.key});
+class CashflowPlannerPage extends GetView<CashflowController> {
+  const CashflowPlannerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class CashflowPlannerScreen extends GetView<CashflowController> {
           AppSection(
             sectionTitle: 'Plan Overview',
             trailingType: SectionTrailingType.textButton,
-            trailingText: 'See more',
+            trailingText: 'See plans',
             onTrailingPressed: () {
               Get.toNamed(Routes.CASHFLOWDETAILS);
             },

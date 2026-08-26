@@ -6,8 +6,8 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_bills_payment_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_summary_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_transactions_view.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
+import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
 class CreditCardDetailSheet extends StatelessWidget {
   final AccountsTableData account;

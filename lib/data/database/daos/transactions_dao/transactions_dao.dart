@@ -6,6 +6,7 @@ import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
 import 'package:getx_drift_app/data/tables/transaction_participants_table.dart';
 import 'package:getx_drift_app/data/tables/financial_obligations_table.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
@@ -109,6 +110,19 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
       final result = trendMap.values.toList();
       result.sort((a, b) => a.month.compareTo(b.month));
       return result;
+    });
+  }
+
+  Stream<List<TransactionWithDetails>> watchTransactionsForCashflowPlan(
+    SavedCashflowPlanData plan,
+  ) {
+    return watchTransactions().map((transactions) {
+      return transactions
+          .where(
+            (transaction) =>
+                transaction.transaction.categoryId == plan.categoryId,
+          )
+          .toList();
     });
   }
 

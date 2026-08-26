@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/budget_list.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/create_income_plan_sheet.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/planned_income_list.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/budget_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/create_income_plan_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/income_plan/income_plan_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/select_budget_type_sheet.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_action_section.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
+import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
-class CashflowDetailsView extends GetView<CashflowController> {
-  const CashflowDetailsView({super.key});
+class CashflowDetailsPage extends GetView<CashflowController> {
+  const CashflowDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +41,7 @@ class CashflowDetailsView extends GetView<CashflowController> {
                             ? 'Annual Surplus'
                             : 'Annual Deficit',
                         style: AppTextStyle.titleM.copyWith(
-                          color: colorScheme.inversePrimary.withAlpha(180),
+                          color: colorScheme.textInversedMuted,
                         ),
                       ),
                     ],
@@ -67,7 +64,7 @@ class CashflowDetailsView extends GetView<CashflowController> {
                           Text(
                             'Annual Income',
                             style: AppTextStyle.titleM.copyWith(
-                              color: colorScheme.inversePrimary.withAlpha(150),
+                              color: colorScheme.textInversedMuted,
                             ),
                           ),
                         ],
@@ -87,7 +84,7 @@ class CashflowDetailsView extends GetView<CashflowController> {
                           Text(
                             'Annual Budget',
                             style: AppTextStyle.titleM.copyWith(
-                              color: colorScheme.inversePrimary.withAlpha(150),
+                              color: colorScheme.textInversedMuted,
                             ),
                           ),
                         ],
@@ -121,36 +118,11 @@ class CashflowDetailsView extends GetView<CashflowController> {
             child: Obx(
               () => IndexedStack(
                 index: controller.seletectedDetailsTabIndex.value,
-                children: const [PlannedIncomeList(), BudgetList()],
+                children: const [IncomePlanPage(), BudgetPage()],
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class BudgetPeriodSelectionSheet extends StatelessWidget {
-  const BudgetPeriodSelectionSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppSheet(
-      title: 'Select Period',
-      adaptiveHeight: false,
-      child: Column(
-        children: BudgetPeriod.values.map((period) {
-          return AdaptivePressable(
-            onTap: () {
-              Get.back(result: period);
-            },
-            child: ListTile(
-              title: Text(period.label),
-              subtitle: Text(period.description),
-            ),
-          );
-        }).toList(),
       ),
     );
   }

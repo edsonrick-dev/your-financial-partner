@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 
-class BudgetsView extends StatelessWidget {
-  const BudgetsView({super.key});
+class BillsPage extends StatelessWidget {
+  const BillsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class BudgetsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Budgets', style: AppTextStyle.headlineL),
+        title: Text('Bills', style: AppTextStyle.headlineL),
       ),
       body: SingleChildScrollView(child: Column(children: [          ],
         )),

@@ -5,11 +5,11 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/cashflow_plan_period_selection_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/plan_summary_dialog.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_details_view.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_distribution_fields.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/cashflow_plan_annual_summary.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/create_income_plan_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/cashflow_distribution_fields.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sections/cashflow_plan_annual_summary_section.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
@@ -53,7 +53,7 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
                   hint: 'Select period',
                   onTap: () async {
                     final selected = await Get.bottomSheet<BudgetPeriod>(
-                      const BudgetPeriodSelectionSheet(),
+                      const CashflowPlanPeriodSelectionSheet(),
                       backgroundColor: Colors.transparent,
                       isScrollControlled: true,
                     );
@@ -134,38 +134,11 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
 
               SizedBox(height: spacingHeight),
               // Annual projection
-              CashflowPlanAnnualSummary(transactionType: transactionType),
+              CashflowPlanAnnualSummarySection(
+                transactionType: transactionType,
+              ),
               const SizedBox(height: 20),
 
-              // Monthly distribution
-              // FutureBuilder<List<double>>(
-              //   future: controller.calculateCurrentMonthlyDistribution(
-              //     transactionType: transactionType,
-              //   ),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return const SizedBox(
-              //         height: 220,
-              //         child: Center(child: CircularProgressIndicator()),
-              //       );
-              //     }
-
-              //     if (snapshot.hasError) {
-              //       return const SizedBox.shrink();
-              //     }
-
-              //     return Obx(
-              //       () => CashflowPlanMonthlyDistribution(
-              //         transactionType: transactionType,
-              //         currentDistribution:
-              //             snapshot.data ?? List<double>.filled(12, 0),
-              //         plannedDistribution:
-              //             controller.monthlyPlannedDistribution,
-              //       ),
-              //     );
-              //   },
-              // ),
-              // CashflowPlanValueCreation(transactionType: transactionType),
               AppButton(
                 type: ButtonType.outline,
                 text: 'View Plan Summary',

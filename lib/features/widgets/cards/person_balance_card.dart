@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
-import 'package:getx_drift_app/app/routes/app_routes.dart';
-import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
+import 'package:getx_drift_app/features/personal_balance/screen/personal_balance_details_sheet.dart';
+import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/models/person_balance_summary_model.dart';
 
@@ -15,46 +16,49 @@ class PersonBalanceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
 
-    return AppFieldContainer(
-      trailingPadding: 12,
+    return AppCard(
       onTap: () {
-        Get.toNamed(Routes.PERSONALBALANCE, arguments: item.entity.id);
+        Get.bottomSheet(
+          PersonalBalanceDetailsSheet(entityId: item.entity.id),
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+        );
       },
       child: Row(
         children: [
           /// NAME + STATUS
-          Expanded(
-            child: Row(
-              spacing: 8,
-              children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      height: 36,
-                      width: 36,
-                      decoration: BoxDecoration(
-                        color: colorScheme.appText,
-                        borderRadius: BorderRadius.circular(18),
+          Row(
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    height: 24,
+                    width: 24,
+                    decoration: BoxDecoration(
+                      color: colorScheme.appText,
+                      borderRadius: BorderRadius.circular(18),
+                      gradient: LinearGradient(
+                        colors: [colorScheme.text, colorScheme.gradient2],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.bottomRight,
                       ),
                     ),
-                    Text(
-                      item.entity.name.trim()[0].toUpperCase(),
-                      style: TextStyle(color: colorScheme.surface),
-                    ),
-                  ],
-                ),
-                Text(
-                  item.entity.name,
-
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
                   ),
-                ),
-              ],
-            ),
+
+                  Text(
+                    item.entity.name.trim()[0].toUpperCase(),
+                    style: AppTextStyle.labelS.copyWith(
+                      color: colorScheme.appInversedtext,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 12),
+              Text(item.entity.name, style: AppTextStyle.titleM),
+            ],
           ),
+          Spacer(),
 
           /// BALANCE
           Column(
@@ -63,35 +67,31 @@ class PersonBalanceCard extends StatelessWidget {
               Text(
                 item.balanceAmount.toCurrency(),
 
-                // isReceivable
-                //     ? net.toCurrency()
-                //     : '-${net.abs().toCurrency()}',
-                style: TextStyle(
-                  fontSize: 16,
-                  // fontWeight: FontWeight.w700,
-                  fontFeatures: [FontFeature.tabularFigures()],
-                  color: colorScheme.appText,
+                style: AppTextStyle.amountL.copyWith(
+                  color: item.iOwe
+                      ? colorScheme.appOutflow
+                      : colorScheme.appInflow,
                 ),
               ),
 
-              Text(
-                item.isSettled
-                    ? 'Settled'
-                    : item.owesMe
-                    ? 'Collectible'
-                    : 'Payable',
+              // Text(
+              //   item.isSettled
+              //       ? 'Settled'
+              //       : item.owesMe
+              //       ? 'Collectible'
+              //       : 'Payable',
 
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  // color: Colors.grey.shade600,
-                  color: item.isSettled
-                      ? colorScheme.appTextMuted
-                      : item.owesMe
-                      ? colorScheme.appInflow
-                      : colorScheme.appOutflow,
-                ),
-              ),
+              //   style: TextStyle(
+              //     fontSize: 12,
+              //     fontWeight: FontWeight.w600,
+              //     // color: Colors.grey.shade600,
+              //     color: item.isSettled
+              //         ? colorScheme.appTextMuted
+              //         : item.owesMe
+              //         ? colorScheme.appInflow
+              //         : colorScheme.appOutflow,
+              //   ),
+              // ),
             ],
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/constants/app_scale.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
@@ -16,13 +17,14 @@ class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
   @override
   Widget build(BuildContext context) {
+    final spacingM = AppScale.x5;
+    final spacingL = AppScale.x6;
     final colorScheme = context.colors;
     return Scaffold(
       body: SafeArea(
         top: false,
         child: SingleChildScrollView(
           child: Column(
-            spacing: 12,
             children: [
               Column(
                 children: [
@@ -34,15 +36,18 @@ class HomeView extends GetView<HomeController> {
                     ),
                     surfaceTintColor: Colors.transparent,
                   ),
+                  SizedBox(height: spacingM),
                   AppSection(
                     child: Column(
-                      spacing: 12,
+                      spacing: spacingM,
                       children: [FundSummaryCard(), QuickActionSection()],
                     ),
                   ),
                 ],
               ),
+              SizedBox(height: spacingL),
               BudgetProgressSection(),
+              SizedBox(height: spacingM),
               AppSection(
                 sectionTitle: 'Payment Reminders',
                 child: ClipRRect(
@@ -81,7 +86,7 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
               ),
-
+              SizedBox(height: spacingL),
               // AppSection(
               //   child: Container(
               //     padding: EdgeInsets.only(bottom: 12),
