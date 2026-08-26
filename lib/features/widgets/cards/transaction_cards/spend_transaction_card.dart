@@ -15,6 +15,17 @@ class SpendTransactionCard extends GetView<TransactionController> {
   final TransactionWithDetails item;
 
   const SpendTransactionCard({super.key, required this.item});
+  String get paymentSource {
+    if (item.account != null) {
+      return item.account!.name;
+    }
+
+    if (item.participants.isNotEmpty) {
+      return 'Paid by ${item.participants.first.entity.name}';
+    }
+
+    return 'Paid by someone else';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +103,7 @@ class SpendTransactionCard extends GetView<TransactionController> {
                               ),
                               SizedBox(height: 2),
                               Text(
-                                item.account.name,
+                                paymentSource,
                                 style: AppTextStyle.bodyS.copyWith(
                                   color: colorScheme.appTextMuted,
                                 ),

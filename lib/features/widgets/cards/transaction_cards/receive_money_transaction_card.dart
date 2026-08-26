@@ -118,7 +118,7 @@ class ReceiveMoneyTransactionCard extends GetView<TransactionController> {
                               ),
                               SizedBox(width: 2),
                               Text(
-                                '$participantName → ${item.account.name}',
+                                '$participantName → ${item.account!.name}',
                                 style: AppTextStyle.bodyS.copyWith(
                                   color: colorScheme.appTextMuted,
                                 ),

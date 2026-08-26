@@ -18,8 +18,8 @@ class TransactionsTable extends Table {
   IntColumn get categoryId =>
       integer().nullable().references(CashflowCategoriesTable, #id)();
 
-  IntColumn get accountId => integer().references(AccountsTable, #id)();
-
+  IntColumn get accountId =>
+      integer().nullable().references(AccountsTable, #id)();
   IntColumn get linkedAccountId =>
       integer().nullable().references(AccountsTable, #id)();
 

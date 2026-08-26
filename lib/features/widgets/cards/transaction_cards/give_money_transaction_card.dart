@@ -111,7 +111,7 @@ class GiveMoneyTransactionCard extends GetView<TransactionController> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                '${item.account.name} → ',
+                                '${item.account!.name} → ',
                                 style: AppTextStyle.bodyS.copyWith(
                                   color: colorScheme.appTextMuted,
                                 ),

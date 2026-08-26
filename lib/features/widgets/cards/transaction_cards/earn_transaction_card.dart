@@ -77,7 +77,7 @@ class EarnTransactionCard extends GetView<TransactionController> {
                       ),
                       SizedBox(height: 2),
                       Text(
-                        item.account.name,
+                        item.account!.name,
                         style: AppTextStyle.bodyS.copyWith(
                           color: colorScheme.appTextMuted,
                         ),

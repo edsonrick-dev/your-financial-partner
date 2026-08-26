@@ -895,9 +895,9 @@ class $TransactionsTableTable extends TransactionsTable
   late final GeneratedColumn<int> accountId = GeneratedColumn<int>(
     'account_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES accounts_table (id)',
     ),
@@ -1012,8 +1012,6 @@ class $TransactionsTableTable extends TransactionsTable
         _accountIdMeta,
         accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_accountIdMeta);
     }
     if (data.containsKey('linked_account_id')) {
       context.handle(
@@ -1072,7 +1070,7 @@ class $TransactionsTableTable extends TransactionsTable
       accountId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}account_id'],
-      )!,
+      ),
       linkedAccountId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}linked_account_id'],
@@ -1102,7 +1100,7 @@ class TransactionsTableData extends DataClass
   final String? note;
   final String transactionType;
   final int? categoryId;
-  final int accountId;
+  final int? accountId;
   final int? linkedAccountId;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -1113,7 +1111,7 @@ class TransactionsTableData extends DataClass
     this.note,
     required this.transactionType,
     this.categoryId,
-    required this.accountId,
+    this.accountId,
     this.linkedAccountId,
     required this.createdAt,
     required this.updatedAt,
@@ -1131,7 +1129,9 @@ class TransactionsTableData extends DataClass
     if (!nullToAbsent || categoryId != null) {
       map['category_id'] = Variable<int>(categoryId);
     }
-    map['account_id'] = Variable<int>(accountId);
+    if (!nullToAbsent || accountId != null) {
+      map['account_id'] = Variable<int>(accountId);
+    }
     if (!nullToAbsent || linkedAccountId != null) {
       map['linked_account_id'] = Variable<int>(linkedAccountId);
     }
@@ -1150,7 +1150,9 @@ class TransactionsTableData extends DataClass
       categoryId: categoryId == null && nullToAbsent
           ? const Value.absent()
           : Value(categoryId),
-      accountId: Value(accountId),
+      accountId: accountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accountId),
       linkedAccountId: linkedAccountId == null && nullToAbsent
           ? const Value.absent()
           : Value(linkedAccountId),
@@ -1171,7 +1173,7 @@ class TransactionsTableData extends DataClass
       note: serializer.fromJson<String?>(json['note']),
       transactionType: serializer.fromJson<String>(json['transactionType']),
       categoryId: serializer.fromJson<int?>(json['categoryId']),
-      accountId: serializer.fromJson<int>(json['accountId']),
+      accountId: serializer.fromJson<int?>(json['accountId']),
       linkedAccountId: serializer.fromJson<int?>(json['linkedAccountId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -1187,7 +1189,7 @@ class TransactionsTableData extends DataClass
       'note': serializer.toJson<String?>(note),
       'transactionType': serializer.toJson<String>(transactionType),
       'categoryId': serializer.toJson<int?>(categoryId),
-      'accountId': serializer.toJson<int>(accountId),
+      'accountId': serializer.toJson<int?>(accountId),
       'linkedAccountId': serializer.toJson<int?>(linkedAccountId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
@@ -1201,7 +1203,7 @@ class TransactionsTableData extends DataClass
     Value<String?> note = const Value.absent(),
     String? transactionType,
     Value<int?> categoryId = const Value.absent(),
-    int? accountId,
+    Value<int?> accountId = const Value.absent(),
     Value<int?> linkedAccountId = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -1212,7 +1214,7 @@ class TransactionsTableData extends DataClass
     note: note.present ? note.value : this.note,
     transactionType: transactionType ?? this.transactionType,
     categoryId: categoryId.present ? categoryId.value : this.categoryId,
-    accountId: accountId ?? this.accountId,
+    accountId: accountId.present ? accountId.value : this.accountId,
     linkedAccountId: linkedAccountId.present
         ? linkedAccountId.value
         : this.linkedAccountId,
@@ -1294,7 +1296,7 @@ class TransactionsTableCompanion
   final Value<String?> note;
   final Value<String> transactionType;
   final Value<int?> categoryId;
-  final Value<int> accountId;
+  final Value<int?> accountId;
   final Value<int?> linkedAccountId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
@@ -1317,14 +1319,13 @@ class TransactionsTableCompanion
     this.note = const Value.absent(),
     required String transactionType,
     this.categoryId = const Value.absent(),
-    required int accountId,
+    this.accountId = const Value.absent(),
     this.linkedAccountId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : amount = Value(amount),
        date = Value(date),
-       transactionType = Value(transactionType),
-       accountId = Value(accountId);
+       transactionType = Value(transactionType);
   static Insertable<TransactionsTableData> custom({
     Expression<int>? id,
     Expression<double>? amount,
@@ -1358,7 +1359,7 @@ class TransactionsTableCompanion
     Value<String?>? note,
     Value<String>? transactionType,
     Value<int?>? categoryId,
-    Value<int>? accountId,
+    Value<int?>? accountId,
     Value<int?>? linkedAccountId,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
@@ -5802,7 +5803,7 @@ typedef $$TransactionsTableTableCreateCompanionBuilder =
       Value<String?> note,
       required String transactionType,
       Value<int?> categoryId,
-      required int accountId,
+      Value<int?> accountId,
       Value<int?> linkedAccountId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
@@ -5815,7 +5816,7 @@ typedef $$TransactionsTableTableUpdateCompanionBuilder =
       Value<String?> note,
       Value<String> transactionType,
       Value<int?> categoryId,
-      Value<int> accountId,
+      Value<int?> accountId,
       Value<int?> linkedAccountId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
@@ -5864,9 +5865,9 @@ final class $$TransactionsTableTableReferences
         ),
       );
 
-  $$AccountsTableTableProcessedTableManager get accountId {
-    final $_column = $_itemColumn<int>('account_id')!;
-
+  $$AccountsTableTableProcessedTableManager? get accountId {
+    final $_column = $_itemColumn<int>('account_id');
+    if ($_column == null) return null;
     final manager = $$AccountsTableTableTableManager(
       $_db,
       $_db.accountsTable,
@@ -6447,7 +6448,7 @@ class $$TransactionsTableTableTableManager
                 Value<String?> note = const Value.absent(),
                 Value<String> transactionType = const Value.absent(),
                 Value<int?> categoryId = const Value.absent(),
-                Value<int> accountId = const Value.absent(),
+                Value<int?> accountId = const Value.absent(),
                 Value<int?> linkedAccountId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -6471,7 +6472,7 @@ class $$TransactionsTableTableTableManager
                 Value<String?> note = const Value.absent(),
                 required String transactionType,
                 Value<int?> categoryId = const Value.absent(),
-                required int accountId,
+                Value<int?> accountId = const Value.absent(),
                 Value<int?> linkedAccountId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),

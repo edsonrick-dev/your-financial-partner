@@ -437,7 +437,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
             cashflowCategoriesTable.id.equalsExp(transactionsTable.categoryId),
           ),
 
-          innerJoin(
+          leftOuterJoin(
             accountsTable,
             accountsTable.id.equalsExp(transactionsTable.accountId),
           ),
@@ -450,7 +450,6 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
           OrderingTerm.desc(transactionsTable.date),
           OrderingTerm.desc(transactionsTable.createdAt),
         ]);
-
     return query.watch().asyncMap((rows) async {
       return Future.wait(
         rows.map((row) async {
@@ -458,7 +457,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
 
           final category = row.readTableOrNull(cashflowCategoriesTable);
 
-          final account = row.readTable(accountsTable);
+          final account = row.readTableOrNull(accountsTable);
 
           final participants = await getParticipantsWithEntities(
             transaction.id,

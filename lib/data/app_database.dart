@@ -77,10 +77,15 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(cashFlowPlans);
         await m.createTable(cashFlowPlanAllocations);
       }
+      // SCHEMA 11
+      if (from < 11) {
+        await m.deleteTable('transactions_table');
+        await m.createTable(transactionsTable);
+      }
     },
   );
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();

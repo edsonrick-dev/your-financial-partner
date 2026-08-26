@@ -15,7 +15,7 @@ class CashAndBankAccountCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-
+    final isAssetNegative = account.currentValue < 0 ? true : false;
     return AppCard(
       onTap: onTap,
       child: Column(
@@ -44,7 +44,9 @@ class CashAndBankAccountCard extends StatelessWidget {
                   Text(
                     account.currentValue.toCurrency(),
                     style: AppTextStyle.amountL.copyWith(
-                      color: colorScheme.appInflow,
+                      color: isAssetNegative
+                          ? colorScheme.appOutflow
+                          : colorScheme.appInflow,
                     ),
                   ),
                   // Text(

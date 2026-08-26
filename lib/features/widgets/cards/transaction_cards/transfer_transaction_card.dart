@@ -98,7 +98,7 @@ class TransferTransactionCard extends GetView<TransactionController> {
                       Text('Transfer', style: AppTextStyle.titleL),
                       SizedBox(height: 2),
                       Text(
-                        '${item.account.name} → ${item.linkedAccount?.name ?? 'Unknown'}',
+                        '${item.account!.name} → ${item.linkedAccount?.name ?? 'Unknown'}',
                         style: AppTextStyle.bodyS.copyWith(
                           color: colorScheme.appTextMuted,
                         ),

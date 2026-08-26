@@ -1,20 +1,72 @@
+import 'package:getx_drift_app/features/sheets/transaction_sheets/spend_transaction_sheet.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 
 extension TransactionValidationExtension on TransactionController {
-  bool get isSpendTransactionValid {
-    final hasBasicFields =
-        selectedCategory.value != null &&
-        selectedAccount.value != null &&
-        amount.value > 0;
+  // bool get isSpendTransactionValid {
+  //   final hasBasicFields =
+  //       selectedCategory.value != null &&
+  //       selectedAccount.value != null &&
+  //       amount.value > 0;
 
-    if (!hasBasicFields) {
+  //   if (!hasBasicFields) {
+  //     return false;
+  //   }
+  //   if (isSharedExpense.value) {
+  //     return participants.length > 1 && isFullyAllocated;
+  //   }
+
+  //   return true;
+  // }
+  // bool get isSpendTransactionValid {
+  //   final hasBasicFields = selectedCategory.value != null && amount.value > 0;
+
+  //   if (!hasBasicFields) {
+  //     return false;
+  //   }
+
+  //   if (paidBy.value == PaidBy.self && selectedAccount.value == null) {
+  //     return false;
+  //   }
+
+  //   if (paidBy.value == PaidBy.others && selectedPerson.value == null) {
+  //     return false;
+  //   }
+
+  //   if (isSharedExpense.value) {
+  //     if (paidBy.value != PaidBy.self) {
+  //       return false;
+  //     }
+
+  //     return participants.length > 1 && isFullyAllocated;
+  //   }
+
+  //   return true;
+  // }
+  bool get isSpendTransactionValid {
+    if (selectedCategory.value == null || amount.value <= 0) {
       return false;
     }
-    if (isSharedExpense.value) {
-      return participants.length > 1 && isFullyAllocated;
+
+    // I paid.
+    if (paidBy.value == PaidBy.self) {
+      if (selectedAccount.value == null) {
+        return false;
+      }
+
+      // Shared expenses are only possible when I paid.
+      if (isSharedExpense.value) {
+        return participants.length > 1 && isFullyAllocated;
+      }
+
+      return true;
     }
 
-    return true;
+    // Someone else paid.
+    if (paidBy.value == PaidBy.others) {
+      return selectedPerson.value != null;
+    }
+
+    return false;
   }
 
   bool get isEarnTransactionValid {

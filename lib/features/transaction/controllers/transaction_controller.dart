@@ -9,10 +9,64 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/models/participant_model.dart';
 import 'package:getx_drift_app/data/models/person_balance_summary_model.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/spend_transaction_sheet.dart';
 import 'package:intl/intl.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
 
 class TransactionController extends GetxController {
+  final Rx<PaidBy> paidBy = PaidBy.self.obs;
+  void setPaidBy(PaidBy value) {
+    paidBy.value = value;
+
+    if (value == PaidBy.self) {
+      selectedPerson.value = null;
+      participants.clear();
+    } else {
+      selectedAccount.value = null;
+      participants.clear();
+      isSharedExpense.value = false;
+    }
+  }
+
+  Future<void> selectPayer(EntitiesTableData person) async {
+    selectedPerson.value = person;
+
+    participants
+      ..clear()
+      ..add(
+        ParticipantModel(
+          entityId: person.id,
+          name: person.name,
+          amount: amount.value,
+          percentage: 1.0,
+        ),
+      );
+  }
+
+  void syncPayerParticipant() {
+    if (paidBy.value != PaidBy.others) return;
+
+    final payer = selectedPerson.value;
+
+    if (payer == null) {
+      participants.clear();
+      return;
+    }
+
+    participants
+      ..clear()
+      ..add(
+        ParticipantModel(
+          entityId: payer.id,
+          name: payer.name,
+          amount: amount.value,
+          percentage: 1.0,
+        ),
+      );
+
+    participants.refresh();
+  }
+
   Future<void> selectCategoryById(int categoryId) async {
     final category = await database.getCategoryById(categoryId);
 

@@ -10,7 +10,11 @@ extension DeleteFunctions on TransactionController {
       final transactionData = item.transaction;
 
       /// KEEP TRACK OF ALL ACCOUNTS AFFECTED
-      final affectedAccountIds = <int>{transactionData.accountId};
+      final affectedAccountIds = <int>{};
+
+      if (transactionData.accountId != null) {
+        affectedAccountIds.add(transactionData.accountId!);
+      }
 
       /// TRANSFERS AFFECT TWO ACCOUNTS
       if (transactionData.type == TransactionType.transfer) {
