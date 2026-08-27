@@ -5,6 +5,8 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
 enum ButtonType { primary, outline, ghost }
 
+enum ButtonSize { small, medium, large }
+
 class AppButton extends StatelessWidget {
   final String text;
   final ButtonType type;

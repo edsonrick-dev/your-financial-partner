@@ -7,6 +7,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_plan_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class IncomePlanPage extends GetView<CashflowController> {
   const IncomePlanPage({super.key});
@@ -73,14 +74,14 @@ class IncomePlanPage extends GetView<CashflowController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.construction_outlined,
+                            PhosphorIconsFill.piggyBank,
                             size: 48,
                             color: colorScheme.textMuted,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             'No income plans yet',
-                            style: AppTextStyle.titleL,
+                            style: AppTextStyle.headlineM,
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 8),

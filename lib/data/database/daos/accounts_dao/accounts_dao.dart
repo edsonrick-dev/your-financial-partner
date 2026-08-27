@@ -153,7 +153,7 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
                   return NetWorthItem(
                     id: 'account_${account.id}',
                     name: account.name,
-                    value: account.currentValue.abs(),
+                    value: account.currentValue,
                     source: NetWorthItemSource.account,
                     group: accountType.group,
                     account: account,
@@ -188,7 +188,7 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
                   return NetWorthItem(
                     id: 'account_${account.id}',
                     name: account.name,
-                    value: account.currentValue.abs(),
+                    value: account.currentValue,
                     source: NetWorthItemSource.account,
                     group: accountType.group,
                     account: account,

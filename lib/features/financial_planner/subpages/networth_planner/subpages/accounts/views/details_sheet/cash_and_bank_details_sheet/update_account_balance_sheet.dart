@@ -70,15 +70,17 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
 
             const SizedBox(height: 24),
 
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: controller.actualBalance < 0
-                    ? null
-                    : () {
-                        controller.updateAccountBalance(account);
-                      },
-                child: const Text('Update Balance'),
+            Obx(
+              () => SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: controller.actualBalance < 0
+                      ? null
+                      : () {
+                          controller.updateAccountBalance(account);
+                        },
+                  child: const Text('Update Balance'),
+                ),
               ),
             ),
             const SizedBox(height: 24),

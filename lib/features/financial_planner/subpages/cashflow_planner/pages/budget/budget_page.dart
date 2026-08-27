@@ -209,7 +209,7 @@ class BudgetPage extends GetView<CashflowController> {
                           const SizedBox(height: 16),
                           Text(
                             'No budget plans yet',
-                            style: AppTextStyle.titleL,
+                            style: AppTextStyle.headlineM,
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 8),

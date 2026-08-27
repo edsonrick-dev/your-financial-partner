@@ -35,7 +35,7 @@ class AppCard extends StatelessWidget {
             ),
           ],
         ),
-        child: child,
+        child: Center(child: child),
       ),
     );
   }
