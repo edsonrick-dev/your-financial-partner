@@ -1,11 +1,32 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 
 class HomeController extends GetxController {
   final isFundHidden = false.obs;
-
+  final RxBool hasAccounts = false.obs;
   void toggleIsFundHidden() {
     isFundHidden.toggle();
+  }
+
+  late final StreamSubscription _accountSubscription;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    _accountSubscription = database.accountsDao.watchAccounts().listen((
+      accounts,
+    ) {
+      hasAccounts.value = accounts.isNotEmpty;
+    });
+  }
+
+  @override
+  void onClose() {
+    _accountSubscription.cancel();
+    super.onClose();
   }
 
   final selectedMonth = DateTime.now().obs;

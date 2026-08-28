@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/domain/financial_metrics_calculator.dart';
+import 'package:getx_drift_app/features/financial_state/financial_state.dart';
 import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/debt_load_ratio_scoring.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/emergency_fund_ratio_scoring.dart';
@@ -181,16 +183,16 @@ class ProfileController extends GetxController {
   // Ratio calculations
   // ---------------------------------------------------------------------------
 
-  double calculateDebtLoadRatio({
-    required double debtRepayments,
-    required double income,
-  }) {
-    if (income <= 0) return 100;
+  // double calculateDebtLoadRatio({
+  //   required double debtRepayments,
+  //   required double income,
+  // }) {
+  //   if (income <= 0) return 100;
 
-    final ratio = (debtRepayments / income) * 100;
+  //   final ratio = (debtRepayments / income) * 100;
 
-    return ratio.clamp(0, 100);
-  }
+  //   return ratio.clamp(0, 100);
+  // }
 
   double calculateEmergencyFundMonths({
     required double liquidFunds,
@@ -265,10 +267,11 @@ class ProfileController extends GetxController {
   // ---------------------------------------------------------------------------
   // Financial ratios
   // ---------------------------------------------------------------------------
+  final FinancialMetricsCalculator calculator = FinancialMetricsCalculator();
 
   FinancialRatio get debtLoad {
-    final value = calculateDebtLoadRatio(
-      debtRepayments: annualDebtRepayments.value,
+    final value = calculator.calculateDebtLoadRatio(
+      debtRepayment: annualDebtRepayments.value,
       income: annualIncome.value,
     );
 

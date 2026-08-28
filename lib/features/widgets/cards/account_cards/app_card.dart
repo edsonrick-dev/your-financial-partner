@@ -20,7 +20,7 @@ class AppCard extends StatelessWidget {
       onTap: onTap,
       onLongPress: onLongPressed,
       child: Container(
-        constraints: BoxConstraints(minHeight: 60),
+        constraints: BoxConstraints(minHeight: 52),
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

@@ -5,7 +5,6 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
@@ -29,14 +28,18 @@ class BudgetProgressSection extends GetView<CashflowController> {
           controller.seletectedDetailsTabIndex(1);
           Get.toNamed(Routes.CASHFLOWDETAILS);
         },
-        child: SizedBox(
-          height: 44,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Center(
-              child: Text('View budgets', style: AppTextStyle.titleM),
-            ),
-          ),
+        child: Obx(
+          () => controller.currentMonthBudgetItems.isEmpty
+              ? SizedBox.shrink()
+              : SizedBox(
+                  height: 44,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Center(
+                      child: Text('View budgets', style: AppTextStyle.titleM),
+                    ),
+                  ),
+                ),
         ),
       ),
       trailingType: SectionTrailingType.custom,

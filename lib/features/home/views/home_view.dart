@@ -6,7 +6,7 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/home/views/section_views/quick_actions_section.dart';
-import 'package:getx_drift_app/features/widgets/cards/bills_card.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
 import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -19,7 +19,7 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final spacingM = AppScale.x5;
     final spacingL = AppScale.x6;
-    final colorScheme = context.colors;
+    // final colorScheme = context.colors;
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -47,45 +47,47 @@ class HomeView extends GetView<HomeController> {
               ),
               SizedBox(height: spacingL),
               BudgetProgressSection(),
-              SizedBox(height: spacingM),
-              AppSection(
-                sectionTitle: 'Payment Reminders',
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    constraints: BoxConstraints(minHeight: 44),
-                    width: double.infinity,
-                    decoration: BoxDecoration(color: colorScheme.bgLight),
-                    child: Column(
-                      spacing: 8,
-                      children: [
-                        BillsCard(
-                          billName: 'Internet Bill',
-                          billType: 'Internet',
-                          dueDate: DateTime(2026, 8, 3),
-                          amountDue: 1499,
-                          iconKey: 'wifi',
-                        ),
-                        BillsCard(
-                          billName: 'Electric Bill',
-                          billType: 'Electricity',
-                          dueDate: DateTime(2026, 8, 14),
-                          amountDue: 1499,
-                          iconKey: 'lightning',
-                        ),
-                        BillsCard(
-                          billName: 'Credit Card Bill',
-                          billType: 'Credit Card',
-                          dueDate: DateTime(2026, 8, 28),
-                          amountDue: 24000,
-                          iconKey: 'creditCard',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+
+              LearningSection(),
+              // SizedBox(height: spacingM),
+              // AppSection(
+              //   sectionTitle: 'Payment Reminders',
+              //   child: ClipRRect(
+              //     borderRadius: BorderRadius.circular(24),
+              //     child: Container(
+              //       padding: EdgeInsets.all(8),
+              //       constraints: BoxConstraints(minHeight: 44),
+              //       width: double.infinity,
+              //       decoration: BoxDecoration(color: colorScheme.bgLight),
+              //       child: Column(
+              //         spacing: 8,
+              //         children: [
+              //           BillsCard(
+              //             billName: 'Internet Bill',
+              //             billType: 'Internet',
+              //             dueDate: DateTime(2026, 8, 3),
+              //             amountDue: 1499,
+              //             iconKey: 'wifi',
+              //           ),
+              //           BillsCard(
+              //             billName: 'Electric Bill',
+              //             billType: 'Electricity',
+              //             dueDate: DateTime(2026, 8, 14),
+              //             amountDue: 1499,
+              //             iconKey: 'lightning',
+              //           ),
+              //           BillsCard(
+              //             billName: 'Credit Card Bill',
+              //             billType: 'Credit Card',
+              //             dueDate: DateTime(2026, 8, 28),
+              //             amountDue: 24000,
+              //             iconKey: 'creditCard',
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: spacingL),
               // AppSection(
               //   child: Container(

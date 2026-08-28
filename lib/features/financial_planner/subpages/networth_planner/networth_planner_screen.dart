@@ -7,6 +7,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/metric_bar_row.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/sections/networth_summary_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_group_overview_tile.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_overview.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
@@ -125,7 +126,32 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
                             ),
                           ),
                         ),
+                        Obx(
+                          () => Column(
+                            spacing: 12,
+                            children: controller.displayedGroupTotals.entries
+                                .map((entry) {
+                                  final group = entry.key;
+                                  final amount = entry.value;
 
+                                  return AccountOverview(
+                                    icon: group.icon,
+                                    type: group.label,
+                                    amount: amount,
+                                    percentage: controller.groupPercentage(
+                                      group,
+                                    ),
+                                    color: group.color,
+                                    percentageLabel:
+                                        controller.selectedView.value ==
+                                            BalanceSheetType.asset
+                                        ? 'Assets'
+                                        : 'Liabilities',
+                                  );
+                                })
+                                .toList(),
+                          ),
+                        ),
                         Obx(
                           () => Column(
                             spacing: 12,

@@ -28,7 +28,7 @@ class SelectBudgetTypeSheet extends GetView<CashflowController> {
                   backgroundColor: Colors.transparent,
                   isScrollControlled: true,
                 ).whenComplete(() {
-                  controller.resetIncomePlan();
+                  controller.resetBudgetPlan();
                 });
               },
               child: Container(

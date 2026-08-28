@@ -33,6 +33,12 @@ class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
     return select(cashFlowPlans).get();
   }
 
+  Stream<bool> watchHasCashflowPlan() {
+    final query = select(cashFlowPlans);
+
+    return query.watch().map((plans) => plans.isNotEmpty);
+  }
+
   Stream<List<CashflowPlanWithCategory>> watchAllPlansWithDetails() {
     final query =
         select(cashFlowPlans).join([

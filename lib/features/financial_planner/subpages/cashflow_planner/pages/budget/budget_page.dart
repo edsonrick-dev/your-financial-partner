@@ -10,6 +10,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_summary_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_transactions_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/select_budget_type_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_plan_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
@@ -208,17 +210,35 @@ class BudgetPage extends GetView<CashflowController> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No budget plans yet',
+                            'No budget set yet',
                             style: AppTextStyle.headlineM,
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Add your first budget plan to start planning your cash flow.',
+                            'Add your first budget to start planning your cash. flow.',
                             style: AppTextStyle.bodyM.copyWith(
                               color: colorScheme.textMuted,
                             ),
                             textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+
+                          AppButton(
+                            text: 'Set up your first budget',
+                            onTap: () {
+                              Get.bottomSheet(
+                                const SelectBudgetTypeSheet(),
+                                backgroundColor: Colors.transparent,
+                                isScrollControlled: true,
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 8),
+                          AppButton(
+                            type: ButtonType.outline,
+                            text: 'Watch how to set up a budget',
+                            onTap: () {},
                           ),
                         ],
                       ),

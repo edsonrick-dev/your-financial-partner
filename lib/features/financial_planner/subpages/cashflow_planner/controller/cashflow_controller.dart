@@ -1893,6 +1893,25 @@ class CashflowController extends GetxController {
     // Reset revision
     // distributionRevision.value++;
   }
+
+  void resetBudgetPlan() {
+    transactionController.selectedCategory.value = null;
+    // Reset period
+    selectedPeriod.value = null;
+
+    // Reset distribution mode
+    selectedDistribution.value = CashFlowDistribution.defaultDistribution;
+
+    // Reset amount
+    amount.value = 0;
+    // amountController.clear();
+
+    // Reset custom allocation fields
+    disposeDistributionFields();
+
+    // Reset revision
+    // distributionRevision.value++;
+  }
   // ===========================================================================
   // Financial Stability — Temporary Values
   // ===========================================================================
