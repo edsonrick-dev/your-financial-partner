@@ -9,7 +9,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_group_overview_tile.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_overview.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
-import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
+import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/balance_sheet_type_enum.dart';
 import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';

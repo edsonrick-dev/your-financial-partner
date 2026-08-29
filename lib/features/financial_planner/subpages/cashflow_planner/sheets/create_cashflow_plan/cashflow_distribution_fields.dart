@@ -6,7 +6,6 @@ import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_header.dart';
 
 class CashFlowDistributionFields extends GetView<CashflowController> {
   const CashFlowDistributionFields({super.key});

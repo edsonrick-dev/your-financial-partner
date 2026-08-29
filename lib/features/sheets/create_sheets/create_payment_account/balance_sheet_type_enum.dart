@@ -1,0 +1,1 @@
+enum BalanceSheetType { asset, liability }

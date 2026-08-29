@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
-import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_category_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_day_of_month.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_cycles_sheet.dart';

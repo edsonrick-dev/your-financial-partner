@@ -1,0 +1,9 @@
+// /Name
+// /PropertyType
+// /Purpose
+// /owenershipPercentage
+// /currentMarketValue
+// /valuationDate
+// /valuationMethod
+// /purchaseDate
+// /purchasePrice

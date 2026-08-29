@@ -4,13 +4,32 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
-import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:drift/drift.dart' as drift;
 
 class AccountController extends GetxController {
+  Future<bool> isAccountNameTaken() async {
+    final name = accountName.value.trim();
+
+    if (name.isEmpty) {
+      return false;
+    }
+
+    return database.accountsDao.accountNameExists(name);
+  }
+
   // ============================================================
   // FORM STATE
   // ============================================================
+  final selectedInstitution = Rxn<EntitiesTableData>();
+  void selectInstitution(EntitiesTableData institution) {
+    selectedInstitution.value = institution;
+  }
+
+  final RxString accountName = ''.obs;
+  void setAccountName(String value) {
+    accountName.value = value;
+  }
 
   final TextEditingController nameController = TextEditingController();
 
@@ -191,6 +210,15 @@ class AccountController extends GetxController {
       return null;
     }
 
+    final nameTaken = await isAccountNameTaken();
+
+    if (nameTaken) {
+      Get.snackbar(
+        'Account Already Exists',
+        'An account with this name already exists.',
+      );
+      return null;
+    }
     final initialBalance = enteredBalance.value;
     final creditLimit = enteredCreditLimit.value;
 
@@ -241,7 +269,7 @@ class AccountController extends GetxController {
         database.accountsTable,
       )..where((tbl) => tbl.id.equals(insertedId))).getSingleOrNull();
 
-      collapseButton();
+      resetForm();
 
       return createdAccount;
     });
@@ -258,14 +286,16 @@ class AccountController extends GetxController {
   // ============================================================
   // RESET
   // ============================================================
-
   void resetForm() {
     nameController.clear();
+    accountName.value = '';
+
     bankNameController.clear();
 
     enteredBalance.value = 0;
     enteredCreditLimit.value = 0;
 
+    selectedInstitution.value = null;
     selectedAccountType.value = null;
     selectedIconKey.value = 'wallet';
 

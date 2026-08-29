@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/cash_and_bank_account_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/credit_card_account_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/person_balance_card.dart';

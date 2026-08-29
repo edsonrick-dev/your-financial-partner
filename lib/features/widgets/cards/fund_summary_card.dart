@@ -5,6 +5,7 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class FundSummaryCard extends GetView<HomeController> {
   const FundSummaryCard({super.key});
@@ -36,49 +37,68 @@ class FundSummaryCard extends GetView<HomeController> {
   Widget _buildEmptyState(BuildContext context) {
     final colorScheme = context.colors;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
+      alignment: Alignment.centerRight,
       children: [
-        Text(
-          "Let's get your finances ready",
-          style: AppTextStyle.headlineL.copyWith(
-            color: colorScheme.appInversedtext,
-          ),
-        ),
-
-        const SizedBox(height: 16),
-
-        Text(
-          'Add your accounts to start tracking your available funds, spending, and progress towards your financial goals.',
-          style: AppTextStyle.bodyL.copyWith(
-            color: colorScheme.appInversedtextMuted,
-          ),
-        ),
-
-        const SizedBox(height: 24),
-
-        AdaptivePressable(
-          onTap: () {
-            // Navigate to Add Account
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: colorScheme.inversePrimary,
-              borderRadius: BorderRadius.circular(32),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Let's get your finances ready",
+              style: AppTextStyle.headlineL.copyWith(
+                color: colorScheme.appInversedtext,
+              ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.add, color: colorScheme.appText),
-                const SizedBox(width: 12),
-                Text(
-                  'Add an account',
-                  style: AppTextStyle.titleL.copyWith(
-                    color: colorScheme.appText,
-                  ),
+
+            const SizedBox(height: 16),
+
+            Text(
+              'Add your accounts to start tracking your available funds, spending, and progress towards your financial goals.',
+              style: AppTextStyle.bodyL.copyWith(
+                color: colorScheme.appInversedtextMuted,
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            AdaptivePressable(
+              onTap: () {
+                // Navigate to Add Account
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
                 ),
-              ],
+                decoration: BoxDecoration(
+                  color: colorScheme.inversePrimary,
+                  borderRadius: BorderRadius.circular(32),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.add, color: colorScheme.appText),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Add an account',
+                      style: AppTextStyle.titleL.copyWith(
+                        color: colorScheme.appText,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        Opacity(
+          opacity: 0.12,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              PhosphorIconsRegular.wallet,
+              size: 160,
+              color: colorScheme.appAccent,
             ),
           ),
         ),

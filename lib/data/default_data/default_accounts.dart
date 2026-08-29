@@ -1,4 +1,4 @@
-import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 
 class DefaultAccount {
   final String name;

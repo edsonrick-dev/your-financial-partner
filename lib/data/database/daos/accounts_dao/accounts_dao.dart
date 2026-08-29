@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_group_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_group/account_group_summary.dart';
-import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
@@ -79,7 +80,18 @@ part 'accounts_dao.g.dart';
 class AccountsDao extends DatabaseAccessor<AppDatabase>
     with _$AccountsDaoMixin {
   AccountsDao(super.db);
+  Future<bool> accountNameExists(String name) async {
+    final normalizedName = name.trim();
 
+    final query = selectOnly(accountsTable)
+      ..addColumns([accountsTable.id])
+      ..where(accountsTable.name.equals(normalizedName))
+      ..limit(1);
+
+    final result = await query.getSingleOrNull();
+
+    return result != null;
+  }
   // ============================================================================
   // ACCOUNT CRUD
   // ============================================================================
