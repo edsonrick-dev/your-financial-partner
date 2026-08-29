@@ -145,7 +145,7 @@ class ProtectionGapCard extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                       style: AppTextStyle.bodyS.copyWith(
-                        color: colorScheme.textMuted,
+                        color: colorScheme.appTextMuted,
                       ),
                       children: [
                         TextSpan(

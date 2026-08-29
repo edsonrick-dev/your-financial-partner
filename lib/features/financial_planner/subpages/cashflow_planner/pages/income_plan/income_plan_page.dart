@@ -78,7 +78,7 @@ class IncomePlanPage extends GetView<CashflowController> {
                           Icon(
                             PhosphorIconsFill.piggyBank,
                             size: 48,
-                            color: colorScheme.textMuted,
+                            color: colorScheme.appTextMuted,
                           ),
                           const SizedBox(height: 16),
                           Text(
@@ -90,7 +90,7 @@ class IncomePlanPage extends GetView<CashflowController> {
                           Text(
                             "Add your first income plan so Ascend can help you plan where your money should go.",
                             style: AppTextStyle.bodyM.copyWith(
-                              color: colorScheme.textMuted,
+                              color: colorScheme.appTextMuted,
                             ),
                             textAlign: TextAlign.center,
                           ),

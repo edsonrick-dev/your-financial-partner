@@ -3,6 +3,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/enums/protection_profile_enum.dart';
 
 class InsurancePlannerController extends GetxController {
+  RxBool isUnderConstruction = true.obs;
   // Protection amounts
   final deathBenefitCovered = 1000000.0.obs;
   final deathBenefitNeed = 2000000.0.obs;

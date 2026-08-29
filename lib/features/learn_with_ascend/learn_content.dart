@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -11,11 +12,15 @@ class LearnThumbnail extends StatelessWidget {
     this.status = LearnStatus.available,
     this.type = ContentType.article,
     this.showThumbnail = true,
+    this.onTap,
+    required this.title,
   });
 
   final LearnStatus status;
   final ContentType type;
   final bool showThumbnail;
+  final String title;
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
@@ -23,76 +28,79 @@ class LearnThumbnail extends StatelessWidget {
       LearnStatus.watched => PhosphorIconsRegular.check,
       LearnStatus.available =>
         type == ContentType.video
-            ? PhosphorIconsFill.play
-            : PhosphorIconsFill.book,
+            ? PhosphorIconsRegular.play
+            : PhosphorIconsRegular.book,
       LearnStatus.locked => PhosphorIconsRegular.lock,
     };
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: colorScheme.bgLight,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (showThumbnail)
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: SizedBox(
-                    width: 108,
-                    height: 60,
-                    child: Container(color: colorScheme.appText),
-                  ),
-                ),
-                const SizedBox(width: 12),
-              ],
-            ),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(icon, size: 14, color: colorScheme.appTextMuted),
-                    const SizedBox(width: 4),
-                    Text(type.label, style: AppTextStyle.labelM),
-
-                    const SizedBox(width: 4),
-
-                    Text('•', style: AppTextStyle.labelM),
-
-                    const SizedBox(width: 4),
-
-                    Text(
-                      '5 min. ${type.actionLabel}',
-                      style: AppTextStyle.labelM,
+    return AdaptivePressable(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(08),
+        decoration: BoxDecoration(
+          color: colorScheme.bgLight,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (showThumbnail)
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: SizedBox(
+                      width: 108,
+                      height: 60,
+                      child: Container(color: colorScheme.appText),
                     ),
-
-                    const Spacer(),
-                  ],
-                ),
-
-                const SizedBox(height: 6),
-
-                SizedBox(
-                  height: 44,
-                  child: Text(
-                    'What is Financial Stability and Why Does It Matter?',
-                    style: AppTextStyle.titleM,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                ],
+              ),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(icon, size: 14, color: colorScheme.appTextMuted),
+                      const SizedBox(width: 4),
+                      Text(type.label, style: AppTextStyle.labelM),
+
+                      const SizedBox(width: 4),
+
+                      Text('•', style: AppTextStyle.labelM),
+
+                      const SizedBox(width: 4),
+
+                      Text(
+                        '5 min. ${type.actionLabel}',
+                        style: AppTextStyle.labelM,
+                      ),
+
+                      const Spacer(),
+                    ],
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  SizedBox(
+                    height: 44,
+                    child: Text(
+                      title,
+                      style: AppTextStyle.titleM,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -150,67 +158,3 @@ enum LearnContext {
 }
 
 class CashflowLearnContent {}
-
-class FinancialState {
-  // Foundation
-  final int accountCount;
-  final bool hasAssets;
-  final bool hasLiabilities;
-
-  final bool hasIncomePlan;
-  final bool hasBudgetPlan;
-  final bool hasDebtPlan;
-
-  final int transactionCount;
-
-  // Cash Flow
-  final double plannedIncome;
-  final double plannedAllocation;
-
-  final double actualIncome;
-  final double actualSpending;
-
-  final double budgetConfidence;
-
-  // Net Worth
-  final double totalAssets;
-  final double totalLiabilities;
-  final double netWorth;
-
-  // Financial Ratios
-  final double savingsRate;
-  final double emergencyFundRatio;
-  final double debtToIncomeRatio;
-  final double lifestyleCoverageRatio;
-
-  // Stability
-  final FinancialStabilityLevel stabilityLevel;
-
-  const FinancialState({
-    required this.accountCount,
-    required this.hasAssets,
-    required this.hasLiabilities,
-    required this.hasIncomePlan,
-    required this.hasBudgetPlan,
-    required this.hasDebtPlan,
-    required this.transactionCount,
-    required this.plannedIncome,
-    required this.plannedAllocation,
-    required this.actualIncome,
-    required this.actualSpending,
-    required this.budgetConfidence,
-    required this.totalAssets,
-    required this.totalLiabilities,
-    required this.netWorth,
-    required this.savingsRate,
-    required this.emergencyFundRatio,
-    required this.debtToIncomeRatio,
-    required this.lifestyleCoverageRatio,
-    required this.stabilityLevel,
-  });
-
-  bool get hasAssetsOrLiabilities => hasAssets || hasLiabilities;
-
-  bool get hasFinancialFoundation =>
-      hasAssetsOrLiabilities && hasIncomePlan && hasBudgetPlan;
-}

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/home/views/section_views/quick_actions_section.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
 import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -48,121 +50,19 @@ class HomeView extends GetView<HomeController> {
               SizedBox(height: spacingL),
               BudgetProgressSection(),
 
-              LearningSection(),
-              // SizedBox(height: spacingM),
-              // AppSection(
-              //   sectionTitle: 'Payment Reminders',
-              //   child: ClipRRect(
-              //     borderRadius: BorderRadius.circular(24),
-              //     child: Container(
-              //       padding: EdgeInsets.all(8),
-              //       constraints: BoxConstraints(minHeight: 44),
-              //       width: double.infinity,
-              //       decoration: BoxDecoration(color: colorScheme.bgLight),
-              //       child: Column(
-              //         spacing: 8,
-              //         children: [
-              //           BillsCard(
-              //             billName: 'Internet Bill',
-              //             billType: 'Internet',
-              //             dueDate: DateTime(2026, 8, 3),
-              //             amountDue: 1499,
-              //             iconKey: 'wifi',
-              //           ),
-              //           BillsCard(
-              //             billName: 'Electric Bill',
-              //             billType: 'Electricity',
-              //             dueDate: DateTime(2026, 8, 14),
-              //             amountDue: 1499,
-              //             iconKey: 'lightning',
-              //           ),
-              //           BillsCard(
-              //             billName: 'Credit Card Bill',
-              //             billType: 'Credit Card',
-              //             dueDate: DateTime(2026, 8, 28),
-              //             amountDue: 24000,
-              //             iconKey: 'creditCard',
-              //           ),
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // ),
+              LearningSection(
+                state: LearningSectionState.available,
+                contents: [
+                  LearnThumbnail(
+                    title: 'Why Financial Planning Matters',
+                    onTap: () {
+                      AppSheets.learningSheets.whyFinancialPlanningMatters();
+                    },
+                  ),
+                ],
+              ),
+
               SizedBox(height: spacingL),
-              // AppSection(
-              //   child: Container(
-              //     padding: EdgeInsets.only(bottom: 12),
-              //     constraints: BoxConstraints(minHeight: 44),
-              //     width: double.infinity,
-              //     decoration: BoxDecoration(
-              //       color: colorScheme.bgLight,
-              //       borderRadius: BorderRadius.circular(8),
-              //     ),
-              //     child: Column(
-              //       children: [
-              //         //Header
-              //         Row(
-              //           children: [
-              //             SizedBox(width: 12),
-              //             Text('Accounts Overview'),
-              //             Spacer(),
-              //             TextButton(
-              //               onPressed: () {
-              //                 Get.find<MainShellController>().changeTab(2);
-              //                 Get.find<FinancialPlannerController>().selectTab(
-              //                   0,
-              //                 );
-              //               },
-              //               child: Row(
-              //                 children: [
-              //                   Text(
-              //                     'View All',
-              //                     style: TextStyle(color: colorScheme.appInfo),
-              //                   ),
-              //                   SizedBox(width: 4),
-              //                   Icon(
-              //                     PhosphorIconsRegular.caretRight,
-              //                     size: 16,
-              //                     color: colorScheme.appInfo,
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //         Column(
-              //           spacing: 4,
-              //           children: [
-              //             // SizedBox(height: 4),
-              //             Column(
-              //               spacing: 12,
-              //               children: [
-              //                 AccountsOverviewTile(
-              //                   accountName: 'Cash & Bank',
-              //                   iconKey: 'wallet',
-              //                   value: 8120,
-              //                   count: 3,
-              //                 ),
-              //                 AccountsOverviewTile(
-              //                   accountName: 'Credit Card',
-              //                   iconKey: 'creditCard',
-              //                   value: 42500,
-              //                   count: 2,
-              //                 ),
-              //                 AccountsOverviewTile(
-              //                   accountName: 'Investments',
-              //                   iconKey: '',
-              //                   value: 42500,
-              //                   count: 2,
-              //                 ),
-              //               ],
-              //             ),
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),

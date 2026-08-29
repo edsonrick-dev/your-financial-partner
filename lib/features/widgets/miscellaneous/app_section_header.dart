@@ -11,10 +11,11 @@ class AppSectionHeader extends StatelessWidget {
   final VoidCallback? onTrailingPressed;
   final Color textColor;
   final Widget? child;
-
+  final String? subtitle;
   const AppSectionHeader({
     super.key,
     required this.sectionTitle,
+    this.subtitle,
     this.textColor = Colors.black,
     this.onTrailingPressed,
     this.trailingText,
@@ -32,7 +33,22 @@ class AppSectionHeader extends StatelessWidget {
         height: 44,
         child: Row(
           children: [
-            Text(sectionTitle, style: AppTextStyle.titleL),
+            if (subtitle != null && subtitle!.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(sectionTitle, style: AppTextStyle.titleL),
+                  Text(
+                    subtitle!,
+                    style: AppTextStyle.bodyS.copyWith(
+                      color: colorScheme.appTextMuted,
+                    ),
+                  ),
+                ],
+              )
+            else
+              Text(sectionTitle, style: AppTextStyle.titleL),
 
             const Spacer(),
 

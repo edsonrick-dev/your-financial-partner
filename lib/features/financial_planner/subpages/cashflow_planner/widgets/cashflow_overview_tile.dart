@@ -48,7 +48,7 @@ class CashFlowOverviewTile extends StatelessWidget {
                 Text(
                   '$count $label',
                   style: TextStyle(
-                    color: colorScheme.textMuted,
+                    color: colorScheme.appTextMuted,
                     fontWeight: FontWeight.w400,
                   ),
                 ),

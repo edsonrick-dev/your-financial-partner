@@ -3,7 +3,7 @@ import 'package:getx_drift_app/features/profile/models/ratio_score_band.dart';
 
 class FinancialRatio {
   final FinancialRatioType type;
-  final double value;
+  final double? value;
   final RatioScoreBand scoreBand;
   final double? displayValue;
 

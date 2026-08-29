@@ -8,11 +8,10 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/widgets/recommended_policy_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
-  const InsurancePlannerScreen({super.key});
+class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
+  const InsurancePlannerContentView({super.key});
 
   @override
   Widget build(BuildContext context) {

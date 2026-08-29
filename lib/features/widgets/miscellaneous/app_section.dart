@@ -10,7 +10,7 @@ class AppSection extends StatelessWidget {
   final String? trailingText;
   final VoidCallback? onTrailingPressed;
   final bool isHorizontalScrolling;
-
+  final String? subtitle;
   const AppSection({
     required this.child,
     this.trailingWidget,
@@ -19,6 +19,7 @@ class AppSection extends StatelessWidget {
     this.onTrailingPressed,
     this.trailingType,
     this.isHorizontalScrolling = false,
+    this.subtitle,
     super.key,
   });
 
@@ -34,6 +35,7 @@ class AppSection extends StatelessWidget {
           AppSectionHeader(
             trailingText: trailingText,
             sectionTitle: sectionTitle!,
+            subtitle: subtitle,
             onTrailingPressed: onTrailingPressed,
             trailingType: trailingType,
             child: trailingWidget,

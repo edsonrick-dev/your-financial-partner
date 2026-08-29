@@ -4,13 +4,13 @@ import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/profile/controller/profile_controller.dart';
+import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/profile/widgets/financial_ratio_card.dart';
 import 'package:getx_drift_app/features/profile/widgets/financial_stability_guage.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class ProfilePage extends GetView<ProfileController> {
+class ProfilePage extends GetView<FinancialProfileController> {
   const ProfilePage({super.key});
 
   @override
@@ -141,13 +141,13 @@ class ProfilePage extends GetView<ProfileController> {
                                   Text(
                                     controller.stability.title,
                                     style: AppTextStyle.headlineM.copyWith(
-                                      color: colorScheme.textMuted,
+                                      color: colorScheme.appTextMuted,
                                     ),
                                   ),
                                   Text(
                                     controller.stability.shortDescription,
                                     style: AppTextStyle.bodyM.copyWith(
-                                      color: colorScheme.textMuted,
+                                      color: colorScheme.appTextMuted,
                                     ),
                                   ),
                                 ],
@@ -181,7 +181,7 @@ class ProfilePage extends GetView<ProfileController> {
                         Expanded(
                           child: Obx(
                             () => FinancialRatioCard(
-                              ratio: controller.emergencyFund,
+                              ratio: controller.wealthBuilding,
                             ),
                           ),
                         ),
@@ -195,7 +195,7 @@ class ProfilePage extends GetView<ProfileController> {
                         Expanded(
                           child: Obx(
                             () => FinancialRatioCard(
-                              ratio: controller.wealthBuilding,
+                              ratio: controller.emergencyFund,
                             ),
                           ),
                         ),

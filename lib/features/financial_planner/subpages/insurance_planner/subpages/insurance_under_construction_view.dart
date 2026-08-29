@@ -25,7 +25,7 @@ class InsuranceUnderConstructionView extends StatelessWidget {
             Icon(
               Icons.construction_outlined,
               size: 48,
-              color: colorScheme.textMuted,
+              color: colorScheme.appTextMuted,
             ),
             const SizedBox(height: 16),
             Text(
@@ -36,7 +36,9 @@ class InsuranceUnderConstructionView extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               description,
-              style: AppTextStyle.bodyM.copyWith(color: colorScheme.textMuted),
+              style: AppTextStyle.bodyM.copyWith(
+                color: colorScheme.appTextMuted,
+              ),
               textAlign: TextAlign.center,
             ),
           ],

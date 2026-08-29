@@ -58,7 +58,7 @@ class FinancialRatioCard extends StatelessWidget {
 
             const SizedBox(height: 8),
             Text(
-              ratio.type.formatValue(displayValue),
+              ratio.type.formatValue(displayValue!),
               style: AppTextStyle.headlineM,
             ),
 

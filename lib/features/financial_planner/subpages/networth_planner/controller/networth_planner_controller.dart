@@ -7,6 +7,12 @@ import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_acco
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/models/net_worth_item.dart';
 
 class NetWorthController extends GetxController {
+  bool get isEmpty => assetAccounts.isEmpty && liabilityAccounts.isEmpty;
+  bool get hasAssets => assetAccounts.isNotEmpty;
+
+  bool get hasLiabilities => liabilityAccounts.isNotEmpty;
+
+  bool get hasAccounts => hasAssets || hasLiabilities;
   Future<void> deleteAccount(AccountsTableData account) async {
     await database.accountsDao.deleteAccount(account.id);
   }

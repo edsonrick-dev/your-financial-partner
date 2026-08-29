@@ -206,7 +206,7 @@ class BudgetPage extends GetView<CashflowController> {
                           Icon(
                             Icons.account_balance_wallet_outlined,
                             size: 48,
-                            color: colorScheme.textMuted,
+                            color: colorScheme.appTextMuted,
                           ),
                           const SizedBox(height: 16),
                           Text(
@@ -218,7 +218,7 @@ class BudgetPage extends GetView<CashflowController> {
                           Text(
                             'Add your first budget to start planning your cash. flow.',
                             style: AppTextStyle.bodyM.copyWith(
-                              color: colorScheme.textMuted,
+                              color: colorScheme.appTextMuted,
                             ),
                             textAlign: TextAlign.center,
                           ),

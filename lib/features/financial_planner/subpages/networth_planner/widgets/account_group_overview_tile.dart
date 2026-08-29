@@ -55,7 +55,7 @@ class AccountGroupOverviewTile extends StatelessWidget {
                 Text(
                   '${(percentage * 100).toStringAsFixed(1)}% of $percentageLabel',
                   style: AppTextStyle.labelS.copyWith(
-                    color: colorScheme.textMuted,
+                    color: colorScheme.appTextMuted,
                   ),
                 ),
               ],

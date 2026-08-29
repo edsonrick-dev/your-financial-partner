@@ -118,7 +118,7 @@ class BudgetGridView extends StatelessWidget {
                     Text(
                       ' / ${budget.toCurrency()}',
                       style: AppTextStyle.amountXS.copyWith(
-                        color: colorScheme.textMuted.withAlpha(160),
+                        color: colorScheme.appTextMuted.withAlpha(160),
                       ),
                     ),
                   ],

@@ -140,7 +140,7 @@ class CashflowPlanCard extends GetView<CashflowController> {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: AppTextStyle.bodyS.copyWith(
-                              color: colorScheme.textMuted,
+                              color: colorScheme.appTextMuted,
                             ),
                           ),
                         ],

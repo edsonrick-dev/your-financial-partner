@@ -14,7 +14,7 @@ extension AppColorScheme on ColorScheme {
 
   /// TEXT
   Color get appText => const Color(0xFF141C29);
-  Color get appTextMuted => const Color(0xFf475569);
+  Color get appTextMuted => const Color(0xFF64748B);
   Color get appInversedtext => surface;
   Color get appInversedtextMuted => color300;
 
@@ -36,7 +36,7 @@ extension AppColorScheme on ColorScheme {
   Color get bgDark => isDark ? color950 : color200;
 
   Color get text => onSurface;
-  Color get textMuted => isDark ? color300 : color700;
+  // Color get textMuted => isDark ? color300 : color700;
   Color get textInversed => bg;
   Color get textInversedMuted => bgLight;
   Color get gradient2 => const Color(0xFF46628F);

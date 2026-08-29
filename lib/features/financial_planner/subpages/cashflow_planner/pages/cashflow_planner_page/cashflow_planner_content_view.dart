@@ -1,31 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
-import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
-import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sections/cashflow_summary_container_section.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_overview_tile.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/metric_bar_row.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
-import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
-import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 
-import 'package:phosphor_flutter/phosphor_flutter.dart';
-
-class CashflowPlannerPage extends GetView<CashflowController> {
-  const CashflowPlannerPage({super.key});
+class CashflowPlannerContentView extends GetView<CashflowController> {
+  const CashflowPlannerContentView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final showEmptyView = database.cashflowPlanDao.watchAllPlansWithDetails();
     final colorScheme = context.colors;
     return SingleChildScrollView(
       child: Column(
@@ -161,7 +149,7 @@ class CashflowPlannerPage extends GetView<CashflowController> {
           //     ],
           //   ),
           // ),
-          LearningSection(contents: [LearnThumbnail()]),
+          // LearningSection(contents: [LearnThumbnail()]),
           SizedBox(height: 24),
           // AppSection(
           //   sectionTitle: 'Bills',
@@ -204,69 +192,6 @@ class CashflowPlannerPage extends GetView<CashflowController> {
           //     );
           //   },
           // ),
-        ],
-      ),
-    );
-  }
-}
-
-class CashFlowCardAmountSummary extends GetView<FinancialPlannerController> {
-  final String title;
-  final double amount;
-  final Color color;
-  final double percentage;
-  const CashFlowCardAmountSummary({
-    super.key,
-    required this.title,
-    required this.amount,
-    required this.color,
-    required this.percentage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: colorScheme.gradient2.withAlpha(30),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        spacing: 4,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: color,
-              fontSize: 13,
-              height: 16 / 13,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Row(
-            spacing: 8,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                amount.toCurrency(),
-                style: AppTextStyle.amountM.copyWith(
-                  color: colorScheme.appInversedtext,
-                ),
-              ),
-              Text(
-                '${(percentage * 100).toStringAsFixed(1)}%',
-                style: TextStyle(
-                  color: colorScheme.appInversedtextMuted,
-                  fontSize: 11,
-                  height: 16 / 11,
-                  fontWeight: FontWeight.w400,
-                  fontFeatures: [FontFeature.tabularFigures()],
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );

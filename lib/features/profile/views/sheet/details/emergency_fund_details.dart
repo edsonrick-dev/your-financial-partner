@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
+import 'package:getx_drift_app/features/profile/views/sheet/details/financial_score_disclaimer_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class EmergencyFundDetails extends StatelessWidget {
@@ -18,6 +19,8 @@ class EmergencyFundDetails extends StatelessWidget {
           //Score Explanation
           //Insights
           //Score General
+          FinancialScoreDisclaimerSection(),
+          SizedBox(height: 40),
         ],
       ),
     );

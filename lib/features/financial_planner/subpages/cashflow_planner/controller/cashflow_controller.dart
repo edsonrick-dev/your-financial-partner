@@ -19,6 +19,9 @@ import 'package:drift/drift.dart' as d;
 import 'dart:math' as math;
 
 class CashflowController extends GetxController {
+  final savedPlans = <CashflowPlanWithCategory>[].obs;
+
+  bool get isEmpty => savedPlans.isEmpty;
   final currentMonthBudgetItems = <CurrentMonthBudgetItem>[].obs;
   final Rx<DisplayMode> budgetDisplayMode = DisplayMode.grid.obs;
   final RxBool isBudgetExpanded = false.obs;
@@ -166,95 +169,6 @@ class CashflowController extends GetxController {
     return result;
   }
 
-  // Stream<List<CurrentMonthBudgetItem>> watchCurrentMonthBudgetItems() {
-  //   final now = DateTime.now();
-  //   final monthIndex = now.month - 1;
-  //   final year = now.year;
-  //   return database.transactionsDao
-  //       .watchCurrentMonthExpensesByCategory(month: now)
-  //       .map((spentByCategory) {
-  //         debugPrint('BUDGET STREAM UPDATED: $spentByCategory');
-
-  //         return spentByCategory;
-  //       })
-  //       .asyncMap((spentByCategory) async {
-  //         // Get the latest saved plans with their category details.
-  //         final savedPlans = await cashflowPlanDao
-  //             .watchAllPlansWithDetails()
-  //             .first;
-
-  //         final result = <CurrentMonthBudgetItem>[];
-
-  //         for (final savedPlan in savedPlans) {
-  //           final plan = savedPlan.plan;
-
-  //           // Only expense budgets belong here.
-  //           if (plan.planType != 'expense') {
-  //             continue;
-  //           }
-
-  //           final allocations = await cashflowPlanDao.getAllocationsForPlan(
-  //             plan.id,
-  //           );
-
-  //           final period = BudgetPeriod.values.firstWhere(
-  //             (period) => period.name == plan.period,
-  //           );
-
-  //           final isCustom =
-  //               plan.distributionType == CashFlowDistribution.custom.name;
-
-  //           final amount = calculateSavedPlanBaseAmount(
-  //             plan: plan,
-  //             allocations: allocations,
-  //           );
-
-  //           final customSummary = isCustom
-  //               ? buildSavedPlanCustomSummary(
-  //                   period: period,
-  //                   allocations: allocations,
-  //                 )
-  //               : null;
-
-  //           final savedPlanData = SavedCashflowPlanData(
-  //             planId: plan.id,
-  //             categoryId: plan.categoryId!,
-  //             category: savedPlan.category.name,
-  //             amount: amount,
-  //             budgetPeriod: period,
-  //             iconKey: savedPlan.category.icon,
-  //             isCustom: isCustom,
-  //             customSummary: customSummary,
-  //             planType: plan.planType,
-  //           );
-
-  //           final monthly = calculateSavedPlanMonthlyDistribution(
-  //             plan: plan,
-  //             allocations: allocations,
-  //             year: year,
-  //           );
-
-  //           final budget = monthly[monthIndex];
-
-  //           if (budget <= 0) {
-  //             continue;
-  //           }
-
-  //           final spent = spentByCategory[plan.categoryId] ?? 0;
-
-  //           result.add(
-  //             CurrentMonthBudgetItem(
-  //               plan: savedPlanData,
-  //               categoryId: plan.categoryId!,
-  //               budget: budget,
-  //               spent: spent,
-  //             ),
-  //           );
-  //         }
-
-  //         return result;
-  //       });
-  // }
   Stream<List<CurrentMonthBudgetItem>> watchCurrentMonthBudgetItems() {
     final now = DateTime.now();
     final monthIndex = now.month - 1;
@@ -693,86 +607,6 @@ class CashflowController extends GetxController {
     return patternTotal / period.customPatternLength;
   }
 
-  // String? buildSavedPlanCustomSummary({
-  //   required BudgetPeriod period,
-  //   required List<CashFlowPlanAllocation> allocations,
-  // }) {
-  //   if (allocations.isEmpty) {
-  //     return null;
-  //   }
-
-  //   String format(double amount) {
-  //     return amount.toCurrency();
-  //   }
-
-  //   switch (period) {
-  //     case BudgetPeriod.weekly:
-  //       final visible = allocations
-  //           .where((allocation) => allocation.amount > 0)
-  //           .take(3)
-  //           .map((allocation) {
-  //             final day = AppDay.values[allocation.allocationIndex];
-
-  //             return '${day.shortName} ${format(allocation.amount)}';
-  //           })
-  //           .toList();
-
-  //       final nonZeroCount = allocations
-  //           .where((allocation) => allocation.amount > 0)
-  //           .length;
-
-  //       final remaining = nonZeroCount - visible.length;
-
-  //       if (visible.isEmpty) {
-  //         return 'No allocated days';
-  //       }
-
-  //       return remaining > 0
-  //           ? '${visible.join(' • ')} • +$remaining more'
-  //           : visible.join(' • ');
-
-  //     case BudgetPeriod.fortnightly:
-  //       if (allocations.length < 2) {
-  //         return null;
-  //       }
-
-  //       return '1st ${format(allocations[0].amount)} • '
-  //           '2nd ${format(allocations[1].amount)}';
-
-  //     case BudgetPeriod.monthly:
-  //       if (allocations.length < 2) {
-  //         return null;
-  //       }
-
-  //       return '1st ${format(allocations[0].amount)} • '
-  //           '2nd ${format(allocations[1].amount)}';
-
-  //     case BudgetPeriod.yearly:
-  //       final visible = allocations
-  //           .where((allocation) => allocation.amount > 0)
-  //           .take(3)
-  //           .map((allocation) {
-  //             final month = AppMonth.values[allocation.allocationIndex];
-
-  //             return '${month.shortName} ${format(allocation.amount)}';
-  //           })
-  //           .toList();
-
-  //       final nonZeroCount = allocations
-  //           .where((allocation) => allocation.amount > 0)
-  //           .length;
-
-  //       final remaining = nonZeroCount - visible.length;
-
-  //       if (visible.isEmpty) {
-  //         return 'No allocated months';
-  //       }
-
-  //       return remaining > 0
-  //           ? '${visible.join(' • ')} • +$remaining more'
-  //           : visible.join(' • ');
-  //   }
-  // }
   String? buildSavedPlanCustomSummary({
     required BudgetPeriod period,
     required List<CashFlowPlanAllocation> allocations,

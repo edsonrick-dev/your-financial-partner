@@ -8,15 +8,14 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/sections/networth_summary_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_group_overview_tile.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_overview.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/create_payment_account_controller.dart';
 import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
-import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class NetworthPlannerScreen extends GetView<NetWorthController> {
-  const NetworthPlannerScreen({super.key});
+class NetWorthPlannerContent extends GetView<NetWorthController> {
+  const NetWorthPlannerContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -185,36 +184,38 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
               ],
             ),
           ),
+
           SizedBox(height: 20),
-          AppSection(
-            sectionTitle: 'Others',
-            child: Column(
-              spacing: 8,
-              children: [
-                OthersCard(
-                  icon: PhosphorIconsRegular.chartBar,
-                  title: 'Charts',
-                  onTap: () {
-                    Get.toNamed(Routes.NETWORTHCHARTS);
-                  },
-                ),
-                OthersCard(
-                  icon: PhosphorIconsRegular.receipt,
-                  title: 'Checks',
-                  onTap: () {
-                    Get.toNamed(Routes.CHECKMANAGEMENTS);
-                  },
-                ),
-                OthersCard(
-                  icon: PhosphorIconsRegular.export,
-                  title: 'Export',
-                  onTap: () {
-                    Get.toNamed(Routes.NETWORTHEXPORT);
-                  },
-                ),
-              ],
-            ),
-          ),
+          LearningSection(),
+          // AppSection(
+          //   sectionTitle: 'Others',
+          //   child: Column(
+          //     spacing: 8,
+          //     children: [
+          //       OthersCard(
+          //         icon: PhosphorIconsRegular.chartBar,
+          //         title: 'Charts',
+          //         onTap: () {
+          //           Get.toNamed(Routes.NETWORTHCHARTS);
+          //         },
+          //       ),
+          //       OthersCard(
+          //         icon: PhosphorIconsRegular.receipt,
+          //         title: 'Checks',
+          //         onTap: () {
+          //           Get.toNamed(Routes.CHECKMANAGEMENTS);
+          //         },
+          //       ),
+          //       OthersCard(
+          //         icon: PhosphorIconsRegular.export,
+          //         title: 'Export',
+          //         onTap: () {
+          //           Get.toNamed(Routes.NETWORTHEXPORT);
+          //         },
+          //       ),
+          //     ],
+          //   ),
+          // ),
           SizedBox(height: 24),
         ],
       ),
