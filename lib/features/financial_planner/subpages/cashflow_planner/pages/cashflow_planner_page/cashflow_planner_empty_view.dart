@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
@@ -10,7 +11,7 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class CashflowPlannerEmptyView extends StatelessWidget {
+class CashflowPlannerEmptyView extends GetView<CashflowController> {
   const CashflowPlannerEmptyView({super.key});
 
   @override
@@ -60,6 +61,7 @@ class CashflowPlannerEmptyView extends StatelessWidget {
                     AppButton(
                       text: 'Set up your income plan',
                       onTap: () {
+                        controller.seletectedDetailsTabIndex(0);
                         Get.toNamed(Routes.CASHFLOWDETAILS);
                       },
                     ),

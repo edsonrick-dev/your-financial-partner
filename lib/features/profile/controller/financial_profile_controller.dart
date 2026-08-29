@@ -1,9 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/domain/financial_metrics_calculator.dart';
 import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/debt_load_ratio_scoring.dart';
-import 'package:getx_drift_app/features/profile/financial_ratios/emergency_fund_ratio_scoring.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/lifestyle_coverage_ratio.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/wealth_building_rate_scoring.dart';
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
@@ -14,6 +15,7 @@ import 'package:getx_drift_app/features/profile/views/sheet/details/emergency_fu
 import 'package:getx_drift_app/features/profile/views/sheet/details/lifestyle_coverage_details.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/details/stability_level_details.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/details/wealth_building_details_sheet.dart';
+import 'package:getx_drift_app/features/profile/controller/extensions/emergency_fund_controller_extension.dart';
 
 class FinancialStabilityDetail {
   final String title;
@@ -27,31 +29,33 @@ class FinancialStabilityDetail {
   });
 }
 
-class FinancialProfileController extends GetxController {
-  // ---------------------------------------------------------------------------
-  // Details Page
-  // ---------------------------------------------------------------------------
-  final detailsScrollController = ScrollController();
-
-  final selectedDetailsIndex = 0.obs;
-
-  @override
-  void onClose() {
-    detailsScrollController.dispose();
-    super.onClose();
-  }
-
-  late final List<GlobalKey> stabilityDetailKeys;
-  @override
-  void onInit() {
-    super.onInit();
-
-    stabilityDetailKeys = List.generate(
-      stabilityProfileDetails.length,
-      (_) => GlobalKey(),
-    );
-  }
-
+extension FinancialProfileDetailsScreenExtension on FinancialProfileController {
+  List<FinancialStabilityDetail> get stabilityProfileDetails => [
+    FinancialStabilityDetail(
+      title: 'Stability Level',
+      page: StabilityLevelDetails(stability: stability),
+    ),
+    FinancialStabilityDetail(
+      title: FinancialRatioType.debtLoad.displayName,
+      ratioType: FinancialRatioType.debtLoad,
+      page: DebtLoadDetails(ratio: debtLoad),
+    ),
+    FinancialStabilityDetail(
+      title: FinancialRatioType.wealthBuilding.displayName,
+      ratioType: FinancialRatioType.wealthBuilding,
+      page: WealthBuildingDetailsSheet(ratio: wealthBuilding),
+    ),
+    FinancialStabilityDetail(
+      title: FinancialRatioType.emergencyFund.displayName,
+      ratioType: FinancialRatioType.emergencyFund,
+      page: EmergencyFundDetails(ratio: emergencyFund),
+    ),
+    FinancialStabilityDetail(
+      title: FinancialRatioType.lifestyleCoverage.displayName,
+      ratioType: FinancialRatioType.lifestyleCoverage,
+      page: LifestyleCoverageDetails(ratio: lifestyleCoverage),
+    ),
+  ];
   void selectRatioTab(FinancialRatioType ratioType) {
     final index = getDetailIndex(ratioType);
 
@@ -114,35 +118,36 @@ class FinancialProfileController extends GetxController {
     );
   }
 
-  List<FinancialStabilityDetail> get stabilityProfileDetails => [
-    FinancialStabilityDetail(
-      title: 'Stability Level',
-      page: StabilityLevelDetails(stability: stability),
-    ),
-    FinancialStabilityDetail(
-      title: FinancialRatioType.debtLoad.displayName,
-      ratioType: FinancialRatioType.debtLoad,
-      page: DebtLoadDetails(ratio: debtLoad),
-    ),
-    FinancialStabilityDetail(
-      title: FinancialRatioType.wealthBuilding.displayName,
-      ratioType: FinancialRatioType.wealthBuilding,
-      page: WealthBuildingDetailsSheet(ratio: wealthBuilding),
-    ),
-    FinancialStabilityDetail(
-      title: FinancialRatioType.emergencyFund.displayName,
-      ratioType: FinancialRatioType.emergencyFund,
-      page: EmergencyFundDetails(ratio: emergencyFund),
-    ),
-    FinancialStabilityDetail(
-      title: FinancialRatioType.lifestyleCoverage.displayName,
-      ratioType: FinancialRatioType.lifestyleCoverage,
-      page: LifestyleCoverageDetails(ratio: lifestyleCoverage),
-    ),
-  ];
   int getDetailIndex(FinancialRatioType ratioType) {
     return stabilityProfileDetails.indexWhere(
       (detail) => detail.ratioType == ratioType,
+    );
+  }
+}
+
+class FinancialProfileController extends GetxController {
+  // ---------------------------------------------------------------------------
+  // Details Page
+  // ---------------------------------------------------------------------------
+  final detailsScrollController = ScrollController();
+  final FinancialMetricsCalculator calculator = FinancialMetricsCalculator();
+
+  final selectedDetailsIndex = 0.obs;
+
+  @override
+  void onClose() {
+    detailsScrollController.dispose();
+    super.onClose();
+  }
+
+  late final List<GlobalKey> stabilityDetailKeys;
+  @override
+  void onInit() {
+    super.onInit();
+
+    stabilityDetailKeys = List.generate(
+      stabilityProfileDetails.length,
+      (_) => GlobalKey(),
     );
   }
 
@@ -157,18 +162,20 @@ class FinancialProfileController extends GetxController {
   final annualDebtRepayments = 36200.0.obs;
   final annualExpenses = 7000.0.obs;
 
-  final liquidFunds = 20000.0.obs;
+  final liquidFunds = 80000.0.obs;
+  final averageDailyBalnce = 200000.0.obs;
 
   final annualSavingGoals = 120000.0.obs;
   final annualInvestmentGoals = 60000.0.obs;
-
   final netWorth = 30000.0.obs;
+
+  // ---------------------------------------------------------------------------
+  // Derived  values
+  // ---------------------------------------------------------------------------
   double get annualBudget => annualDebtRepayments.value + annualExpenses.value;
   double get annualSavings => annualIncome.value - annualBudget;
-  // ---------------------------------------------------------------------------
-  // Derived monthly values
-  // ---------------------------------------------------------------------------
-
+  double get emergencyFundAvailable =>
+      min(liquidFunds.value, averageDailyBalnce.value);
   double get monthlyIncome => annualIncome.value / 12;
 
   double get monthlyDebtRepayments => annualDebtRepayments.value / 12;
@@ -183,16 +190,6 @@ class FinancialProfileController extends GetxController {
   // Ratio calculations
   // ---------------------------------------------------------------------------
 
-  // double calculateDebtLoadRatio({
-  //   required double debtRepayments,
-  //   required double income,
-  // }) {
-  //   if (income <= 0) return 100;
-
-  //   final ratio = (debtRepayments / income) * 100;
-
-  //   return ratio.clamp(0, 100);
-  // }
   String formatLifestyleCoverage(double? months) {
     if (months == null) {
       return 'Not assessed';
@@ -205,42 +202,28 @@ class FinancialProfileController extends GetxController {
     return calculator.formatDuration(months);
   }
 
-  double calculateEmergencyFundMonths({
-    required double liquidFunds,
-    required double monthlyExpenses,
-    required double monthlyDebtRepayments,
-  }) {
-    final monthlyLifestyleAllocation = monthlyExpenses + monthlyDebtRepayments;
+  // double calculateEmergencyFundRatio({
+  //   required double liquidFunds,
+  //   required double monthlyExpenses,
+  //   required double monthlyDebtRepayments,
+  //   required double monthlySavings,
+  //   required double monthlyInvestments,
+  // }) {
+  //   final monthlyLifestyleAllocation = monthlyExpenses + monthlyDebtRepayments;
 
-    if (monthlyLifestyleAllocation <= 0) {
-      return 0;
-    }
+  //   final monthlyWealthAllocation = monthlySavings + monthlyInvestments;
 
-    return liquidFunds / monthlyLifestyleAllocation;
-  }
+  //   final monthlyTotalAllocation =
+  //       monthlyLifestyleAllocation + monthlyWealthAllocation;
 
-  double calculateEmergencyFundRatio({
-    required double liquidFunds,
-    required double monthlyExpenses,
-    required double monthlyDebtRepayments,
-    required double monthlySavings,
-    required double monthlyInvestments,
-  }) {
-    final monthlyLifestyleAllocation = monthlyExpenses + monthlyDebtRepayments;
+  //   if (monthlyTotalAllocation <= 0) {
+  //     return 0;
+  //   }
 
-    final monthlyWealthAllocation = monthlySavings + monthlyInvestments;
+  //   final annualTotalAllocation = monthlyTotalAllocation * 12;
 
-    final monthlyTotalAllocation =
-        monthlyLifestyleAllocation + monthlyWealthAllocation;
-
-    if (monthlyTotalAllocation <= 0) {
-      return 0;
-    }
-
-    final annualTotalAllocation = monthlyTotalAllocation * 12;
-
-    return (liquidFunds / annualTotalAllocation) * 100;
-  }
+  //   return (liquidFunds / annualTotalAllocation) * 100;
+  // }
 
   // double calculateWealthBuildingRate({
   //   required double monthlyIncome,
@@ -276,7 +259,7 @@ class FinancialProfileController extends GetxController {
   }
 
   // ---------------------------------------------------------------------------
-  final FinancialMetricsCalculator calculator = FinancialMetricsCalculator();
+
   // Financial ratios score
   // ---------------------------------------------------------------------------
   double? get lifestyleCoverageRatio =>
@@ -284,12 +267,40 @@ class FinancialProfileController extends GetxController {
         netWorth: netWorth.value,
         plannedAnnualBudget: annualBudget,
       );
+  // double? get emergencyFundRatio => calculator.calculateEmergencyFundRatio(
+  //   liquidFunds: emergencyFundAvailable,
+  //   plannedAnnualBudget: annualBudget,
+  // );
+  String opportunityFundScaleLabel(double ratio) {
+    final months = ratio / 100 * 12;
+
+    return '${months.round()} mo';
+  }
+
+  double? get emergencyFundRatio {
+    if (annualBudget <= 0 || emergencyFundAvailable <= 0) {
+      return 0;
+    }
+
+    final requiredLiquidity = annualBudget / 0.70;
+
+    return (emergencyFundAvailable / requiredLiquidity) * 100;
+  }
 
   double? get lifestyleCoverageMonths =>
       calculator.calculateLifestyleCoverageMonths(
         netWorth: netWorth.value,
         plannedAnnualBudget: annualBudget,
       );
+  // String? get emergencyFundDuration {
+  //   final months = emergencyFundMonths;
+
+  //   if (months == null) {
+  //     return null;
+  //   }
+
+  //   return calculator.formatuDuration(months);
+  // }
 
   String? get lifestyleCoverageDuration =>
       calculator.formatLifestyleCoverageDuration(
@@ -305,6 +316,10 @@ class FinancialProfileController extends GetxController {
     annualIncome: annualIncome.value,
     annualExpenses: annualExpenses.value,
   );
+  // double? get emergencyFundMonths => calculator.calculateEmergencyFundMonths(
+  //   emergencyFund: emergencyFundAvailable,
+  //   plannedAnnualBudget: annualBudget,
+  // );
 
   // ---------------------------------------------------------------------------
   // Financial ratio
@@ -316,29 +331,6 @@ class FinancialProfileController extends GetxController {
       type: FinancialRatioType.debtLoad,
       value: value,
       scoreBand: debtLoadBand(value),
-    );
-  }
-
-  FinancialRatio get emergencyFund {
-    final ratio = calculateEmergencyFundRatio(
-      liquidFunds: liquidFunds.value,
-      monthlyExpenses: monthlyExpenses,
-      monthlyDebtRepayments: monthlyDebtRepayments,
-      monthlySavings: monthlySavingGoals,
-      monthlyInvestments: monthlyInvestmentGoals,
-    );
-
-    final months = calculateEmergencyFundMonths(
-      liquidFunds: liquidFunds.value,
-      monthlyExpenses: monthlyExpenses,
-      monthlyDebtRepayments: monthlyDebtRepayments,
-    );
-
-    return FinancialRatio(
-      type: FinancialRatioType.emergencyFund,
-      value: ratio,
-      displayValue: months,
-      scoreBand: emergencyFundBand(ratio),
     );
   }
 

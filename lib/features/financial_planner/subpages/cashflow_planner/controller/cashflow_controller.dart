@@ -48,6 +48,7 @@ class CashflowController extends GetxController {
     _cashflowPlansSubscription = cashflowPlanDao
         .watchAllPlansWithDetails()
         .listen((plans) async {
+          savedPlans.assignAll(plans);
           var income = 0.0;
           var expense = 0.0;
           var debtRepayment = 0.0;

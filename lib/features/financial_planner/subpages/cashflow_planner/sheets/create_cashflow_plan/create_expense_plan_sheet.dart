@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
@@ -10,18 +12,21 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/cashflow_distribution_fields.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sections/cashflow_plan_annual_summary_section.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/spend_transaction_sheet.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CreateExpensePlanSheet extends GetView<CashflowController> {
   const CreateExpensePlanSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     final transactionController = Get.find<TransactionController>();
     final transactionType = TransactionType.spend;
     double spacingHeight = 20;
@@ -75,23 +80,77 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
 
                 return Column(
                   children: [
-                    SegmentedButton<CashFlowDistribution>(
-                      segments: const [
-                        ButtonSegment(
-                          value: CashFlowDistribution.defaultDistribution,
-                          label: Text('Evenly'),
+                    Row(
+                      children: [
+                        Text(
+                          'Cashflow Distribution:',
+                          style: AppTextStyle.titleM,
                         ),
-                        ButtonSegment(
-                          value: CashFlowDistribution.custom,
-                          label: Text('Custom'),
+                        Spacer(),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: colorScheme.bgLight,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: colorScheme.appBorderMuted,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              ModeButton(
+                                item: const ModeItem(
+                                  selectedIcon: PhosphorIconsFill.coin,
+                                  unselectedIcon: PhosphorIconsRegular.coin,
+                                  title: 'Evenly',
+                                ),
+                                selected:
+                                    controller.selectedDistribution.value ==
+                                    CashFlowDistribution.defaultDistribution,
+                                onTap: () {
+                                  controller.selectDistribution(
+                                    CashFlowDistribution.defaultDistribution,
+                                  );
+                                },
+                              ),
+                              ModeButton(
+                                item: const ModeItem(
+                                  selectedIcon: PhosphorIconsFill.coins,
+                                  unselectedIcon: PhosphorIconsRegular.coins,
+                                  title: 'Custom',
+                                ),
+                                selected:
+                                    controller.selectedDistribution.value ==
+                                    CashFlowDistribution.custom,
+                                onTap: () {
+                                  controller.selectDistribution(
+                                    CashFlowDistribution.custom,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ],
-                      selected: {controller.selectedDistribution.value},
-                      onSelectionChanged: (selection) {
-                        controller.selectDistribution(selection.first);
-                      },
                     ),
-                    SizedBox(height: spacingHeight),
+                    SizedBox(height: 12),
+                    // SegmentedButton<CashFlowDistribution>(
+                    //   segments: const [
+                    //     ButtonSegment(
+                    //       value: CashFlowDistribution.defaultDistribution,
+                    //       label: Text('Evenly'),
+                    //     ),
+                    //     ButtonSegment(
+                    //       value: CashFlowDistribution.custom,
+                    //       label: Text('Custom'),
+                    //     ),
+                    //   ],
+                    //   selected: {controller.selectedDistribution.value},
+                    //   onSelectionChanged: (selection) {
+                    //     controller.selectDistribution(selection.first);
+                    //   },
+                    // ),
+                    // SizedBox(height: spacingHeight),
                   ],
                 );
               }),

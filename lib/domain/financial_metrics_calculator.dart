@@ -66,11 +66,15 @@ class FinancialMetricsCalculator {
     return ratio.clamp(0, 100);
   }
 
-  double calculateEmergencyFundMonths({
+  double? calculateEmergencyFundMonths({
     required double emergencyFund,
     required double plannedAnnualBudget,
   }) {
-    if (emergencyFund <= 0 || plannedAnnualBudget <= 0) {
+    if (plannedAnnualBudget <= 0) {
+      return null;
+    }
+
+    if (emergencyFund <= 0) {
       return 0;
     }
 
@@ -79,8 +83,8 @@ class FinancialMetricsCalculator {
     return emergencyFund / monthlyBudget;
   }
 
-  bool isOpportunityFundEnabled({required double emergencyFundMonths}) {
-    return emergencyFundMonths >= 12;
+  bool isOpportunityFundEnabled({required double? emergencyFundMonths}) {
+    return emergencyFundMonths != null && emergencyFundMonths >= 12;
   }
 
   double calculateOpportunityFundTarget({
@@ -99,6 +103,35 @@ class FinancialMetricsCalculator {
     );
   }
 
+  double? calculateEmergencyFundRatio({
+    required double liquidFunds,
+    required double plannedAnnualBudget,
+  }) {
+    if (liquidFunds <= 0 || plannedAnnualBudget <= 0) {
+      return 0;
+    }
+
+    final requiredLiquidity = plannedAnnualBudget / 0.70;
+
+    return (liquidFunds / requiredLiquidity) * 100;
+  }
+
+  String? formatEmergencyFundDuration({
+    required double emergencyFund,
+    required double plannedAnnualBudget,
+  }) {
+    final months = calculateEmergencyFundMonths(
+      emergencyFund: emergencyFund,
+      plannedAnnualBudget: plannedAnnualBudget,
+    );
+
+    if (months == null) {
+      return null;
+    }
+
+    return formatDuration(months);
+  }
+
   String formatDuration(double months) {
     if (months <= 0) {
       return '0 months';
@@ -107,48 +140,49 @@ class FinancialMetricsCalculator {
     const daysPerMonth = 365 / 12;
 
     final wholeMonths = months.floor();
+    final fractionalMonths = months - wholeMonths;
+
+    final days = (fractionalMonths * daysPerMonth).round();
+
+    // Less than 1 month → days only
+    if (wholeMonths == 0) {
+      return '$days ${days == 1 ? 'day' : 'days'}';
+    }
+
+    // Less than 1 year → months + days
+    if (wholeMonths < 12) {
+      final parts = <String>[
+        '$wholeMonths ${wholeMonths == 1 ? 'month' : 'months'}',
+      ];
+
+      if (days > 0) {
+        parts.add('$days ${days == 1 ? 'day' : 'days'}');
+      }
+
+      if (parts.length == 1) {
+        return parts.first;
+      }
+
+      return '${parts[0]} and ${parts[1]}';
+    }
+
+    // 1 year or more → years + months, no days
     final years = wholeMonths ~/ 12;
     final remainingMonths = wholeMonths % 12;
 
-    final remainingFraction = months - wholeMonths;
-    var days = (remainingFraction * daysPerMonth).round();
+    final parts = <String>['$years ${years == 1 ? 'year' : 'years'}'];
 
-    // Prevent outputs like "11 months and 30 days".
-    var displayMonths = remainingMonths;
-    var displayYears = years;
-
-    if (days >= 30) {
-      days = 0;
-      displayMonths++;
-
-      if (displayMonths >= 12) {
-        displayMonths = 0;
-        displayYears++;
-      }
-    }
-
-    final parts = <String>[];
-
-    if (displayYears > 0) {
-      parts.add('$displayYears ${displayYears == 1 ? 'year' : 'years'}');
-    }
-
-    if (displayMonths > 0) {
-      parts.add('$displayMonths ${displayMonths == 1 ? 'month' : 'months'}');
-    }
-
-    if (days > 0) {
-      parts.add('$days ${days == 1 ? 'day' : 'days'}');
+    if (remainingMonths > 0) {
+      parts.add(
+        '$remainingMonths '
+        '${remainingMonths == 1 ? 'month' : 'months'}',
+      );
     }
 
     if (parts.length == 1) {
       return parts.first;
     }
 
-    if (parts.length == 2) {
-      return '${parts[0]} and ${parts[1]}';
-    }
-
-    return '${parts[0]}, ${parts[1]}, and ${parts[2]}';
+    return '${parts[0]} and ${parts[1]}';
   }
 }

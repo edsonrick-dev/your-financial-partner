@@ -10,12 +10,15 @@ class RatioScale extends StatelessWidget {
     required this.bands,
     this.minValue = 0,
     this.maxValue = 100,
+    this.labelBuilder,
   });
 
   final double value;
   final List<RatioScoreBand> bands;
   final double minValue;
   final double maxValue;
+
+  final String Function(double value)? labelBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +34,7 @@ class RatioScale extends StatelessWidget {
           minValue: minValue,
           maxValue: maxValue,
           lineColor: colorScheme.appText,
+          labelBuilder: labelBuilder,
         ),
       ),
     );
@@ -44,6 +48,7 @@ class RatioScalePainter extends CustomPainter {
     required this.minValue,
     required this.maxValue,
     required this.lineColor,
+    this.labelBuilder,
   });
 
   final double value;
@@ -52,6 +57,7 @@ class RatioScalePainter extends CustomPainter {
   final double maxValue;
   final Color lineColor;
 
+  final String Function(double value)? labelBuilder;
   @override
   void paint(Canvas canvas, Size size) {
     const double lineY = 16;
@@ -70,13 +76,17 @@ class RatioScalePainter extends CustomPainter {
     // ----------------------------------------
     // Draw colored bands
     // ----------------------------------------
+    final sortedBands = [...bands]
+      ..sort((a, b) => a.threshold.compareTo(b.threshold));
 
-    for (int i = 0; i < bands.length; i++) {
-      final band = bands[i];
+    for (int i = 0; i < sortedBands.length; i++) {
+      final band = sortedBands[i];
 
       final startValue = band.threshold;
 
-      final endValue = i < bands.length - 1 ? bands[i + 1].threshold : maxValue;
+      final endValue = i < sortedBands.length - 1
+          ? sortedBands[i + 1].threshold
+          : maxValue;
 
       final startX = xFromValue(startValue);
       final endX = xFromValue(endValue);
@@ -91,6 +101,26 @@ class RatioScalePainter extends CustomPainter {
 
       canvas.drawPath(path, paint);
     }
+    // for (int i = 0; i < bands.length; i++) {
+    //   final band = bands[i];
+
+    //   final startValue = band.threshold;
+
+    //   final endValue = i < bands.length - 1 ? bands[i + 1].threshold : maxValue;
+
+    //   final startX = xFromValue(startValue);
+    //   final endX = xFromValue(endValue);
+
+    //   final rect = Rect.fromLTRB(startX, lineY, endX, lineY + lineHeight);
+
+    //   final paint = Paint()..color = band.color ?? Colors.grey;
+
+    //   final borderRadius = BorderRadius.circular(lineHeight / 2);
+
+    //   final path = Path()..addRRect(borderRadius.toRRect(rect));
+
+    //   canvas.drawPath(path, paint);
+    // }
 
     // ----------------------------------------
     // Threshold labels
@@ -106,9 +136,8 @@ class RatioScalePainter extends CustomPainter {
       }
 
       final x = xFromValue(threshold);
-
       textPainter.text = TextSpan(
-        text: threshold.toStringAsFixed(0),
+        text: labelBuilder?.call(threshold) ?? threshold.toStringAsFixed(0),
         style: AppTextStyle.amountXS.copyWith(color: lineColor.withAlpha(150)),
       );
 

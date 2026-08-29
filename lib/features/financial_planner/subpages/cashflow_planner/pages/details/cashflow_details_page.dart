@@ -7,7 +7,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/create_income_plan_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/income_plan/income_plan_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/select_budget_type_sheet.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';

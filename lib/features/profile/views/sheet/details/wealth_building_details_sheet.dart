@@ -6,8 +6,6 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
-import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
-import 'package:getx_drift_app/features/profile/financial_ratios/debt_load_ratio_scoring.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/wealth_building_rate_scoring.dart';
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/details/financial_score_disclaimer_section.dart';
@@ -24,8 +22,6 @@ class WealthBuildingDetailsSheet extends GetView<FinancialProfileController> {
     final score = controller.wealthBuilding.scoreBand;
     final ratio = controller.wealthBuildingRatio;
     final colorScheme = context.colors;
-    final budget =
-        controller.annualDebtRepayments.value + controller.annualExpenses.value;
     return SingleChildScrollView(
       child: Column(
         children: [
