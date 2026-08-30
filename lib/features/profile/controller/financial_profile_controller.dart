@@ -97,27 +97,6 @@ extension FinancialProfileDetailsScreenExtension on FinancialProfileController {
     );
   }
 
-  void scrollToSelectedTab() {
-    final index = selectedDetailsIndex.value;
-
-    if (index < 0 || index >= stabilityDetailKeys.length) {
-      return;
-    }
-
-    final context = stabilityDetailKeys[index].currentContext;
-
-    if (context == null) {
-      return;
-    }
-
-    Scrollable.ensureVisible(
-      context,
-      alignment: 0.5,
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeOut,
-    );
-  }
-
   int getDetailIndex(FinancialRatioType ratioType) {
     return stabilityProfileDetails.indexWhere(
       (detail) => detail.ratioType == ratioType,

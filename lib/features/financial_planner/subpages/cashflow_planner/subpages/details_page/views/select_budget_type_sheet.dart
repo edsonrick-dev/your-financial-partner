@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
@@ -16,8 +17,11 @@ class SelectBudgetTypeSheet extends GetView<CashflowController> {
 
     return AppSheet(
       title: 'Select Budget Type',
+
+      height: AppSheetHeight.half,
       child: AppSection(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           spacing: 20,
           children: [
             AdaptivePressable(
@@ -62,6 +66,7 @@ class SelectBudgetTypeSheet extends GetView<CashflowController> {
                 ],
               ),
             ),
+            SizedBox(height: 24),
           ],
         ),
       ),

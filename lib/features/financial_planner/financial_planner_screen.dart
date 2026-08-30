@@ -21,32 +21,7 @@ class FinancialPlannerScreen extends GetView<FinancialPlannerController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  spacing: 8,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 8),
-
-                    ...controller.financialPlannerPages.asMap().entries.map((
-                      entry,
-                    ) {
-                      final index = entry.key;
-                      final item = entry.value;
-                      return Padding(
-                        padding: EdgeInsets.only(right: 0),
-                        child: CashflowPlannerPageShifter(
-                          title: item.title,
-                          index: index,
-                        ),
-                      );
-                    }),
-
-                    SizedBox(width: 8),
-                  ],
-                ),
-              ),
+              FinancialPlannerPicker(),
               SizedBox(height: 4),
               Expanded(
                 child: IndexedStack(
@@ -61,5 +36,35 @@ class FinancialPlannerScreen extends GetView<FinancialPlannerController> {
         ),
       );
     });
+  }
+}
+
+class FinancialPlannerPicker extends GetView<FinancialPlannerController> {
+  const FinancialPlannerPicker({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      controller: controller.pageScrollController,
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        spacing: 8,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(width: 16),
+          ...controller.financialPlannerPages.asMap().entries.map((entry) {
+            final index = entry.key;
+            final item = entry.value;
+            return FinancialPlannerPageShifter(
+              key: controller.financialPlannerKeys[index],
+              title: item.title,
+              index: index,
+            );
+          }),
+
+          SizedBox(width: 16),
+        ],
+      ),
+    );
   }
 }

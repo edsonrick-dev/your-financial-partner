@@ -92,15 +92,17 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
 
             final account = filteredAccounts[index];
 
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: SelectAccountCard(
-                account: account,
-                onTap: () {
-                  Get.back(result: account);
-                },
-              ),
-            );
+            return filteredAccounts.length == 1
+                ? Text('Wala ka namang pera')
+                : Padding(
+                    padding: const EdgeInsets.only(bottom: 12), //Spacing
+                    child: SelectAccountCard(
+                      account: account,
+                      onTap: () {
+                        Get.back(result: account);
+                      },
+                    ),
+                  );
           },
         );
       },

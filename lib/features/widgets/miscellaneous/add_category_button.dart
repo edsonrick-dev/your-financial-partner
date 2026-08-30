@@ -11,7 +11,12 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 
 class AddCategoryButton extends GetView<CreateCategoryController> {
   final TransactionType transactionType;
-  const AddCategoryButton({super.key, required this.transactionType});
+  final VoidCallback? onExpand;
+  const AddCategoryButton({
+    super.key,
+    required this.transactionType,
+    this.onExpand,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,7 @@ class AddCategoryButton extends GetView<CreateCategoryController> {
 
         child: isExpanded
             ? _BuildExpanded(controller: controller)
-            : _BuildCollapsed(controller: controller),
+            : _BuildCollapsed(controller: controller, onExpand: onExpand),
       );
     });
   }
@@ -147,23 +152,32 @@ class _BuildExpanded extends StatelessWidget {
 
 class _BuildCollapsed extends StatelessWidget {
   final CreateCategoryController controller;
-  const _BuildCollapsed({required this.controller});
+  final VoidCallback? onExpand;
+  const _BuildCollapsed({required this.controller, this.onExpand});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: controller.expandButton,
-      child: SizedBox(
-        height: 52,
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.add),
-            SizedBox(width: 8),
-            Text('Add New Category'),
-          ],
+    return AdaptivePressable(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          controller.expandButton();
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            onExpand?.call();
+          });
+        },
+        child: SizedBox(
+          height: 52,
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.add),
+              SizedBox(width: 8),
+              Text('Add New Category'),
+            ],
+          ),
         ),
       ),
     );

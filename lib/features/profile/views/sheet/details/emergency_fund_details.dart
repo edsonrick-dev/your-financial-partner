@@ -68,7 +68,7 @@ class EmergencyFundDetails extends GetView<FinancialProfileController> {
                                 ),
                                 Text(
                                   '${(controller.annualBudget / 2).toCurrency()} - ${(controller.annualBudget).toCurrency()}',
-                                  style: AppTextStyle.amountXS.copyWith(
+                                  style: AppTextStyle.bodyS.copyWith(
                                     color: colorScheme.appTextMuted,
                                   ),
                                 ),
@@ -137,8 +137,8 @@ class EmergencyFundDetails extends GetView<FinancialProfileController> {
                                     style: AppTextStyle.amountM,
                                   ),
                                   Text(
-                                    'Available beyond your emergency fund',
-                                    style: AppTextStyle.labelXS.copyWith(
+                                    'Amount in excess emergency fund',
+                                    style: AppTextStyle.bodyS.copyWith(
                                       color: colorScheme.appTextMuted,
                                     ),
                                   ),

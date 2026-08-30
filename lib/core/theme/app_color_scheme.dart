@@ -14,7 +14,7 @@ extension AppColorScheme on ColorScheme {
 
   /// TEXT
   Color get appText => const Color(0xFF141C29);
-  Color get appTextMuted => const Color(0xFF64748B);
+  Color get appTextMuted => AppPalette.color500;
   Color get appInversedtext => surface;
   Color get appInversedtextMuted => color300;
 

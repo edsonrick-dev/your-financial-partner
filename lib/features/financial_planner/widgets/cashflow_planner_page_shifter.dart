@@ -4,8 +4,8 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 
-class CashflowPlannerPageShifter extends GetView<FinancialPlannerController> {
-  const CashflowPlannerPageShifter({
+class FinancialPlannerPageShifter extends GetView<FinancialPlannerController> {
+  const FinancialPlannerPageShifter({
     super.key,
     required this.title,
     required this.index,

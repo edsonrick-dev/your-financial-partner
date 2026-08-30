@@ -23,7 +23,7 @@ class InsurancePlannerEmptyView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    PhosphorIconsRegular.toolbox,
+                    PhosphorIconsRegular.shieldPlus,
                     size: 56,
                     color: colorScheme.appInfo,
                   ),
