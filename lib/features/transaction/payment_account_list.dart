@@ -93,7 +93,7 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
             final account = filteredAccounts[index];
 
             return filteredAccounts.length == 1
-                ? Text('Wala ka namang pera')
+                ? Text('Add mo first account ngani!')
                 : Padding(
                     padding: const EdgeInsets.only(bottom: 12), //Spacing
                     child: SelectAccountCard(

@@ -6,7 +6,7 @@ import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 import 'package:getx_drift_app/data/models/participant_model.dart';
 import 'package:getx_drift_app/domain/enums/app_snack_type.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/spend_transaction_sheet.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_transaction_form.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_hydration_ext.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_validation_extension.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -22,6 +22,33 @@ enum DebtManagementType {
 }
 
 extension SaveTransactionFunctions on TransactionController {
+  Future<void> saveTransaction(TransactionType type) async {
+    switch (type) {
+      case TransactionType.earn:
+        if (!isEarnTransactionValid) return;
+        await saveEarnTransaction();
+
+      case TransactionType.spend:
+        if (!isSpendTransactionValid) return;
+        await saveSpendTransaction();
+
+      case TransactionType.transfer:
+        if (!isTransferTransactionValid) return;
+        await saveTransferTransaction();
+
+      case TransactionType.receive:
+        if (!isReceiveMoneyTransactionValid) return;
+        await saveReceiveMoneyTransaction();
+
+      case TransactionType.give:
+        if (!isGiveMoneyTransactionValid) return;
+        await saveGiveMoneyTransaction();
+
+      case TransactionType.balanceUpdate:
+        return;
+    }
+  }
+
   Future<void> saveSpendTransaction() async {
     final isEditing = editingTransaction.value != null;
 

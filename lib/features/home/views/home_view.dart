@@ -6,6 +6,7 @@ import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
+import 'package:getx_drift_app/features/financial_setup/financial_setup_controller.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/home/views/section_views/quick_actions_section.dart';
@@ -15,19 +16,21 @@ import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
+
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
     final spacingM = AppScale.x5;
     final spacingL = AppScale.x6;
     final colorScheme = context.colors;
-    final budgetController = Get.find<CashflowController>();
-    final hasBudget = budgetController.currentMonthBudgetItems.isNotEmpty;
+
+    final setupController = Get.find<FinancialSetupController>();
+    final cashflowController = Get.find<CashflowController>();
+
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -37,87 +40,84 @@ class HomeView extends GetView<HomeController> {
             children: [
               SizedBox(height: topPadding),
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppSection(
+              // HEADER
+              AppSection(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Good morning, Edson Rick!',
+                      style: AppTextStyle.headlineL,
+                    ),
+                    Text(
+                      'Let’s make today a great financial day.',
+                      style: AppTextStyle.labelM.copyWith(
+                        color: colorScheme.appTextMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // ACCOUNT-DEPENDENT CONTENT
+              Obx(() {
+                if (!setupController.hasAccounts) {
+                  return const SizedBox.shrink();
+                }
+
+                return Padding(
+                  padding: EdgeInsets.only(top: spacingM),
+                  child: AppSection(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Good morning, Edson Rick!',
-                          style: AppTextStyle.headlineL,
-                        ),
-                        Text(
-                          '''Let’s make today a great financial day.''',
-                          style: AppTextStyle.labelM.copyWith(
-                            color: colorScheme.appTextMuted,
-                          ),
-                        ),
+                        FundSummaryCard(),
+                        SizedBox(height: spacingM),
+                        QuickActionSection(),
                       ],
                     ),
                   ),
+                );
+              }),
 
-                  if (controller.hasAccounts.value)
-                    AppSection(
-                      child: Column(
-                        children: [
-                          SizedBox(height: spacingM),
-                          FundSummaryCard(),
-                          SizedBox(height: spacingM),
-                          QuickActionSection(),
-                        ],
-                      ),
+              // CASHFLOW-DEPENDENT CONTENT
+              Obx(() {
+                if (cashflowController.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
+                return Padding(
+                  padding: EdgeInsets.only(top: spacingL),
+                  child: BudgetProgressSection(),
+                );
+              }),
+
+              // SETUP GUIDE
+              Obx(() {
+                if (setupController.hasAccounts &&
+                    setupController.hasCashflow) {
+                  return const SizedBox.shrink();
+                }
+
+                return Padding(
+                  padding: EdgeInsets.only(top: spacingL),
+                  child: const FinancialSetupGuideCarousel(),
+                );
+              }),
+
+              // LEARNING
+              Padding(
+                padding: EdgeInsets.only(top: spacingL),
+                child: LearningSection(
+                  state: LearningSectionState.available,
+                  contents: [
+                    LearnThumbnail(
+                      title: 'Why Financial Planning Matters',
+                      onTap: () {
+                        AppSheets.learningSheets.whyFinancialPlanningMatters();
+                      },
                     ),
-                ],
-              ),
-              SizedBox(height: spacingL),
-              AppSection(
-                // sectionTitle: 'Get Started',
-                child: AppSectionBody(
-                  child: Column(
-                    children: [
-                      GetStartedTile(
-                        title: 'Add your first account',
-                        description:
-                            'Add your cash, bank, e-wallet, or other accounts to track what you own.',
-                        icon: PhosphorIconsRegular.creditCard,
-                        iconColor: colorScheme.appInfo,
-                        guideState: GuideState.completed,
-                      ),
-                      GetStartedTile(
-                        title: 'Set up your monthly cashflow',
-                        description:
-                            'Plan your income and expenses, including your monthly budget.',
-                        icon: PhosphorIconsRegular.calendar,
-                        iconColor: Colors.orange,
-                        guideState: GuideState.available,
-                      ),
-                      GetStartedTile(
-                        title: 'Set up your bills & reminders',
-                        description:
-                            'Add recurring bills and payment dates so you know what’s coming up.',
-                        icon: PhosphorIconsRegular.bell,
-                        iconColor: colorScheme.appInfo,
-                        guideState: GuideState.locked,
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-              ),
-              SizedBox(height: spacingL),
-              if (hasBudget) BudgetProgressSection(),
-
-              LearningSection(
-                state: LearningSectionState.available,
-                contents: [
-                  LearnThumbnail(
-                    title: 'Why Financial Planning Matters',
-                    onTap: () {
-                      AppSheets.learningSheets.whyFinancialPlanningMatters();
-                    },
-                  ),
-                ],
               ),
 
               SizedBox(height: spacingL),
@@ -134,6 +134,11 @@ enum GuideState {
   locked,
   completed;
 
+  String get statusLabel => switch (this) {
+    GuideState.available => 'In Progress',
+    GuideState.locked => 'Locked',
+    GuideState.completed => 'Completed',
+  };
   IconData get statusIcon => switch (this) {
     GuideState.available => PhosphorIconsRegular.caretRight,
     GuideState.locked => PhosphorIconsFill.lock,

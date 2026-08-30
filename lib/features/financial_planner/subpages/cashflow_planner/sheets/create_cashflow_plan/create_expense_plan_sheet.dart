@@ -12,7 +12,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/cashflow_distribution_fields.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sections/cashflow_plan_annual_summary_section.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/spend_transaction_sheet.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_transaction_form.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';

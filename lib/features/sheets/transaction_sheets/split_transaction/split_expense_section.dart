@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/spend_transaction_sheet.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_transaction_form.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/add_participant_button.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/split_allocation_summary.dart';
@@ -10,7 +10,8 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class SplitExpenseSection extends GetView<TransactionController> {
-  const SplitExpenseSection({super.key});
+  const SplitExpenseSection({super.key, this.onExpand});
+  final VoidCallback? onExpand;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +129,7 @@ class SplitExpenseSection extends GetView<TransactionController> {
 
                     const SizedBox(height: 12),
 
-                    AddParticipantButton(),
+                    AddParticipantButton(onExpand: onExpand),
                   ],
                 ],
               ),

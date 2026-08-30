@@ -18,10 +18,9 @@ class SplitModeSelector extends GetView<TransactionController> {
 
       return Container(
         height: 44,
-
         decoration: BoxDecoration(
           color: colorScheme.bgLight,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(999),
         ),
 
         child: LayoutBuilder(
@@ -49,7 +48,7 @@ class SplitModeSelector extends GetView<TransactionController> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: colorScheme.appText,
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(999),
                       ),
                     ),
                   ),
@@ -63,21 +62,6 @@ class SplitModeSelector extends GetView<TransactionController> {
                     return Expanded(
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
-
-                        // onTap: () {
-                        //   controller.splitMode.value = mode;
-
-                        //   /// collapse all participant cards
-                        //   for (final participant in controller.participants) {
-                        //     participant.isActive.value = false;
-                        //     participant.focusNode.unfocus();
-                        //   }
-                        //   debugPrint(controller.splitMode.value.name);
-                        //   if (mode == SplitMode.equal) {
-                        //     controller.recalculateEqualSplit();
-                        //   }
-
-                        // },
                         onTap: () {
                           /// collapse + unfocus
                           for (final participant in controller.participants) {

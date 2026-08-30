@@ -9,11 +9,25 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/models/participant_model.dart';
 import 'package:getx_drift_app/data/models/person_balance_summary_model.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/spend_transaction_sheet.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_transaction_form.dart';
 import 'package:intl/intl.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
 
 class TransactionController extends GetxController {
+  final splitExpenseKey = GlobalKey();
+  void ensureVisible(GlobalKey key) {
+    final context = key.currentContext;
+
+    if (context == null) return;
+
+    Scrollable.ensureVisible(
+      context,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  final ScrollController scrollController = ScrollController();
   final Rx<PaidBy> paidBy = PaidBy.self.obs;
   void setPaidBy(PaidBy value) {
     paidBy.value = value;
@@ -139,6 +153,8 @@ class TransactionController extends GetxController {
   final noteFocusNode = FocusNode();
   @override
   void onClose() {
+    scrollController.dispose();
+
     noteController.dispose();
     noteFocusNode.dispose();
     super.onClose();

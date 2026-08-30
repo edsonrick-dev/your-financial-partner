@@ -11,6 +11,7 @@ import 'package:getx_drift_app/domain/enums/app_day.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
+import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_plan_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
@@ -19,6 +20,7 @@ import 'package:drift/drift.dart' as d;
 import 'dart:math' as math;
 
 class CashflowController extends GetxController {
+  bool get hasCurrentMonthBudget => currentMonthBudgetItems.isNotEmpty;
   final savedPlans = <CashflowPlanWithCategory>[].obs;
 
   bool get isEmpty => savedPlans.isEmpty;
@@ -94,6 +96,13 @@ class CashflowController extends GetxController {
     });
   }
 
+  bool get hasBudgetPlan => savedPlans.any(
+    (plan) =>
+        plan.plan.planType == CashflowPlanType.expense.name ||
+        plan.plan.planType == 'debtRepayment',
+  );
+  bool get hasIncomePlan =>
+      savedPlans.any((plan) => plan.plan.planType == 'income');
   Future<List<CurrentMonthBudgetItem>> _buildCurrentMonthBudgetItems(
     List<CashflowPlanWithCategory> plans,
   ) async {

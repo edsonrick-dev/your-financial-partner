@@ -23,7 +23,7 @@ class AppButton extends StatelessWidget {
     final colorScheme = context.colors;
 
     if (onTap == null) {
-      return colorScheme.appText.withValues(alpha: 0.12);
+      return colorScheme.appText.withValues(alpha: 0.08);
     }
 
     return switch (type) {
@@ -37,7 +37,7 @@ class AppButton extends StatelessWidget {
     final colorScheme = context.colors;
 
     if (onTap == null) {
-      return colorScheme.appText.withValues(alpha: 0.4);
+      return colorScheme.appText.withValues(alpha: 0.35);
     }
 
     return switch (type) {

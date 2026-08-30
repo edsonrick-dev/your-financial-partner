@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 
@@ -8,15 +9,16 @@ class SplitAllocationSummary extends GetView<TransactionController> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     return Obx(() {
       Color color;
 
       if (controller.remainingAllocation < 0) {
-        color = Colors.red;
+        color = colorScheme.appOutflow;
       } else if (controller.remainingAllocation.abs() < 0.01) {
-        color = Colors.green;
+        color = colorScheme.appInflow;
       } else {
-        color = Colors.orange;
+        color = colorScheme.appText;
       }
 
       final progress = controller.amount.value == 0
@@ -45,7 +47,12 @@ class SplitAllocationSummary extends GetView<TransactionController> {
 
             ClipRRect(
               borderRadius: BorderRadius.circular(99),
-              child: LinearProgressIndicator(value: progress, minHeight: 8),
+              child: LinearProgressIndicator(
+                backgroundColor: colorScheme.bgDark,
+                value: progress,
+                minHeight: 8,
+                color: color,
+              ),
             ),
 
             const SizedBox(height: 8),

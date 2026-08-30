@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/sheets/transaction_sheets/transaction_sheet.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_hydration_ext.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/earn_transaction_sheet.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/give_money_transaction_sheet.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/receive_money_transaction_sheet.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/spend_transaction_sheet.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/transfer_transaction_sheet.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 
 class TransactionSheets {
@@ -20,7 +17,8 @@ class TransactionSheets {
     }
 
     await Get.bottomSheet(
-      const EarnTransactionSheet(),
+      const TransactionSheet(transactionType: TransactionType.earn),
+
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
@@ -40,7 +38,8 @@ class TransactionSheets {
     }
 
     await Get.bottomSheet(
-      const SpendTransactionSheet(),
+      // const SpendTransactionSheet(),
+      const TransactionSheet(transactionType: TransactionType.spend),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
@@ -56,7 +55,8 @@ class TransactionSheets {
     }
 
     await Get.bottomSheet(
-      const TransferTransactionSheet(),
+      // const TransferTransactionSheet(),
+      const TransactionSheet(transactionType: TransactionType.transfer),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
@@ -71,7 +71,8 @@ class TransactionSheets {
     }
 
     await Get.bottomSheet(
-      const ReceiveMoneyTransactionSheet(),
+      // const ReceiveMoneyTransactionSheet(),
+      const TransactionSheet(transactionType: TransactionType.receive),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
@@ -86,7 +87,8 @@ class TransactionSheets {
       controller.resetForm();
     }
     await Get.bottomSheet(
-      const GiveMoneyTransactionSheet(),
+      // const GiveMoneyTransactionForm(),
+      const TransactionSheet(transactionType: TransactionType.give),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );

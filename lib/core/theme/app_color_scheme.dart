@@ -13,6 +13,7 @@ extension AppColorScheme on ColorScheme {
   Color get bg => color100;
   Color get bgLight => isDark ? color800 : color50;
   Color get bgDark => isDark ? color950 : color200;
+  Color get bgInversed => isDark ? color200 : color900;
   // Color get appOnSurface => const Color(0xFFFFFFFF);
   // Color get appOnSurfaceSecondary => appText;
   // Color get appOnSurfaceTertiary => appText.withAlpha(220);

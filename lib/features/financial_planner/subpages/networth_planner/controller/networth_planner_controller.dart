@@ -121,7 +121,7 @@ class NetWorthController extends GetxController {
       return NetWorthItem(
         id: 'personal_balance_${person.entity.id}',
         name: person.entity.name,
-        value: person.netBalance,
+        value: person.netBalance.abs(),
         source: NetWorthItemSource.personalBalance,
         group: isReceivable ? AccountGroup.receivable : AccountGroup.payable,
         personBalance: person,

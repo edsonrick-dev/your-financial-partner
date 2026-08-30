@@ -12,9 +12,9 @@ class AppTextStyle {
     letterSpacing: 0,
   );
   static TextStyle get displayM => TextStyle(
-    fontSize: 34,
+    fontSize: 28,
     fontWeight: FontWeight.w700,
-    height: 40 / 34,
+    height: 36 / 28,
     letterSpacing: 0,
   );
   static TextStyle get displayS => TextStyle(

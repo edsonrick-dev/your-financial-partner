@@ -20,156 +20,146 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     return AppSheet(
-      showHeader: false,
+      title: 'Personal Balance',
       height: AppSheetHeight.full,
       child: Column(
         children: [
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(38),
-                bottom: Radius.circular(38),
-              ),
-              color: colorScheme.bg,
-            ),
-            child: Column(
-              children: [
-                ///Grabber
-                AppGrabber(isDark: true),
+          Column(
+            children: [
+              StreamBuilder(
+                stream: database.peopleBalanceDao.watchPersonBalance(entityId),
+                builder: (context, snapshot) {
+                  final summary = snapshot.data;
 
-                ///Toolbar
-                AppToolbar(
-                  title: 'Personal Balance',
-                  isDark: true,
-                  showLeading: false,
-                ),
-                StreamBuilder(
-                  stream: database.peopleBalanceDao.watchPersonBalance(
-                    entityId,
-                  ),
-                  builder: (context, snapshot) {
-                    final summary = snapshot.data;
+                  if (summary == null) {
+                    return const SizedBox();
+                  }
 
-                    if (summary == null) {
-                      return const SizedBox();
-                    }
-
-                    return Container(
+                  return AppSection(
+                    child: Container(
+                      padding: EdgeInsets.all(24),
                       width: double.infinity,
-                      padding: EdgeInsets.only(
-                        bottom: 28,
-                        left: 24,
-                        right: 24,
-                        top: 12,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [colorScheme.text, colorScheme.gradient2],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(24),
                       ),
-                      // height: 44,
-                      // decoration: BoxDecoration(
-                      //   gradient: LinearGradient(
-                      //     colors: [
-                      //       const Color(0xFF141C29),
-                      //       const Color(0xFF1E293B),
-                      //     ],
-                      //   ),
-                      //   borderRadius: BorderRadius.vertical(
-                      //     bottom: Radius.circular(24),
-                      //   ),
-                      // ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Stack(
-                            alignment: Alignment.center,
+                          Row(
+                            spacing: 8,
                             children: [
-                              Opacity(
-                                opacity: 0.60,
-                                child: Container(
-                                  height: 60,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                    color: colorScheme.inversePrimary,
-                                    borderRadius: BorderRadius.circular(999),
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Opacity(
+                                    opacity: 0.60,
+                                    child: Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.inversePrimary,
+                                        borderRadius: BorderRadius.circular(
+                                          999,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
+                                  Text(
+                                    summary.entity.name.trim()[0],
+                                    style: AppTextStyle.headlineL,
+                                  ),
+                                ],
+                              ),
+
+                              Expanded(
+                                child: Text(
+                                  summary.entity.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyle.displayM.copyWith(
+                                    color: colorScheme.appInversedtext,
                                   ),
                                 ),
                               ),
-
-                              Text(
-                                summary.entity.name.trim()[0],
-                                style: AppTextStyle.displayL,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            summary.entity.name,
-                            style: TextStyle(
-                              color: colorScheme.inversePrimary,
-                              fontSize: 24,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Opacity(
-                                opacity: 0.25,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 4,
+                              Spacer(),
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Opacity(
+                                    opacity: 0.8,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: summary.isSettled
+                                            ? colorScheme.appNeutral
+                                            : summary.owesMe
+                                            ? colorScheme.appText
+                                            : colorScheme.appText,
+                                        borderRadius: BorderRadius.circular(
+                                          999,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        summary.owesMe
+                                            ? 'Owes You'
+                                            : summary.iOwe
+                                            ? 'You Owe'
+                                            : 'Settled',
+                                        style: AppTextStyle.labelM.copyWith(
+                                          color: Colors.transparent,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: summary.isSettled
-                                        ? colorScheme.appNeutral
-                                        : summary.owesMe
-                                        ? colorScheme.appInflow
-                                        : colorScheme.appOutflow,
-                                    borderRadius: BorderRadius.circular(999),
-                                  ),
-                                  child: Text(
+                                  Text(
                                     summary.owesMe
                                         ? 'Owes You'
                                         : summary.iOwe
                                         ? 'You Owe'
                                         : 'Settled',
-                                    style: TextStyle(
-                                      color: Colors.transparent,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                    style: AppTextStyle.labelM.copyWith(
+                                      color: summary.isSettled
+                                          ? colorScheme.appNeutral
+                                          : summary.owesMe
+                                          ? colorScheme.appInversedtext
+                                          : colorScheme.appInversedtext,
                                     ),
                                   ),
-                                ),
-                              ),
-                              Text(
-                                summary.owesMe
-                                    ? 'Owes You'
-                                    : summary.iOwe
-                                    ? 'You Owe'
-                                    : 'Settled',
-                                style: TextStyle(
-                                  color: summary.isSettled
-                                      ? colorScheme.appNeutral
-                                      : summary.owesMe
-                                      ? colorScheme.appInflow
-                                      : colorScheme.appOutflow,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                ],
                               ),
                             ],
                           ),
+                          SizedBox(height: 20),
                           Text(
                             summary.netBalance.abs().toCurrency(),
                             style: AppTextStyle.amountXL.copyWith(
-                              color: colorScheme.appInversedtext,
+                              color: summary.netBalance < 0
+                                  ? colorScheme.appOutflowInversed
+                                  : colorScheme.appInflowInverse,
+                            ),
+                          ),
+                          Text(
+                            summary.netBalance < 0 ? 'Payable' : 'Receivable',
+                            style: AppTextStyle.titleS.copyWith(
+                              color: colorScheme.appInversedtextMuted,
                             ),
                           ),
                         ],
                       ),
-                    );
-                  },
-                ),
-              ],
-            ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8, right: 4.0),

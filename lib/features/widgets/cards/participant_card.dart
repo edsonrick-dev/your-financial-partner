@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/domain/app_calculator.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
@@ -17,27 +20,115 @@ class ParticipantCard extends GetView<TransactionController> {
     required this.participant,
     required this.index,
   });
+  String participantValue(ParticipantModel participant) {
+    switch (controller.splitMode.value) {
+      case SplitMode.custom:
+      case SplitMode.equal:
+        return participant.amount.value.toCurrency();
+
+      case SplitMode.percentage:
+        return '${(participant.percentage.value * 100).toStringAsFixed(2)}%';
+
+      // case SplitMode.custom:
+      //   final total = controller.amount.value;
+
+      //   if (total == 0) return '0%';
+
+      //   final percentage = participant.amount.value / total * 100;
+
+      //   return '${percentage.toStringAsFixed(2)}%';
+    }
+  }
+
+  Future<void> _openCalculator(BuildContext context) async {
+    final calculatorController = Get.find<AppCalculatorController>();
+
+    final mode = controller.splitMode.value;
+
+    final originalValue = mode == SplitMode.percentage
+        ? participant.percentage.value * 100
+        : participant.amount.value;
+
+    calculatorController.initialize(originalValue);
+
+    final result = await Get.bottomSheet<double>(
+      const AppCalculator(),
+      isScrollControlled: true,
+    );
+
+    if (result == null) return;
+
+    if (mode == SplitMode.percentage) {
+      controller.updateParticipantPercentage(
+        participant: participant,
+        percentage: result / 100,
+      );
+      return;
+    }
+
+    if (mode == SplitMode.equal) {
+      controller.updateParticipantAmount(
+        participant: participant,
+        amount: result,
+      );
+
+      // Manual change breaks equal split.
+      if ((result - originalValue).abs() >= 0.01) {
+        controller.splitMode.value = SplitMode.custom;
+        controller.recalculateParticipants();
+      }
+
+      return;
+    }
+
+    // Custom
+    controller.updateParticipantAmount(
+      participant: participant,
+      amount: result,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+    final isMe = participant.entityId == controller.currentUserEntityId.value;
 
     return Obx(() {
       final isActive = participant.isActive.value;
 
-      return GestureDetector(
-        onTap: () {
-          /// close others
-          for (final p in controller.participants) {
-            p.isActive.value = false;
+      return AdaptivePressable(
+        onTap: () => _openCalculator(context),
+        onLongPress: isMe
+            ? null
+            : () async {
+                final shouldDelete = await Get.dialog<bool>(
+                  AlertDialog(
+                    title: const Text('Remove participant?'),
+                    content: Text(
+                      'Remove ${participant.name} from this expense split?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Get.back(result: false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Get.back(result: true),
+                        child: const Text('Remove'),
+                      ),
+                    ],
+                  ),
+                );
 
-            p.focusNode.unfocus();
-          }
+                if (shouldDelete != true) return;
 
-          participant.isActive.value = true;
+                controller.removeParticipant(participant.entityId);
 
-          participant.focusNode.requestFocus();
-        },
+                if (controller.splitMode.value == SplitMode.equal) {
+                  controller.recalculateEqualSplit();
+                }
+              },
+
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -51,6 +142,7 @@ class ParticipantCard extends GetView<TransactionController> {
             children: [
               CircleAvatar(
                 radius: 18,
+                backgroundColor: colorScheme.appText,
                 child: Text(participant.name[0].toUpperCase()),
               ),
 
@@ -79,150 +171,13 @@ class ParticipantCard extends GetView<TransactionController> {
                   ],
                 ),
               ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 180),
-
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-
-                  children: [
-                    if (controller.splitMode.value != SplitMode.equal)
-                      SizedBox(
-                        width:
-                            controller.splitMode.value == SplitMode.percentage
-                            ? 70
-                            : 90,
-                        child: IgnorePointer(
-                          ignoring: isActive ? false : true,
-                          child: TextFormField(
-                            focusNode: participant.focusNode,
-                            controller: participant.textController,
-
-                            // initialValue:
-                            //     controller.splitMode.value ==
-                            //         SplitMode.percentage
-                            //     ? (participant.percentage.value * 100)
-                            //           .toStringAsFixed(2)
-                            //     : participant.amount.value.toStringAsFixed(2),
-                            textAlign: TextAlign.end,
-
-                            keyboardType: TextInputType.number,
-
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              isDense: true,
-                              suffixText:
-                                  controller.splitMode.value ==
-                                      SplitMode.percentage
-                                  ? '%'
-                                  : null,
-                              prefix:
-                                  controller.splitMode.value == SplitMode.custom
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(right: 4),
-                                      child: Text('₱'),
-                                    )
-                                  : null,
-
-                              // prefixText:
-                              //     controller.splitMode.value == SplitMode.custom
-                              //     ? '₱'
-                              //     : null,
-                            ),
-
-                            onChanged: (value) {
-                              final parsed = double.tryParse(value) ?? 0;
-
-                              if (controller.splitMode.value ==
-                                  SplitMode.percentage) {
-                                controller.updateParticipantPercentage(
-                                  participant: participant,
-                                  percentage: parsed / 100,
-                                );
-                              } else {
-                                controller.updateParticipantAmount(
-                                  participant: participant,
-                                  amount: parsed,
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      )
-                    else
-                      Text(
-                        participant.amount.value.toCurrency(),
-
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontFeatures: [FontFeature.tabularFigures()],
-                        ),
-                      ),
-
-                    AnimatedSize(
-                      duration: const Duration(milliseconds: 180),
-
-                      child:
-                          isActive &&
-                              participant.entityId !=
-                                  controller.currentUserEntityId.value
-                          ? IconButton(
-                              onPressed: () {
-                                controller.removeParticipant(
-                                  participant.entityId,
-                                );
-
-                                if (controller.splitMode.value ==
-                                    SplitMode.equal) {
-                                  controller.recalculateEqualSplit();
-                                }
-                              },
-
-                              icon: Icon(
-                                Icons.delete_forever_outlined,
-                                color: colorScheme.appAccent,
-                                size: 20,
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-                  ],
+              Text(
+                participantValue(participant),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontFeatures: [FontFeature.tabularFigures()],
                 ),
               ),
-              // AnimatedSwitcher(
-              //   duration: const Duration(milliseconds: 180),
-
-              //   child: isActive
-              //       ? Row(
-              //           key: const ValueKey('active'),
-
-              //           mainAxisSize: MainAxisSize.min,
-
-              //           children: [
-              //             if (controller.splitMode.value != SplitMode.equal)
-              //               SizedBox(
-              //                 width: 90,
-              //                 child:
-              //               )
-              //             else
-              //
-
-              //             if (participant.entityId !=
-              //                 controller.currentUserEntityId.value)
-
-              //           ],
-              //         )
-              //       : Text(
-              //           participant.amount.value.toCurrency(),
-
-              //           key: const ValueKey('collapsed'),
-
-              //           style: const TextStyle(
-              //             fontWeight: FontWeight.w700,
-              //             fontFeatures: [FontFeature.tabularFigures()],
-              //           ),
-              //         ),
-              // ),
             ],
           ),
         ),
