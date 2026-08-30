@@ -5,6 +5,7 @@ import 'package:getx_drift_app/core/constants/app_scale.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/home/views/section_views/quick_actions_section.dart';
@@ -25,6 +26,8 @@ class HomeView extends GetView<HomeController> {
     final spacingM = AppScale.x5;
     final spacingL = AppScale.x6;
     final colorScheme = context.colors;
+    final budgetController = Get.find<CashflowController>();
+    final hasBudget = budgetController.currentMonthBudgetItems.isNotEmpty;
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -54,18 +57,23 @@ class HomeView extends GetView<HomeController> {
                       ],
                     ),
                   ),
-                  SizedBox(height: spacingM),
-                  AppSection(
-                    child: Column(
-                      spacing: spacingM,
-                      children: [FundSummaryCard(), QuickActionSection()],
+
+                  if (controller.hasAccounts.value)
+                    AppSection(
+                      child: Column(
+                        children: [
+                          SizedBox(height: spacingM),
+                          FundSummaryCard(),
+                          SizedBox(height: spacingM),
+                          QuickActionSection(),
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
               SizedBox(height: spacingL),
               AppSection(
-                sectionTitle: 'Get Started',
+                // sectionTitle: 'Get Started',
                 child: AppSectionBody(
                   child: Column(
                     children: [
@@ -98,7 +106,7 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               SizedBox(height: spacingL),
-              BudgetProgressSection(),
+              if (hasBudget) BudgetProgressSection(),
 
               LearningSection(
                 state: LearningSectionState.available,

@@ -55,7 +55,7 @@ class SpendTransactionSheet extends GetView<TransactionController> {
                     top: Radius.circular(38),
                     bottom: Radius.circular(20),
                   ),
-                  color: colorScheme.appOnSurfaceSecondary,
+                  color: colorScheme.bg,
                 ),
                 child: Column(
                   children: [

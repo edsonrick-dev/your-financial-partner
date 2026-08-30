@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
@@ -20,30 +21,26 @@ class FinancialStabilityScreenShifter
     return Obx(() {
       final isSelected = controller.selectedDetailsIndex.value == index;
       return AdaptivePressable(
-        child: GestureDetector(
-          onTap: () {
-            controller.selectTab(index);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? colorScheme.primary
-                  : colorScheme.inversePrimary,
-              borderRadius: BorderRadius.circular(999),
-              border: Border.all(
-                color: colorScheme.text,
-                width: isSelected ? 0.5 : 1,
-              ),
+        onTap: () {
+          controller.selectTab(index);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.ease,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? colorScheme.appText : colorScheme.bgLight,
+            borderRadius: BorderRadius.circular(999),
+            boxShadow: AppShadows.pill(colorScheme.text),
+          ),
+          child: AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
+            style: TextStyle(
+              color: isSelected ? colorScheme.textInversed : colorScheme.text,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             ),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              title,
-              style: TextStyle(
-                color: colorScheme.text,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                // fontSize: 1,
-              ),
-            ),
+            child: Text(title),
           ),
         ),
       );

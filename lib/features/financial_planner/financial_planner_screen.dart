@@ -46,6 +46,7 @@ class FinancialPlannerPicker extends GetView<FinancialPlannerController> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       controller: controller.pageScrollController,
+      padding: const EdgeInsets.symmetric(vertical: 4),
       scrollDirection: Axis.horizontal,
       child: Row(
         spacing: 8,

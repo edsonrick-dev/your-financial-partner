@@ -20,6 +20,7 @@ class NetWorthEmptyView extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
+          SizedBox(height: 20),
           AppSection(
             child: AppSectionBody(
               child: Padding(
@@ -34,7 +35,7 @@ class NetWorthEmptyView extends StatelessWidget {
                     Icon(
                       PhosphorIconsRegular.wallet,
                       size: 56,
-                      color: colorScheme.appInfo,
+                      color: colorScheme.appAccent,
                     ),
 
                     const SizedBox(height: 24),
@@ -54,7 +55,7 @@ class NetWorthEmptyView extends StatelessWidget {
                       'how your financial position changes over time.',
                       textAlign: TextAlign.center,
                       style: AppTextStyle.bodyL.copyWith(
-                        color: colorScheme.appTextMuted,
+                        // color: colorScheme.appTextMuted,
                       ),
                     ),
 

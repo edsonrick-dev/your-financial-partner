@@ -34,9 +34,9 @@ class CashflowPlannerEmptyView extends GetView<CashflowController> {
                   children: [
                     const SizedBox(height: 24),
                     Icon(
-                      PhosphorIconsRegular.wallet,
+                      PhosphorIconsRegular.coins,
                       size: 56,
-                      color: colorScheme.appInfo,
+                      color: colorScheme.appAccent,
                     ),
 
                     const SizedBox(height: 24),
@@ -53,7 +53,7 @@ class CashflowPlannerEmptyView extends GetView<CashflowController> {
                       'Start by adding your expected income then budget where it should go. Ascend will help you compare your plan with what actually happens as you use the app.',
                       textAlign: TextAlign.center,
                       style: AppTextStyle.bodyL.copyWith(
-                        color: colorScheme.appTextMuted,
+                        // color: colorScheme.appTextMuted,
                       ),
                     ),
 

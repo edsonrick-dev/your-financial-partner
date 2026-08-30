@@ -154,4 +154,9 @@ class AppGradient {
     begin: Alignment.centerLeft,
     end: Alignment.bottomRight,
   );
+  static LinearGradient gradientB(ColorScheme colors) => LinearGradient(
+    colors: [colors.text, colors.gradient2],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }

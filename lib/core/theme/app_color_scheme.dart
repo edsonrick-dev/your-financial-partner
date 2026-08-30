@@ -8,13 +8,18 @@ extension AppColorScheme on ColorScheme {
   bool get isDark => brightness == Brightness.dark;
 
   /// BACKGROUND
+  ///
+  // Color get surface => color200;
+  Color get bg => color100;
+  Color get bgLight => isDark ? color800 : color50;
+  Color get bgDark => isDark ? color950 : color200;
   // Color get appOnSurface => const Color(0xFFFFFFFF);
-  Color get appOnSurfaceSecondary => appText;
-  Color get appOnSurfaceTertiary => appText.withAlpha(220);
+  // Color get appOnSurfaceSecondary => appText;
+  // Color get appOnSurfaceTertiary => appText.withAlpha(220);
 
   /// TEXT
-  Color get appText => const Color(0xFF141C29);
-  Color get appTextMuted => AppPalette.color500;
+  Color get appText => color900;
+  Color get appTextMuted => color500;
   Color get appInversedtext => surface;
   Color get appInversedtextMuted => color300;
 
@@ -30,10 +35,6 @@ extension AppColorScheme on ColorScheme {
   /// BORDERS
   Color get appBorder => appText.withAlpha(70);
   Color get appBorderMuted => appBorder.withAlpha(70);
-
-  Color get bg => surface;
-  Color get bgLight => isDark ? color800 : color50;
-  Color get bgDark => isDark ? color950 : color200;
 
   Color get text => onSurface;
   // Color get textMuted => isDark ? color300 : color700;
