@@ -395,27 +395,112 @@ class AppDatabase extends _$AppDatabase {
   //     }
   //   }
   // }
-
   Future<void> seedDefaultEntities() async {
+    final defaultEntities = [
+      // People
+      (name: 'Me', entityType: EntityType.person, organizationType: null),
+      (name: 'Juan', entityType: EntityType.person, organizationType: null),
+      (name: 'Maria', entityType: EntityType.person, organizationType: null),
+
+      // Banks
+      (
+        name: 'BPI',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+      (
+        name: 'BDO',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+      (
+        name: 'Metrobank',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+      (
+        name: 'UnionBank',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+      (
+        name: 'Security Bank',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+      (
+        name: 'RCBC',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+      (
+        name: 'PNB',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+      (
+        name: 'LandBank',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+
+      // Digital banks
+      (
+        name: 'CIMB Bank',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+      (
+        name: 'GoTyme Bank',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+      (
+        name: 'Tonik Bank',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+      (
+        name: 'Maya Bank',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.bank,
+      ),
+
+      // E-wallets
+      (
+        name: 'GCash',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.eWallet,
+      ),
+      (
+        name: 'Maya',
+        entityType: EntityType.organization,
+        organizationType: OrganizationType.eWallet,
+      ),
+    ];
+
     final existing = await select(entitiesTable).get();
 
-    if (existing.isNotEmpty) return;
+    final existingNames = existing.map((e) => e.name).toSet();
+
+    final missing = defaultEntities
+        .where((entity) => !existingNames.contains(entity.name))
+        .toList();
+
+    if (missing.isEmpty) return;
 
     await batch((batch) {
-      batch.insertAll(entitiesTable, [
-        EntitiesTableCompanion.insert(
-          name: 'Me',
-          entityType: EntityType.person.name,
-        ),
-        EntitiesTableCompanion.insert(
-          name: 'Juan',
-          entityType: EntityType.person.name,
-        ),
-        EntitiesTableCompanion.insert(
-          name: 'Maria',
-          entityType: EntityType.person.name,
-        ),
-      ]);
+      batch.insertAll(
+        entitiesTable,
+        missing.map((entity) {
+          return EntitiesTableCompanion.insert(
+            name: entity.name,
+            entityType: entity.entityType.name,
+            organizationType: Value(entity.organizationType?.name),
+            isSystem: const Value(true),
+          );
+        }).toList(),
+      );
     });
   }
 

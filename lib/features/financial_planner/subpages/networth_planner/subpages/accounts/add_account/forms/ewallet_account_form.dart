@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
@@ -19,15 +20,23 @@ class EWalletAccountForm extends GetView<AccountController> {
             label: 'Name',
             focusNode: controller.nameFocusNode,
             controller: controller.nameController,
+            onChanged: controller.setAccountName,
           ),
 
           Obx(
             () => AppDropdownField(
               iconKey: 'wallet',
               label: 'E-Wallet Provider',
-              value: controller.selectedInstitution.value?.name,
+              value:
+                  controller.selectedInstitution.value?.displayName ??
+                  controller.selectedInstitution.value?.name,
               onTap: () async {
-                // Open financial institution selection sheet.
+                final institution = await AppSheets.selection
+                    .selectInstitution();
+
+                if (institution == null) return;
+
+                controller.selectInstitution(institution);
               },
             ),
           ),

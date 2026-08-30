@@ -92,6 +92,12 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
 
     return result != null;
   }
+
+  Stream<List<AccountsTableData>> watchCreditCards() {
+    return (select(accountsTable)
+          ..where((tbl) => tbl.accountType.equals(AccountType.creditCard.name)))
+        .watch();
+  }
   // ============================================================================
   // ACCOUNT CRUD
   // ============================================================================

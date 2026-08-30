@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/credit_card_installment_form.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/select_institution_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_category_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_day_of_month.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_cycles_sheet.dart';
@@ -15,6 +17,22 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 
 class SelectionSheets {
+  Future<AccountsTableData?> selectCreditCard() {
+    return Get.bottomSheet<AccountsTableData>(
+      const SelectCreditCardSheet(),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
+  Future<EntitiesTableData?> selectInstitution() {
+    return Get.bottomSheet<EntitiesTableData>(
+      const SelectInstitutionSheet(),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
   Future<CashflowCategoriesTableData?> selectCategory(
     TransactionType transactionType, {
     CashflowCategoriesTableData? selectedCategory,

@@ -18,8 +18,8 @@ class RealPropertyForm extends GetView<AccountController> {
             label: 'Name',
             focusNode: controller.nameFocusNode,
             controller: controller.nameController,
+            onChanged: controller.setAccountName,
           ),
-
           Obx(
             () => AppAmountField(
               label: 'Current Market Value',
