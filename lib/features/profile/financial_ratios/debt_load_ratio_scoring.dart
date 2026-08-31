@@ -7,7 +7,7 @@ RatioScoreBand debtLoadBand(double value) {
 
 const debtLoadBands = [
   RatioScoreBand(
-    category: 'No',
+    category: 'Debt Free',
     threshold: 0,
     definition: 'Debt places very little weight on your financial growth.',
     interpretation:

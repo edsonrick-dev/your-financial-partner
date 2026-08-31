@@ -57,7 +57,7 @@ class TransactionAmountHolder extends GetView<TransactionController> {
                 () => Text(
                   controller.amount.value.toStringAsFixed(2),
                   style: AppTextStyle.amountXL.copyWith(
-                    color: colorScheme.textInversed,
+                    color: colorScheme.appInversedtext,
                   ),
                 ),
               ),

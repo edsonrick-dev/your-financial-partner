@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/constants/app_opacity.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/models/person_debt_activity.dart';
+import 'package:getx_drift_app/features/transaction/controllers/extensions/save_functions.dart';
 import 'package:intl/intl.dart';
 
 class PersonDebtActivityCard extends StatelessWidget {
   final PersonDebtActivity activity;
-
-  const PersonDebtActivityCard({super.key, required this.activity});
+  final VoidCallback? onTap;
+  const PersonDebtActivityCard({super.key, required this.activity, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,23 +20,30 @@ class PersonDebtActivityCard extends StatelessWidget {
     final transaction = activity.transaction;
     final obligation = activity.obligation;
 
-    final transactionType = TransactionType.values.firstWhere(
-      (e) => e.name == transaction.transactionType,
+    final debtType = DebtManagementType.values.firstWhere(
+      (e) => e.name == obligation.type,
     );
-
-    final title = switch (transactionType) {
-      TransactionType.give => 'Give Money',
-      TransactionType.receive => 'Receive Money',
-      _ => 'Debt Activity',
+    final title = switch (debtType) {
+      DebtManagementType.expensePaidByOthers => 'Paid for You',
+      DebtManagementType.splitExpense => 'Shared Expense',
+      DebtManagementType.giveMoney => 'You Lent',
+      DebtManagementType.receiveMoney => 'You Borrowed',
     };
 
-    final iconKey = switch (transactionType) {
-      TransactionType.give => 'handDeposit',
-      TransactionType.receive => 'handCoins',
-      _ => 'usersThree',
+    final iconKey = switch (debtType) {
+      DebtManagementType.giveMoney => 'handDeposit',
+      DebtManagementType.receiveMoney => 'handCoins',
+      DebtManagementType.splitExpense => 'usersThree',
+      DebtManagementType.expensePaidByOthers => 'user',
     };
-    final amountText = obligation.amount.toCurrency();
-    // final amountText = transactionType == TransactionType.give
+    final balanceInflow = switch (debtType) {
+      DebtManagementType.giveMoney => false,
+      DebtManagementType.receiveMoney => true,
+      DebtManagementType.splitExpense => false,
+      DebtManagementType.expensePaidByOthers => true,
+    };
+    final obligationAmount = obligation.amount;
+    // final obligationAmount = transactionType == TransactionType.give
     //     ? '-${transaction.amount.toCurrency()}'
     //     : transaction.amount.toCurrency();
 
@@ -48,106 +55,96 @@ class PersonDebtActivityCard extends StatelessWidget {
 
     final balanceAmount = activity.runningBalance.abs();
 
-    final balanceColor = activity.runningBalance == 0
-        ? colorScheme.appNeutral
-        : activity.isReceivable
+    final flowColor = balanceInflow
         ? colorScheme.appInflow
         : colorScheme.appOutflow;
+    // final balanceColor = activity.runningBalance == 0
+    //     ? colorScheme.appNeutral
+    //     : activity.isReceivable
+    //     ? colorScheme.appInflow
+    //     : colorScheme.appOutflow; //4938271509
 
-    return AdaptivePressable(
-      child: Container(
-        padding: const EdgeInsets.all(8),
+    return Container(
+      padding: const EdgeInsets.all(8),
 
-        constraints: const BoxConstraints(minHeight: 44),
+      constraints: const BoxConstraints(minHeight: 44),
 
-        width: double.infinity,
+      width: double.infinity,
 
-        decoration: BoxDecoration(
-          color: colorScheme.bgLight,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: colorScheme.appBorder),
-        ),
-
-        child: Row(
-          children: [
-            SizedBox(
-              width: 36,
-              height: 36,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Opacity(
-                    opacity: AppOpacity.transactionIcon,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: colorScheme.appText,
-                        borderRadius: BorderRadius.circular(999),
-                      ),
+      decoration: BoxDecoration(
+        color: colorScheme.bgLight,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: colorScheme.appBorder),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 36,
+            height: 36,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Opacity(
+                  opacity: AppOpacity.transactionIcon,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: colorScheme.appText,
+                      borderRadius: BorderRadius.circular(999),
                     ),
                   ),
-                  Icon(
-                    AppIcons.categories.resolve(iconKey),
-                    size: 20,
-                    color: colorScheme.appText,
-                  ),
-                ],
-              ),
+                ),
+                Icon(
+                  AppIcons.categories.resolve(iconKey),
+                  size: 20,
+                  color: colorScheme.appText,
+                ),
+              ],
             ),
+          ),
 
-            const SizedBox(width: 8),
+          const SizedBox(width: 12),
 
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(fontSize: 17, height: 20 / 17),
-                      ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: Text(title, style: AppTextStyle.bodyM)),
+                    const SizedBox(width: 16),
+                    Text(
+                      obligationAmount.toCurrency(),
+                      style: AppTextStyle.amountM.copyWith(color: flowColor),
+                    ),
+                  ],
+                ),
 
-                      Text(
+                // const Spacer(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Text(
                         DateFormat('MMMM d, yyyy').format(transaction.date),
-                        style: TextStyle(
-                          fontSize: 10,
-                          height: 12 / 10,
+                        style: AppTextStyle.bodyS.copyWith(
                           color: colorScheme.appTextMuted,
                         ),
                       ),
-                    ],
-                  ),
-
-                  const Spacer(),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        amountText,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          height: 20 / 17,
-                          fontFeatures: [FontFeature.tabularFigures()],
-                        ),
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      '$balanceLabel: ${balanceAmount.toCompactCurrency()}',
+                      style: AppTextStyle.bodyS.copyWith(
+                        color: colorScheme.appTextMuted,
                       ),
-
-                      Text(
-                        '$balanceLabel: ${balanceAmount.toCurrency()}',
-                        style: TextStyle(
-                          fontSize: 10,
-                          height: 12 / 10,
-                          color: balanceColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

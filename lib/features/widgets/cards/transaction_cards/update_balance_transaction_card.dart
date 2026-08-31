@@ -26,7 +26,7 @@ class UpdateBalanceTransactionCard extends StatelessWidget {
         : "You adjusted this account's balance by";
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -39,7 +39,7 @@ class UpdateBalanceTransactionCard extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: 3),
           Text(
             '${adjustment >= 0 ? '+' : '-'}'
             '${adjustment.abs().toCurrency()}',

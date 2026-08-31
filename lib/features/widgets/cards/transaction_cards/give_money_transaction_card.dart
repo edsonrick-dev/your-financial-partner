@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
-import 'package:getx_drift_app/core/constants/app_opacity.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/delete_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/widgets/container/category_icon_container.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class GiveMoneyTransactionCard extends GetView<TransactionController> {
@@ -62,108 +61,100 @@ class GiveMoneyTransactionCard extends GetView<TransactionController> {
         constraints: BoxConstraints(minHeight: 44),
         width: double.infinity,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ///TOP SECTION
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
 
-              children: [
-                ///Icon Holder
-                SizedBox(
-                  width: 36,
-                  height: 36,
-                  child: Stack(
-                    alignment: Alignment.center,
+          children: [
+            CategoryIconContainer(item: item, color: colorScheme.appOutflow),
+
+            const SizedBox(width: 12),
+
+            ///Details Row
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ///Top Column
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Opacity(
-                        opacity: AppOpacity.transactionIcon,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(999),
-                            color: colorScheme.appOutflow,
-                          ),
-                        ),
+                      Expanded(
+                        child: Text('Give Money', style: AppTextStyle.titleM),
                       ),
-                      Icon(
-                        AppIcons.categories.resolve('handDeposit'),
-                        size: 20,
-                        color: colorScheme.appOutflow,
+                      const SizedBox(width: 16),
+                      Text(
+                        item.transaction.amount.toCurrency(),
+                        style: AppTextStyle.amountL.copyWith(
+                          color: colorScheme.appOutflow,
+                        ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(width: 12),
 
-                ///Details Row
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ///Right Section
+                  Row(
                     children: [
-                      ///Left Section
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-
-                        children: [
-                          Text('Give Money', style: AppTextStyle.titleL),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                '${item.account!.name} → ',
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                item.account!.name,
                                 style: AppTextStyle.bodyS.copyWith(
                                   color: colorScheme.appTextMuted,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              Icon(
-                                PhosphorIconsRegular.user,
+                            ),
+
+                            Text(
+                              ' → ',
+                              style: AppTextStyle.bodyS.copyWith(
                                 color: colorScheme.appTextMuted,
-                                size: 14,
                               ),
-                              SizedBox(width: 3),
-                              Text(
+                            ),
+
+                            Icon(
+                              PhosphorIconsRegular.user,
+                              color: colorScheme.appTextMuted,
+                              size: 14,
+                            ),
+
+                            const SizedBox(width: 3),
+
+                            Flexible(
+                              child: Text(
                                 participantName,
                                 style: AppTextStyle.bodyS.copyWith(
                                   color: colorScheme.appTextMuted,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
-                      Spacer(),
 
-                      ///Right Section
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            item.transaction.amount.toCurrency(),
-                            style: AppTextStyle.amountL.copyWith(
-                              color: colorScheme.appOutflow,
+                      const SizedBox(width: 16),
+                      if (item.hasDebtImpact)
+                        Column(
+                          children: [
+                            SizedBox(height: 2),
+                            Icon(
+                              PhosphorIconsRegular.coins,
+                              color: colorScheme.appInfo,
+                              size: 16,
                             ),
-                          ),
-                          if (item.hasDebtImpact)
-                            Column(
-                              children: [
-                                SizedBox(height: 2),
-                                Icon(
-                                  PhosphorIconsRegular.coins,
-                                  color: colorScheme.appInfo,
-                                  size: 16,
-                                ),
-                              ],
-                            ),
-                        ],
-                      ),
+                          ],
+                        ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-
-            ///BOTTOM SECTION
           ],
         ),
       ),

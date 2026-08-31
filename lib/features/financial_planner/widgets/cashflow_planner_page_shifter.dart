@@ -39,7 +39,9 @@ class FinancialPlannerPageShifter extends GetView<FinancialPlannerController> {
             duration: const Duration(milliseconds: 180),
             curve: Curves.easeOut,
             style: TextStyle(
-              color: isSelected ? colorScheme.textInversed : colorScheme.text,
+              color: isSelected
+                  ? colorScheme.appInversedtext
+                  : colorScheme.text,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             ),
             child: Text(title),

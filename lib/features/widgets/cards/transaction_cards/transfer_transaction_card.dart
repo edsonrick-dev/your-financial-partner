@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/constants/app_opacity.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/delete_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/widgets/container/category_icon_container.dart';
 
 class TransferTransactionCard extends GetView<TransactionController> {
   final TransactionWithDetails item;
@@ -58,61 +57,62 @@ class TransferTransactionCard extends GetView<TransactionController> {
         width: double.infinity,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ///Icon Holder
-            SizedBox(
-              width: 36,
-              height: 36,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Opacity(
-                    opacity: AppOpacity.transactionIcon,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(999),
-                        color: colorScheme.appText,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    AppIcons.categories.resolve('sync_alt_sharp'),
-                    size: 20,
-                    color: colorScheme.appText,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 12),
+            CategoryIconContainer(item: item, color: colorScheme.appText),
+
+            const SizedBox(width: 12),
 
             ///Details Row
             Expanded(
-              child: Row(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
-                      Text('Transfer', style: AppTextStyle.titleL),
-                      SizedBox(height: 2),
+                      Expanded(
+                        child: Text('Transfer', style: AppTextStyle.titleL),
+                      ),
+                      const SizedBox(width: 16),
                       Text(
-                        '${item.account!.name} → ${item.linkedAccount?.name ?? 'Unknown'}',
+                        item.transaction.amount.toCurrency(),
+                        style: AppTextStyle.amountL,
+                      ),
+                    ],
+                  ),
+
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      ///Value
+                      Flexible(
+                        child: Text(
+                          item.account!.name,
+                          style: AppTextStyle.bodyS.copyWith(
+                            color: colorScheme.appTextMuted,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        ' → ',
                         style: AppTextStyle.bodyS.copyWith(
                           color: colorScheme.appTextMuted,
                         ),
                       ),
-                    ],
-                  ),
-                  Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      ///Value
-                      Text(
-                        item.transaction.amount.toCurrency(),
-                        style: AppTextStyle.amountL,
+                      Flexible(
+                        child: Text(
+                          item.linkedAccount?.name ?? 'Unknown',
+                          style: AppTextStyle.bodyS.copyWith(
+                            color: colorScheme.appTextMuted,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

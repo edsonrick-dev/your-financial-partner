@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/domain/financial_metrics_calculator.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/debt_load_ratio_scoring.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/lifestyle_coverage_ratio.dart';
@@ -105,6 +106,7 @@ extension FinancialProfileDetailsScreenExtension on FinancialProfileController {
 }
 
 class FinancialProfileController extends GetxController {
+  final CashflowController cashflowController = Get.find<CashflowController>();
   // ---------------------------------------------------------------------------
   // Details Page
   // ---------------------------------------------------------------------------
@@ -136,10 +138,17 @@ class FinancialProfileController extends GetxController {
   // ---------------------------------------------------------------------------
   // Raw financial data
   // ---------------------------------------------------------------------------
+  double get annualIncome => cashflowController.plannedAnnualIncome.value;
 
-  final annualIncome = 360000.0.obs;
-  final annualDebtRepayments = 36200.0.obs;
-  final annualExpenses = 7000.0.obs;
+  double get annualBudget => cashflowController.annualBudget.value;
+
+  double get annualExpenses => cashflowController.annualExpense.value;
+
+  double get annualDebtRepayments =>
+      cashflowController.annualDebtRepayment.value;
+  // final annualIncome = 360000.0.obs;
+  // final annualDebtRepayments = 36200.0.obs;
+  // final annualExpenses = 7000.0.obs;
 
   final liquidFunds = 80000.0.obs;
   final averageDailyBalnce = 200000.0.obs;
@@ -151,15 +160,15 @@ class FinancialProfileController extends GetxController {
   // ---------------------------------------------------------------------------
   // Derived  values
   // ---------------------------------------------------------------------------
-  double get annualBudget => annualDebtRepayments.value + annualExpenses.value;
-  double get annualSavings => annualIncome.value - annualBudget;
+  // double get annualBudget => annualDebtRepayments + annualExpenses.value;
+  double get annualSavings => annualIncome - annualBudget;
   double get emergencyFundAvailable =>
       min(liquidFunds.value, averageDailyBalnce.value);
-  double get monthlyIncome => annualIncome.value / 12;
+  double get monthlyIncome => annualIncome / 12;
 
-  double get monthlyDebtRepayments => annualDebtRepayments.value / 12;
+  double get monthlyDebtRepayments => annualDebtRepayments / 12;
 
-  double get monthlyExpenses => annualExpenses.value / 12;
+  double get monthlyExpenses => annualExpenses / 12;
 
   double get monthlySavingGoals => annualSavingGoals.value / 12;
 
@@ -287,13 +296,13 @@ class FinancialProfileController extends GetxController {
         plannedAnnualBudget: annualBudget,
       );
   double get debtLoadRatio => calculator.calculateDebtLoadRatio(
-    annualDebtRepayment: annualDebtRepayments.value,
-    annualIncome: annualIncome.value,
+    annualDebtRepayment: annualDebtRepayments,
+    annualIncome: annualIncome,
   );
   double get wealthBuildingRatio => calculator.calculateWealthBuildingRate(
-    annualDebtRepayment: annualDebtRepayments.value,
-    annualIncome: annualIncome.value,
-    annualExpenses: annualExpenses.value,
+    annualDebtRepayment: annualDebtRepayments,
+    annualIncome: annualIncome,
+    annualExpenses: annualExpenses,
   );
   // double? get emergencyFundMonths => calculator.calculateEmergencyFundMonths(
   //   emergencyFund: emergencyFundAvailable,

@@ -95,7 +95,7 @@ class WealthBuildingDetailsSheet extends GetView<FinancialProfileController> {
                   children: [
                     _MetricRow(
                       label: 'Annual income',
-                      value: controller.annualIncome.value.toCurrency(),
+                      value: controller.annualIncome.toCurrency(),
                     ),
                     const SizedBox(height: 8),
                     _MetricRow(

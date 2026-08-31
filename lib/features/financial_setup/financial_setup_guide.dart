@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
-import 'package:getx_drift_app/features/financial_setup/financial_setup_controller.dart';
 import 'package:getx_drift_app/features/financial_setup/financial_setup_criterion.dart';
-import 'package:getx_drift_app/features/home/views/home_view.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class FinancialSetupGuide {
   FinancialSetupGuide({
@@ -48,17 +44,17 @@ class GuideCard extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsetsGeometry.all(24),
+            padding: EdgeInsetsGeometry.only(top: 12, left: 24, right: 24),
             child: Row(
-              spacing: 20,
+              spacing: 8,
               children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('RECOMMENDED'),
-                      Text(guide.title, style: AppTextStyle.headlineM),
-                      Text(guide.description, style: AppTextStyle.bodyM),
+                      Text('RECOMMENDED', style: AppTextStyle.labelS),
+                      Text(guide.title, style: AppTextStyle.headlineS),
+                      Text(guide.description, style: AppTextStyle.bodyS),
                     ],
                   ),
                 ),
@@ -71,7 +67,7 @@ class GuideCard extends StatelessWidget {
               ],
             ),
           ),
-
+          Spacer(),
           Padding(
             padding: EdgeInsetsGeometry.only(bottom: 16, left: 16, right: 16),
             child: Column(

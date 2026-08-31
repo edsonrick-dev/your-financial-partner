@@ -127,41 +127,46 @@ class FundSummaryCard extends GetView<HomeController> {
 
             return Row(
               children: [
-                Obx(
-                  () => SizedBox(
-                    height: 40,
-                    child: Stack(
-                      alignment: Alignment.centerLeft,
-                      children: [
-                        AnimatedOpacity(
-                          opacity: controller.isFundHidden.value ? 0 : 1,
-                          duration: const Duration(milliseconds: 180),
-                          child: Text(
-                            availableFunds.abs().toCurrency(),
-                            style: AppTextStyle.amountXL.copyWith(
-                              color: availableFunds.isNegative
-                                  ? colorScheme.appOutflow
-                                  : colorScheme.appInversedtext,
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Obx(
+                      () => SizedBox(
+                        height: 40,
+                        child: Stack(
+                          alignment: Alignment.centerLeft,
+                          children: [
+                            AnimatedOpacity(
+                              opacity: controller.isFundHidden.value ? 0 : 1,
+                              duration: const Duration(milliseconds: 180),
+                              child: Text(
+                                availableFunds.abs().toCurrency(),
+                                style: AppTextStyle.amountXL.copyWith(
+                                  color: availableFunds.isNegative
+                                      ? colorScheme.appOutflow
+                                      : colorScheme.appInversedtext,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
 
-                        AnimatedOpacity(
-                          opacity: controller.isFundHidden.value ? 1 : 0,
-                          duration: const Duration(milliseconds: 180),
-                          child: Text(
-                            '••••••',
-                            style: AppTextStyle.amountXL.copyWith(
-                              color: colorScheme.appInversedtext,
+                            AnimatedOpacity(
+                              opacity: controller.isFundHidden.value ? 1 : 0,
+                              duration: const Duration(milliseconds: 180),
+                              child: Text(
+                                '••••••',
+                                style: AppTextStyle.amountXL.copyWith(
+                                  color: colorScheme.appInversedtext,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
 
-                const Spacer(),
+                const SizedBox(width: 16),
 
                 SizedBox(
                   width: 44,

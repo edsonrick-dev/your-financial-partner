@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
-import 'package:getx_drift_app/core/constants/app_opacity.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/delete_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/widgets/container/category_icon_container.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class ReceiveMoneyTransactionCard extends GetView<TransactionController> {
@@ -62,96 +61,89 @@ class ReceiveMoneyTransactionCard extends GetView<TransactionController> {
         width: double.infinity,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ///Icon Holder
-            SizedBox(
-              width: 36,
-              height: 36,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Opacity(
-                    opacity: AppOpacity.transactionIcon,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(999),
-                        color: colorScheme.appInflow,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    AppIcons.categories.resolve('handCoins'),
-                    size: 20,
-                    color: colorScheme.appInflow,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 12),
+            CategoryIconContainer(item: item, color: colorScheme.appInflow),
 
-            ///Details Row
+            const SizedBox(width: 12),
+
             Expanded(
               child: Column(
-                spacing: 8,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ///Top Section
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ///Left Section
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Expanded(
+                        child: Text(
+                          'Receive Money',
+                          style: AppTextStyle.titleL.copyWith(),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Text(
+                        item.transaction.amount.toCurrency(),
+                        style: AppTextStyle.amountL.copyWith(
+                          color: colorScheme.appInflow,
+                        ),
+                      ),
+                    ],
+                  ),
 
-                        children: [
-                          Text(
-                            'Receive Money',
-                            style: AppTextStyle.titleL.copyWith(),
-                          ),
-                          SizedBox(height: 2),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                PhosphorIconsRegular.user,
-                                color: colorScheme.appTextMuted,
-                                size: 14,
-                              ),
-                              SizedBox(width: 2),
-                              Text(
-                                '$participantName → ${item.account!.name}',
+                  ///Bottom Section
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              PhosphorIconsRegular.user,
+                              color: colorScheme.appTextMuted,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 3),
+                            Flexible(
+                              child: Text(
+                                participantName,
                                 style: AppTextStyle.bodyS.copyWith(
                                   color: colorScheme.appTextMuted,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-
-                      ///Right Section
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            item.transaction.amount.toCurrency(),
-                            style: AppTextStyle.amountL.copyWith(
-                              color: colorScheme.appInflow,
                             ),
-                          ),
-                          if (item.hasDebtImpact)
-                            Column(
-                              children: [
-                                SizedBox(height: 2),
-                                Icon(
-                                  PhosphorIconsRegular.coins,
-                                  color: colorScheme.appInfo,
-                                  size: 16,
+                            Text(
+                              ' → ',
+                              style: AppTextStyle.bodyS.copyWith(
+                                color: colorScheme.appTextMuted,
+                              ),
+                            ),
+                            Flexible(
+                              child: Text(
+                                item.account!.name,
+                                style: AppTextStyle.bodyS.copyWith(
+                                  color: colorScheme.appTextMuted,
                                 ),
-                              ],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                        ],
+                          ],
+                        ),
                       ),
+                      if (item.hasDebtImpact)
+                        Column(
+                          children: [
+                            SizedBox(height: 2),
+                            Icon(
+                              PhosphorIconsRegular.coins,
+                              color: colorScheme.appInfo,
+                              size: 16,
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ],

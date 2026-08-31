@@ -65,12 +65,15 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  netWorth.abs().toCurrency(),
-                  style: AppTextStyle.amountXL.copyWith(
-                    color: netWorth < 0
-                        ? colorScheme.appOutflowInversed
-                        : colorScheme.inversePrimary,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    netWorth.abs().toCurrency(),
+                    style: AppTextStyle.amountXL.copyWith(
+                      color: netWorth < 0
+                          ? colorScheme.appOutflowInversed
+                          : colorScheme.inversePrimary,
+                    ),
                   ),
                 ),
 
@@ -99,13 +102,13 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
                             TextSpan(
                               text: ' vs ',
                               style: AppTextStyle.titleM.copyWith(
-                                color: colorScheme.textInversed,
+                                color: colorScheme.appInversedtext,
                               ),
                             ),
                             TextSpan(
                               text: comparisonType.comparisonLabel,
                               style: AppTextStyle.titleM.copyWith(
-                                color: colorScheme.textInversed,
+                                color: colorScheme.appInversedtext,
                               ),
                             ),
                           ],
@@ -150,14 +153,14 @@ class _ComparisonSelector extends StatelessWidget {
           Text(
             value.selectorLabel,
             style: AppTextStyle.titleS.copyWith(
-              color: colorScheme.textInversed,
+              color: colorScheme.appInversedtext,
             ),
           ),
           const SizedBox(width: 4),
           Icon(
             PhosphorIconsRegular.caretDown,
             size: 14,
-            color: colorScheme.textInversed,
+            color: colorScheme.appInversedtext,
           ),
         ],
       ),

@@ -27,54 +27,76 @@ class NetWorthDetailsPage extends GetView<NetWorthController> {
               title: 'Net Worth',
               child: Column(
                 children: [
-                  Text(
-                    controller.netWorth.abs().toCurrency(),
-                    style: AppTextStyle.amountXL.copyWith(
-                      color: controller.netWorth <= 0
-                          ? colorScheme.appOutflowInversed
-                          : colorScheme.appInversedtext,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        controller.netWorth.abs().toCurrency(),
+                        style: AppTextStyle.amountXL.copyWith(
+                          color: controller.netWorth <= 0
+                              ? colorScheme.appOutflowInversed
+                              : colorScheme.appInversedtext,
+                        ),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Text(
-                              controller.totalAssets.toCurrency(),
-                              style: AppTextStyle.amountL.copyWith(
-                                color: colorScheme.appInflowInverse,
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 24,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    controller.totalAssets.toCurrency(),
+                                    style: AppTextStyle.amountL.copyWith(
+                                      color: colorScheme.appInflowInverse,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Assets',
-                              style: AppTextStyle.titleM.copyWith(
-                                color: colorScheme.appInversedtextMuted,
+                              Text(
+                                'Assets',
+                                style: AppTextStyle.titleM.copyWith(
+                                  color: colorScheme.appInversedtextMuted,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Text(
-                              controller.totalLiabilities.toCurrency(),
-                              style: AppTextStyle.amountL.copyWith(
-                                color: colorScheme.appOutflowInversed,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 24,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    controller.totalLiabilities.toCurrency(),
+                                    style: AppTextStyle.amountL.copyWith(
+                                      color: colorScheme.appOutflowInversed,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Liabilities',
-                              style: AppTextStyle.titleM.copyWith(
-                                color: colorScheme.appInversedtextMuted,
+                              Text(
+                                'Liabilities',
+                                style: AppTextStyle.titleM.copyWith(
+                                  color: colorScheme.appInversedtextMuted,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

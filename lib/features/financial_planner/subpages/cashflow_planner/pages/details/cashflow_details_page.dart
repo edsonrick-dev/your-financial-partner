@@ -41,7 +41,7 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                             ? 'Annual Surplus'
                             : 'Annual Deficit',
                         style: AppTextStyle.titleM.copyWith(
-                          color: colorScheme.textInversedMuted,
+                          color: colorScheme.appInversedtext,
                         ),
                       ),
                     ],
@@ -64,7 +64,7 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                           Text(
                             'Annual Income',
                             style: AppTextStyle.titleM.copyWith(
-                              color: colorScheme.textInversedMuted,
+                              color: colorScheme.appInversedtext,
                             ),
                           ),
                         ],
@@ -84,7 +84,7 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                           Text(
                             'Annual Budget',
                             style: AppTextStyle.titleM.copyWith(
-                              color: colorScheme.textInversedMuted,
+                              color: colorScheme.appInversedtext,
                             ),
                           ),
                         ],

@@ -37,26 +37,31 @@ class CashAndBankSummarySection extends StatelessWidget {
           children: [
             Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Fund',
-                      style: AppTextStyle.titleL.copyWith(
-                        color: colorScheme.appInversedtextMuted,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Total Fund',
+                        style: AppTextStyle.titleL.copyWith(
+                          color: colorScheme.appInversedtextMuted,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
+                      const SizedBox(height: 4),
 
-                    Text(
-                      totalFund.toCurrency(),
-                      style: AppTextStyle.amountXL.copyWith(
-                        color: colorScheme.textInversed,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          totalFund.toCurrency(),
+                          style: AppTextStyle.amountXL.copyWith(
+                            color: colorScheme.appInversedtext,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                Spacer(),
+                const SizedBox(width: 16),
                 AdaptivePressable(
                   onTap: () {
                     AppSheets.openAccountActionSheet(account);
@@ -71,7 +76,7 @@ class CashAndBankSummarySection extends StatelessWidget {
                           width: 44,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(999),
-                            color: colorScheme.textInversed,
+                            color: colorScheme.appInversedtext,
                           ),
                         ),
                       ),

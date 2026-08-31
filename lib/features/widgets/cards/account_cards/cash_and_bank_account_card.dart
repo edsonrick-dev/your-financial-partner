@@ -28,7 +28,6 @@ class CashAndBankAccountCard extends GetView<AccountController> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
-            spacing: 16,
             children: [
               Expanded(
                 child: Row(
@@ -36,12 +35,17 @@ class CashAndBankAccountCard extends GetView<AccountController> {
                     Icon(AppIcons.categories.resolve(account.icon), size: 24),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(account.name, style: AppTextStyle.titleM),
+                      child: Text(
+                        account.name,
+                        style: AppTextStyle.bodyM,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
               ),
-
+              const SizedBox(width: 8),
               Text(
                 account.currentValue.toCurrency(),
                 style: AppTextStyle.amountL.copyWith(
@@ -49,6 +53,9 @@ class CashAndBankAccountCard extends GetView<AccountController> {
                       ? colorScheme.appOutflow
                       : colorScheme.appInflow,
                 ),
+                softWrap: false,
+                maxLines: 1,
+                textAlign: TextAlign.right,
               ),
             ],
           ),

@@ -60,19 +60,31 @@ class _CardDesign2 extends StatelessWidget {
         // Header
         Row(
           children: [
-            Row(
-              children: [
-                Icon(AppIcons.categories.resolve(account.icon), size: 24),
-                const SizedBox(width: 12),
-                Text(account.name, style: AppTextStyle.titleM),
-              ],
+            Expanded(
+              child: Row(
+                children: [
+                  Icon(AppIcons.categories.resolve(account.icon), size: 24),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      account.name,
+                      style: AppTextStyle.bodyM,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Spacer(),
+            const SizedBox(width: 8),
             Text(
               account.currentValue.toCurrency(),
               style: AppTextStyle.amountL.copyWith(
                 color: colorScheme.appOutflow,
               ),
+              softWrap: false,
+              maxLines: 1,
+              textAlign: TextAlign.right,
             ),
           ],
         ),

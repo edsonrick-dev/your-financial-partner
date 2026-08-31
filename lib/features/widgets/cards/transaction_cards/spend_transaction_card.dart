@@ -70,188 +70,74 @@ class SpendTransactionCard extends GetView<TransactionController> {
         constraints: BoxConstraints(minHeight: 44),
         width: double.infinity,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
-            ///TOP SECTION
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            ///Icon Holder
+            CategoryIconContainer(item: item, color: colorScheme.appOutflow),
+            const SizedBox(width: 12),
 
-              children: [
-                ///Icon Holder
-                CategoryIconContainer(
-                  item: item,
-                  color: colorScheme.appOutflow,
-                ),
-                SizedBox(width: 12),
+            ///Details Row
+            Expanded(
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                ///Details Row
-                Expanded(
-                  child: Column(
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ///Left Section
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-
-                            children: [
-                              Text(
-                                item.category?.name ?? 'Unknown',
-                                style: AppTextStyle.titleL,
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                paymentSource,
-                                style: AppTextStyle.bodyS.copyWith(
-                                  color: colorScheme.appTextMuted,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Spacer(),
-
-                          ///Right Section
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                item.transaction.amount.toCurrency(),
-                                style: AppTextStyle.amountL.copyWith(
-                                  color: colorScheme.appOutflow,
-                                ),
-                              ),
-
-                              if (item.isSharedExpense)
-                                Column(
-                                  children: [
-                                    SizedBox(width: 2),
-                                    Icon(
-                                      PhosphorIconsRegular.users,
-                                      color: colorScheme.appInfo,
-                                      size: 16,
-                                    ),
-                                  ],
-                                ),
-
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.center,
-                              //   children: [
-                              //     Icon(
-                              //       PhosphorIconsRegular.users,
-                              //       color: colorScheme.info,
-                              //       size: 12,
-                              //     ),
-                              //     SizedBox(width: 4),
-                              //     Text(
-                              //       'Split with '
-                              //       '$othersCount ${othersCount == 1 ? 'other' : 'others'}',
-                              //       style: TextStyle(
-                              //         fontSize: 11,
-                              //         height: 16 / 11,
-                              //         color: colorScheme.info,
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
-                            ],
-                          ),
-                        ],
+                      Expanded(
+                        child: Text(
+                          item.category?.name ?? 'Unknown',
+                          style: AppTextStyle.titleL,
+                        ),
                       ),
 
-                      /// SHARED SUMMARY
-                      // if (item.isSharedExpense)
-                      //   Container(
-                      //     padding: const EdgeInsets.all(8),
-
-                      //     decoration: BoxDecoration(
-                      //       color: colorScheme.infoSoft,
-                      //       borderRadius: BorderRadius.circular(4),
-                      //       border: Border.all(
-                      //         color: colorScheme.info,
-                      //         width: 0.4,
-                      //       ),
-                      //     ),
-
-                      //     child: Column(
-                      //       spacing: 4,
-                      //       children: [
-                      //         _SummaryRow(
-                      //           label: 'Your share',
-
-                      //           value: item.splitSummary?.myShare ?? 0,
-
-                      //           valueColor: colorScheme.error,
-                      //           fontWeight: 600,
-                      //         ),
-
-                      //         // const SizedBox(height: 4),
-                      //         _SummaryRow(
-                      //           label: 'Others owe you',
-
-                      //           value: item.splitSummary?.receivableAmount ?? 0,
-
-                      //           valueColor: Colors.green,
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
+                      Text(
+                        item.transaction.amount.toCurrency(),
+                        style: AppTextStyle.amountL.copyWith(
+                          color: colorScheme.appOutflow,
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
 
-            ///BOTTOM SECTION
+                  ///Right Section
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Flexible(
+                          child: Text(
+                            paymentSource,
+                            style: AppTextStyle.bodyS.copyWith(
+                              color: colorScheme.appTextMuted,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      if (item.isSharedExpense)
+                        Column(
+                          children: [
+                            SizedBox(width: 2),
+                            Icon(
+                              PhosphorIconsRegular.users,
+                              color: colorScheme.appInfo,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-// class _SummaryRow extends StatelessWidget {
-//   final String label;
-
-//   final double value;
-
-//   final Color? valueColor;
-
-//   final int? fontWeight;
-//   const _SummaryRow({
-//     required this.label,
-//     required this.value,
-//     this.valueColor,
-//     this.fontWeight = 400,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       children: [
-//         Expanded(
-//           child: Text(
-//             label,
-//             style: TextStyle(
-//               fontWeight: FontWeight(fontWeight!),
-//               fontSize: 11,
-//               height: 16 / 11,
-//             ),
-//           ),
-//         ),
-
-//         Text(
-//           value.toCurrency(),
-
-//           style: TextStyle(
-//             fontWeight: FontWeight(fontWeight!),
-//             color: valueColor,
-//             fontSize: 11,
-//             height: 16 / 11,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }

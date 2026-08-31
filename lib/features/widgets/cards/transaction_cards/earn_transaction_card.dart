@@ -60,38 +60,46 @@ class EarnTransactionCard extends GetView<TransactionController> {
           children: [
             ///Icon Holder
             CategoryIconContainer(item: item, color: colorScheme.appInflow),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
 
             ///Details Row
             Expanded(
-              child: Row(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
-                      Text(
-                        item.category?.name ?? 'Unknown',
-                        style: AppTextStyle.titleL,
-                      ),
-                      SizedBox(height: 2),
-                      Text(
-                        item.account!.name,
-                        style: AppTextStyle.bodyS.copyWith(
-                          color: colorScheme.appTextMuted,
+                      Expanded(
+                        child: Text(
+                          item.category?.name ?? 'Unknown',
+                          style: AppTextStyle.titleL,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ],
-                  ),
-                  Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
+                      const SizedBox(width: 16),
                       Text(
                         item.transaction.amount.toCurrency(),
                         style: AppTextStyle.amountL.copyWith(
                           color: colorScheme.appInflow,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Flexible(
+                          child: Text(
+                            item.account!.name,
+                            style: AppTextStyle.bodyS.copyWith(
+                              color: colorScheme.appTextMuted,
+                            ),
+                          ),
                         ),
                       ),
                     ],

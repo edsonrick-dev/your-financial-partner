@@ -22,6 +22,9 @@ class DebtLoadDetails extends GetView<FinancialProfileController> {
   Widget build(BuildContext context) {
     final score = controller.debtLoad.scoreBand;
     final colorScheme = context.colors;
+    String detailsTitle = score.threshold == 0
+        ? score.category
+        : '${score.category} ${ratio.type.displayName}';
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -33,10 +36,7 @@ class DebtLoadDetails extends GetView<FinancialProfileController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${score.category} ${ratio.type.displayName}',
-                    style: AppTextStyle.headlineL,
-                  ),
+                  Text(detailsTitle, style: AppTextStyle.headlineL),
                   SizedBox(height: 12),
 
                   // Row(
@@ -115,12 +115,12 @@ class DebtLoadDetails extends GetView<FinancialProfileController> {
                   children: [
                     _MetricRow(
                       label: 'Annual debt repayments',
-                      value: controller.annualDebtRepayments.value.toCurrency(),
+                      value: controller.annualDebtRepayments.toCurrency(),
                     ),
                     const SizedBox(height: 8),
                     _MetricRow(
                       label: 'Annual income',
-                      value: controller.annualIncome.value.toCurrency(),
+                      value: controller.annualIncome.toCurrency(),
                     ),
                     const SizedBox(height: 16),
                     Container(

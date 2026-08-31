@@ -21,7 +21,7 @@ extension AppColorScheme on ColorScheme {
   /// TEXT
   Color get appText => color900;
   Color get appTextMuted => color500;
-  Color get appInversedtext => surface;
+  Color get appInversedtext => color50;
   Color get appInversedtextMuted => color300;
 
   /// SEMANTICS
@@ -39,8 +39,8 @@ extension AppColorScheme on ColorScheme {
 
   Color get text => onSurface;
   // Color get textMuted => isDark ? color300 : color700;
-  Color get textInversed => bg;
-  Color get textInversedMuted => bgLight;
+  // Color get textInversed => bg;
+  // Color get textInversedMuted => bgLight;
   Color get gradient2 => const Color(0xFF46628F);
 }
 

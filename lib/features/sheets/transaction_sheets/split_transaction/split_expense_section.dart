@@ -62,7 +62,9 @@ class SplitExpenseSection extends GetView<TransactionController> {
                             Text(
                               controller.participants.isEmpty
                                   ? 'Split this expense with others'
-                                  : '${controller.participants.length} participants',
+                                  : controller.participants.length > 1
+                                  ? '${controller.participants.length} participants'
+                                  : '${controller.participants.length} participant',
                               style: TextStyle(
                                 color: colorScheme.appInfo,
                                 fontSize: 12,

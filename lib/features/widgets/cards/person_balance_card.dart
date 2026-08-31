@@ -27,72 +27,55 @@ class PersonBalanceCard extends StatelessWidget {
       child: Row(
         children: [
           /// NAME + STATUS
-          Row(
-            children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    height: 24,
-                    width: 24,
-                    decoration: BoxDecoration(
-                      color: colorScheme.appText,
-                      borderRadius: BorderRadius.circular(18),
-                      gradient: LinearGradient(
-                        colors: [colorScheme.text, colorScheme.gradient2],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.bottomRight,
+          Expanded(
+            child: Row(
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      height: 24,
+                      width: 24,
+                      decoration: BoxDecoration(
+                        color: colorScheme.appText,
+                        borderRadius: BorderRadius.circular(18),
+                        gradient: LinearGradient(
+                          colors: [colorScheme.text, colorScheme.gradient2],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.bottomRight,
+                        ),
                       ),
                     ),
-                  ),
 
-                  Text(
-                    item.entity.name.trim()[0].toUpperCase(),
-                    style: AppTextStyle.labelS.copyWith(
-                      color: colorScheme.appInversedtext,
+                    Text(
+                      item.entity.name.trim()[0].toUpperCase(),
+                      style: AppTextStyle.labelS.copyWith(
+                        color: colorScheme.appInversedtext,
+                      ),
                     ),
+                  ],
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    item.entity.name,
+                    style: AppTextStyle.bodyM,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
-              const SizedBox(width: 12),
-              Text(item.entity.name, style: AppTextStyle.titleM),
-            ],
+                ),
+              ],
+            ),
           ),
-          Spacer(),
+          const SizedBox(width: 16),
 
           /// BALANCE
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                item.balanceAmount.toCurrency(),
+          Text(
+            item.balanceAmount.toCurrency(),
 
-                style: AppTextStyle.amountL.copyWith(
-                  color: item.iOwe
-                      ? colorScheme.appOutflow
-                      : colorScheme.appInflow,
-                ),
-              ),
-
-              // Text(
-              //   item.isSettled
-              //       ? 'Settled'
-              //       : item.owesMe
-              //       ? 'Collectible'
-              //       : 'Payable',
-
-              //   style: TextStyle(
-              //     fontSize: 12,
-              //     fontWeight: FontWeight.w600,
-              //     // color: Colors.grey.shade600,
-              //     color: item.isSettled
-              //         ? colorScheme.appTextMuted
-              //         : item.owesMe
-              //         ? colorScheme.appInflow
-              //         : colorScheme.appOutflow,
-              //   ),
-              // ),
-            ],
+            style: AppTextStyle.amountL.copyWith(
+              color: item.iOwe ? colorScheme.appOutflow : colorScheme.appInflow,
+            ),
           ),
         ],
       ),

@@ -41,26 +41,31 @@ class CreditCardSummarySection extends StatelessWidget {
           children: [
             Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Current Payable',
-                      style: AppTextStyle.titleL.copyWith(
-                        color: colorScheme.appInversedtextMuted,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Current Payable',
+                        style: AppTextStyle.titleL.copyWith(
+                          color: colorScheme.appInversedtextMuted,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
+                      const SizedBox(height: 4),
 
-                    Text(
-                      payable.toCurrency(),
-                      style: AppTextStyle.amountXL.copyWith(
-                        color: colorScheme.textInversed,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          payable.toCurrency(),
+                          style: AppTextStyle.amountXL.copyWith(
+                            color: colorScheme.appInversedtext,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                Spacer(),
+                const SizedBox(width: 16),
                 AdaptivePressable(
                   onTap: () {
                     AppSheets.openAccountActionSheet(account);
@@ -75,13 +80,13 @@ class CreditCardSummarySection extends StatelessWidget {
                           width: 44,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(999),
-                            color: colorScheme.textInversed,
+                            color: colorScheme.appInversedtext,
                           ),
                         ),
                       ),
                       Icon(
                         PhosphorIconsRegular.dotsThree,
-                        color: colorScheme.text,
+                        color: colorScheme.appInversedtext,
                       ),
                     ],
                   ),
@@ -111,7 +116,7 @@ class CreditCardSummarySection extends StatelessWidget {
             const SizedBox(height: 16),
 
             LinearProgressIndicator(
-              backgroundColor: colorScheme.textInversed,
+              backgroundColor: colorScheme.appInversedtext,
               value: utilization.clamp(0.0, 1.0),
               minHeight: 6,
               borderRadius: BorderRadius.circular(10),
@@ -122,7 +127,7 @@ class CreditCardSummarySection extends StatelessWidget {
             Text(
               '${(utilization * 100).toStringAsFixed(1)}% utilized',
               style: AppTextStyle.bodyS.copyWith(
-                color: colorScheme.textInversedMuted,
+                color: colorScheme.appInversedtextMuted,
               ),
             ),
           ],

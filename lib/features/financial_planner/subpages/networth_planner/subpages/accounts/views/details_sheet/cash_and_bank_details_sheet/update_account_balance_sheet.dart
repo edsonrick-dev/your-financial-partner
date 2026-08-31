@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
@@ -13,6 +15,7 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
     return AppSheet(
       adaptiveHeight: true,
       title: 'Update Balance',
@@ -31,7 +34,7 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
 
             Text(
               account.currentValue.toCurrency(),
-              style: Theme.of(context).textTheme.titleLarge,
+              style: AppTextStyle.amountL.copyWith(fontSize: 20),
             ),
 
             const SizedBox(height: 20),
@@ -69,21 +72,17 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
             }),
 
             const SizedBox(height: 24),
-
             Obx(
-              () => SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: controller.actualBalance < 0
-                      ? null
-                      : () {
-                          controller.updateAccountBalance(account);
-                        },
-                  child: const Text('Update Balance'),
-                ),
+              () => AppButton(
+                text: 'Update Balance',
+                onTap: controller.actualBalance < 0
+                    ? null
+                    : () {
+                        controller.updateAccountBalance(account);
+                      },
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: bottomPadding),
           ],
         ),
       ),

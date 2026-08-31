@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -47,7 +48,7 @@ class ProfilePage extends GetView<FinancialProfileController> {
                           height: 80,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: colorScheme.textInversed,
+                            color: colorScheme.appInversedtext,
                           ),
                         ),
                         SizedBox(width: 12),
@@ -59,7 +60,7 @@ class ProfilePage extends GetView<FinancialProfileController> {
                               Text(
                                 'Katrina Francesca D. Villano',
                                 style: AppTextStyle.headlineM.copyWith(
-                                  color: colorScheme.textInversed,
+                                  color: colorScheme.appInversedtext,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -67,7 +68,7 @@ class ProfilePage extends GetView<FinancialProfileController> {
                               Text(
                                 'edsonsanjuan@gmail.com',
                                 style: AppTextStyle.titleM.copyWith(
-                                  color: colorScheme.textInversed,
+                                  color: colorScheme.appInversedtext,
                                 ),
                               ),
                               SizedBox(height: 4),
@@ -91,7 +92,7 @@ class ProfilePage extends GetView<FinancialProfileController> {
                         SizedBox(width: 2),
                         Icon(
                           PhosphorIconsRegular.pencilSimple,
-                          color: colorScheme.textInversed,
+                          color: colorScheme.appInversedtext,
                         ),
                         SizedBox(width: 4),
                       ],
@@ -117,13 +118,7 @@ class ProfilePage extends GetView<FinancialProfileController> {
                       decoration: BoxDecoration(
                         color: colorScheme.bgLight,
                         borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.06),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+                        boxShadow: AppShadows.card(colorScheme.appText),
                         // border: Border.all(color: colorScheme.appBorder),
                       ),
                       child: Obx(

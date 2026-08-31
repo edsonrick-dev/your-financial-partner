@@ -12,7 +12,7 @@ class AddParticipantButton extends GetView<TransactionController> {
     final colorScheme = context.colors;
     return SizedBox(
       width: double.infinity,
-      height: 52,
+      height: 44,
       child: GestureDetector(
         onTap: () async {
           // final person = await AppSheets.selection.selectExpenseParticipant();/

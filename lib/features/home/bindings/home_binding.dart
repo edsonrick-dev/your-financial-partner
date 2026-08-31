@@ -6,6 +6,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/credit_card_installment_form.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_planner/views/savings_planner_screen.dart';
 import 'package:getx_drift_app/features/financial_setup/financial_setup_controller.dart';
 import 'package:getx_drift_app/features/main_shell/controller/main_shell_controller.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
@@ -24,6 +25,7 @@ class HomeBinding extends Bindings {
     Get.lazyPut<HomeController>(() => HomeController());
     Get.lazyPut<FinancialPlannerController>(() => FinancialPlannerController());
     Get.lazyPut<NetWorthController>(() => NetWorthController());
+    Get.lazyPut<SavingsPlannerController>(() => SavingsPlannerController());
 
     Get.lazyPut<FinancialProfileController>(() => FinancialProfileController());
     Get.lazyPut<InsurancePlannerController>(() => InsurancePlannerController());

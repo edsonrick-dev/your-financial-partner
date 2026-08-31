@@ -27,7 +27,9 @@ class AccountCardMetric extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           value,
-          style: AppTextStyle.amountM.copyWith(color: colorScheme.textInversed),
+          style: AppTextStyle.amountM.copyWith(
+            color: colorScheme.appInversedtext,
+          ),
         ),
       ],
     );

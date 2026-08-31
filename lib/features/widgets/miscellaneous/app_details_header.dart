@@ -22,12 +22,12 @@ class AppDetailsHeader extends StatelessWidget {
         children: [
           AppBar(
             backgroundColor: Colors.transparent,
-            foregroundColor: colorScheme.textInversed,
+            foregroundColor: colorScheme.appInversedtext,
             centerTitle: true,
             title: Text(
               title,
               style: AppTextStyle.headlineL.copyWith(
-                color: colorScheme.textInversed,
+                color: colorScheme.appInversedtext,
               ),
             ),
             surfaceTintColor: Colors.transparent,

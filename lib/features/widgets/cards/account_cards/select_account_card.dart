@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 
 class SelectAccountCard extends StatelessWidget {
   final AccountsTableData account;
@@ -16,42 +15,32 @@ class SelectAccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return AdaptivePressable(
-      borderRadius: BorderRadius.circular(8),
+    return AppCard(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        width: double.infinity,
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: colorScheme.bgLight,
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: colorScheme.text.withValues(alpha: 0.06),
-          //     blurRadius: 8,
-          //     offset: const Offset(0, 2),
-          //   ),
-          // ],
-        ),
-        child: Row(
-          children: [
-            Row(
-              spacing: 12,
+      child: Row(
+        children: [
+          Expanded(
+            child: Row(
               children: [
                 Icon(AppIcons.categories.resolve(account.icon), size: 24),
-
-                Text(account.name, style: AppTextStyle.titleM),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    account.name,
+                    style: AppTextStyle.titleM,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
-            Spacer(),
-            Text(
-              account.availableForPayment.toCurrency(),
-              style: AppTextStyle.amountM,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            account.availableForPayment.toCurrency(),
+            style: AppTextStyle.amountM,
+          ),
+        ],
       ),
     );
   }

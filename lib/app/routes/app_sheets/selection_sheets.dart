@@ -70,8 +70,12 @@ class SelectionSheets {
   Future<AccountType?> selectPaymentAccountType({
     required List<AccountType> accountTypes,
   }) {
+    final paymentAccountTypes = accountTypes
+        .where((type) => type.isPaymentAccount)
+        .toList();
+
     return Get.bottomSheet<AccountType>(
-      SelectPaymentAccountTypeSheet(accountTypes: accountTypes),
+      SelectPaymentAccountTypeSheet(accountTypes: paymentAccountTypes),
     );
   }
 

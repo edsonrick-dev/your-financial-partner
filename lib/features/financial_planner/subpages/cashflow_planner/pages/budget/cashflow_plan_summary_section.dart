@@ -55,7 +55,7 @@ class CashflowPlanSummarySection extends StatelessWidget {
             Text(
               _periodLabel(),
               style: AppTextStyle.bodyS.copyWith(
-                color: colorScheme.textInversedMuted,
+                color: colorScheme.appInversedtext,
               ),
             ),
 
@@ -85,7 +85,7 @@ class CashflowPlanSummarySection extends StatelessWidget {
               value: progress,
               minHeight: 6,
               borderRadius: BorderRadius.circular(10),
-              backgroundColor: colorScheme.textInversed.withAlpha(40),
+              backgroundColor: colorScheme.appInversedtext.withAlpha(40),
               valueColor: AlwaysStoppedAnimation(statusColor),
             ),
 
@@ -96,7 +96,7 @@ class CashflowPlanSummarySection extends StatelessWidget {
                 Text(
                   '${(spent / (planned > 0 ? planned : 1) * 100).clamp(0, double.infinity).toStringAsFixed(0)}% used',
                   style: AppTextStyle.bodyS.copyWith(
-                    color: colorScheme.textInversedMuted,
+                    color: colorScheme.appInversedtext,
                   ),
                 ),
                 const Spacer(),
@@ -148,14 +148,14 @@ class _Metric extends StatelessWidget {
         Text(
           label,
           style: AppTextStyle.bodyS.copyWith(
-            color: colorScheme.textInversedMuted,
+            color: colorScheme.appInversedtext,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           value,
           style: AppTextStyle.amountM.copyWith(
-            color: valueColor ?? colorScheme.textInversed,
+            color: valueColor ?? colorScheme.appInversedtext,
           ),
         ),
       ],

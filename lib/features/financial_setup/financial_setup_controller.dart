@@ -153,21 +153,24 @@ class FinancialSetupGuideCarousel extends GetView<FinancialSetupController> {
       return Column(
         children: [
           SizedBox(
-            height: 244,
+            height: 210,
             child: PageView.builder(
               controller: controller.guidePageController,
               itemCount: guides.length,
               onPageChanged: controller.onGuidePageChanged,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.only(
+                    right: 16,
+                    left: 16,
+                    bottom: 12,
+                  ),
                   child: GuideCard(guide: guides[index]),
                 );
               },
             ),
           ),
 
-          const SizedBox(height: 12),
           if (guides.length > 1) _GuidePageIndicator(),
         ],
       );

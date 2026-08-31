@@ -42,77 +42,113 @@ class AppToolbar extends StatelessWidget {
   Widget build(BuildContext context) {
     final leading = leadingIcon ?? const Icon(Icons.close, size: 20);
     final trailing = trailingIcon ?? const Icon(Icons.check, size: 20);
+
     final colorScheme = context.colors;
+
     final defaultButtonColor = isDark
         ? colorScheme.appInversedtext
         : Colors.grey[200];
+
     final defaultButtonForegroundColor = isDark
         ? colorScheme.appInversedtextMuted
         : colorScheme.appText;
 
+    final leadingWidth = showLeading && leadingOnPressed != null
+        ? (leadingIcon == null ? 44.0 : 56.0)
+        : 0.0;
+
+    final trailingWidth = showTrailing
+        ? (trailingIcon == null ? 44.0 : 56.0)
+        : 0.0;
+
     return SizedBox(
       height: 44,
       child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Text(
-              title,
-              style: AppTextStyle.headlineM.copyWith(
-                // fontSize: 17,
-                // height: 24 / 17,
-                // fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white : Colors.black,
-              ),
-            ),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // To keep the title visually centered, both sides
+            // use the larger occupied width.
+            final sideInset = [
+              leadingWidth,
+              trailingWidth,
+            ].reduce((a, b) => a > b ? a : b);
 
-            Row(
+            final titleWidth = constraints.maxWidth - (sideInset * 2);
+
+            return Stack(
+              alignment: Alignment.center,
               children: [
-                if (showLeading && leadingOnPressed != null)
-                  AdaptivePressable(
-                    onTap: leadingOnPressed,
-                    child: Container(
-                      constraints: BoxConstraints(minWidth: 44),
-                      height: 44,
-                      width: leadingIcon == null ? 44 : null,
-                      padding: leadingIcon == null
-                          ? EdgeInsets.zero
-                          : EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color:
-                            leadingBackgroundColor ??
-                            defaultButtonForegroundColor,
-                        borderRadius: BorderRadius.circular(22),
+                // TITLE
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, right: 16),
+                  child: SizedBox(
+                    width: titleWidth.clamp(0.0, constraints.maxWidth),
+                    child: Text(
+                      title,
+                      style: AppTextStyle.headlineM.copyWith(
+                        color: isDark
+                            ? colorScheme.appInversedtext
+                            : colorScheme.appText,
                       ),
-                      child: Center(child: leading),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                     ),
                   ),
+                ),
 
-                const Spacer(),
-                if (showTrailing)
-                  Opacity(
-                    opacity: trailingOnPressed == null ? 0.4 : 1.0,
-                    child: AdaptivePressable(
-                      onTap: trailingOnPressed,
-                      child: Container(
-                        constraints: const BoxConstraints(minWidth: 44),
-                        height: 44,
-                        width: trailingIcon == null ? 44 : null,
-                        padding: trailingIcon == null
-                            ? EdgeInsets.zero
-                            : const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: trailingBackgroundColor ?? defaultButtonColor,
-                          borderRadius: BorderRadius.circular(22),
+                // BUTTONS
+                Row(
+                  children: [
+                    if (showLeading && leadingOnPressed != null)
+                      AdaptivePressable(
+                        onTap: leadingOnPressed,
+                        child: Container(
+                          constraints: const BoxConstraints(minWidth: 44),
+                          height: 44,
+                          width: leadingIcon == null ? 44 : null,
+                          padding: leadingIcon == null
+                              ? EdgeInsets.zero
+                              : const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            color:
+                                leadingBackgroundColor ??
+                                defaultButtonForegroundColor,
+                            borderRadius: BorderRadius.circular(22),
+                          ),
+                          child: Center(child: leading),
                         ),
-                        child: Center(child: trailing),
                       ),
-                    ),
-                  ),
+
+                    const Spacer(),
+
+                    if (showTrailing)
+                      Opacity(
+                        opacity: trailingOnPressed == null ? 0.4 : 1.0,
+                        child: AdaptivePressable(
+                          onTap: trailingOnPressed,
+                          child: Container(
+                            constraints: const BoxConstraints(minWidth: 44),
+                            height: 44,
+                            width: trailingIcon == null ? 44 : null,
+                            padding: trailingIcon == null
+                                ? EdgeInsets.zero
+                                : const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
+                              color:
+                                  trailingBackgroundColor ?? defaultButtonColor,
+                              borderRadius: BorderRadius.circular(22),
+                            ),
+                            child: Center(child: trailing),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ],
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

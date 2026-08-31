@@ -1,20 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/data/tables/transactions_table.dart';
 import 'package:getx_drift_app/features/widgets/cards/person_activity_card.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/models/person_debt_activity.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_toolbar.dart';
 
 class PersonalBalanceDetailsSheet extends StatelessWidget {
   const PersonalBalanceDetailsSheet({super.key, required this.entityId});
 
   final int entityId;
+  void openTransactionSheet(PersonDebtActivity activity) {
+    final item = activity.transactionDetails;
+
+    if (item == null) return;
+
+    switch (item.transaction.type) {
+      case TransactionType.give:
+        AppSheets.transaction.giveMoney(item);
+
+      case TransactionType.receive:
+        AppSheets.transaction.receiveMoney(item);
+
+      case TransactionType.spend:
+        AppSheets.transaction.spend(item: item);
+
+      default:
+        return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +107,7 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Spacer(),
+                              SizedBox(width: 8),
                               Stack(
                                 alignment: Alignment.center,
                                 children: [
@@ -139,17 +159,20 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 20),
-                          Text(
-                            summary.netBalance.abs().toCurrency(),
-                            style: AppTextStyle.amountXL.copyWith(
-                              color: summary.netBalance < 0
-                                  ? colorScheme.appOutflowInversed
-                                  : colorScheme.appInflowInverse,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              summary.netBalance.abs().toCurrency(),
+                              style: AppTextStyle.amountXL.copyWith(
+                                color: summary.netBalance < 0
+                                    ? colorScheme.appOutflowInversed
+                                    : colorScheme.appInflowInverse,
+                              ),
                             ),
                           ),
                           Text(
                             summary.netBalance < 0 ? 'Payable' : 'Receivable',
-                            style: AppTextStyle.titleS.copyWith(
+                            style: AppTextStyle.titleM.copyWith(
                               color: colorScheme.appInversedtextMuted,
                             ),
                           ),
@@ -212,8 +235,12 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ...entry.value.map(
-                            (activity) =>
-                                PersonDebtActivityCard(activity: activity),
+                            (activity) => PersonDebtActivityCard(
+                              activity: activity,
+                              // onTap: () {
+                              //   openTransactionSheet(activity);
+                              // },
+                            ),
                           ),
                         ],
                       ),

@@ -75,7 +75,8 @@ enum AccountType {
   bool get isLiability => group.isLiability;
 
   BalanceSheetType get balanceSheetType => group.balanceSheetType;
-
+  bool get isPaymentAccount =>
+      group == AccountGroup.cashAndBank || group == AccountGroup.creditCards;
   static AccountType fromName(String value) {
     return AccountType.values.firstWhere((e) => e.name == value);
   }

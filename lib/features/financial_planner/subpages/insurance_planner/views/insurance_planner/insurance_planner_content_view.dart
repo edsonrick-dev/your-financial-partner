@@ -108,7 +108,7 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
               ],
             ),
           ),
-          SizedBox(height: 24),
+          // SizedBox(height: 24),
           // AppSection(
           //   sectionTitle: 'Bills',
           //   trailingType: SectionTrailingType.textButton,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -27,6 +28,7 @@ class TrackAsDebtSection extends GetView<TransactionController> {
           border: Border.all(color: colorScheme.appInfo),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8,
           children: [
             Row(
@@ -92,28 +94,38 @@ class TrackAsDebtSection extends GetView<TransactionController> {
 
               if (controller.isDebt.value == true) {
                 return Row(
+                  spacing: 8,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _BalanceSection(
-                      controller: controller,
-                      label: controller.currentBalanceLabel,
-                      sectionTitle: 'Current Balance',
-                      amount:
-                          (controller.selectedPersonBalance.value?.netBalance ??
-                          0),
+                    Expanded(
+                      child: _BalanceSection(
+                        controller: controller,
+                        label: controller.currentBalanceLabel,
+                        sectionTitle: 'Current Balance',
+                        amount:
+                            (controller
+                                .selectedPersonBalance
+                                .value
+                                ?.netBalance ??
+                            0),
+                      ),
                     ),
-                    Spacer(),
+                    // Spacer(),
                     Icon(
                       PhosphorIconsRegular.arrowRight,
                       color: colorScheme.appInfo,
                       size: 24,
                     ),
-                    Spacer(),
-                    _BalanceSection(
-                      controller: controller,
-                      label: controller.projectedBalanceLabel(transactionType),
-                      sectionTitle: 'Balance After',
-                      amount: controller.projectedBalance(transactionType),
+                    // Spacer(),
+                    Expanded(
+                      child: _BalanceSection(
+                        controller: controller,
+                        label: controller.projectedBalanceLabel(
+                          transactionType,
+                        ),
+                        sectionTitle: 'Balance After',
+                        amount: controller.projectedBalance(transactionType),
+                      ),
                     ),
                   ],
                 );
@@ -168,23 +180,22 @@ class _BalanceSection extends StatelessWidget {
           Column(
             spacing: 4,
             children: [
-              Text(
-                label,
-                style: TextStyle(color: colorScheme.appInfo, fontSize: 12),
-              ),
-              Text(
-                amount.abs().toCurrency(),
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: amount.isNegative
-                      ? colorScheme.appOutflow
-                      : colorScheme.appInflow,
+              Text(sectionTitle, style: TextStyle(color: colorScheme.appInfo)),
+
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  amount.abs().toCurrency(),
+                  style: AppTextStyle.amountL.copyWith(
+                    color: amount.isNegative
+                        ? colorScheme.appOutflow
+                        : colorScheme.appInflow,
+                  ),
                 ),
               ),
+              Text(label, style: AppTextStyle.labelXS),
             ],
           ),
-
-          Text(sectionTitle, style: TextStyle(color: colorScheme.appInfo)),
         ],
       ),
     );
