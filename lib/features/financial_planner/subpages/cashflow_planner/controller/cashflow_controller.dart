@@ -96,11 +96,14 @@ class CashflowController extends GetxController {
     });
   }
 
-  bool get hasBudgetPlan => savedPlans.any(
-    (plan) =>
-        plan.plan.planType == CashflowPlanType.expense.name ||
-        plan.plan.planType == 'debtRepayment',
+  bool get hasDebtRepaymentPlan => savedPlans.any(
+    (plan) => plan.plan.planType == CashflowPlanType.debtRepayment.name,
   );
+  bool get hasExpensePlan => savedPlans.any(
+    (plan) => plan.plan.planType == CashflowPlanType.expense.name,
+  );
+
+  bool get hasBudgetPlan => hasExpensePlan || hasDebtRepaymentPlan;
   bool get hasIncomePlan =>
       savedPlans.any((plan) => plan.plan.planType == 'income');
   Future<List<CurrentMonthBudgetItem>> _buildCurrentMonthBudgetItems(
@@ -763,7 +766,12 @@ class CashflowController extends GetxController {
     final now = DateTime.now();
 
     final planType = planTypeFromTransactionType(transactionType);
-
+    debugPrint('========== BEFORE SAVE ==========');
+    debugPrint('amount.value = ${amount.value}');
+    debugPrint('period = ${selectedPeriod.value}');
+    debugPrint('distribution = ${selectedDistribution.value}');
+    debugPrint('category = ${category.name}');
+    debugPrint('=================================');
     final planId = await cashflowPlanDao.insertPlan(
       CashFlowPlansCompanion.insert(
         categoryId: d.Value<int?>(category.id),

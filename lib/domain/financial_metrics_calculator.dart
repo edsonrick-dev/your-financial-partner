@@ -42,30 +42,6 @@ class FinancialMetricsCalculator {
     return netWorth / plannedAnnualBudget;
   }
 
-  double calculateWealthBuildingRate({
-    required double annualIncome,
-    required double annualExpenses,
-    required double annualDebtRepayment,
-  }) {
-    if (annualIncome <= 0) return 0;
-
-    final wealthBuildingAmount =
-        annualIncome - annualExpenses - annualDebtRepayment;
-    final ratio = ((wealthBuildingAmount / annualIncome) * 100);
-    return ratio.clamp(0, 100);
-  }
-
-  double calculateDebtLoadRatio({
-    required double annualDebtRepayment,
-    required double annualIncome,
-  }) {
-    if (annualIncome <= 0) return 0;
-
-    final ratio = (annualDebtRepayment / annualIncome) * 100;
-
-    return ratio.clamp(0, 100);
-  }
-
   double? calculateEmergencyFundMonths({
     required double emergencyFund,
     required double plannedAnnualBudget,

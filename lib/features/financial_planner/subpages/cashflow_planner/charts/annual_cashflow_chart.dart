@@ -6,6 +6,7 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
+import 'dart:math' as math;
 
 class AnnualCashflowChart extends GetView<CashflowController> {
   const AnnualCashflowChart({super.key});
@@ -65,6 +66,7 @@ BarChartData _barChartData(
       show: true,
       drawVerticalLine: false,
       horizontalInterval: _gridInterval(maxY, minY),
+      // horizontalInterval: maxY / 4,
     ),
 
     borderData: FlBorderData(show: false),
@@ -77,7 +79,7 @@ BarChartData _barChartData(
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          reservedSize: 45,
+          reservedSize: 60,
           getTitlesWidget: (value, meta) {
             return Text(
               value.toCompactCurrency(),
@@ -218,17 +220,23 @@ LineChartData _lineChartData(
 double _gridInterval(double maxY, double minY) {
   final range = maxY - minY;
 
-  if (range <= 10000) {
-    return 5000;
+  if (range <= 0) {
+    return 1;
   }
 
-  if (range <= 50000) {
-    return 10000;
-  }
+  final rawInterval = range / 4;
 
-  if (range <= 100000) {
-    return 25000;
-  }
+  final magnitude = math.pow(10, math.log(rawInterval) / math.ln10).toDouble();
 
-  return 50000;
+  final normalized = rawInterval / magnitude;
+
+  final niceNormalized = normalized <= 1
+      ? 1
+      : normalized <= 2
+      ? 2
+      : normalized <= 5
+      ? 5
+      : 10;
+
+  return niceNormalized * magnitude;
 }

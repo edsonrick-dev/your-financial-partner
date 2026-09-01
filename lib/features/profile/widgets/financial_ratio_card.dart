@@ -68,17 +68,20 @@ class FinancialRatioCard extends StatelessWidget {
               style: AppTextStyle.bodyS.copyWith(color: ratio.scoreBand.color),
             ),
             const SizedBox(height: 4),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: ratio.scoreBand.color,
-                borderRadius: BorderRadius.circular(99),
+            if (ratio.scoreBand.category != 'Not Assessed')
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: ratio.scoreBand.color,
+                  borderRadius: BorderRadius.circular(99),
+                ),
+                child: Text(
+                  '${ratio.normalizedPoints} pts',
+                  style: AppTextStyle.labelM.copyWith(
+                    color: colorScheme.bgLight,
+                  ),
+                ),
               ),
-              child: Text(
-                '${ratio.normalizedPoints} pts',
-                style: AppTextStyle.labelM.copyWith(color: colorScheme.bgLight),
-              ),
-            ),
           ],
         ),
       ),

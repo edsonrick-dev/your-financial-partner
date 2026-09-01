@@ -19,6 +19,24 @@ class NetWorthController extends GetxController {
     await database.accountsDao.deleteAccount(account.id);
   }
 
+  bool get hasLiquidFundAccounts {
+    return netWorthItems.any(
+      (item) => item.isAsset && item.group == AccountGroup.cashAndBank,
+    );
+  }
+
+  bool get hasAverageDailyBalanceData => averageDailyBalance != null;
+  double? get averageDailyBalance {
+    // TODO: Calculate from historical cash/bank balances.
+    return null;
+  }
+
+  double get liquidFunds {
+    return netWorthItems
+        .where((item) => item.isAsset && item.group == AccountGroup.cashAndBank)
+        .fold<double>(0, (sum, item) => sum + item.value);
+  }
+
   final netWorthComparison = NetWorthComparison.mtd.obs;
 
   DateTime get baselineDate {

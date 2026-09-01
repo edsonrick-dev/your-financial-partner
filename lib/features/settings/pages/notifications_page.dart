@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/settings/widgets/settings_section.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
 class NotificationsPage extends GetView<SettingsController> {
   const NotificationsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Notifications')),
-      body: Column(
+    return AppSheet(
+      title: 'Notifications',
+      // appBar: AppBar(title: Text('Notifications')),
+      child: Column(
         spacing: 24,
         children: [
           SettingsSection(

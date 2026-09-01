@@ -19,10 +19,10 @@ RatioScoreBand emergencyFundBand(double? value) {
 const emergencyFundNotAssessedBand = RatioScoreBand(
   category: 'Not Assessed',
   threshold: 0,
-  definition: 'Lifestyle coverage cannot currently be calculated.',
+  definition: 'Your emergency fund cannot currently be assessed.',
   interpretation:
-      'A planned annual lifestyle budget is required to determine '
-      'how much of your lifestyle your net worth can support.',
+      'An income plan and budget plan, along with liquid fund data, '
+      'are required to determine how long your financial needs can be covered.',
   points: 0,
   color: Color(0xFF9CA3AF),
 );

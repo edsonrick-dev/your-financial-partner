@@ -1,9 +1,27 @@
 import 'package:flutter/animation.dart';
 import 'package:getx_drift_app/features/profile/models/ratio_score_band.dart';
 
-RatioScoreBand debtLoadBand(double value) {
-  return debtLoadBands.lastWhere((band) => value >= band.threshold);
+RatioScoreBand debtLoadBand(double? value) {
+  if (value == null) {
+    return debtLoadNotAssessedBand;
+  }
+
+  return debtLoadBands.lastWhere(
+    (band) => value >= band.threshold,
+    orElse: () => debtLoadBands.first,
+  );
 }
+
+const debtLoadNotAssessedBand = RatioScoreBand(
+  category: 'Not Assessed',
+  threshold: 0,
+  definition: 'Debt load cannot currently be calculated.',
+  interpretation:
+      'A planned income is required to determine how much of your income '
+      'is committed to debt repayments.',
+  points: 0,
+  color: Color(0xFF9CA3AF),
+);
 
 const debtLoadBands = [
   RatioScoreBand(

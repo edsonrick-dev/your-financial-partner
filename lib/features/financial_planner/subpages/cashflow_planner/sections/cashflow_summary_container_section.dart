@@ -37,7 +37,7 @@ class CashflowSummaryContainerSection extends GetView<CashflowController> {
             const SizedBox(height: 16),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 _LegendItem(
                   color: colorScheme.appInflowInverse,
@@ -88,7 +88,12 @@ class _LegendItem extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 6),
-        Text(label, style: TextStyle(color: colorScheme.inversePrimary)),
+        Text(
+          label,
+          style: AppTextStyle.labelM.copyWith(
+            color: colorScheme.appInversedtext,
+          ),
+        ),
       ],
     );
   }

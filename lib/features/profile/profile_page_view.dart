@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/profile/controller/extensions/emergency_fund_controller_extension.dart';
+import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_debt_load_extension.dart';
+import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_emergency_fund_extension.dart';
+import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_lifestyle_coverage_extension.dart';
+import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_wealth_building_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/profile/widgets/financial_ratio_card.dart';
-import 'package:getx_drift_app/features/profile/widgets/financial_stability_guage.dart';
+import 'package:getx_drift_app/features/profile/widgets/financial_stability_profile_card.dart';
+import 'package:getx_drift_app/features/settings/settings_page_view.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -27,10 +29,24 @@ class ProfilePage extends GetView<FinancialProfileController> {
             //Personal Profile Section
             Column(
               children: [
-                AppBar(
-                  title: Text('Profile', style: AppTextStyle.headlineL),
-                  centerTitle: false,
-                  surfaceTintColor: Colors.transparent,
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: AppBar(
+                    title: Text('Profile', style: AppTextStyle.headlineL),
+                    centerTitle: false,
+                    surfaceTintColor: Colors.transparent,
+                    actions: [
+                      AdaptivePressable(
+                        onTap: () {
+                          Get.bottomSheet(
+                            SettingsPageView(),
+                            isScrollControlled: true,
+                          );
+                        },
+                        child: Icon(PhosphorIconsRegular.gear),
+                      ),
+                    ],
+                  ),
                 ),
                 AppSection(
                   child: Container(
@@ -105,57 +121,7 @@ class ProfilePage extends GetView<FinancialProfileController> {
             //Financial Stability Profile Section
             AppSection(
               sectionTitle: 'Financial Stability Profile',
-              child: Column(
-                spacing: 12,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AdaptivePressable(
-                    onTap: () {
-                      AppSheets.viewStabilityProfileDetails(null);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(16, 16, 20, 16),
-                      decoration: BoxDecoration(
-                        color: colorScheme.bgLight,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: AppShadows.card(colorScheme.appText),
-                        // border: Border.all(color: colorScheme.appBorder),
-                      ),
-                      child: Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            FinancialStabilityGauge(
-                              score: controller.financialScore,
-                              colorScheme: colorScheme,
-                            ),
-                            SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    controller.stability.title,
-                                    style: AppTextStyle.headlineM.copyWith(
-                                      color: colorScheme.appText,
-                                    ),
-                                  ),
-                                  Text(
-                                    controller.stability.shortDescription,
-                                    style: AppTextStyle.bodyM.copyWith(
-                                      color: colorScheme.appText,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              child: FinancialStabilityProfileCard(),
             ),
 
             //Financial Ratios

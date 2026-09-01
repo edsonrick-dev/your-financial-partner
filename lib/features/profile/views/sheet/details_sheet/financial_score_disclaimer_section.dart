@@ -21,7 +21,7 @@ class FinancialScoreDisclaimerSection extends StatelessWidget {
                 ),
                 TextSpan(
                   text:
-                      'Your financial scores are based on the information in your Cashflow Plan. Keep your financial information accurate and up to date for more reliable scores and insights. Scores are estimates and are not financial advice.',
+                      'Your financial scores are based on the information in your Cashflow Plan and Net Worth Plan. Keep your financial information accurate and up to date for more reliable scores and insights. Scores are estimates and are not financial advice.',
                 ),
               ],
             ),

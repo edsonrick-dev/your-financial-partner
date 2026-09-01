@@ -12,6 +12,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/cash_and_bank_details_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_detail_sheet.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learning_sheets.dart';
+import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_details_screen_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/shell/financial_stability_sheet_shell.dart';

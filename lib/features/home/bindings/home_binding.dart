@@ -22,7 +22,7 @@ class HomeBinding extends Bindings {
 
     Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
 
-    Get.lazyPut<HomeController>(() => HomeController());
+    Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
     Get.lazyPut<FinancialPlannerController>(() => FinancialPlannerController());
     Get.lazyPut<NetWorthController>(() => NetWorthController());
     Get.lazyPut<SavingsPlannerController>(() => SavingsPlannerController());

@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/features/profile/models/ratio_score_band.dart';
 
-RatioScoreBand wealthBuildingBand(double value) {
-  return wealthBuildingBands.firstWhere((band) => value >= band.threshold);
+RatioScoreBand wealthBuildingBand(double? value) {
+  if (value == null) {
+    return wealthBuildingNotAssessedBand;
+  }
+
+  return wealthBuildingBands.firstWhere(
+    (band) => value >= band.threshold,
+    orElse: () => wealthBuildingBands.last,
+  );
 }
+
+const wealthBuildingNotAssessedBand = RatioScoreBand(
+  category: 'Not Assessed',
+  threshold: 0,
+  definition: 'Wealth-building rate cannot currently be calculated.',
+  interpretation:
+      'A planned income and budget are required to determine how much '
+      'of your income is available for wealth building.',
+  points: 0,
+  color: Color(0xFF9CA3AF),
+);
 
 const wealthBuildingBands = [
   RatioScoreBand(

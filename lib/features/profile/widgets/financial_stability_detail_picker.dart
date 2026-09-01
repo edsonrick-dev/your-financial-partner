@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_details_screen_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/profile/widgets/financial_stability_screen_shifter.dart';
 
