@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
-import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
@@ -15,7 +14,6 @@ import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell
 import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeView extends GetView<HomeController> {

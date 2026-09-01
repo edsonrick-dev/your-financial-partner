@@ -14,7 +14,7 @@ class AppTheme {
   static ThemeData dark = ThemeData(
     useMaterial3: true,
     colorScheme: const ColorScheme.dark(
-      surface: Color(0xFf0a0e17),
+      surface: AppPalette.color950,
       onSurface: AppPalette.color100,
     ),
   );

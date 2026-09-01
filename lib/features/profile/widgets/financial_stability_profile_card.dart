@@ -115,7 +115,7 @@ class _UnassessedView extends StatelessWidget {
               Text(
                 'Financial Stability',
                 style: AppTextStyle.headlineM.copyWith(
-                  color: colorScheme.appText,
+                  // color: colorScheme.appText,
                 ),
               ),
 

@@ -31,7 +31,9 @@ class FinancialPlannerPageShifter extends GetView<FinancialPlannerController> {
           curve: Curves.ease,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? colorScheme.appText : colorScheme.bgLight,
+            color: isSelected
+                ? colorScheme.pageShifterFillSelected
+                : colorScheme.pageShifterFillUnselected,
             borderRadius: BorderRadius.circular(999),
             boxShadow: AppShadows.pill(colorScheme.text),
           ),
@@ -40,8 +42,9 @@ class FinancialPlannerPageShifter extends GetView<FinancialPlannerController> {
             curve: Curves.easeOut,
             style: TextStyle(
               color: isSelected
-                  ? colorScheme.appInversedtext
-                  : colorScheme.text,
+                  ? colorScheme.pageShifterTextSelected
+                  : colorScheme.pageShifterTextUnselected,
+
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             ),
             child: Text(title),

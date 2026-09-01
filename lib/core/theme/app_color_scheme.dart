@@ -7,20 +7,30 @@ extension ContextExtension on BuildContext {
 extension AppColorScheme on ColorScheme {
   bool get isDark => brightness == Brightness.dark;
 
-  /// BACKGROUND
-  ///
-  Color get surface => color200;
-  Color get bg => color100;
+  ///PAGE SHIFTERS
+  Color get pageShifterTextSelected =>
+      isDark ? pageShifterFillUnselected : pageShifterTextUnselected;
+  Color get pageShifterFillSelected =>
+      isDark ? appAccent : pageShifterFillUnselected;
+  Color get pageShifterTextUnselected => isDark ? color300 : text;
+  Color get pageShifterFillUnselected => isDark ? color800 : bgLight;
+
+  Color get grabber => isDark ? color700 : color900;
+  Color get grabberInversed => color900;
+
+  Color get bg => isDark ? color900 : color100;
   Color get bgLight => isDark ? color800 : color50;
   Color get bgDark => isDark ? color950 : color200;
-  Color get bgInversed => isDark ? color200 : color900;
+  Color get surface => bg;
+
+  Color get bgInversed => isDark ? color900 : color900;
   Color get appOnSurface => const Color(0xFFFFFFFF);
   Color get appOnSurfaceSecondary => appText;
   Color get appOnSurfaceTertiary => appText.withAlpha(220);
 
   /// TEXT
 
-  Color get appText => color900;
+  Color get appText => isDark ? color100 : color900;
   Color get appTextMuted => color500;
   Color get appInversedtext => color50;
   Color get appInversedtextMuted => color300;
@@ -38,10 +48,11 @@ extension AppColorScheme on ColorScheme {
   Color get appBorder => appText.withAlpha(70);
   Color get appBorderMuted => appBorder.withAlpha(70);
 
-  Color get text => onSurface;
+  Color get text => isDark ? color100 : color900;
   Color get textMuted => isDark ? color300 : color700;
   Color get textInversed => bg;
   Color get textInversedMuted => bgLight;
+  Color get gradient1 => color900;
   Color get gradient2 => const Color(0xFF46628F);
 }
 

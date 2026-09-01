@@ -87,9 +87,7 @@ class AppToolbar extends StatelessWidget {
                     child: Text(
                       title,
                       style: AppTextStyle.headlineM.copyWith(
-                        color: isDark
-                            ? colorScheme.appInversedtext
-                            : colorScheme.appText,
+                        // color: color
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
