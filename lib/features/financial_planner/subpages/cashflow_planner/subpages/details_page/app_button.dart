@@ -11,11 +11,13 @@ class AppButton extends StatelessWidget {
   final String text;
   final ButtonType type;
   final VoidCallback? onTap;
+  final bool isInversed;
 
   const AppButton({
     super.key,
     this.type = ButtonType.primary,
     this.onTap,
+    this.isInversed = false,
     required this.text,
   });
 
@@ -27,7 +29,8 @@ class AppButton extends StatelessWidget {
     }
 
     return switch (type) {
-      ButtonType.primary => colorScheme.appText,
+      ButtonType.primary =>
+        isInversed ? colorScheme.appAccent : colorScheme.appText,
       ButtonType.outline => Colors.transparent,
       ButtonType.ghost => Colors.transparent,
     };
@@ -41,7 +44,7 @@ class AppButton extends StatelessWidget {
     }
 
     return switch (type) {
-      ButtonType.primary => colorScheme.bg,
+      ButtonType.primary => isInversed ? colorScheme.appText : colorScheme.bg,
       ButtonType.outline => colorScheme.appText,
       ButtonType.ghost => colorScheme.appText,
     };

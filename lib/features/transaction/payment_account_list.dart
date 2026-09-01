@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_group_enum.dart';
+import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/add_payment_account_button.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/select_account_card.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class PaymentAccountList extends StatefulWidget {
   final TransactionType transactionType;
@@ -74,7 +77,37 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
               return account.group == AccountGroup.cashAndBank;
           }
         }).toList();
+        if (filteredAccounts.isEmpty) {
+          return AppSection(
+            child: Column(
+              children: [
+                AppCard(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      Text(
+                        'No Payment Accounts Yet',
+                        style: AppTextStyle.headlineS,
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'Add your firs account first.',
+                        style: AppTextStyle.bodyM,
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
 
+                SizedBox(height: 20),
+                AddPaymentAccountButton(
+                  transactionType: widget.transactionType,
+                  onExpand: _scrollToAddAccount,
+                ),
+              ],
+            ),
+          );
+        }
         return ListView.builder(
           controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -92,17 +125,15 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
 
             final account = filteredAccounts[index];
 
-            return filteredAccounts.isEmpty
-                ? Text('Add mo first account ngani!')
-                : Padding(
-                    padding: const EdgeInsets.only(bottom: 12), //Spacing
-                    child: SelectAccountCard(
-                      account: account,
-                      onTap: () {
-                        Get.back(result: account);
-                      },
-                    ),
-                  );
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12), //Spacing
+              child: SelectAccountCard(
+                account: account,
+                onTap: () {
+                  Get.back(result: account);
+                },
+              ),
+            );
           },
         );
       },

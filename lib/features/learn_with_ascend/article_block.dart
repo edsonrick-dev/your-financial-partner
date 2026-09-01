@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/article_block_type.dart';
 
 class ArticleBlock extends StatelessWidget {
-  const ArticleBlock({super.key, required this.type, required this.content});
+  const ArticleBlock({
+    super.key,
+    required this.type,
+    required this.content,
+    this.onTap,
+  });
 
   final ArticleBlockType type;
   final String content;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +61,11 @@ class ArticleBlock extends StatelessWidget {
               style: AppTextStyle.titleM.copyWith(color: colorScheme.appText),
             ),
           ),
+        );
+      case ArticleBlockType.link:
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
+          child: AppButton(text: content, onTap: onTap),
         );
       default:
         return SizedBox.shrink();

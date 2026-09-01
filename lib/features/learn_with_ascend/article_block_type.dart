@@ -1,1 +1,1 @@
-enum ArticleBlockType { paragraph, heading, image, video, quote, callout }
+enum ArticleBlockType { paragraph, heading, image, video, quote, callout, link }

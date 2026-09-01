@@ -8,7 +8,7 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       surface: AppPalette.color100,
       onSurface: AppPalette.color900,
-      primary: AppPalette.accent,
+      primary: AppPalette.color900,
     ),
   );
   static ThemeData dark = ThemeData(

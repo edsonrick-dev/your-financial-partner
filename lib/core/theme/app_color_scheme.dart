@@ -9,16 +9,17 @@ extension AppColorScheme on ColorScheme {
 
   /// BACKGROUND
   ///
-  // Color get surface => color200;
+  Color get surface => color200;
   Color get bg => color100;
   Color get bgLight => isDark ? color800 : color50;
   Color get bgDark => isDark ? color950 : color200;
   Color get bgInversed => isDark ? color200 : color900;
-  // Color get appOnSurface => const Color(0xFFFFFFFF);
-  // Color get appOnSurfaceSecondary => appText;
-  // Color get appOnSurfaceTertiary => appText.withAlpha(220);
+  Color get appOnSurface => const Color(0xFFFFFFFF);
+  Color get appOnSurfaceSecondary => appText;
+  Color get appOnSurfaceTertiary => appText.withAlpha(220);
 
   /// TEXT
+
   Color get appText => color900;
   Color get appTextMuted => color500;
   Color get appInversedtext => color50;
@@ -38,9 +39,9 @@ extension AppColorScheme on ColorScheme {
   Color get appBorderMuted => appBorder.withAlpha(70);
 
   Color get text => onSurface;
-  // Color get textMuted => isDark ? color300 : color700;
-  // Color get textInversed => bg;
-  // Color get textInversedMuted => bgLight;
+  Color get textMuted => isDark ? color300 : color700;
+  Color get textInversed => bg;
+  Color get textInversedMuted => bgLight;
   Color get gradient2 => const Color(0xFF46628F);
 }
 
@@ -94,7 +95,7 @@ class AppPalette {
   static const color900 = Color(0xFF141C29);
   static const color950 = Color(0xFF0A0E17);
 
-  static const accent = Color(0xFFF5A623);
+  // static const accent = Color(0xFFF5A623);
   static const success = Color(0xFF16A34A);
   static const error = Color(0xFFDC2626);
   static const warning = Color(0xFFF59E0B);

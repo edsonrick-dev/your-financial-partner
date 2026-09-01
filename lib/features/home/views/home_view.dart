@@ -113,7 +113,9 @@ class HomeView extends GetView<HomeController> {
                     LearnThumbnail(
                       title: 'Why Financial Planning Matters',
                       onTap: () {
-                        AppSheets.learningSheets.whyFinancialPlanningMatters();
+                        AppSheets.learningSheets.openLearnArticle(
+                          'https://ascendyfp.com/learn/why-financial-planning-matters',
+                        );
                       },
                     ),
                   ],
@@ -247,106 +249,6 @@ class GetStartedTile extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class AccountsOverviewTile extends StatelessWidget {
-  final String accountName;
-  final double value;
-  final int count;
-  final String iconKey;
-  final bool? flowPositive;
-  const AccountsOverviewTile({
-    super.key,
-    required this.accountName,
-    required this.value,
-    required this.count,
-    required this.iconKey,
-    this.flowPositive = true,
-  });
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    String accountCount;
-    if (count == 1) {
-      accountCount = '$count account';
-    } else {
-      accountCount = '$count accounts';
-    }
-
-    Color valueColor;
-    value >= 0
-        ? valueColor = colorScheme.appText
-        : valueColor = colorScheme.appOutflow;
-
-    return Container(
-      constraints: BoxConstraints(minHeight: 44),
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Icon(
-                AppIcons.categories.resolve(iconKey),
-                color: colorScheme.appSuccess,
-              ),
-              Opacity(
-                opacity: 0.2,
-                child: Container(
-                  height: 36,
-                  width: 36,
-                  decoration: BoxDecoration(
-                    color: colorScheme.appSuccess,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(width: 8),
-          Expanded(
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      accountName,
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      accountCount,
-                      style: TextStyle(color: colorScheme.appTextMuted),
-                    ),
-                  ],
-                ),
-                Spacer(),
-                Row(
-                  children: [
-                    Text(
-                      value.toCompactCurrency(kThreshold: 1000000),
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: valueColor,
-                        fontWeight: FontWeight.w500,
-                        fontFeatures: [FontFeature.tabularFigures()],
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                    Icon(
-                      PhosphorIconsRegular.caretRight,
-                      size: 16,
-                      color: colorScheme.appTextMuted,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

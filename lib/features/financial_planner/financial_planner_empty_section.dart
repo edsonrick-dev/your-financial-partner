@@ -24,7 +24,7 @@ class FinancialPlannerEmptySection extends StatelessWidget {
     final colorScheme = context.colors;
     return Container(
       decoration: BoxDecoration(
-        color: colorScheme.bgLight,
+        gradient: AppGradient.gradientA(colorScheme),
         borderRadius: BorderRadius.circular(24),
         boxShadow: AppShadows.floating(colorScheme.appText),
       ),
@@ -43,7 +43,9 @@ class FinancialPlannerEmptySection extends StatelessWidget {
                 Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: AppTextStyle.headlineL,
+                  style: AppTextStyle.headlineL.copyWith(
+                    color: colorScheme.appInversedtext,
+                  ),
                 ),
 
                 const SizedBox(height: 12),
@@ -52,7 +54,7 @@ class FinancialPlannerEmptySection extends StatelessWidget {
                   description,
                   textAlign: TextAlign.center,
                   style: AppTextStyle.bodyL.copyWith(
-                    // color: colorScheme.appTextMuted,
+                    color: colorScheme.appInversedtextMuted,
                   ),
                 ),
               ],
@@ -65,7 +67,11 @@ class FinancialPlannerEmptySection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (actionText != null)
-                  AppButton(text: actionText ?? '', onTap: onTap),
+                  AppButton(
+                    text: actionText ?? '',
+                    onTap: onTap,
+                    isInversed: true,
+                  ),
               ],
             ),
           ),

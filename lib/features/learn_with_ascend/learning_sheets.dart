@@ -4,6 +4,7 @@ import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/article_block.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/article_block_type.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LearningSheets {
   Future<void> whyFinancialPlanningMatters() async {
@@ -16,6 +17,17 @@ class LearningSheets {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //OPENING
+              ArticleBlock(
+                type: ArticleBlockType.link,
+                content: 'Read the full article on Ascend',
+                onTap: () {
+                  launchUrl(
+                    Uri.parse(
+                      'https://ascendyfp.com/learn/why-financial-planning-matters',
+                    ),
+                  );
+                },
+              ),
               ArticleBlock(
                 type: ArticleBlockType.paragraph,
                 content:
@@ -279,5 +291,13 @@ class LearningSheets {
       ),
       isScrollControlled: true,
     );
+  }
+
+  Future<void> openLearnArticle(String url) async {
+    final uri = Uri.parse(url);
+
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not open $url');
+    }
   }
 }

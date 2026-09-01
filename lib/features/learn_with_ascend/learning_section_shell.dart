@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
 enum LearningSectionState { noContent, available, allCompleted }
 
@@ -24,6 +27,16 @@ class LearningSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppSection(
       sectionTitle: 'Learn With Ascend',
+      trailingType: SectionTrailingType.textButton,
+      trailingText: 'See More',
+      onTrailingPressed: () {
+        Get.bottomSheet(
+          AppSheet(
+            title: 'AscendYFP Learning Library',
+            child: SingleChildScrollView(),
+          ),
+        );
+      },
       subtitle: subtitle,
       child: switch (state) {
         LearningSectionState.available => Column(

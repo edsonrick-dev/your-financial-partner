@@ -37,7 +37,7 @@ class GuideCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: colorScheme.bgLight,
+        gradient: AppGradient.gradientA(colorScheme),
         borderRadius: BorderRadius.circular(24),
         boxShadow: AppShadows.elevated(colorScheme.appText),
       ),
@@ -52,9 +52,24 @@ class GuideCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('RECOMMENDED', style: AppTextStyle.labelS),
-                      Text(guide.title, style: AppTextStyle.headlineS),
-                      Text(guide.description, style: AppTextStyle.bodyS),
+                      Text(
+                        'RECOMMENDED',
+                        style: AppTextStyle.labelS.copyWith(
+                          color: colorScheme.appInversedtextMuted,
+                        ),
+                      ),
+                      Text(
+                        guide.title,
+                        style: AppTextStyle.headlineS.copyWith(
+                          color: colorScheme.appInversedtext,
+                        ),
+                      ),
+                      Text(
+                        guide.description,
+                        style: AppTextStyle.bodyS.copyWith(
+                          color: colorScheme.appInversedtext,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -72,7 +87,11 @@ class GuideCard extends StatelessWidget {
             padding: EdgeInsetsGeometry.only(bottom: 16, left: 16, right: 16),
             child: Column(
               children: [
-                AppButton(text: guide.actionLabel, onTap: guide.onAction),
+                AppButton(
+                  text: guide.actionLabel,
+                  onTap: guide.onAction,
+                  isInversed: true,
+                ),
               ],
             ),
           ),
