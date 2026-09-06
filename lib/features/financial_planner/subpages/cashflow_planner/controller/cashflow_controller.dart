@@ -20,12 +20,19 @@ import 'package:drift/drift.dart' as d;
 import 'dart:math' as math;
 
 class CashflowController extends GetxController {
+  Set<int> get existingIncomePlanCategoryIds {
+    return savedPlans
+        .where((plan) => plan.plan.planType == 'income')
+        .map((plan) => plan.category.id)
+        .toSet();
+  }
+
   bool get hasCurrentMonthBudget => currentMonthBudgetItems.isNotEmpty;
   final savedPlans = <CashflowPlanWithCategory>[].obs;
 
   bool get isEmpty => savedPlans.isEmpty;
   final currentMonthBudgetItems = <CurrentMonthBudgetItem>[].obs;
-  final Rx<DisplayMode> budgetDisplayMode = DisplayMode.grid.obs;
+  final Rx<DisplayMode> budgetDisplayMode = DisplayMode.list.obs;
   final RxBool isBudgetExpanded = false.obs;
 
   void setBudgetDisplayMode(DisplayMode mode) {
@@ -1380,7 +1387,9 @@ class CashflowController extends GetxController {
   /// - Fortnightly: every 14 days
   /// - Monthly: every calendar month
   /// - Yearly: once per calendar year
-  final Rxn<BudgetPeriod> selectedPeriod = Rxn<BudgetPeriod>();
+  final Rxn<BudgetPeriod> selectedPeriod = Rxn<BudgetPeriod>(
+    BudgetPeriod.monthly,
+  );
 
   /// Changes the plan's budget period.
   ///
@@ -1730,7 +1739,7 @@ class CashflowController extends GetxController {
   void resetIncomePlan() {
     transactionController.selectedCategory.value = null;
     // Reset period
-    selectedPeriod.value = null;
+    selectedPeriod.value = BudgetPeriod.monthly;
 
     // Reset distribution mode
     selectedDistribution.value = CashFlowDistribution.defaultDistribution;
@@ -1749,7 +1758,7 @@ class CashflowController extends GetxController {
   void resetBudgetPlan() {
     transactionController.selectedCategory.value = null;
     // Reset period
-    selectedPeriod.value = null;
+    selectedPeriod.value = BudgetPeriod.monthly;
 
     // Reset distribution mode
     selectedDistribution.value = CashFlowDistribution.defaultDistribution;

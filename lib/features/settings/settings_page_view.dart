@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/settings/pages/notifications_page.dart';
 import 'package:getx_drift_app/features/settings/pages/preferences_page.dart';
 import 'package:getx_drift_app/features/settings/widgets/settings_section.dart';
 import 'package:getx_drift_app/features/settings/widgets/settings_tile.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -70,7 +72,30 @@ class SettingsPageView extends StatelessWidget {
                   icon: PhosphorIconsRegular.palette,
                   title: 'Appearance',
                   subtitle: 'Theme, color, text, and display',
-                  onTap: () {},
+                  onTap: () {
+                    Get.bottomSheet(
+                      AppSheet(
+                        child: Column(
+                          children: [
+                            AppSection(
+                              child: AppButton(
+                                text: Get.isDarkMode
+                                    ? 'Switch to Light Mode'
+                                    : 'Switch to Dark Mode',
+                                onTap: () {
+                                  Get.changeThemeMode(
+                                    Get.isDarkMode
+                                        ? ThemeMode.light
+                                        : ThemeMode.dark,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                   color: Colors.deepPurple,
                 ),
               ],

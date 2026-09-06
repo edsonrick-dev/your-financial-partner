@@ -11,10 +11,8 @@ extension FinancialProfileEmergencyFundExtension on FinancialProfileController {
   // ---------------------------------------------------------------------------
 
   bool get canAssessEmergencyFund {
-    return hasIncome &&
-        hasBudget &&
-        hasLiquidFunds &&
-        averageDailyBalance != null;
+    return hasIncome && hasBudget && hasLiquidFunds;
+    // && averageDailyBalance != null;
   }
 
   // ---------------------------------------------------------------------------

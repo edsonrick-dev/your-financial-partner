@@ -16,6 +16,7 @@ class AppTheme {
     colorScheme: const ColorScheme.dark(
       surface: AppPalette.color950,
       onSurface: AppPalette.color100,
+      primary: AppPalette.color100,
     ),
   );
 }

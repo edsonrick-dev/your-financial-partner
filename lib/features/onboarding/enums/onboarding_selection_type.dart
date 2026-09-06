@@ -1,0 +1,1 @@
+enum OnboardingSelectionType { multiple, single }

@@ -13,6 +13,21 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/exports/views/file_export_view.dart';
 import 'package:getx_drift_app/features/home/views/home_view.dart';
 import 'package:getx_drift_app/features/main_shell/views/main_shell_view.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_controller.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_ascend_intro/onboarding_ascend_intro_view.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_financial_stability_score_intro/onboarding_financial_stability_preview.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_financial_stability_score_intro/onboarding_financial_stability_score_intro.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_learn_with_ascend/onboarding_learn_with_ascend_intro.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_learn_with_ascend/onboarding_learn_with_ascend_preview.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_questions/onboarding_fifth_question.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_questions/onboarding_first_question.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_questions/onboarding_fourth_question.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_questions/onboarding_second_question.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_questions/onboarding_seventh_question.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_questions/onboarding_sixth_question.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_questions/onboarding_third_question.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_view.dart';
+import 'package:getx_drift_app/features/paywall/paywall_page.dart';
 import 'package:getx_drift_app/features/settings/pages/notifications_page.dart';
 import 'package:getx_drift_app/features/settings/pages/preferences_page.dart';
 import '../../features/home/bindings/home_binding.dart';
@@ -30,6 +45,116 @@ class AppPages {
     //   page: () => const PersonalBalanceDetailsPage(),
     //   binding: PersonalBalanceBinding(),
     // ),
+    GetPage(
+      name: Routes.ONBOARDING,
+      page: () => const OnboardingView(),
+      // binding: HomeBinding(),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_FIRST_QUESTION,
+      page: () => const OnboardingFirstQuestionView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_SECOND_QUESTION,
+      page: () => const OnboardingSecondQuestionView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_THIRD_QUESTION,
+      page: () => const OnboardingThirdQuestionView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_FOURTH_QUESTION,
+      page: () => const OnboardingFourthQuestionView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_FIFTH_QUESTION,
+      page: () => const OnboardingFifthQuestion(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_SIXTH_QUESTION,
+      page: () => const OnboardingSixthQuestion(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_SEVENTH_QUESTION,
+      page: () => const OnboardingSeventhQuestion(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_ASCEND_INTRO_VIEW,
+      page: () => const OnboardingAscendIntroView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_ASCEND_STABILITY_SCORE_VIEW,
+      page: () => const OnboardingFinancialStabilityScoreIntro(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_ASCEND_STABILITY_PREVIEW_VIEW,
+      page: () => const OnboardingFinancialStabilityPreview(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_LEARN_WITH_ASCEND_INTRO,
+      page: () => const OnboardingLearnWithAscendIntro(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_LEARN_WITH_ASCEND_INTRO,
+      page: () => const OnboardingLearnWithAscendIntro(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_LEARN_WITH_ASCEND_PREVIEW,
+      page: () => const OnboardingLearnWithAscendPreview(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.PAYWALL,
+      page: () => const PaywallPage(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<PaywallController>(() => PaywallController());
+      }),
+    ),
+
+    GetPage(
+      name: Routes.MAINVIEW,
+      page: () => const MainShell(),
+      binding: HomeBinding(),
+    ),
+
     GetPage(
       name: Routes.MAINVIEW,
       page: () => const MainShell(),

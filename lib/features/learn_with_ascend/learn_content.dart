@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -12,14 +14,18 @@ class LearnThumbnail extends StatelessWidget {
     this.type = ContentType.article,
     this.showThumbnail = true,
     this.onTap,
+    this.description,
+    this.showHelper = true,
     required this.title,
   });
 
+  final String? description;
   final LearnStatus status;
   final ContentType type;
   final bool showThumbnail;
   final String title;
   final VoidCallback? onTap;
+  final bool showHelper;
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
@@ -35,8 +41,11 @@ class LearnThumbnail extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(08),
+        padding: showThumbnail
+            ? EdgeInsets.all(8)
+            : EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
+          boxShadow: AppShadows.card(colorScheme.appText),
           color: colorScheme.bgLight,
           borderRadius: BorderRadius.circular(16),
         ),
@@ -51,7 +60,11 @@ class LearnThumbnail extends StatelessWidget {
                     child: SizedBox(
                       width: 108,
                       height: 60,
-                      child: Container(color: colorScheme.appText),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: AppGradient.gradientA(colorScheme),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -62,39 +75,55 @@ class LearnThumbnail extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(icon, size: 14, color: colorScheme.appTextMuted),
-                      const SizedBox(width: 4),
-                      Text(type.label, style: AppTextStyle.labelM),
+                  if (showHelper)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(icon, size: 14, color: colorScheme.appTextMuted),
+                        const SizedBox(width: 4),
+                        Text(type.label, style: AppTextStyle.labelM),
 
-                      const SizedBox(width: 4),
+                        const SizedBox(width: 4),
 
-                      Text('•', style: AppTextStyle.labelM),
+                        Text('•', style: AppTextStyle.labelM),
 
-                      const SizedBox(width: 4),
+                        const SizedBox(width: 4),
 
-                      Text(
-                        '5 min. ${type.actionLabel}',
-                        style: AppTextStyle.labelM,
-                      ),
+                        Text(
+                          '5 min. ${type.actionLabel}',
+                          style: AppTextStyle.labelM,
+                        ),
 
-                      const Spacer(),
-                    ],
-                  ),
+                        const Spacer(),
+                      ],
+                    ),
 
                   const SizedBox(height: 6),
 
-                  SizedBox(
-                    height: 44,
-                    child: Text(
-                      title,
-                      style: AppTextStyle.titleM,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  Text(
+                    title,
+                    style: AppTextStyle.titleL,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
+
+                  if (description != null)
+                    Column(
+                      children: [
+                        const SizedBox(height: 2),
+
+                        Text(
+                          description ?? '',
+                          style: showThumbnail
+                              ? AppTextStyle.bodyS
+                              : AppTextStyle.bodyM.copyWith(
+                                  // color: colorScheme.appTextMuted,
+                                ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),

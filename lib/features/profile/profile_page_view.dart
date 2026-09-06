@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_debt_load_extension.dart';
@@ -147,7 +148,7 @@ class UserProfileCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Katrina Francesca D. Villano',
+                    'Juan Dela Cruz',
                     style: AppTextStyle.headlineM.copyWith(
                       color: colorScheme.appInversedtext,
                     ),
@@ -155,7 +156,7 @@ class UserProfileCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    'edsonsanjuan@gmail.com',
+                    'juand_dela_cruz@gmail.com',
                     style: AppTextStyle.titleM.copyWith(
                       color: colorScheme.appInversedtext,
                     ),

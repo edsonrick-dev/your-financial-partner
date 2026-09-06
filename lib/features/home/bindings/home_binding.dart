@@ -19,6 +19,7 @@ class HomeBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => MainShellController());
+    // Get.lazyPut<OnboardingController>(() => OnboardingController());
 
     Get.lazyPut<SettingsController>(() => SettingsController(), fenix: true);
 

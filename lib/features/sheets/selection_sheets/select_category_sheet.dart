@@ -12,10 +12,12 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 class SelectCategorySheet extends StatelessWidget {
   final TransactionType transactionType;
   final CashflowCategoriesTableData? selectedCategory;
+  final Set<int> excludedCategoryIds;
   const SelectCategorySheet({
     super.key,
     required this.transactionType,
     this.selectedCategory,
+    this.excludedCategoryIds = const {},
   });
 
   @override
@@ -59,6 +61,7 @@ class SelectCategorySheet extends StatelessWidget {
                 child: CategoryList(
                   transactionType: transactionType,
                   selectedCategory: selectedCategory,
+                  excludedCategoryIds: excludedCategoryIds,
                 ),
               ),
 

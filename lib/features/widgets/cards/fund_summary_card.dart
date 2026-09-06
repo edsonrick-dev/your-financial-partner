@@ -130,6 +130,7 @@ class FundSummaryCard extends GetView<HomeController> {
               children: [
                 Expanded(
                   child: FittedBox(
+                    alignment: AlignmentGeometry.centerLeft,
                     fit: BoxFit.scaleDown,
                     child: Obx(
                       () => SizedBox(

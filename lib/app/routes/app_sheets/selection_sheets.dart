@@ -36,11 +36,13 @@ class SelectionSheets {
   Future<CashflowCategoriesTableData?> selectCategory(
     TransactionType transactionType, {
     CashflowCategoriesTableData? selectedCategory,
+    Set<int> excludedCategoryIds = const {},
   }) {
     return Get.bottomSheet<CashflowCategoriesTableData>(
       SelectCategorySheet(
         transactionType: transactionType,
         selectedCategory: selectedCategory,
+        excludedCategoryIds: excludedCategoryIds,
       ),
     );
   }

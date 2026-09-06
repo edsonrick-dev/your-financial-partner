@@ -13,6 +13,21 @@ extension DropdownSelectors on TransactionController {
     selectedCategory.value = result;
   }
 
+  Future<void> selectCategoryWithFilter(
+    TransactionType transactionType,
+    Set<int> excludedCategoryIds,
+  ) async {
+    final result = await AppSheets.selection.selectCategory(
+      transactionType,
+      selectedCategory: selectedCategory.value,
+      excludedCategoryIds: excludedCategoryIds,
+    );
+
+    if (result == null) return;
+
+    selectedCategory.value = result;
+  }
+
   Future<void> selectAccount(TransactionType transactionType) async {
     final result = await AppSheets.selection.selectAccount(transactionType);
 

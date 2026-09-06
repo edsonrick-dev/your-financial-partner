@@ -6,14 +6,17 @@ extension ContextExtension on BuildContext {
 
 extension AppColorScheme on ColorScheme {
   bool get isDark => brightness == Brightness.dark;
+  Color get ascendPrimary => color900;
 
   ///PAGE SHIFTERS
   Color get pageShifterTextSelected =>
-      isDark ? pageShifterFillUnselected : pageShifterTextUnselected;
-  Color get pageShifterFillSelected =>
-      isDark ? appAccent : pageShifterFillUnselected;
-  Color get pageShifterTextUnselected => isDark ? color300 : text;
+      isDark ? pageShifterFillUnselected : color100;
+  Color get pageShifterFillSelected => isDark ? appAccent : appText;
+  Color get pageShifterTextUnselected => text;
   Color get pageShifterFillUnselected => isDark ? color800 : bgLight;
+
+  Color get buttonBackground => isDark ? appAccent : color900;
+  Color get buttonForeground => isDark ? text : color900;
 
   Color get grabber => isDark ? color700 : color900;
   Color get grabberInversed => color900;
@@ -62,7 +65,7 @@ extension FinanceColors on ColorScheme {
   Color get appInflowInverse => const Color(0xFF4ADE80);
   Color get appOutflow => const Color(0xFFDC2626);
   Color get appOutflowInversed => const Color(0xFFFF6B6B);
-  Color get appAccent => const Color(0xFFF59E0B);
+  Color get appAccent => const Color(0xFFE6A23F);
   Color get appNeutral => const Color(0xFF94A3B8);
   Color get appNeutralSoft => const Color(0xFFE2E8F0);
 

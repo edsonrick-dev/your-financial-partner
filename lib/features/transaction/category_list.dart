@@ -10,11 +10,12 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/add_category_butto
 class CategoryList extends StatefulWidget {
   final TransactionType transactionType;
   final CashflowCategoriesTableData? selectedCategory;
-
+  final Set<int> excludedCategoryIds;
   const CategoryList({
     super.key,
     required this.transactionType,
     this.selectedCategory,
+    this.excludedCategoryIds = const {},
   });
 
   @override
@@ -63,8 +64,45 @@ class _CategoryListState extends State<CategoryList> {
           return Text('Error: ${snapshot.error}');
         }
 
-        final categories = snapshot.data!;
+        // final categories = snapshot.data!;
+        final allCategories = snapshot.data!;
 
+        final categories = allCategories
+            .where(
+              (category) => !widget.excludedCategoryIds.contains(category.id),
+            )
+            .toList();
+
+        final categoryType = widget.transactionType == TransactionType.earn
+            ? 'income'
+            : 'spending';
+
+        if (categories.isEmpty) {
+          return Column(
+            children: [
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      allCategories.isEmpty
+                          ? 'You have no $categoryType categories'
+                          : 'You have planned for all $categoryType categories already',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 36),
+                child: AddCategoryButton(
+                  transactionType: widget.transactionType,
+                  onExpand: _scrollToAddCategory,
+                ),
+              ),
+            ],
+          );
+        }
         return ListView.builder(
           controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 16),

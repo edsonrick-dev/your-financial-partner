@@ -8,6 +8,7 @@ import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/cashflow_plan_period_selection_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/create_income_plan_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/plan_summary_dialog.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/cashflow_distribution_fields.dart';
@@ -38,6 +39,34 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
         child: AppSection(
           child: Column(
             children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Plan Period:', style: AppTextStyle.titleM),
+                  SizedBox(height: 8),
+                  Obx(
+                    () => Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: colorScheme.bgLight,
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: colorScheme.appBorderMuted),
+                      ),
+                      child: Row(
+                        children: BudgetPeriod.values.map((period) {
+                          return PeriodButton(
+                            period: period,
+                            isSelected:
+                                controller.selectedPeriod.value == period,
+                            onTap: () => controller.selectPeriod(period),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: spacingHeight),
               Obx(
                 () => AppDropdownField(
                   label: 'Expense Category',
@@ -48,27 +77,27 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
                   },
                 ),
               ),
-              SizedBox(height: spacingHeight),
-              // Period
-              Obx(
-                () => AppDropdownField(
-                  iconKey: 'caretDown',
-                  label: 'Period',
-                  value: controller.selectedPeriod.value?.label,
-                  hint: 'Select period',
-                  onTap: () async {
-                    final selected = await Get.bottomSheet<BudgetPeriod>(
-                      const CashflowPlanPeriodSelectionSheet(),
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                    );
 
-                    if (selected != null) {
-                      controller.selectPeriod(selected);
-                    }
-                  },
-                ),
-              ),
+              // // Period
+              // Obx(
+              //   () => AppDropdownField(
+              //     iconKey: 'caretDown',
+              //     label: 'Period',
+              //     value: controller.selectedPeriod.value?.label,
+              //     hint: 'Select period',
+              //     onTap: () async {
+              //       final selected = await Get.bottomSheet<BudgetPeriod>(
+              //         const CashflowPlanPeriodSelectionSheet(),
+              //         backgroundColor: Colors.transparent,
+              //         isScrollControlled: true,
+              //       );
+
+              //       if (selected != null) {
+              //         controller.selectPeriod(selected);
+              //       }
+              //     },
+              //   ),
+              // ),
               SizedBox(height: spacingHeight),
               // Distribution mode
               Obx(() {
@@ -77,83 +106,147 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
                 if (period == null || !period.supportsCustomization) {
                   return const SizedBox.shrink();
                 }
-
                 return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Cashflow Distribution:',
-                          style: AppTextStyle.titleM,
-                        ),
-                        Spacer(),
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: colorScheme.bgLight,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: colorScheme.appBorderMuted,
+                    Text('Amount Distribution:', style: AppTextStyle.titleM),
+                    SizedBox(height: 8),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: colorScheme.bgLight,
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: colorScheme.appBorderMuted),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ModeButton(
+                              item: const ModeItem(
+                                selectedIcon: PhosphorIconsFill.coin,
+                                unselectedIcon: PhosphorIconsRegular.coin,
+                                title: 'Even Distribution',
+                              ),
+                              selected:
+                                  controller.selectedDistribution.value ==
+                                  CashFlowDistribution.defaultDistribution,
+                              onTap: () {
+                                controller.selectDistribution(
+                                  CashFlowDistribution.defaultDistribution,
+                                );
+                              },
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              ModeButton(
-                                item: const ModeItem(
-                                  selectedIcon: PhosphorIconsFill.coin,
-                                  unselectedIcon: PhosphorIconsRegular.coin,
-                                  title: 'Evenly',
-                                ),
-                                selected:
-                                    controller.selectedDistribution.value ==
-                                    CashFlowDistribution.defaultDistribution,
-                                onTap: () {
-                                  controller.selectDistribution(
-                                    CashFlowDistribution.defaultDistribution,
-                                  );
-                                },
+                          Expanded(
+                            child: ModeButton(
+                              item: const ModeItem(
+                                selectedIcon: PhosphorIconsFill.coins,
+                                unselectedIcon: PhosphorIconsRegular.coins,
+                                title: 'Custom Distribution',
                               ),
-                              ModeButton(
-                                item: const ModeItem(
-                                  selectedIcon: PhosphorIconsFill.coins,
-                                  unselectedIcon: PhosphorIconsRegular.coins,
-                                  title: 'Custom',
-                                ),
-                                selected:
-                                    controller.selectedDistribution.value ==
-                                    CashFlowDistribution.custom,
-                                onTap: () {
-                                  controller.selectDistribution(
-                                    CashFlowDistribution.custom,
-                                  );
-                                },
-                              ),
-                            ],
+                              selected:
+                                  controller.selectedDistribution.value ==
+                                  CashFlowDistribution.custom,
+                              onTap: () {
+                                controller.selectDistribution(
+                                  CashFlowDistribution.custom,
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 12),
-                    // SegmentedButton<CashFlowDistribution>(
-                    //   segments: const [
-                    //     ButtonSegment(
-                    //       value: CashFlowDistribution.defaultDistribution,
-                    //       label: Text('Evenly'),
-                    //     ),
-                    //     ButtonSegment(
-                    //       value: CashFlowDistribution.custom,
-                    //       label: Text('Custom'),
-                    //     ),
-                    //   ],
-                    //   selected: {controller.selectedDistribution.value},
-                    //   onSelectionChanged: (selection) {
-                    //     controller.selectDistribution(selection.first);
-                    //   },
-                    // ),
-                    // SizedBox(height: spacingHeight),
+
+                    SizedBox(height: 20),
                   ],
                 );
               }),
+
+              // Obx(() {
+              //   final period = controller.selectedPeriod.value;
+
+              //   if (period == null || !period.supportsCustomization) {
+              //     return const SizedBox.shrink();
+              //   }
+
+              //   return Column(
+              //     children: [
+              //       Row(
+              //         children: [
+              //           Text(
+              //             'Cashflow Distribution:',
+              //             style: AppTextStyle.titleM,
+              //           ),
+              //           Spacer(),
+              //           Container(
+              //             padding: const EdgeInsets.all(4),
+              //             decoration: BoxDecoration(
+              //               color: colorScheme.bgLight,
+              //               borderRadius: BorderRadius.circular(12),
+              //               border: Border.all(
+              //                 color: colorScheme.appBorderMuted,
+              //               ),
+              //             ),
+              //             child: Row(
+              //               children: [
+              //                 ModeButton(
+              //                   item: const ModeItem(
+              //                     selectedIcon: PhosphorIconsFill.coin,
+              //                     unselectedIcon: PhosphorIconsRegular.coin,
+              //                     title: 'Evenly',
+              //                   ),
+              //                   selected:
+              //                       controller.selectedDistribution.value ==
+              //                       CashFlowDistribution.defaultDistribution,
+              //                   onTap: () {
+              //                     controller.selectDistribution(
+              //                       CashFlowDistribution.defaultDistribution,
+              //                     );
+              //                   },
+              //                 ),
+              //                 ModeButton(
+              //                   item: const ModeItem(
+              //                     selectedIcon: PhosphorIconsFill.coins,
+              //                     unselectedIcon: PhosphorIconsRegular.coins,
+              //                     title: 'Custom',
+              //                   ),
+              //                   selected:
+              //                       controller.selectedDistribution.value ==
+              //                       CashFlowDistribution.custom,
+              //                   onTap: () {
+              //                     controller.selectDistribution(
+              //                       CashFlowDistribution.custom,
+              //                     );
+              //                   },
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //       SizedBox(height: 12),
+              //       // SegmentedButton<CashFlowDistribution>(
+              //       //   segments: const [
+              //       //     ButtonSegment(
+              //       //       value: CashFlowDistribution.defaultDistribution,
+              //       //       label: Text('Evenly'),
+              //       //     ),
+              //       //     ButtonSegment(
+              //       //       value: CashFlowDistribution.custom,
+              //       //       label: Text('Custom'),
+              //       //     ),
+              //       //   ],
+              //       //   selected: {controller.selectedDistribution.value},
+              //       //   onSelectionChanged: (selection) {
+              //       //     controller.selectDistribution(selection.first);
+              //       //   },
+              //       // ),
+              //       // SizedBox(height: spacingHeight),
+              //     ],
+              //   );
+              // }),
 
               // Amount — only in Evenly mode
               // Amount / period total

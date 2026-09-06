@@ -30,7 +30,7 @@ class AppButton extends StatelessWidget {
 
     return switch (type) {
       ButtonType.primary =>
-        isInversed ? colorScheme.appAccent : colorScheme.appText,
+        isInversed ? colorScheme.appAccent : colorScheme.buttonBackground,
       ButtonType.outline => Colors.transparent,
       ButtonType.ghost => Colors.transparent,
     };

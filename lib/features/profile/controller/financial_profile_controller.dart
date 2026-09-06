@@ -49,7 +49,7 @@ class FinancialProfileController extends GetxController {
   double? get emergencyFundAvailable {
     final adb = averageDailyBalance;
 
-    if (adb == null) return null;
+    if (adb == null) return liquidFunds;
 
     return min(liquidFunds, adb);
   }

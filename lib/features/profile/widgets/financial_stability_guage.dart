@@ -5,11 +5,16 @@ class FinancialStabilityGauge extends StatelessWidget {
   final int score;
   final int maxScore;
   final ColorScheme colorScheme;
-
+  final double guageSize;
+  final bool showScore;
+  final double scoreSize;
   const FinancialStabilityGauge({
     super.key,
     required this.score,
     this.maxScore = 80,
+    this.guageSize = 80,
+    this.showScore = true,
+    this.scoreSize = 20,
     required this.colorScheme,
   });
 
@@ -19,38 +24,40 @@ class FinancialStabilityGauge extends StatelessWidget {
     final progress = clampedScore / maxScore;
     final normalizedScore = (score / 80) * 100;
     return SizedBox(
-      width: 80,
-      height: 80,
+      width: guageSize,
+      height: guageSize,
       child: Stack(
         alignment: Alignment.center,
         children: [
           CustomPaint(
-            size: const Size(80, 80),
+            size: Size(guageSize, guageSize),
             painter: FinancialStabilityGaugePainter(progress: progress),
           ),
 
           // Score
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                normalizedScore.round().toString(),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  height: 1,
+          if (showScore)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  normalizedScore.round().toString(),
+                  style: TextStyle(
+                    fontSize: scoreSize,
+                    fontWeight: FontWeight.w700,
+                    height: 1,
+                    fontFeatures: [FontFeature.tabularFigures()],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 2),
-              // Text(
-              //   'out of ${maxScore.toStringAsFixed(0)}',
-              //   style: const TextStyle(
-              //     fontSize: 9,
-              //     fontWeight: FontWeight.w500,
-              //   ),
-              // ),
-            ],
-          ),
+                const SizedBox(height: 2),
+                // Text(
+                //   'out of ${maxScore.toStringAsFixed(0)}',
+                //   style: const TextStyle(
+                //     fontSize: 9,
+                //     fontWeight: FontWeight.w500,
+                //   ),
+                // ),
+              ],
+            ),
         ],
       ),
     );

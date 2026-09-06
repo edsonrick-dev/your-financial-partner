@@ -91,6 +91,8 @@ class TransactionController extends GetxController {
 
   /// VARIABLES ✅
   /// GENERAL VARIABLES -------------
+  ///
+
   final selectedCategory = Rxn<CashflowCategoriesTableData>();
   final selectedAccount = Rxn<AccountsTableData>();
   final selectedPerson = Rxn<EntitiesTableData>();

@@ -125,11 +125,10 @@ class _YearlyFields extends GetView<CashflowController> {
           spacing: 12,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Yearly Distribution',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-
+            // Text(
+            //   'Yearly Distribution',
+            //   style: Theme.of(context).textTheme.titleMedium,
+            // ),
             ...AppMonth.values.map(
               (month) => Obx(
                 () => AppAmountField(
