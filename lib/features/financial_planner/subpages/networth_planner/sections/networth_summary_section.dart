@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/domain/enums/net_worth_comparison_enum.dart';
@@ -33,11 +34,7 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         width: double.infinity,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [colorScheme.text, colorScheme.gradient2],
-            begin: Alignment.centerLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppGradient.gradientA(colorScheme),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(
@@ -72,7 +69,7 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
                     style: AppTextStyle.amountXL.copyWith(
                       color: netWorth < 0
                           ? colorScheme.appOutflowInversed
-                          : colorScheme.inversePrimary,
+                          : colorScheme.appInversedtext,
                     ),
                   ),
                 ),

@@ -181,7 +181,7 @@ class FundSummaryCard extends GetView<HomeController> {
                             ? Icons.visibility_off
                             : Icons.remove_red_eye,
                         size: 24,
-                        color: colorScheme.inversePrimary,
+                        color: colorScheme.appInversedtext,
                       ),
                     ),
                   ),

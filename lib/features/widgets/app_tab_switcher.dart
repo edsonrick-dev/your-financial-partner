@@ -24,9 +24,16 @@ class TabSwitcher extends StatelessWidget {
               height: 36,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: isActive ? colorScheme.appAccent : Colors.transparent,
+                color: colorScheme.pageShifterFillSelected,
               ),
-              child: Center(child: Text(label, style: AppTextStyle.titleM)),
+              child: Center(
+                child: Text(
+                  label,
+                  style: AppTextStyle.titleM.copyWith(
+                    color: colorScheme.pageShifterTextSelected,
+                  ),
+                ),
+              ),
             ),
           )
         : AdaptivePressable(
@@ -35,10 +42,15 @@ class TabSwitcher extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               child: Container(
                 height: 36,
-                decoration: BoxDecoration(
-                  color: isActive ? colorScheme.appAccent : Colors.transparent,
+                decoration: BoxDecoration(color: Colors.transparent),
+                child: Center(
+                  child: Text(
+                    label,
+                    style: AppTextStyle.titleM.copyWith(
+                      color: colorScheme.pageShifterTextUnselected,
+                    ),
+                  ),
                 ),
-                child: Center(child: Text(label, style: AppTextStyle.titleM)),
               ),
             ),
           );

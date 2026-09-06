@@ -15,7 +15,7 @@ class AppDetailsHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: colorScheme.text,
+        color: colorScheme.bgInversed,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(38)),
       ),
       child: Column(

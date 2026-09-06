@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/metric_bar_row.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/sections/networth_summary_section.dart';
@@ -75,7 +76,7 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
               ),
               AppSectionBody(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
                   child: Column(
                     spacing: 16,
                     children: [
@@ -147,29 +148,37 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
                         ),
                       ),
                       Obx(
-                        () => Column(
-                          spacing: 12,
-                          children: controller.displayedGroupTotals.entries.map(
-                            (entry) {
-                              final group = entry.key;
-                              final amount = entry.value;
-
-                              return AccountGroupOverviewTile(
-                                icon: group.icon,
-                                type: group.label,
-                                amount: amount,
-                                percentage: controller.groupPercentage(group),
-                                color: group.color,
-                                percentageLabel:
-                                    controller.selectedView.value ==
-                                        BalanceSheetType.asset
-                                    ? 'Assets'
-                                    : 'Liabilities',
-                              );
-                            },
-                          ).toList(),
+                        () => AppButton(
+                          onTap: () {},
+                          type: ButtonType.ghost,
+                          text:
+                              'View ${controller.selectedView.value.name} details',
                         ),
                       ),
+                      // Obx(
+                      //   () => Column(
+                      //     spacing: 12,
+                      //     children: controller.displayedGroupTotals.entries.map(
+                      //       (entry) {
+                      //         final group = entry.key;
+                      //         final amount = entry.value;
+
+                      //         return AccountGroupOverviewTile(
+                      //           icon: group.icon,
+                      //           type: group.label,
+                      //           amount: amount,
+                      //           percentage: controller.groupPercentage(group),
+                      //           color: group.color,
+                      //           percentageLabel:
+                      //               controller.selectedView.value ==
+                      //                   BalanceSheetType.asset
+                      //               ? 'Assets'
+                      //               : 'Liabilities',
+                      //         );
+                      //       },
+                      //     ).toList(),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

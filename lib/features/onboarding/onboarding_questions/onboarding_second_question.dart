@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/onboarding/enums/onboarding_selection_type.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_controller.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_option_tile.dart';

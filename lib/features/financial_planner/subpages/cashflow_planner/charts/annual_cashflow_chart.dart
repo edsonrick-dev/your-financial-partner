@@ -84,7 +84,7 @@ BarChartData _barChartData(
             return Text(
               value.toCompactCurrency(),
               style: AppTextStyle.labelXS.copyWith(
-                color: colorScheme.inversePrimary,
+                color: colorScheme.appInversedtext,
               ),
             );
           },
@@ -107,7 +107,7 @@ BarChartData _barChartData(
               child: Text(
                 AppMonth.values[index].shortName,
                 style: AppTextStyle.labelXS.copyWith(
-                  color: colorScheme.inversePrimary,
+                  color: colorScheme.appInversedtext,
                 ),
               ),
             );

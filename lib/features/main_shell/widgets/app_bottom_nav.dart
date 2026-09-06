@@ -15,7 +15,7 @@ class AppBottomNav extends StatelessWidget {
     return SafeArea(
       // top: false,
       child: Padding(
-        padding: const EdgeInsets.only(top: 8),
+        padding: const EdgeInsets.only(top: 12),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           // mainAxisAlignment: MainAxisAlignment.end,

@@ -10,20 +10,18 @@ class AddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: AdaptivePressable(
-        child: GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: 44,
-            height: 44,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color(0xFF0F172A),
-            ),
-            child: AnimatedRotation(
-              turns: isOpen ? 0.125 : 0,
-              duration: const Duration(milliseconds: 200),
-              child: const Icon(Icons.add, color: Colors.white),
-            ),
+        onTap: onTap,
+        child: Container(
+          width: 44,
+          height: 44,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color(0xFF0F172A),
+          ),
+          child: AnimatedRotation(
+            turns: isOpen ? 0.125 : 0,
+            duration: const Duration(milliseconds: 200),
+            child: const Icon(Icons.add, color: Colors.white),
           ),
         ),
       ),

@@ -40,7 +40,7 @@ class AddTransactionSheet extends StatelessWidget {
               // padding: EdgeInsets.all(24),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colorScheme.bg,
                   borderRadius: BorderRadius.circular(20),
                 ),
 

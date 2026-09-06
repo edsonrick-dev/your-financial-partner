@@ -48,7 +48,7 @@ class AppDropdownField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = FieldColors.text(effectiveState);
+    final textColor = FieldColors.text(effectiveState, context);
 
     return AdaptivePressable(
       child: AppFieldContainer(
@@ -73,7 +73,7 @@ class AppDropdownField extends StatelessWidget {
                         label,
 
                         style: AppTextStyle.titleM.copyWith(
-                          color: FieldColors.label(effectiveState),
+                          color: FieldColors.label(effectiveState, context),
                         ),
                       ),
 
@@ -98,7 +98,7 @@ class AppDropdownField extends StatelessWidget {
                             Icon(
                               AppIcons.categories.resolve(iconKey ?? ''),
                               size: 16,
-                              color: FieldColors.icon(effectiveState),
+                              color: FieldColors.icon(effectiveState, context),
                             ),
                       ],
                     ),

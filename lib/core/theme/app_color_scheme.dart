@@ -4,13 +4,17 @@ extension ContextExtension on BuildContext {
   ColorScheme get colors => Theme.of(this).colorScheme;
 }
 
+extension FieldColorScheme on ColorScheme {
+  Color get emptyBorder => isDark ? Colors.transparent : Color(0xFFCAC3BB);
+  Color get filledBorder => isDark ? Colors.transparent : color100;
+}
+
 extension AppColorScheme on ColorScheme {
   bool get isDark => brightness == Brightness.dark;
   Color get ascendPrimary => color900;
 
   ///PAGE SHIFTERS
-  Color get pageShifterTextSelected =>
-      isDark ? pageShifterFillUnselected : color100;
+  Color get pageShifterTextSelected => isDark ? color800 : color100;
   Color get pageShifterFillSelected => isDark ? appAccent : appText;
   Color get pageShifterTextUnselected => text;
   Color get pageShifterFillUnselected => isDark ? color800 : bgLight;
@@ -19,14 +23,14 @@ extension AppColorScheme on ColorScheme {
   Color get buttonForeground => isDark ? text : color900;
 
   Color get grabber => isDark ? color700 : color900;
-  Color get grabberInversed => color900;
+  Color get grabberInversed => color300;
 
   Color get bg => isDark ? color900 : color100;
   Color get bgLight => isDark ? color800 : color50;
   Color get bgDark => isDark ? color950 : color200;
   Color get surface => bg;
 
-  Color get bgInversed => isDark ? color900 : color900;
+  Color get bgInversed => color900;
   Color get appOnSurface => const Color(0xFFFFFFFF);
   Color get appOnSurfaceSecondary => appText;
   Color get appOnSurfaceTertiary => appText.withAlpha(220);

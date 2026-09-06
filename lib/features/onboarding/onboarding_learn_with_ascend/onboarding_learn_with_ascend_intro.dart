@@ -15,7 +15,7 @@ class OnboardingLearnWithAscendIntro extends GetView<OnboardingController> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
+    // final colorScheme = context.colors;
     return Scaffold(
       appBar: AppBar(
         // title: Text(
@@ -156,89 +156,6 @@ class PersonaCard extends StatelessWidget {
 
           Divider(),
           Column(children: []),
-        ],
-      ),
-    );
-  }
-}
-
-class _RatioCard extends StatelessWidget {
-  const _RatioCard({
-    required this.ratioName,
-    required this.state,
-    required this.score,
-    required this.color,
-    required this.scoreColor,
-    required this.icon,
-  });
-  final String ratioName;
-  final String state;
-  final int score;
-  final Color color;
-  final Color scoreColor;
-  final IconData icon;
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return Container(
-      padding: EdgeInsets.fromLTRB(8, 4, 12, 4),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: colorScheme.appBorderMuted),
-        color: colorScheme.bgLight,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                height: 36,
-                width: 36,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-              ),
-              Icon(icon, size: 18, color: color),
-            ],
-          ),
-          SizedBox(width: 4),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Text(ratioName, style: AppTextStyle.labelS),
-                    Spacer(),
-                    Text(
-                      score.toString(),
-                      style: AppTextStyle.amountS.copyWith(color: scoreColor),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 2),
-                Row(
-                  children: [
-                    // Spacer(),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(999),
-                        color: scoreColor.withValues(alpha: 0.2),
-                      ),
-                      child: Text(
-                        state,
-                        style: AppTextStyle.labelXS.copyWith(color: scoreColor),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

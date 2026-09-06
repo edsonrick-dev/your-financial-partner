@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
-import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_controller.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_option_tile.dart';
@@ -164,63 +163,6 @@ class OnboardingFifthQuestion extends GetView<OnboardingController> {
           ),
           SizedBox(height: context.bottomPadding),
         ],
-      ),
-    );
-  }
-}
-
-class _FinancialFocusOption extends StatelessWidget {
-  const _FinancialFocusOption({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: isSelected ? colorScheme.bgLight : colorScheme.bgLight,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isSelected ? colorScheme.appText : colorScheme.appBorder,
-            width: isSelected ? 1.5 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Expanded(child: Text(label, style: AppTextStyle.bodyL)),
-
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                color: isSelected ? colorScheme.appText : Colors.transparent,
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(
-                  color: isSelected
-                      ? colorScheme.appText
-                      : colorScheme.appBorder,
-                ),
-              ),
-              child: isSelected
-                  ? Icon(Icons.check, size: 14, color: colorScheme.bg)
-                  : null,
-            ),
-          ],
-        ),
       ),
     );
   }

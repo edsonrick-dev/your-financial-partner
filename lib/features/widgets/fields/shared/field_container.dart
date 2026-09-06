@@ -38,7 +38,7 @@ class AppFieldContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = FieldColors.border(effectiveState);
+    final borderColor = FieldColors.border(effectiveState, context);
     final colorScheme = context.colors;
 
     return Opacity(

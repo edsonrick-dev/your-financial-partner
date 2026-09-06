@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/app_date_picker.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
@@ -13,6 +12,8 @@ import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/organize_THIS/app_mode_item.dart';
+import 'package:getx_drift_app/organize_THIS/app_mode_shifter.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 enum PaidBy { self, others }
@@ -78,7 +79,7 @@ class SpendTransactionForm extends GetView<TransactionController> {
                       ),
                       child: Row(
                         children: [
-                          ModeButton(
+                          ModeShifter(
                             item: const ModeItem(
                               selectedIcon: PhosphorIconsFill.user,
                               unselectedIcon: PhosphorIconsRegular.user,
@@ -89,7 +90,7 @@ class SpendTransactionForm extends GetView<TransactionController> {
                               controller.setPaidBy(PaidBy.self);
                             },
                           ),
-                          ModeButton(
+                          ModeShifter(
                             item: const ModeItem(
                               selectedIcon: PhosphorIconsFill.users,
                               unselectedIcon: PhosphorIconsRegular.users,
@@ -168,80 +169,4 @@ class SpendTransactionForm extends GetView<TransactionController> {
       ),
     );
   }
-}
-
-class ModeButton extends StatelessWidget {
-  const ModeButton({
-    super.key,
-    required this.item,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final ModeItem item;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return AdaptivePressable(
-      borderRadius: BorderRadius.circular(999),
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        decoration: BoxDecoration(
-          color: selected
-              ? colorScheme.pageShifterFillSelected
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2.0),
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              spacing: 6,
-              children: [
-                Icon(
-                  selected ? item.selectedIcon : item.unselectedIcon,
-                  size: 24,
-                  color: selected ? colorScheme.bg : colorScheme.appTextMuted,
-                ),
-
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOut,
-                  child: item.title != null
-                      ? Text(
-                          item.title!,
-                          style: AppTextStyle.titleM.copyWith(
-                            color: selected
-                                ? colorScheme.bg
-                                : colorScheme.appText,
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ModeItem {
-  const ModeItem({
-    required this.selectedIcon,
-    required this.unselectedIcon,
-    this.title,
-  });
-
-  final IconData selectedIcon;
-  final IconData unselectedIcon;
-  final String? title;
 }

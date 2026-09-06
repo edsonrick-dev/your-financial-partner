@@ -3,9 +3,7 @@ import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
-import 'package:getx_drift_app/features/onboarding/onboarding_ascend_intro/widgets/intro_message_card.dart';
 import 'package:getx_drift_app/features/profile/widgets/financial_stability_guage.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class LearnIntroPageOne extends StatelessWidget {
   const LearnIntroPageOne({super.key});
@@ -121,19 +119,6 @@ class LearnIntroPageOne extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _FinancialRelationshipDiagram extends StatelessWidget {
-  const _FinancialRelationshipDiagram();
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      'assets/images/onboarding_financial_planners2.png',
-      width: double.infinity,
-      fit: BoxFit.contain,
     );
   }
 }

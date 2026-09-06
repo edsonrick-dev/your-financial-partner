@@ -44,7 +44,8 @@ class FinancialProfileController extends GetxController {
   bool get hasLiquidFunds => netWorthController.hasLiquidFundAccounts;
   double get liquidFunds => netWorthController.liquidFunds;
   bool get hasNetWorth => netWorthController.hasAccounts;
-  double? get averageDailyBalance => netWorthController.averageDailyBalance;
+  double? get averageDailyBalance =>
+      0; // netWorthController.averageDailyBalance;
 
   double? get emergencyFundAvailable {
     final adb = averageDailyBalance;

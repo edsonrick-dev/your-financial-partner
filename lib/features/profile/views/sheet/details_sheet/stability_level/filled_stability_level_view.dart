@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
@@ -25,22 +26,37 @@ class FilledStabilityLevelView extends GetView<FinancialProfileController> {
         AppSection(
           child: Column(
             children: [
-              FinancialStabilityGauge(score: score, colorScheme: colorScheme),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  gradient: AppGradient.gradientA(colorScheme),
+                ),
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    FinancialStabilityGauge(
+                      score: score,
+                      colorScheme: colorScheme,
+                    ),
+                    const SizedBox(height: 20),
 
-              const SizedBox(height: 20),
+                    Text(
+                      stability.title,
+                      style: AppTextStyle.headlineL.copyWith(
+                        color: stability.color,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
 
-              Text(
-                stability.title,
-                style: AppTextStyle.headlineL.copyWith(color: stability.color),
-                textAlign: TextAlign.center,
-              ),
+                    const SizedBox(height: 8),
 
-              const SizedBox(height: 8),
-
-              Text(
-                stability.shortDescription,
-                style: AppTextStyle.bodyM,
-                textAlign: TextAlign.center,
+                    Text(
+                      stability.shortDescription,
+                      style: AppTextStyle.bodyM,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
 
               const SizedBox(height: 16),

@@ -43,9 +43,9 @@ class AppIconPickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = FieldColors.border(effectiveState);
+    final borderColor = FieldColors.border(effectiveState, context);
 
-    final iconColor = FieldColors.icon(effectiveState);
+    final iconColor = FieldColors.icon(effectiveState, context);
 
     final colorScheme = context.colors;
 

@@ -124,16 +124,3 @@ class LearnIntroPageTwo extends StatelessWidget {
     );
   }
 }
-
-class _FinancialRelationshipDiagram extends StatelessWidget {
-  const _FinancialRelationshipDiagram();
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      'assets/images/onboarding_financial_planners2.png',
-      width: double.infinity,
-      fit: BoxFit.contain,
-    );
-  }
-}

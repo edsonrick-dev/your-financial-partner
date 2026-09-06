@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_ascend_intro/widgets/intro_message_card.dart';
 
 class FinancialPicturePage extends StatelessWidget {

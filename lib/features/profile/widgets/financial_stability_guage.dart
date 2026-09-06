@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+
 class FinancialStabilityGauge extends StatelessWidget {
   final int score;
   final int maxScore;
@@ -31,7 +33,10 @@ class FinancialStabilityGauge extends StatelessWidget {
         children: [
           CustomPaint(
             size: Size(guageSize, guageSize),
-            painter: FinancialStabilityGaugePainter(progress: progress),
+            painter: FinancialStabilityGaugePainter(
+              progress: progress,
+              colorScheme: colorScheme,
+            ),
           ),
 
           // Score
@@ -49,13 +54,6 @@ class FinancialStabilityGauge extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 2),
-                // Text(
-                //   'out of ${maxScore.toStringAsFixed(0)}',
-                //   style: const TextStyle(
-                //     fontSize: 9,
-                //     fontWeight: FontWeight.w500,
-                //   ),
-                // ),
               ],
             ),
         ],
@@ -66,9 +64,12 @@ class FinancialStabilityGauge extends StatelessWidget {
 
 class FinancialStabilityGaugePainter extends CustomPainter {
   final double progress;
+  final ColorScheme colorScheme;
 
-  const FinancialStabilityGaugePainter({required this.progress});
-
+  const FinancialStabilityGaugePainter({
+    required this.progress,
+    required this.colorScheme,
+  });
   @override
   void paint(Canvas canvas, Size size) {
     const strokeWidth = 8.0;
@@ -141,7 +142,7 @@ class FinancialStabilityGaugePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round
-      ..color = Colors.black.withValues(alpha: 0.06);
+      ..color = colorScheme.bgDark;
 
     canvas.drawArc(rect, startAngle, sweepAngle, false, backgroundPaint);
 
