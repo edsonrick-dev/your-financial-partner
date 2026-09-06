@@ -93,12 +93,10 @@ class EarnTransactionCard extends GetView<TransactionController> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(
-                        child: Flexible(
-                          child: Text(
-                            item.account!.name,
-                            style: AppTextStyle.bodyS.copyWith(
-                              color: colorScheme.appTextMuted,
-                            ),
+                        child: Text(
+                          item.account!.name,
+                          style: AppTextStyle.bodyS.copyWith(
+                            color: colorScheme.appTextMuted,
                           ),
                         ),
                       ),

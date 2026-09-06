@@ -430,7 +430,9 @@ class _ModeButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8),
 
         decoration: BoxDecoration(
-          color: selected ? colorScheme.appText : Colors.transparent,
+          color: selected
+              ? colorScheme.pageShifterFillSelected
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(9),
         ),
         child: Padding(
@@ -442,14 +444,18 @@ class _ModeButton extends StatelessWidget {
               Icon(
                 selected ? fillIcon : regularIcon,
                 size: 18,
-                color: selected ? colorScheme.bg : colorScheme.appTextMuted,
+                color: selected
+                    ? colorScheme.pageShifterTextSelected
+                    : colorScheme.appTextMuted,
               ),
 
               if (name != null)
                 Text(
                   name!,
                   style: AppTextStyle.labelS.copyWith(
-                    color: selected ? colorScheme.bg : colorScheme.appText,
+                    color: selected
+                        ? colorScheme.pageShifterTextSelected
+                        : colorScheme.appText,
                   ),
                 ),
             ],

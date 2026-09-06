@@ -107,15 +107,13 @@ class SpendTransactionCard extends GetView<TransactionController> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(
-                        child: Flexible(
-                          child: Text(
-                            paymentSource,
-                            style: AppTextStyle.bodyS.copyWith(
-                              color: colorScheme.appTextMuted,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                        child: Text(
+                          paymentSource,
+                          style: AppTextStyle.bodyS.copyWith(
+                            color: colorScheme.appTextMuted,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(width: 16),

@@ -68,61 +68,6 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
                     ),
                   ),
                 ),
-
-                // AppSectionBody(
-                //   child: Padding(
-                //     padding: const EdgeInsets.all(8.0),
-                //     child: Column(
-                //       spacing: 16,
-                //       children: [
-                //         Container(
-                //           width: double.infinity,
-                //           decoration: BoxDecoration(
-                //             color: colorScheme.bg,
-                //             borderRadius: BorderRadius.circular(8),
-                //             border: Border.all(color: colorScheme.appBorder),
-                //           ),
-                //           child: ClipRRect(
-                //             borderRadius: BorderRadius.circular(8),
-
-                //             child: Row(
-                //               children: [
-                //                 Expanded(
-                //                   child: TabSwitcher(
-                //                     label: 'Income',
-                //                     onTap: () {},
-                //                   ),
-                //                 ),
-                //                 Expanded(
-                //                   child: TabSwitcher(
-                //                     label: 'Allocation',
-                //                     isActive: false,
-                //                     onTap: () {},
-                //                   ),
-                //                 ),
-                //               ],
-                //             ),
-                //           ),
-                //         ),
-                //         Column(
-                //           spacing: 12,
-                //           children: [
-                //             CashFlowOverviewTile(
-                //               type: 'Active Income',
-                //               amount: 540000,
-                //               icon: PhosphorIconsRegular.money,
-                //             ),
-                //             CashFlowOverviewTile(
-                //               type: 'Passive Income',
-                //               amount: 12000,
-                //               icon: PhosphorIconsRegular.money,
-                //             ),
-                //           ],
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -152,80 +97,19 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: AppButton(text: 'Go to Bill Manager', onTap: () {}),
+                    child: AppButton(
+                      text: 'Go to Bill Manager',
+                      onTap: () {
+                        Get.toNamed(Routes.BILLS);
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-          // CashflowHistorySection(),
-          // AppSection(
-          //   sectionTitle: 'Bills Management',
 
-          //   // showTrailing: true,
-          //   child: Column(
-          //     spacing: 12,
-          //     children: [
-          //       OthersCard(
-          //         icon: PhosphorIconsRegular.receipt,
-          //         title: 'Bills',
-          //         onTap: () {
-          //           Get.toNamed(Routes.BILLS);
-          //         },
-          //       ),
-
-          //       // BudgetCard(
-          //       //   title: 'Food',
-          //       //   iconKey: 'bowlFood',
-          //       //   consumption: 250,
-          //       //   budget: 400,
-          //       // ),
-          //     ],
-          //   ),
-          // ),
-          // LearningSection(contents: [LearnThumbnail()]),
           SizedBox(height: 24),
-          // AppSection(
-          //   sectionTitle: 'Bills',
-          //   trailingType: SectionTrailingType.textButton,
-          //   trailingText: 'View all',
-          //   onTrailingPressed: () {
-          //     Get.toNamed(Routes.TRANSACTION);
-          //   },
-          //   // showTrailing: true,
-          //   child: Column(
-          //     spacing: 12,
-          //     children: [
-          //       BillsCard(
-          //         iconKey: 'internet',
-          //         billName: 'Internet Home Fiber',
-          //         billType: 'Internet Bill',
-          //         dueDate: DateTime(2026, 6, 4),
-          //         amountDue: 6000,
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
-          // ListView.builder(
-          //   shrinkWrap: true,
-          //   physics: const NeverScrollableScrollPhysics(),
-          //   itemCount: controller.projections.length,
-          //   itemBuilder: (_, index) {
-          //     final item = controller.projections[index];
-
-          //     return Card(
-          //       child: ListTile(
-          //         title: Text(item.month.fullName),
-          //         subtitle: Text(
-          //           'Income: ${item.income}'
-          //           '\nAllocated: ${item.allocated}'
-          //           '\nSurplus: ${item.surplus}',
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // ),
         ],
       ),
     );

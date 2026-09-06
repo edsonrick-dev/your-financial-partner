@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/credit_card_installment_form.dart';
@@ -8,13 +8,13 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_category_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_day_of_month.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_cycles_sheet.dart';
-import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_other_transactions.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_payment_account_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_person_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_payment_account_type_sheet.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/sheets/selection_sheets/select_reminder_sheet.dart';
 
 class SelectionSheets {
   Future<AccountsTableData?> selectCreditCard() {
@@ -47,7 +47,7 @@ class SelectionSheets {
     );
   }
 
-  Future<MonthPattern?> selectMonthPattern(FrequencyType frequency) {
+  Future<MonthPattern?> selectMonthPattern(BillsFrequency frequency) {
     return Get.bottomSheet<MonthPattern>(
       SelectMonthPatternSheet(
         patterns: frequency.monthPatterns,
@@ -69,6 +69,10 @@ class SelectionSheets {
     );
   }
 
+  // Future<AppDay?> selectDay() {
+  //   return Get.bottomSheet<AppDay>(SelectDaySheet(), isScrollControlled: true);
+  // }
+
   Future<AccountType?> selectPaymentAccountType({
     required List<AccountType> accountTypes,
   }) {
@@ -78,6 +82,13 @@ class SelectionSheets {
 
     return Get.bottomSheet<AccountType>(
       SelectPaymentAccountTypeSheet(accountTypes: paymentAccountTypes),
+    );
+  }
+
+  Future<int?> selectReminder({int? selectedDaysBefore}) {
+    return Get.bottomSheet<int>(
+      SelectReminderSheet(selectedDaysBefore: selectedDaysBefore),
+      isScrollControlled: true,
     );
   }
 
@@ -105,13 +116,13 @@ class SelectionSheets {
     );
   }
 
-  Future<FrequencyType?> selectFrequency() {
-    return Get.bottomSheet(
-      const SelectFrequencySheet(),
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-    );
-  }
+  // Future<FrequencyType?> selectFrequency() {
+  //   return Get.bottomSheet(
+  //     const SelectFrequencySheet(),
+  //     isScrollControlled: true,
+  //     backgroundColor: Colors.transparent,
+  //   );
+  // }
 
   Future<int?> selectDayOfMonth({int? selectedDAy}) {
     return Get.bottomSheet<int>(

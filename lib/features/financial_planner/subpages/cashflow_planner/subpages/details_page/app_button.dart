@@ -44,7 +44,7 @@ class AppButton extends StatelessWidget {
     }
 
     return switch (type) {
-      ButtonType.primary => isInversed ? colorScheme.appText : colorScheme.bg,
+      ButtonType.primary => colorScheme.pageShifterTextSelected,
       ButtonType.outline => colorScheme.appText,
       ButtonType.ghost => colorScheme.appText,
     };

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
-import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
@@ -99,7 +99,7 @@ class TransactionController extends GetxController {
   final selectedLinkedAccount = Rxn<AccountsTableData>();
   final amount = 0.0.obs;
   final currencySymbol = '₱'.obs; //UNUSED
-  final selectedFrequency = Rxn<FrequencyType>();
+  final selectedFrequency = Rxn<BillsFrequency>();
 
   ///TRANSACTION SPECIFIC VARIABLES -------------
   ///SPLIT EXPENSE -------------

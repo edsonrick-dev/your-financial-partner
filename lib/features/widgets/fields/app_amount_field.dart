@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/domain/app_calculator.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
+import 'package:getx_drift_app/data/enums/field_states.dart';
 
 class AppAmountField extends StatelessWidget {
   final String label;
@@ -39,7 +40,11 @@ class AppAmountField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppFieldContainer(
-      onTap: () => _openCalculator(context),
+      state: amount > 0 ? FieldState.filled : FieldState.empty,
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+        _openCalculator(context);
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

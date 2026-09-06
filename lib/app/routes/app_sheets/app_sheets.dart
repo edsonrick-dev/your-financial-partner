@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
 import 'package:getx_drift_app/features/add_transaction_sheet.dart';
 import 'package:getx_drift_app/features/balances/views/people_balances_view.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
@@ -16,7 +15,6 @@ import 'package:getx_drift_app/features/profile/controller/extensions/financial_
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/shell/financial_stability_sheet_shell.dart';
-import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_sheet.dart';
 
 import 'package:getx_drift_app/features/widgets/cards/category_card.dart';
 
@@ -44,12 +42,12 @@ class AppSheets {
     );
   }
 
-  static Future<FrequencyType?> selectFrequency() async {
-    return await Get.bottomSheet<FrequencyType>(
-      const SelectFrequencySheet(),
-      backgroundColor: Colors.transparent,
-    );
-  }
+  // static Future<FrequencyType?> selectFrequency() async {
+  //   return await Get.bottomSheet<FrequencyType>(
+  //     const SelectFrequencySheet(),
+  //     backgroundColor: Colors.transparent,
+  //   );
+  // }
 
   static Future<void> addTransactionSheet() async {
     return await Get.bottomSheet(

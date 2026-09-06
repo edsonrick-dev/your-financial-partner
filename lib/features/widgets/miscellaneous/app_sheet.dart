@@ -28,23 +28,28 @@ class AppSheet extends StatelessWidget {
     final colorScheme = context.colors;
     final screenHeight = MediaQuery.sizeOf(context).height;
 
-    final content = Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: AppBorderRadius.sheetTop,
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          mainAxisSize: adaptiveHeight ? MainAxisSize.min : MainAxisSize.max,
-          children: [
-            if (showHeader) ...[AppGrabber(), AppToolbar(title: title ?? '')],
+    final content = GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: AppBorderRadius.sheetTop,
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            mainAxisSize: adaptiveHeight ? MainAxisSize.min : MainAxisSize.max,
+            children: [
+              if (showHeader) ...[AppGrabber(), AppToolbar(title: title ?? '')],
 
-            if (adaptiveHeight)
-              Flexible(fit: FlexFit.loose, child: child)
-            else
-              Expanded(child: child),
-          ],
+              if (adaptiveHeight)
+                Flexible(fit: FlexFit.loose, child: child)
+              else
+                Expanded(child: child),
+            ],
+          ),
         ),
       ),
     );

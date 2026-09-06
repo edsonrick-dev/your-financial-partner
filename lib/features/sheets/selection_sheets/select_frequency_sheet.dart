@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/app_border_radius.dart';
-import 'package:getx_drift_app/data/enums/frequency_type_enum.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -15,7 +15,7 @@ class SelectFrequencySheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
 
-    final frequencies = FrequencyType.values.where((f) => f.isSupported);
+    final frequencies = BillsFrequency.values.where((f) => f.isSupported);
     return Container(
       constraints: BoxConstraints(maxHeight: Get.height * 0.75, minHeight: 200),
 

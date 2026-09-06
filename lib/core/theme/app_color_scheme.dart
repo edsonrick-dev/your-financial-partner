@@ -6,7 +6,7 @@ extension ContextExtension on BuildContext {
 
 extension FieldColorScheme on ColorScheme {
   Color get emptyBorder => isDark ? Colors.transparent : Color(0xFFCAC3BB);
-  Color get filledBorder => isDark ? Colors.transparent : color100;
+  Color get filledBorder => isDark ? Colors.transparent : color700;
 }
 
 extension AppColorScheme on ColorScheme {
@@ -65,9 +65,9 @@ extension AppColorScheme on ColorScheme {
 
 extension FinanceColors on ColorScheme {
   /// FLOW
-  Color get appInflow => const Color(0xFF16A34A);
+  Color get appInflow => isDark ? appInflowInverse : const Color(0xFF16A34A);
   Color get appInflowInverse => const Color(0xFF4ADE80);
-  Color get appOutflow => const Color(0xFFDC2626);
+  Color get appOutflow => isDark ? appOutflowInversed : error;
   Color get appOutflowInversed => const Color(0xFFFF6B6B);
   Color get appAccent => const Color(0xFFE6A23F);
   Color get appNeutral => const Color(0xFF94A3B8);

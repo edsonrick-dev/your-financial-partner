@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
@@ -20,6 +21,12 @@ import 'package:drift/drift.dart' as d;
 import 'dart:math' as math;
 
 class CashflowController extends GetxController {
+  double getBudgetForCategory(int categoryId) {
+    return currentMonthBudgetItems
+        .where((item) => item.categoryId == categoryId)
+        .fold<double>(0.0, (total, item) => total + item.budget);
+  }
+
   Set<int> get existingIncomePlanCategoryIds {
     return savedPlans
         .where((plan) => plan.plan.planType == 'income')

@@ -25,52 +25,57 @@ class AppTextField extends StatelessWidget {
     required this.focusNode,
     required this.controller,
   });
-
   @override
   Widget build(BuildContext context) {
-    return AppFieldContainer(
-      fixedHeight: !multiLine,
-      onTap: () {
-        focusNode.requestFocus();
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: controller,
+      builder: (context, value, child) {
+        return AppFieldContainer(
+          value: value.text,
+          fixedHeight: !multiLine,
+          onTap: () {
+            focusNode.requestFocus();
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$label ${optional ? '(Optional)' : ''}',
+                style: AppTextStyle.titleM,
+              ),
+              TextField(
+                controller: controller,
+                focusNode: focusNode,
+                keyboardType:
+                    keyboardType ??
+                    (multiLine ? TextInputType.multiline : TextInputType.text),
+                minLines: multiLine ? 3 : 1,
+                maxLines: multiLine ? 6 : 1,
+                maxLength: 250,
+                textInputAction: multiLine
+                    ? TextInputAction.newline
+                    : TextInputAction.done,
+                style: AppTextStyle.titleM,
+                decoration: InputDecoration(
+                  prefixText: prefixText ?? '',
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                  border: InputBorder.none,
+                  hintText: hintText,
+                ),
+                buildCounter:
+                    (
+                      context, {
+                      required currentLength,
+                      required isFocused,
+                      required maxLength,
+                    }) => null,
+                onChanged: onChanged,
+              ),
+            ],
+          ),
+        );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '$label ${optional ? '(Optional)' : ''}',
-            style: AppTextStyle.titleM,
-          ),
-          TextField(
-            controller: controller,
-            focusNode: focusNode,
-            keyboardType:
-                keyboardType ??
-                (multiLine ? TextInputType.multiline : TextInputType.text),
-            minLines: multiLine ? 3 : 1,
-            maxLines: multiLine ? 6 : 1,
-            maxLength: 250,
-            textInputAction: multiLine
-                ? TextInputAction.newline
-                : TextInputAction.done,
-            style: AppTextStyle.titleM,
-            decoration: InputDecoration(
-              prefixText: prefixText ?? '',
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-              border: InputBorder.none,
-              hintText: hintText,
-            ),
-            buildCounter:
-                (
-                  context, {
-                  required currentLength,
-                  required isFocused,
-                  required maxLength,
-                }) => null,
-            onChanged: onChanged,
-          ),
-        ],
-      ),
     );
   }
 }

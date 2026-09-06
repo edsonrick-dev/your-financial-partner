@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/controller/bill_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/cashflow_details_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/beneficiaries/views/beneficiaries_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/critical_illness_benefit_gap/views/critical_illness_details_view.dart';
@@ -217,7 +218,9 @@ class AppPages {
     GetPage(
       name: Routes.BILLS,
       page: () => const BillsPage(),
-      // binding: TransactionBinding(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<BillController>(() => BillController());
+      }),
     ),
 
     //NET WORTH PAGE

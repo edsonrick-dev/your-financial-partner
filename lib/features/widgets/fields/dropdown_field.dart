@@ -54,7 +54,10 @@ class AppDropdownField extends StatelessWidget {
       child: AppFieldContainer(
         trailingPadding: 16,
         state: effectiveState,
-        onTap: onTap,
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+          onTap();
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
 
