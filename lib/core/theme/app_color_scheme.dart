@@ -12,6 +12,7 @@ extension FieldColorScheme on ColorScheme {
 extension AppColorScheme on ColorScheme {
   bool get isDark => brightness == Brightness.dark;
   Color get ascendPrimary => color900;
+  Color get transactionButtonBorder => isDark ? appBorder : Colors.transparent;
 
   ///PAGE SHIFTERS
   Color get pageShifterTextSelected => isDark ? color800 : color100;

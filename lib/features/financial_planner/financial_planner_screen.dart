@@ -18,11 +18,12 @@ class FinancialPlannerScreen extends GetView<FinancialPlannerController> {
           surfaceTintColor: Colors.transparent,
         ),
         body: SafeArea(
+          bottom: false,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FinancialPlannerPicker(),
-              SizedBox(height: 4),
+              // SizedBox(height: 4),
               Expanded(
                 child: IndexedStack(
                   index: tabIndex,

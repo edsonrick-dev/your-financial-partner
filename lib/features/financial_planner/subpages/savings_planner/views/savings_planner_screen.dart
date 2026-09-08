@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_planner/views/savings_planner_content_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_planner/views/savings_planner_empty_view.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
@@ -16,7 +17,10 @@ class SavingsPlannerScreen extends GetView<SavingsPlannerController> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.only(
+          top: context.topPadding,
+          bottom: context.bottomPadding,
+        ),
         child: Column(
           spacing: 20,
           children: [

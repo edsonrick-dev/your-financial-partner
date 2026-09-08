@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_debt_load_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_emergency_fund_extension.dart';
@@ -23,93 +24,96 @@ class ProfilePage extends GetView<FinancialProfileController> {
     final spacing = 20.0;
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            //Personal Profile Section
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: AppBar(
-                    title: Text('Profile', style: AppTextStyle.headlineL),
-                    centerTitle: false,
-                    surfaceTintColor: Colors.transparent,
-                    actions: [
-                      AdaptivePressable(
-                        onTap: () {
-                          Get.bottomSheet(
-                            SettingsPageView(),
-                            isScrollControlled: true,
-                          );
-                        },
-                        child: Icon(PhosphorIconsRegular.gear),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            UserProfileCard(),
-
-            //Financial Stability Profile Section
-            SizedBox(height: spacing),
-            AppSection(
-              sectionTitle: 'Financial Stability Profile',
-              child: FinancialStabilityProfileCard(),
-            ),
-            SizedBox(height: spacing),
-            //Financial Ratios
-            AppSection(
-              sectionTitle: 'Financial Ratios',
-              child: Column(
-                spacing: 12,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: context.bottomPadding),
+          child: Column(
+            children: [
+              Column(
                 children: [
-                  IntrinsicHeight(
-                    child: Row(
-                      spacing: 12,
-                      children: [
-                        Expanded(
-                          child: Obx(
-                            () =>
-                                FinancialRatioCard(ratio: controller.debtLoad),
-                          ),
-                        ),
-                        Expanded(
-                          child: Obx(
-                            () => FinancialRatioCard(
-                              ratio: controller.wealthBuilding,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  IntrinsicHeight(
-                    child: Row(
-                      spacing: 12,
-                      children: [
-                        Expanded(
-                          child: Obx(
-                            () => FinancialRatioCard(
-                              ratio: controller.emergencyFund,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Obx(
-                            () => FinancialRatioCard(
-                              ratio: controller.lifestyleCoverage,
-                            ),
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: AppBar(
+                      title: Text('Profile', style: AppTextStyle.headlineL),
+                      centerTitle: false,
+                      surfaceTintColor: Colors.transparent,
+                      actions: [
+                        AdaptivePressable(
+                          onTap: () {
+                            Get.bottomSheet(
+                              SettingsPageView(),
+                              isScrollControlled: true,
+                            );
+                          },
+                          child: Icon(PhosphorIconsRegular.gear),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+
+              UserProfileCard(),
+
+              //Financial Stability Profile Section
+              SizedBox(height: spacing),
+              AppSection(
+                sectionTitle: 'Financial Stability Profile',
+                child: FinancialStabilityProfileCard(),
+              ),
+              SizedBox(height: spacing),
+              //Financial Ratios
+              AppSection(
+                sectionTitle: 'Financial Ratios',
+                child: Column(
+                  spacing: 12,
+                  children: [
+                    IntrinsicHeight(
+                      child: Row(
+                        spacing: 12,
+                        children: [
+                          Expanded(
+                            child: Obx(
+                              () => FinancialRatioCard(
+                                ratio: controller.debtLoad,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Obx(
+                              () => FinancialRatioCard(
+                                ratio: controller.wealthBuilding,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IntrinsicHeight(
+                      child: Row(
+                        spacing: 12,
+                        children: [
+                          Expanded(
+                            child: Obx(
+                              () => FinancialRatioCard(
+                                ratio: controller.emergencyFund,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Obx(
+                              () => FinancialRatioCard(
+                                ratio: controller.lifestyleCoverage,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_setup/financial_setup_controller.dart';
@@ -35,6 +36,7 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       body: SafeArea(
         top: false,
+        bottom: false,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +49,7 @@ class HomeView extends GetView<HomeController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Good morning, Edson Rick!',
+                      'Good morning, Juan Dela Cruz!',
                       style: AppTextStyle.headlineL,
                     ),
                     Text(
@@ -140,7 +142,7 @@ class HomeView extends GetView<HomeController> {
                   },
                 ),
               ),
-              SizedBox(height: spacingL),
+              SizedBox(height: context.bottomPadding),
             ],
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/insurance_planner/insurance_planner_content_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/insurance_planner/insurance_planner_empty_view.dart';
@@ -13,7 +14,10 @@ class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.only(
+          top: context.topPadding,
+          bottom: context.bottomPadding,
+        ),
         child: Column(
           spacing: 20,
           children: [

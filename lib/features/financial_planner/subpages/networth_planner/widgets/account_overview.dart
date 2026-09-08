@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
 class AccountOverview extends StatelessWidget {
   final IconData icon;
@@ -22,38 +23,56 @@ class AccountOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const SizedBox(width: 12),
-        Row(
-          spacing: 4,
-          children: [
-            Container(
-              width: 8,
-              height: 8,
+    final colorScheme = context.colors;
+    return Padding(
+      padding: EdgeInsetsGeometry.symmetric(horizontal: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Container(
+              width: 12,
+              height: 12,
               decoration: BoxDecoration(shape: BoxShape.circle, color: color),
             ),
-            Column(
+          ),
+          SizedBox(width: 6),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(type, style: AppTextStyle.bodyS),
-                // Text(
-                //   '${(percentage * 100).toStringAsFixed(1)}% of $percentageLabel',
-                //   style: AppTextStyle.labelS.copyWith(
-                //     color: colorScheme.textMuted,
-                //   ),
-                // ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: Text(type, style: AppTextStyle.bodyM)),
+                    Text(amount.toCurrency(), style: AppTextStyle.amountM),
+                  ],
+                ),
+                // SizedBox(height: 2),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      '${(percentage * 100).toStringAsFixed(1)}% of $percentageLabel',
+                      style: AppTextStyle.labelS.copyWith(
+                        color: colorScheme.textMuted,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
 
-        const Spacer(),
+      // const Spacer(),
 
-        Text(amount.toCurrency(), style: AppTextStyle.amountS),
+      //
 
-        const SizedBox(width: 12),
-      ],
+      // const SizedBox(width: 12),
     );
   }
 }

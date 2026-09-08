@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/views/net_worth_planner_screen/net_worth_planner_empty_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/views/net_worth_planner_screen/net_worth_planner_screen_content.dart';
@@ -13,7 +14,10 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.only(
+          top: context.topPadding,
+          bottom: context.bottomPadding,
+        ),
         child: Column(
           spacing: 20,
           children: [
@@ -24,7 +28,6 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
 
               return NetWorthPlannerContent();
             }),
-
             LearningSection(
               subtitle: 'Build a good understanding of your net worth',
               state: LearningSectionState.available,
@@ -34,27 +37,6 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
                 LearnThumbnail(title: 'What Are Liabilities?'),
               ],
             ),
-
-            // Column(
-            //   children: [
-            //     AppSection(
-            //       sectionTitle: 'About Net Worth',
-            //       child: AppSectionBody(
-            //         child: Padding(
-            //           padding: const EdgeInsets.all(12),
-            //           child: Column(
-            //             children: [
-            //               Text(
-            //                 '''Net worth is what you own minus what you owe.\nIt gives you a snapshot of your overall financial position. As you build assets and pay down debt, your net worth grows—giving you a clearer picture of whether you're moving toward greater financial stability.''',
-            //                 style: AppTextStyle.bodyM,
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ],
         ),
       ),

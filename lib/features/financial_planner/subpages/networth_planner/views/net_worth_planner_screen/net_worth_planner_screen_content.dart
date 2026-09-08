@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
@@ -77,8 +79,21 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
                   child: Column(
-                    spacing: 16,
                     children: [
+                      // Obx(
+                      //   () => AdaptivePressable(
+                      //     onTap: () {
+                      //       Get.toNamed(Routes.NETWORTHDETAILS);
+                      //     },
+                      //     child: SizedBox(
+                      //       height: 32,
+                      //       child: Text(
+                      //         'Open ${controller.selectedView.value.plural} Details Page',
+                      //         style: AppTextStyle.bodyM,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Obx(
                         () => Container(
                           width: double.infinity,
@@ -98,6 +113,7 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
                                         controller.selectedView.value ==
                                         BalanceSheetType.asset,
                                     onTap: () {
+                                      controller.seletectedDetailsTabIndex(0);
                                       controller.selectBalanceSheetType(
                                         BalanceSheetType.asset,
                                       );
@@ -111,6 +127,7 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
                                         controller.selectedView.value ==
                                         BalanceSheetType.liability,
                                     onTap: () {
+                                      controller.seletectedDetailsTabIndex(1);
                                       controller.selectBalanceSheetType(
                                         BalanceSheetType.liability,
                                       );
@@ -122,8 +139,17 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
                           ),
                         ),
                       ),
-                      Obx(
-                        () => Column(
+                      SizedBox(height: 20),
+                      Obx(() {
+                        final isEmpty = controller.displayedGroupTotals.isEmpty;
+
+                        if (isEmpty) {
+                          return EmptyBalanceSheetView(
+                            type: controller.selectedView.value,
+                          );
+                        }
+
+                        return Column(
                           spacing: 12,
                           children: controller.displayedGroupTotals.entries.map(
                             (entry) {
@@ -144,16 +170,21 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
                               );
                             },
                           ).toList(),
-                        ),
-                      ),
-                      Obx(
-                        () => AppButton(
-                          onTap: () {},
-                          type: ButtonType.ghost,
-                          text:
-                              'View ${controller.selectedView.value.name} details',
-                        ),
-                      ),
+                        );
+                      }),
+                      SizedBox(height: 20),
+
+                      // Divider(color: colorScheme.appTextMuted),
+
+                      // Obx(
+                      //   () => AppButton(
+                      //     onTap: () {
+                      //       Get.toNamed(Routes.NETWORTHDETAILS);
+                      //     },
+                      //     type: ButtonType.ghost,
+                      //     text: 'View ${controller.selectedView.value.plural}',
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -162,6 +193,29 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class EmptyBalanceSheetView extends StatelessWidget {
+  final BalanceSheetType type;
+
+  const EmptyBalanceSheetView({super.key, required this.type});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          // Icon(Icons.account_balance_wallet_outlined, size: 24),
+          // const SizedBox(height: 12),
+          Text(
+            'You have no ${type.plural.toLowerCase()}',
+            style: AppTextStyle.bodyM.copyWith(color: context.colors.textMuted),
+          ),
+          // Text('Add your first ${type.name} to get started.'),
+        ],
+      ),
     );
   }
 }

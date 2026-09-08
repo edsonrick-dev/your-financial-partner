@@ -52,10 +52,10 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
 
                 const Spacer(),
 
-                _ComparisonSelector(
-                  value: comparisonType,
-                  onChanged: onComparisonChanged,
-                ),
+                // _ComparisonSelector(
+                //   value: comparisonType,
+                //   onChanged: onComparisonChanged,
+                // ),
               ],
             ),
 

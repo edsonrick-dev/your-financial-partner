@@ -10,10 +10,16 @@ class MainShell extends GetView<MainShellController> {
   Widget build(BuildContext context) {
     return Obx(() {
       final tabIndex = controller.selectedTabIndex.value;
-      return Scaffold(
-        body: IndexedStack(index: tabIndex, children: controller.pages),
-
-        bottomNavigationBar: AppBottomNav(controller: controller),
+      return Stack(
+        children: [
+          IndexedStack(index: tabIndex, children: controller.pages),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AppBottomNav(controller: controller),
+          ),
+        ],
       );
     });
   }
