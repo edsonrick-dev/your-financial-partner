@@ -122,45 +122,45 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
   }
 }
 
-class _ComparisonSelector extends StatelessWidget {
-  final NetWorthComparison value;
-  final ValueChanged<NetWorthComparison> onChanged;
+// class _ComparisonSelector extends StatelessWidget {
+//   final NetWorthComparison value;
+//   final ValueChanged<NetWorthComparison> onChanged;
 
-  const _ComparisonSelector({required this.value, required this.onChanged});
+//   const _ComparisonSelector({required this.value, required this.onChanged});
 
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
+//   @override
+//   Widget build(BuildContext context) {
+//     final colorScheme = context.colors;
 
-    return PopupMenuButton<NetWorthComparison>(
-      initialValue: value,
-      onSelected: onChanged,
-      offset: const Offset(0, 8),
-      itemBuilder: (context) {
-        return NetWorthComparison.values.map((option) {
-          return PopupMenuItem<NetWorthComparison>(
-            value: option,
-            child: Text(option.selectorLabel),
-          );
-        }).toList();
-      },
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            value.selectorLabel,
-            style: AppTextStyle.titleS.copyWith(
-              color: colorScheme.appInversedtext,
-            ),
-          ),
-          const SizedBox(width: 4),
-          Icon(
-            PhosphorIconsRegular.caretDown,
-            size: 14,
-            color: colorScheme.appInversedtext,
-          ),
-        ],
-      ),
-    );
-  }
-}
+//     return PopupMenuButton<NetWorthComparison>(
+//       initialValue: value,
+//       onSelected: onChanged,
+//       offset: const Offset(0, 8),
+//       itemBuilder: (context) {
+//         return NetWorthComparison.values.map((option) {
+//           return PopupMenuItem<NetWorthComparison>(
+//             value: option,
+//             child: Text(option.selectorLabel),
+//           );
+//         }).toList();
+//       },
+//       child: Row(
+//         mainAxisSize: MainAxisSize.min,
+//         children: [
+//           Text(
+//             value.selectorLabel,
+//             style: AppTextStyle.titleS.copyWith(
+//               color: colorScheme.appInversedtext,
+//             ),
+//           ),
+//           const SizedBox(width: 4),
+//           Icon(
+//             PhosphorIconsRegular.caretDown,
+//             size: 14,
+//             color: colorScheme.appInversedtext,
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

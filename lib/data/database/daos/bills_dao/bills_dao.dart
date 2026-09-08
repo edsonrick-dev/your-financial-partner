@@ -15,6 +15,14 @@ part 'bills_dao.g.dart';
 )
 class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
   BillsDao(super.db);
+  Future<List<BillsTableData>> getActiveBillsForCategory(int categoryId) {
+    return (select(billsTable)..where(
+          (tbl) =>
+              tbl.categoryId.equals(categoryId) & tbl.isActive.equals(true),
+        ))
+        .get();
+  }
+
   Future<void> ensureFutureOccurrence(int billId) async {
     final bill = await getBillById(billId);
 

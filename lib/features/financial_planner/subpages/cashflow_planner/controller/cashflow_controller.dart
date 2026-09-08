@@ -31,9 +31,22 @@ class CashflowController extends GetxController {
   // _budgetSubscription;
   late final StreamSubscription<Map<int, double>> _budgetSubscription;
   double getBudgetForCategory(int categoryId) {
-    return currentMonthBudgetItems
+    debugPrint(
+      'GET BUDGET → category=$categoryId '
+      'items=${currentMonthBudgetItems.length}',
+    );
+
+    for (final item in currentMonthBudgetItems) {
+      debugPrint('  item category=${item.categoryId} budget=${item.budget}');
+    }
+
+    final result = currentMonthBudgetItems
         .where((item) => item.categoryId == categoryId)
         .fold<double>(0.0, (total, item) => total + item.budget);
+
+    debugPrint('GET BUDGET RESULT → $result');
+
+    return result;
   }
 
   Set<int> get existingBudgetPlanCategoryIds {
@@ -109,8 +122,8 @@ class CashflowController extends GetxController {
           annualExpense.value = expense;
           annualDebtRepayment.value = debtRepayment;
           annualBudget.value = expense + debtRepayment;
-          // await _refreshCurrentMonthBudgetItems(plans);
 
+          await _refreshCurrentMonthBudgetItems();
           await _refreshMonthlyCashflow();
         });
 
@@ -365,7 +378,7 @@ class CashflowController extends GetxController {
       );
     }
 
-    debugPrint('CURRENT MONTH ITEMS UPDATED: ${result.length}');
+    // debugPrint('CURRENT MONTH ITEMS UPDATED: ${result.length}');
 
     currentMonthBudgetItems.assignAll(result);
   }
@@ -1268,10 +1281,6 @@ class CashflowController extends GetxController {
             for (var day = 1; day <= daysInMonth; day++) {
               final date = DateTime(year, month, day);
 
-              if (!_isPlanActive(plan, date)) {
-                continue;
-              }
-
               if (date.weekday == recurringWeekday) {
                 occurrenceCount++;
 
@@ -1308,10 +1317,6 @@ class CashflowController extends GetxController {
 
             for (var day = 1; day <= daysInMonth; day++) {
               final date = DateTime(year, month, day);
-
-              if (!_isPlanActive(plan, date)) {
-                continue;
-              }
 
               final allocationIndex = date.weekday - 1;
 
@@ -1395,10 +1400,6 @@ class CashflowController extends GetxController {
               : plan.startDate.day;
 
           final date = DateTime(year, month, occurrenceDay);
-
-          if (!_isPlanActive(plan, date)) {
-            continue;
-          }
 
           if (isCustom) {
             if (allocations.length < 2) {
@@ -1662,33 +1663,6 @@ class CashflowController extends GetxController {
   final CashflowPlanDao cashflowPlanDao = database.cashflowPlanDao;
   final transactionController = Get.find<TransactionController>();
 
-  bool _isPlanActive(CashFlowPlan plan, DateTime date) {
-    final startDate = DateTime(
-      plan.startDate.year,
-      plan.startDate.month,
-      plan.startDate.day,
-    );
-
-    final currentDate = DateTime(date.year, date.month, date.day);
-
-    if (currentDate.isBefore(startDate)) {
-      return false;
-    }
-
-    if (plan.endDate != null) {
-      final endDate = DateTime(
-        plan.endDate!.year,
-        plan.endDate!.month,
-        plan.endDate!.day,
-      );
-
-      if (currentDate.isAfter(endDate)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
   // ===========================================================================
   // Lifecycle
   // ===========================================================================

@@ -112,11 +112,14 @@ class BillBudgetNotice extends GetView<BillController> {
   }
 
   Widget _buildFits(BuildContext context, String categoryName) {
-    final colorScheme = context.colors;
     final amount = controller.billAmount.value;
     final budget = controller.selectedPeriodBudget;
     final frequency = controller.selectedPeriod.value!.period;
-    final remaining = budget - amount;
+
+    final existingBills = controller.existingBillsPeriodAmount;
+    final totalBills = existingBills + amount;
+    final remaining = budget - totalBills;
+    final colorScheme = context.colors;
     final color = colorScheme.appInflow;
 
     return Container(
@@ -164,10 +167,22 @@ class BillBudgetNotice extends GetView<BillController> {
           ),
 
           BillsRow(
+            amount: existingBills,
+            frequency: frequency,
+            title: 'Existing bills',
+          ),
+
+          BillsRow(
             amount: amount,
             frequency: frequency,
             title: 'New bill',
             isMain: false,
+          ),
+
+          BillsRow(
+            amount: totalBills,
+            frequency: frequency,
+            title: 'Total bills',
           ),
 
           BillsRow(amount: remaining, frequency: frequency, title: 'Remaining'),
@@ -182,7 +197,18 @@ class BillBudgetNotice extends GetView<BillController> {
     final budget = controller.selectedPeriodBudget;
     final amount = controller.billAmount.value;
     final frequency = controller.selectedPeriod.value!.period;
-    final over = amount - budget;
+
+    final existingBills = controller.existingBillsPeriodAmount;
+
+    final totalBills = existingBills + amount;
+    final over = totalBills - budget;
+    // final budget = controller.selectedPeriodBudget;
+    // final amount = controller.billAmount.value;
+    // final frequency = controller.selectedPeriod.value!.period;
+
+    // final existingBills = controller.existingBillsAnnualAmount / 12;
+    // final totalBills = existingBills + amount;
+    // final over = totalBills - budget;
     final colorScheme = context.colors;
     final color = colorScheme.appOutflow;
     return Container(
@@ -210,9 +236,9 @@ class BillBudgetNotice extends GetView<BillController> {
                       style: AppTextStyle.headlineS,
                     ),
                     Text(
-                      'Your new bill of '
-                      '${amount.toCurrency()}/$frequency '
-                      'is more than your current budget for this category.',
+                      'Your existing bills and this new bill would total '
+                      '${totalBills.toCurrency()}/$frequency, '
+                      'which is more than your current budget for this category.',
                       style: AppTextStyle.bodyM,
                     ),
                   ],
@@ -229,7 +255,19 @@ class BillBudgetNotice extends GetView<BillController> {
             title: 'Current budget',
           ),
 
+          BillsRow(
+            amount: existingBills,
+            frequency: frequency,
+            title: 'Existing bills',
+          ),
+
           BillsRow(amount: amount, frequency: frequency, title: 'New bill'),
+
+          BillsRow(
+            amount: totalBills,
+            frequency: frequency,
+            title: 'Total bills',
+          ),
 
           BillsRow(amount: over, frequency: frequency, title: 'Over budget'),
 

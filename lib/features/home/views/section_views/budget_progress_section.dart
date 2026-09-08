@@ -317,8 +317,8 @@ class _FilledView extends StatelessWidget {
                   duration: const Duration(milliseconds: 250),
                   curve: Curves.easeOutCubic,
                   alignment: Alignment.topCenter,
-                  child: TextButton(
-                    onPressed: controller.toggleBudgetExpanded,
+                  child: AdaptivePressable(
+                    onTap: controller.toggleBudgetExpanded,
                     child: Text(isExpanded ? 'See less' : 'See more'),
                   ),
                 ),

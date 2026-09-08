@@ -76,7 +76,7 @@ class OnboardingThirdQuestionView extends GetView<OnboardingController> {
             ),
           ),
 
-          SizedBox(height: context.bottomPadding),
+          SizedBox(height: context.bottomPaddingSub),
         ],
       ),
     );

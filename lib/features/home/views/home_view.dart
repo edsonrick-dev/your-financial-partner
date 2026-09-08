@@ -12,7 +12,6 @@ import 'package:getx_drift_app/features/financial_setup/financial_setup_controll
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/views/section_views/bills_reminder_section.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
-import 'package:getx_drift_app/features/home/views/section_views/quick_actions_section.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
 import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
@@ -28,122 +27,125 @@ class HomeView extends GetView<HomeController> {
     final topPadding = MediaQuery.of(context).padding.top;
     final spacingM = AppScale.x5;
     final spacingL = AppScale.x6;
-    final colorScheme = context.colors;
 
     final setupController = Get.find<FinancialSetupController>();
     final cashflowController = Get.find<CashflowController>();
+    final colorScheme = context.colors;
 
     return Scaffold(
       body: SafeArea(
         top: false,
         bottom: false,
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: topPadding),
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: topPadding,
+              bottom: context.bottomPadding,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // HEADER
+                AppSection(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Good morning, Juan Dela Cruz!',
+                        style: AppTextStyle.headlineL,
+                      ),
+                      Text(
+                        'Let’s make today a great financial day.',
+                        style: AppTextStyle.labelM.copyWith(
+                          color: colorScheme.appTextMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
-              // HEADER
-              AppSection(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Good morning, Juan Dela Cruz!',
-                      style: AppTextStyle.headlineL,
-                    ),
-                    Text(
-                      'Let’s make today a great financial day.',
-                      style: AppTextStyle.labelM.copyWith(
-                        color: colorScheme.appTextMuted,
+                // ACCOUNT-DEPENDENT CONTENT
+                Obx(() {
+                  if (!setupController.hasAccounts) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return Padding(
+                    padding: EdgeInsets.only(top: spacingM),
+                    child: AppSection(
+                      child: Column(
+                        children: [
+                          FundSummaryCard(),
+                          // SizedBox(height: spacingM),
+                          // QuickActionSection(),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  );
+                }),
 
-              // ACCOUNT-DEPENDENT CONTENT
-              Obx(() {
-                if (!setupController.hasAccounts) {
-                  return const SizedBox.shrink();
-                }
+                // CASHFLOW-DEPENDENT CONTENT
+                Obx(() {
+                  if (cashflowController.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
 
-                return Padding(
-                  padding: EdgeInsets.only(top: spacingM),
-                  child: AppSection(
-                    child: Column(
-                      children: [
-                        FundSummaryCard(),
-                        SizedBox(height: spacingM),
-                        QuickActionSection(),
-                      ],
-                    ),
+                  return Padding(
+                    padding: EdgeInsets.only(top: spacingL),
+                    child: BudgetProgressSection(),
+                  );
+                }),
+                Obx(() {
+                  if (cashflowController.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return Padding(
+                    padding: EdgeInsets.only(top: spacingL),
+                    child: BillsReminderSection(),
+                  );
+                }),
+
+                // SETUP GUIDE
+                Obx(() {
+                  if (setupController.hasAccounts &&
+                      setupController.hasCashflow) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return Padding(
+                    padding: EdgeInsets.only(top: spacingL),
+                    child: const FinancialSetupGuideCarousel(),
+                  );
+                }),
+
+                // LEARNING
+                Padding(
+                  padding: EdgeInsets.only(top: spacingL),
+                  child: LearningSection(
+                    state: LearningSectionState.available,
+                    contents: [
+                      LearnThumbnail(
+                        title: 'Why Financial Planning Matters',
+                        onTap: () {
+                          AppSheets.learningSheets.openLearnArticle(
+                            'https://ascendyfp.com/learn/why-financial-planning-matters',
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                );
-              }),
-
-              // CASHFLOW-DEPENDENT CONTENT
-              Obx(() {
-                if (cashflowController.isEmpty) {
-                  return const SizedBox.shrink();
-                }
-
-                return Padding(
-                  padding: EdgeInsets.only(top: spacingL),
-                  child: BudgetProgressSection(),
-                );
-              }),
-              Obx(() {
-                if (cashflowController.isEmpty) {
-                  return const SizedBox.shrink();
-                }
-
-                return Padding(
-                  padding: EdgeInsets.only(top: spacingL),
-                  child: BillsReminderSection(),
-                );
-              }),
-
-              // SETUP GUIDE
-              Obx(() {
-                if (setupController.hasAccounts &&
-                    setupController.hasCashflow) {
-                  return const SizedBox.shrink();
-                }
-
-                return Padding(
-                  padding: EdgeInsets.only(top: spacingL),
-                  child: const FinancialSetupGuideCarousel(),
-                );
-              }),
-
-              // LEARNING
-              Padding(
-                padding: EdgeInsets.only(top: spacingL),
-                child: LearningSection(
-                  state: LearningSectionState.available,
-                  contents: [
-                    LearnThumbnail(
-                      title: 'Why Financial Planning Matters',
-                      onTap: () {
-                        AppSheets.learningSheets.openLearnArticle(
-                          'https://ascendyfp.com/learn/why-financial-planning-matters',
-                        );
-                      },
-                    ),
-                  ],
                 ),
-              ),
-              AppSection(
-                child: AppButton(
-                  text: 'Open Onboarding Flow',
-                  onTap: () {
-                    Get.toNamed(Routes.ONBOARDING);
-                  },
+                AppSection(
+                  child: AppButton(
+                    text: 'Open Onboarding Flow',
+                    onTap: () {
+                      Get.toNamed(Routes.ONBOARDING);
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(height: context.bottomPadding),
-            ],
+              ],
+            ),
           ),
         ),
       ),

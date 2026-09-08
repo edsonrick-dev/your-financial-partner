@@ -3,6 +3,8 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/tables/cashflow_plan_allocation_table.dart';
 import 'package:getx_drift_app/data/tables/cashflow_plan_table.dart';
 import 'package:getx_drift_app/data/tables/cashflow_categories_table.dart';
+import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
+import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
 
 part 'cashflow_plan_dao.g.dart';
 
@@ -24,6 +26,48 @@ class CashflowPlanWithCategory {
 class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
     with _$CashflowPlanDaoMixin {
   CashflowPlanDao(super.db);
+  Future<void> convertPlanToYearlyCustom({
+    required int planId,
+    required List<double> monthlyAllocations,
+  }) async {
+    if (monthlyAllocations.length != 12) {
+      throw ArgumentError(
+        'Yearly custom distribution must contain 12 allocations.',
+      );
+    }
+
+    await transaction(() async {
+      await (update(
+        cashFlowPlans,
+      )..where((tbl) => tbl.id.equals(planId))).write(
+        CashFlowPlansCompanion(
+          amount: const Value(0),
+          period: Value(BudgetPeriod.yearly.name),
+          distributionType: Value(CashFlowDistribution.custom.name),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
+
+      await (delete(
+        cashFlowPlanAllocations,
+      )..where((tbl) => tbl.planId.equals(planId))).go();
+
+      await batch((batch) {
+        batch.insertAll(
+          cashFlowPlanAllocations,
+          List.generate(
+            12,
+            (index) => CashFlowPlanAllocationsCompanion.insert(
+              planId: planId,
+              allocationIndex: index,
+              amount: monthlyAllocations[index],
+            ),
+          ),
+        );
+      });
+    });
+  }
+
   Future<List<CashflowPlanWithCategory>> getExpensePlansForCategory(
     int categoryId,
   ) async {

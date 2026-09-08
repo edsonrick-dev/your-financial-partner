@@ -48,7 +48,7 @@ class CashAndBankDetailsSheet extends StatelessWidget {
               AppDetailsPageActionSection(
                 selectedIndex: selectedIndex,
                 actions: const ['Transactions', 'Goal Reservation'],
-                onAdd: () {},
+                // onAdd: () {},
               ),
 
               Expanded(

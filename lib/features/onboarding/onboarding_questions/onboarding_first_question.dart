@@ -70,7 +70,7 @@ class OnboardingFirstQuestionView extends GetView<OnboardingController> {
               },
             ),
           ),
-          SizedBox(height: context.bottomPadding),
+          SizedBox(height: context.bottomPadding - 60),
         ],
       ),
     );

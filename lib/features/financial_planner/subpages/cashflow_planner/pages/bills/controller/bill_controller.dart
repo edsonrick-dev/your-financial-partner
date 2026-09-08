@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
 
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/domain/enums/app_day.dart';
@@ -20,6 +21,219 @@ import 'package:drift/drift.dart' as drift;
 import 'package:intl/intl.dart';
 
 class BillController extends GetxController {
+  @override
+  void onInit() {
+    super.onInit();
+
+    ever(transactionController.selectedCategory, (_) => loadExistingBills());
+
+    loadExistingBills();
+  }
+
+  double get existingBillsAnnualAmount {
+    return existingBills.fold<double>(0, (total, bill) {
+      final frequency = BillsFrequency.values.firstWhere(
+        (value) => value.name == bill.frequency,
+      );
+
+      return total + frequency.toAnnual(bill.expectedAmount);
+    });
+  }
+
+  final existingBills = <BillsTableData>[].obs;
+  double get existingBillsPeriodAmount {
+    return switch (selectedPeriod.value) {
+      BillsFrequency.monthly => existingBillsAnnualAmount / 12,
+      BillsFrequency.quarterly => existingBillsAnnualAmount / 4,
+      BillsFrequency.semiAnnual => existingBillsAnnualAmount / 2,
+      BillsFrequency.annual => existingBillsAnnualAmount,
+      _ => 0,
+    };
+  }
+
+  Future<void> loadExistingBills() async {
+    final category = transactionController.selectedCategory.value;
+
+    if (category == null) {
+      existingBills.clear();
+      return;
+    }
+
+    final bills = await database.billsDao.getActiveBillsForCategory(
+      category.id,
+    );
+
+    existingBills.assignAll(bills);
+  }
+
+  List<double> _getExistingPlanMonthlyDistribution(
+    CashflowPlanWithCategory existingPlan,
+  ) {
+    return cashflowController.calculateSavedPlanMonthlyDistribution(
+      plan: existingPlan.plan,
+      allocations: existingPlan.allocations,
+      year: DateTime.now().year,
+    );
+  }
+
+  List<double> _addBillToMonthlyDistribution({
+    required List<double> distribution,
+    required double billAmount,
+    required MonthPattern pattern,
+  }) {
+    final updated = List<double>.from(distribution);
+
+    for (final month in pattern.months) {
+      final index = month.number - 1;
+      updated[index] += billAmount;
+    }
+
+    return updated;
+  }
+
+  List<double> _addQuarterlyBillToDistribution({
+    required List<double> existingDistribution,
+    required double billAmount,
+    required MonthPattern pattern,
+  }) {
+    final distribution = List<double>.from(existingDistribution);
+
+    for (final month in pattern.months) {
+      final monthIndex = month.number - 1;
+      distribution[monthIndex] += billAmount;
+    }
+
+    return distribution;
+  }
+
+  Future<void> increaseBudgetToFitBill() async {
+    final category = transactionController.selectedCategory.value;
+    final billFrequency = selectedPeriod.value;
+
+    if (category == null || billFrequency == null) {
+      return;
+    }
+
+    try {
+      // Get all existing expense plans for this category.
+      final existingPlans = await database.cashflowPlanDao
+          .getExpensePlansForCategory(category.id);
+      debugPrint('========== EXISTING PLANS ==========');
+      debugPrint('Selected category: ${category.name}');
+      debugPrint('Selected category ID: ${category.id}');
+      debugPrint('Found plans: ${existingPlans.length}');
+
+      for (final plan in existingPlans) {
+        debugPrint(
+          'PLAN ID: ${plan.plan.id} | '
+          'categoryId: ${plan.plan.categoryId} | '
+          'category: ${plan.category.name} | '
+          'type: ${plan.plan.planType} | '
+          'amount: ${plan.plan.amount} | '
+          'period: ${plan.plan.period}',
+        );
+      }
+
+      debugPrint('====================================');
+      // No existing budget.
+      if (existingPlans.isEmpty) {
+        await createMinimumBudget();
+        return;
+      }
+
+      // For now, use the existing budget plan.
+      //
+      // If your product allows multiple expense plans for the
+      // same category, we should decide which one this bill belongs to.
+      final existingPlan = existingPlans.first;
+
+      // ============================================================
+      // MONTHLY
+      // ============================================================
+
+      if (existingPlan.plan.period == BudgetPeriod.monthly.name &&
+          existingPlan.plan.distributionType ==
+              CashFlowDistribution.defaultDistribution.name &&
+          billFrequency == BillsFrequency.monthly) {
+        final existingBillsMonthlyAmount = existingBillsAnnualAmount / 12;
+
+        final requiredMonthlyBudget =
+            existingBillsMonthlyAmount + billAmount.value;
+
+        final currentBudget = existingPlan.plan.amount;
+
+        if (requiredMonthlyBudget <= currentBudget) {
+          await saveBill();
+          return;
+        }
+
+        await database.cashflowPlanDao.updatePlanAmount(
+          planId: existingPlan.plan.id,
+          amount: requiredMonthlyBudget,
+        );
+
+        await saveBill();
+        return;
+      }
+
+      if (billFrequency == BillsFrequency.quarterly ||
+          billFrequency == BillsFrequency.semiAnnual ||
+          billFrequency == BillsFrequency.annual) {
+        final pattern = selectedMonthPattern.value;
+
+        if (pattern == null) {
+          debugPrint(
+            '${billFrequency.name.toUpperCase()} BILL FAILED: '
+            'no month pattern selected',
+          );
+          return;
+        }
+
+        final existingDistribution = _getExistingPlanMonthlyDistribution(
+          existingPlan,
+        );
+
+        final updatedDistribution = _addBillToMonthlyDistribution(
+          distribution: existingDistribution,
+          billAmount: billAmount.value,
+          pattern: pattern,
+        );
+
+        debugPrint(
+          '========== ${billFrequency.name.toUpperCase()} '
+          'BUDGET UPDATE ==========',
+        );
+
+        debugPrint('Existing distribution: $existingDistribution');
+        debugPrint('Bill amount: ${billAmount.value}');
+        debugPrint(
+          'Pattern: ${pattern.months.map((e) => e.shortName).join(' | ')}',
+        );
+        debugPrint('Updated distribution: $updatedDistribution');
+
+        await database.cashflowPlanDao.convertPlanToYearlyCustom(
+          planId: existingPlan.plan.id,
+          monthlyAllocations: updatedDistribution,
+        );
+
+        final allocations = await database.cashflowPlanDao
+            .getAllocationsForPlan(existingPlan.plan.id);
+
+        for (final allocation in allocations) {
+          debugPrint(
+            'ALLOCATION ${allocation.allocationIndex}: ${allocation.amount}',
+          );
+        }
+
+        await saveBill();
+        return;
+      }
+    } catch (e, stackTrace) {
+      debugPrint('INCREASE BUDGET FAILED: $e');
+      debugPrint('$stackTrace');
+    }
+  }
+
   Future<void> deletePaymentHistory(BillPaymentHistory payment) async {
     final confirmed = await Get.dialog<bool>(
       AlertDialog(
@@ -132,84 +346,6 @@ class BillController extends GetxController {
     Get.back();
 
     await AppSheets.transaction.spendBill(bill);
-  }
-
-  Future<void> increaseBudgetToFitBill() async {
-    final category = transactionController.selectedCategory.value;
-    final billFrequency = selectedPeriod.value;
-
-    if (category == null || billFrequency == null) {
-      return;
-    }
-
-    try {
-      // Get all existing expense plans for this category.
-      final existingPlans = await database.cashflowPlanDao
-          .getExpensePlansForCategory(category.id);
-
-      // No existing budget.
-      if (existingPlans.isEmpty) {
-        await createMinimumBudget();
-        return;
-      }
-
-      // For now, use the existing budget plan.
-      //
-      // If your product allows multiple expense plans for the
-      // same category, we should decide which one this bill belongs to.
-      final existingPlan = existingPlans.first;
-
-      final budgetPeriod = BudgetPeriod.values.firstWhere(
-        (period) => period.name == existingPlan.plan.period,
-      );
-
-      // Convert the bill into an annual amount.
-      final billAnnualAmount = billFrequency.toAnnual(billAmount.value);
-
-      // Convert the annual bill into the EXISTING
-      // budget's period.
-      final requiredBudgetAmount = budgetPeriod.fromAnnual(billAnnualAmount);
-
-      final currentBudget = existingPlan.plan.amount;
-
-      debugPrint('========== INCREASE BUDGET ==========');
-      debugPrint('category: ${category.name}');
-      debugPrint('budget plan ID: ${existingPlan.plan.id}');
-      debugPrint('budget period: ${budgetPeriod.label}');
-      debugPrint('current budget: $currentBudget');
-      debugPrint('bill frequency: ${billFrequency.label}');
-      debugPrint('bill amount: ${billAmount.value}');
-      debugPrint('bill annual amount: $billAnnualAmount');
-      debugPrint('required budget: $requiredBudgetAmount');
-
-      // Existing budget already covers the bill.
-      if (requiredBudgetAmount <= currentBudget) {
-        debugPrint('EXISTING BUDGET ALREADY COVERS BILL');
-        await saveBill();
-        return;
-      }
-
-      // UPDATE the existing plan.
-      final updated = await database.cashflowPlanDao.updatePlanAmount(
-        planId: existingPlan.plan.id,
-        amount: requiredBudgetAmount,
-      );
-
-      if (!updated) {
-        throw Exception('Failed to update budget plan ${existingPlan.plan.id}');
-      }
-
-      debugPrint(
-        'BUDGET UPDATED: '
-        '$currentBudget → $requiredBudgetAmount '
-        '(${budgetPeriod.label})',
-      );
-
-      await saveBill();
-    } catch (e, stackTrace) {
-      debugPrint('INCREASE BUDGET FAILED: $e');
-      debugPrint('$stackTrace');
-    }
   }
 
   Future<void> _createMonthlyExpenseBudget({
@@ -436,6 +572,9 @@ class BillController extends GetxController {
 
   //   return cashflowController.getAnnualBudgetForCategory(category.id);
   // }
+  double get totalAnnualBills {
+    return existingBillsAnnualAmount + annualBill;
+  }
 
   double get annualBudget {
     return selectedCategoryBudget * 12;
@@ -468,9 +607,21 @@ class BillController extends GetxController {
       return BillBudgetStatus.unbudgeted;
     }
 
-    return annualBudget >= annualBill
-        ? BillBudgetStatus.fits
-        : BillBudgetStatus.exceeds;
+    final budget = selectedPeriodBudget;
+    final existing = existingBillsPeriodAmount;
+    final newBill = billAmount.value;
+    final total = existing + newBill;
+
+    debugPrint('========== BILL BUDGET STATUS ==========');
+    debugPrint('Frequency: ${selectedPeriod.value?.label}');
+    debugPrint('Budget: $budget');
+    debugPrint('Existing bills: $existing');
+    debugPrint('New bill: $newBill');
+    debugPrint('Total bills: $total');
+    debugPrint('Fits: ${budget >= total}');
+    debugPrint('========================================');
+
+    return budget >= total ? BillBudgetStatus.fits : BillBudgetStatus.exceeds;
   }
 
   final cashflowController = Get.find<CashflowController>();
