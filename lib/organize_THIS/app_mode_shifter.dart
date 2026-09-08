@@ -10,11 +10,13 @@ class ModeShifter extends StatelessWidget {
     required this.item,
     required this.selected,
     required this.onTap,
+    this.isFullWidth = true,
   });
 
   final ModeItem item;
   final bool selected;
   final VoidCallback onTap;
+  final bool isFullWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class ModeShifter extends StatelessWidget {
       borderRadius: BorderRadius.circular(999),
       onTap: onTap,
       child: AnimatedContainer(
+        // height: 44,
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
@@ -45,20 +48,32 @@ class ModeShifter extends StatelessWidget {
                   color: selected ? colorScheme.bg : colorScheme.appTextMuted,
                 ),
 
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOut,
-                  child: item.title != null
-                      ? Text(
-                          item.title!,
-                          style: AppTextStyle.titleM.copyWith(
-                            color: selected
-                                ? colorScheme.bg
-                                : colorScheme.appText,
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ),
+                if (isFullWidth)
+                  Expanded(
+                    child: item.title != null
+                        ? Align(
+                            alignment: Alignment.centerLeft,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                item.title!,
+                                style: AppTextStyle.titleM.copyWith(
+                                  color: selected
+                                      ? colorScheme.bg
+                                      : colorScheme.appText,
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  )
+                else if (item.title != null)
+                  Text(
+                    item.title!,
+                    style: AppTextStyle.titleM.copyWith(
+                      color: selected ? colorScheme.bg : colorScheme.appText,
+                    ),
+                  ),
               ],
             ),
           ),

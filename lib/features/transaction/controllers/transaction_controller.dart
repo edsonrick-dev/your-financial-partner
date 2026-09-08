@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 import 'package:getx_drift_app/data/app_database.dart';
@@ -9,11 +10,55 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/models/participant_model.dart';
 import 'package:getx_drift_app/data/models/person_balance_summary_model.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_transaction_form.dart';
+import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:intl/intl.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
 
 class TransactionController extends GetxController {
+  void prepareBillPayment(BillWithNextOccurrence bill) {
+    selectedBill.value = bill;
+    selectedCategory.value = bill.category;
+    amount.value = bill.occurrence.expectedAmount;
+  }
+
+  // Future<void> startBillPayment(BillWithNextOccurrence bill) async {
+  //   // resetForm();
+
+  //   selectedBill.value = bill;
+  //   selectedCategory.value = bill.category;
+  //   amount.value = bill.occurrence.expectedAmount;
+  // }
+
+  final selectedBill = Rxn<BillWithNextOccurrence>();
+  Future<void> selectCategoryOrBill(TransactionType transactionType) async {
+    final result = await AppSheets.selection.selectCategoryOrBill(
+      transactionType,
+      selectedCategory: selectedCategory.value,
+      selectedBill: selectedBill.value,
+    );
+
+    if (result == null) return;
+
+    switch (result) {
+      case CategorySelection(:final category):
+        selectedCategory.value = category;
+        selectedBill.value = null;
+
+      case BillSelection(:final bill):
+        selectedBill.value = bill;
+        selectedCategory.value = bill.category;
+
+        // Use the bill's expected amount as the initial
+        // transaction amount.
+        amount.value = bill.occurrence.expectedAmount;
+
+      // Use the bill's due date as the transaction date.
+      // selectedDate.value = bill.occurrence.dueDate;
+    }
+  }
+
   final splitExpenseKey = GlobalKey();
   void ensureVisible(GlobalKey key) {
     final context = key.currentContext;

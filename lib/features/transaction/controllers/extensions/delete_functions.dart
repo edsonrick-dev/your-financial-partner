@@ -1,10 +1,22 @@
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 
 extension DeleteFunctions on TransactionController {
+  Future<void> deleteTransactionById(int transactionId) async {
+    final transaction = await database.transactionsDao
+        .getTransactionWithDetailsById(transactionId);
+
+    if (transaction == null) {
+      return;
+    }
+
+    await deleteTransaction(transaction);
+  }
+
   Future<void> deleteTransaction(TransactionWithDetails item) async {
     await database.transaction(() async {
       final transactionData = item.transaction;
@@ -25,6 +37,14 @@ extension DeleteFunctions on TransactionController {
         }
 
         affectedAccountIds.add(linkedAccountId);
+      }
+
+      BillOccurrencesTableData? billOccurrence;
+
+      if (transactionData.type == TransactionType.spend) {
+        billOccurrence = await database.billsDao.getOccurrenceByTransactionId(
+          transactionData.id,
+        );
       }
 
       /// DELETE RELATED DATA
@@ -65,6 +85,9 @@ extension DeleteFunctions on TransactionController {
 
       /// DELETE TRANSACTION
       await database.deleteTransaction(transactionData.id);
+      if (billOccurrence != null) {
+        await database.billsDao.unmarkOccurrenceAsPaid(billOccurrence.id);
+      }
 
       /// REBUILD EVERY AFFECTED ACCOUNT
       for (final accountId in affectedAccountIds) {

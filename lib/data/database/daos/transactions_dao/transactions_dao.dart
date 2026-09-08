@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/models/split_expense_summary.dart';
 import 'package:getx_drift_app/data/models/transaction_participant_with_entity.dart';
@@ -62,6 +63,103 @@ part 'transactions_dao.g.dart';
 class TransactionsDao extends DatabaseAccessor<AppDatabase>
     with _$TransactionsDaoMixin {
   TransactionsDao(super.db);
+
+  Future<TransactionWithDetails?> getTransactionWithDetailsById(
+    int transactionId,
+  ) async {
+    final linkedAccounts = alias(accountsTable, 'linked_accounts');
+
+    final query = select(transactionsTable).join([
+      leftOuterJoin(
+        cashflowCategoriesTable,
+        cashflowCategoriesTable.id.equalsExp(transactionsTable.categoryId),
+      ),
+      leftOuterJoin(
+        accountsTable,
+        accountsTable.id.equalsExp(transactionsTable.accountId),
+      ),
+      leftOuterJoin(
+        linkedAccounts,
+        linkedAccounts.id.equalsExp(transactionsTable.linkedAccountId),
+      ),
+    ])..where(transactionsTable.id.equals(transactionId));
+
+    final row = await query.getSingleOrNull();
+
+    if (row == null) {
+      return null;
+    }
+
+    final transaction = row.readTable(transactionsTable);
+
+    final category = row.readTableOrNull(cashflowCategoriesTable);
+
+    final account = row.readTableOrNull(accountsTable);
+
+    final linkedAccount = row.readTableOrNull(linkedAccounts);
+
+    // ---------------------------------------------------------------------------
+    // PARTICIPANTS
+    // ---------------------------------------------------------------------------
+
+    final participants = await getParticipantsWithEntities(transaction.id);
+
+    TransactionParticipantWithEntity? myParticipant;
+
+    try {
+      myParticipant = participants.firstWhere(
+        (participant) => participant.entity.id == 1,
+      );
+    } catch (_) {
+      myParticipant = null;
+    }
+
+    final myShare = myParticipant != null
+        ? myParticipant.participant.allocatedAmount
+        : transaction.amount;
+
+    final receivableAmount = participants
+        .where((participant) => participant.entity.id != 1)
+        .fold<double>(
+          0,
+          (sum, participant) => sum + participant.participant.allocatedAmount,
+        );
+
+    // ---------------------------------------------------------------------------
+    // FINANCIAL OBLIGATIONS
+    // ---------------------------------------------------------------------------
+
+    final obligations = await (select(
+      financialObligationsTable,
+    )..where((tbl) => tbl.transactionId.equals(transaction.id))).get();
+
+    // ---------------------------------------------------------------------------
+    // BUILD TRANSACTION WITH DETAILS
+    // ---------------------------------------------------------------------------
+
+    return TransactionWithDetails(
+      transaction: transaction,
+      category: category,
+      account: account,
+      linkedAccount: linkedAccount,
+      participants: participants,
+      obligations: obligations,
+      obligationType: obligations.isNotEmpty ? obligations.first.type : null,
+      splitSummary: SplitExpenseSummary(
+        totalPaid: transaction.amount,
+        myShare: myShare,
+        receivableAmount: receivableAmount,
+        isSharedExpense: participants.length > 1,
+      ),
+    );
+  }
+
+  Future<TransactionsTableData?> getTransactionById(int transactionId) {
+    return (select(
+      transactionsTable,
+    )..where((tbl) => tbl.id.equals(transactionId))).getSingleOrNull();
+  }
+
   Stream<List<MonthlyCashFlowTrend>> watchMonthlyTrend({
     required DateTime endMonth,
     int months = 7,
@@ -140,15 +238,8 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
             t.date.isSmallerThanValue(end),
       );
 
-    return query.watch().asyncMap((transactions) async {
+    return query.watch().map((transactions) {
       final result = <int, double>{};
-
-      final currentUser = await attachedDatabase.entitiesDao
-          .getCurrentUserEntity();
-
-      if (currentUser == null) {
-        return result;
-      }
 
       for (final transaction in transactions) {
         final categoryId = transaction.categoryId;
@@ -157,28 +248,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
           continue;
         }
 
-        final participants = await getParticipantsWithEntities(transaction.id);
-
-        double budgetExpense;
-
-        if (participants.isEmpty) {
-          // Normal expense:
-          // the entire transaction belongs to the user.
-          budgetExpense = transaction.amount;
-        } else {
-          // Split expense:
-          // only count the user's allocated share.
-          budgetExpense = 0;
-
-          for (final participant in participants) {
-            if (participant.entity.id == currentUser.id) {
-              budgetExpense = participant.participant.allocatedAmount;
-              break;
-            }
-          }
-        }
-
-        result[categoryId] = (result[categoryId] ?? 0) + budgetExpense;
+        result[categoryId] = (result[categoryId] ?? 0) + transaction.amount;
       }
 
       return result;

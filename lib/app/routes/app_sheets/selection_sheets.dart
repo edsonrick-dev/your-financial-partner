@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/credit_card_installment_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/select_institution_sheet.dart';
+import 'package:getx_drift_app/features/sheets/selection_sheets/select_category_or_bill_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_category_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_day_of_month.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_frequency_cycles_sheet.dart';
@@ -15,8 +17,23 @@ import 'package:getx_drift_app/features/sheets/selection_sheets/select_payment_a
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_reminder_sheet.dart';
+import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 
 class SelectionSheets {
+  Future<CategoryOrBillSelection?> selectCategoryOrBill(
+    TransactionType transactionType, {
+    CashflowCategoriesTableData? selectedCategory,
+    BillWithNextOccurrence? selectedBill,
+  }) {
+    return Get.bottomSheet<CategoryOrBillSelection>(
+      SelectCategoryOrBillSheet(
+        transactionType: transactionType,
+        selectedCategory: selectedCategory,
+        selectedBill: selectedBill,
+      ),
+    );
+  }
+
   Future<AccountsTableData?> selectCreditCard() {
     return Get.bottomSheet<AccountsTableData>(
       const SelectCreditCardSheet(),

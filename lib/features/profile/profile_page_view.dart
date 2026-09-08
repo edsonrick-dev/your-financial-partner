@@ -147,18 +147,22 @@ class UserProfileCard extends StatelessWidget {
                 // spacing: 4,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Juan Dela Cruz',
-                    style: AppTextStyle.headlineM.copyWith(
-                      color: colorScheme.appInversedtext,
+                  FittedBox(
+                    child: Text(
+                      'Juan Dela Cruz',
+                      style: AppTextStyle.headlineM.copyWith(
+                        color: colorScheme.appInversedtext,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                  Text(
-                    'juand_dela_cruz@gmail.com',
-                    style: AppTextStyle.titleM.copyWith(
-                      color: colorScheme.appInversedtext,
+                  FittedBox(
+                    child: Text(
+                      'juand_dela_cruz@gmail.com',
+                      style: AppTextStyle.titleM.copyWith(
+                        color: colorScheme.appInversedtext,
+                      ),
                     ),
                   ),
                   SizedBox(height: 4),
@@ -170,7 +174,9 @@ class UserProfileCard extends StatelessWidget {
                     ),
                     child: Text(
                       'Free Account',
-                      style: TextStyle(color: colorScheme.text),
+                      style: TextStyle(
+                        color: colorScheme.pageShifterTextSelected,
+                      ),
                     ),
                   ),
                 ],

@@ -8,7 +8,7 @@ class FinancialPicturePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -28,19 +28,23 @@ class FinancialPicturePage extends StatelessWidget {
 
           // Temporary illustration area.
           // Replace this with your actual illustration.
-          Column(
-            children: [
-              const _FinancialRelationshipDiagram(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const _FinancialRelationshipDiagram(),
 
-              const SizedBox(height: 32),
+                  const SizedBox(height: 32),
 
-              IntroMessageCard(
-                child: Text(
-                  'Looking at one part alone won’t give you the full picture.',
-                  style: AppTextStyle.bodyM,
-                ),
+                  IntroMessageCard(
+                    child: Text(
+                      'Looking at one part alone won’t give you the full picture.',
+                      style: AppTextStyle.bodyM,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ],
       ),

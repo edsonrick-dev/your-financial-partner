@@ -15,6 +15,9 @@ import 'tables/transactions_table.dart';
 import 'tables/financial_obligations_table.dart';
 import 'tables/cashflow_plan_allocation_table.dart';
 import 'tables/cashflow_plan_table.dart';
+import 'tables/bills_table.dart';
+import 'tables/bill_occurrences_table.dart';
+
 import 'tables/loan_table.dart';
 // import 'tables/cashflow_plans_table.dart';
 
@@ -23,6 +26,7 @@ import 'package:getx_drift_app/data/database/daos/accounts_dao/accounts_dao.dart
 import 'package:getx_drift_app/data/database/daos/people_balance_dao/people_balance_dao.dart';
 import 'package:getx_drift_app/data/database/daos/entities_dao/entities_dao.dart';
 import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
+import 'package:getx_drift_app/data/database/daos/bills_dao/bills_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -37,6 +41,8 @@ part 'app_database.g.dart';
     Loans,
     CashFlowPlanAllocations,
     CashFlowPlans,
+    BillsTable,
+    BillOccurrencesTable,
   ],
   daos: [
     TransactionsDao,
@@ -44,6 +50,7 @@ part 'app_database.g.dart';
     PeopleBalanceDao,
     EntitiesDao,
     CashflowPlanDao,
+    BillsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -82,10 +89,14 @@ class AppDatabase extends _$AppDatabase {
         await m.deleteTable('transactions_table');
         await m.createTable(transactionsTable);
       }
+      if (from < 12) {
+        await m.createTable(billsTable);
+        await m.createTable(billOccurrencesTable);
+      }
     },
   );
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();

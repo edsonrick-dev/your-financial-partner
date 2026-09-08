@@ -21,7 +21,6 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: 20),
           CashflowSummaryContainerSection(),
           SizedBox(height: 24),
           AppSection(
@@ -80,6 +79,7 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Icon(PhosphorIconsRegular.receipt, size: 40),
                         SizedBox(height: 20),
@@ -88,9 +88,12 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
                           style: AppTextStyle.headlineL,
                         ),
                         SizedBox(height: 8),
-                        Text(
-                          'Go to Bill Manager to create your first bill',
-                          style: AppTextStyle.bodyM,
+                        FittedBox(
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            'Go to Bill Manager to create your first bill',
+                            style: AppTextStyle.bodyM,
+                          ),
                         ),
                       ],
                     ),

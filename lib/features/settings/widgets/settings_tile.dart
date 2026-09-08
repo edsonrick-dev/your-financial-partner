@@ -28,6 +28,7 @@ class SettingsTile extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         width: double.infinity,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 12,
           children: [
             Stack(
@@ -47,21 +48,23 @@ class SettingsTile extends StatelessWidget {
                 ),
               ],
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: TextStyle(height: 20 / 15, fontSize: 15)),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    color: colorScheme.appTextMuted,
-                    height: 16 / 12,
-                    fontSize: 12,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: TextStyle(height: 20 / 15, fontSize: 15)),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: colorScheme.appTextMuted,
+                      height: 16 / 12,
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            Spacer(),
+            SizedBox(width: 16),
             Icon(PhosphorIconsRegular.caretRight, size: 20),
           ],
         ),

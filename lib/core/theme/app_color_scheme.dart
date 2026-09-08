@@ -71,7 +71,7 @@ extension FinanceColors on ColorScheme {
   Color get appOutflowInversed => const Color(0xFFFF6B6B);
   Color get appAccent => const Color(0xFFE6A23F);
   Color get appNeutral => const Color(0xFF94A3B8);
-  Color get appNeutralSoft => const Color(0xFFE2E8F0);
+  Color get appNeutralSoft => isDark ? color900 : const Color(0xFFE2E8F0);
 
   /// 8-STEP COLOR
   Color get appCritical => Colors.green;

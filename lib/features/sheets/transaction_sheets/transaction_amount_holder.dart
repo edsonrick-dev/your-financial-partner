@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/domain/app_calculator.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -55,7 +56,7 @@ class TransactionAmountHolder extends GetView<TransactionController> {
 
               Obx(
                 () => Text(
-                  controller.amount.value.toStringAsFixed(2),
+                  controller.amount.value.toCurrency(symbol: ''),
                   style: AppTextStyle.amountXL.copyWith(
                     color: colorScheme.appInversedtext,
                   ),

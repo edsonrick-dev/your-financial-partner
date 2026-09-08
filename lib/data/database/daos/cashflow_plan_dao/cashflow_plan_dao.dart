@@ -24,7 +24,81 @@ class CashflowPlanWithCategory {
 class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
     with _$CashflowPlanDaoMixin {
   CashflowPlanDao(super.db);
+  Future<List<CashflowPlanWithCategory>> getExpensePlansForCategory(
+    int categoryId,
+  ) async {
+    final query =
+        select(cashFlowPlans).join([
+            innerJoin(
+              cashflowCategoriesTable,
+              cashflowCategoriesTable.id.equalsExp(cashFlowPlans.categoryId),
+            ),
+            leftOuterJoin(
+              cashFlowPlanAllocations,
+              cashFlowPlanAllocations.planId.equalsExp(cashFlowPlans.id),
+            ),
+          ])
+          ..where(
+            cashFlowPlans.categoryId.equals(categoryId) &
+                cashFlowPlans.planType.equals('expense'),
+          )
+          ..orderBy([
+            OrderingTerm.asc(cashFlowPlans.id),
+            OrderingTerm.asc(cashFlowPlanAllocations.allocationIndex),
+          ]);
 
+    final rows = await query.get();
+
+    final plans = <int, CashflowPlanWithCategory>{};
+    final allocations = <int, List<CashFlowPlanAllocation>>{};
+
+    for (final row in rows) {
+      final plan = row.readTable(cashFlowPlans);
+      final category = row.readTable(cashflowCategoriesTable);
+
+      plans.putIfAbsent(
+        plan.id,
+        () => CashflowPlanWithCategory(
+          plan: plan,
+          category: category,
+          allocations: [],
+        ),
+      );
+
+      final allocation = row.readTableOrNull(cashFlowPlanAllocations);
+
+      if (allocation != null) {
+        allocations.putIfAbsent(plan.id, () => []).add(allocation);
+      }
+    }
+
+    return plans.values.map((savedPlan) {
+      return CashflowPlanWithCategory(
+        plan: savedPlan.plan,
+        category: savedPlan.category,
+        allocations: List.unmodifiable(
+          allocations[savedPlan.plan.id] ?? const [],
+        ),
+      );
+    }).toList();
+  }
+
+  Future<bool> updatePlanAmount({
+    required int planId,
+    required double amount,
+  }) async {
+    final updated =
+        await (update(
+          cashFlowPlans,
+        )..where((tbl) => tbl.id.equals(planId))).write(
+          CashFlowPlansCompanion(
+            amount: Value(amount),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
+
+    return updated > 0;
+  }
   // -----------------------------
   // Plans
   // -----------------------------

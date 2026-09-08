@@ -14,7 +14,7 @@ extension TransactionHydration on TransactionController {
     selectedCategory.value = null;
 
     selectedAccount.value = null;
-
+    selectedBill.value = null;
     selectedLinkedAccount.value = null;
     noteController.clear();
     amount.value = 0;

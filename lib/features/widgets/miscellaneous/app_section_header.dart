@@ -34,23 +34,28 @@ class AppSectionHeader extends StatelessWidget {
         child: Row(
           children: [
             if (subtitle != null && subtitle!.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(sectionTitle, style: AppTextStyle.titleL),
-                  Text(
-                    subtitle!,
-                    style: AppTextStyle.bodyS.copyWith(
-                      color: colorScheme.appTextMuted,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(sectionTitle, style: AppTextStyle.titleL),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        subtitle!,
+                        style: AppTextStyle.bodyS.copyWith(
+                          color: colorScheme.appTextMuted,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               )
             else
-              Text(sectionTitle, style: AppTextStyle.titleL),
+              Expanded(child: Text(sectionTitle, style: AppTextStyle.titleL)),
 
-            const Spacer(),
+            SizedBox(width: 16),
 
             // Explicit trailing type takes priority.
             if (trailingType != null)

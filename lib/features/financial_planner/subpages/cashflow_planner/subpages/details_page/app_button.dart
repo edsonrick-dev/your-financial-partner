@@ -44,7 +44,8 @@ class AppButton extends StatelessWidget {
     }
 
     return switch (type) {
-      ButtonType.primary => colorScheme.pageShifterTextSelected,
+      ButtonType.primary =>
+        isInversed ? colorScheme.color900 : colorScheme.pageShifterTextSelected,
       ButtonType.outline => colorScheme.appText,
       ButtonType.ghost => colorScheme.appText,
     };
@@ -76,11 +77,14 @@ class AppButton extends StatelessWidget {
           border: _border(context),
           borderRadius: BorderRadius.circular(8),
         ),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         child: Center(
-          child: Text(
-            text,
-            style: AppTextStyle.titleL.copyWith(
-              color: _foregroundColor(context),
+          child: FittedBox(
+            child: Text(
+              text,
+              style: AppTextStyle.titleL.copyWith(
+                color: _foregroundColor(context),
+              ),
             ),
           ),
         ),

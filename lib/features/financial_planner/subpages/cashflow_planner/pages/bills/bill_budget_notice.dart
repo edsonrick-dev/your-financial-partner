@@ -81,15 +81,15 @@ class BillBudgetNotice extends GetView<BillController> {
             text:
                 'Create budget for '
                 '${amount.toCurrency()}/$frequency',
-            onTap: () {},
-          ),
-          SizedBox(height: 8),
-          AppButton(
-            type: ButtonType.outline,
-            text: 'Set custom budget',
-            onTap: () {},
+            onTap: controller.createMinimumBudget,
           ),
 
+          // SizedBox(height: 8),
+          // AppButton(
+          //   type: ButtonType.outline,
+          //   text: 'Set custom budget',
+          //   onTap: () {},
+          // ),
           const SizedBox(height: 8),
 
           Row(
@@ -172,7 +172,7 @@ class BillBudgetNotice extends GetView<BillController> {
 
           BillsRow(amount: remaining, frequency: frequency, title: 'Remaining'),
           const SizedBox(height: 20),
-          AppButton(text: 'Save Bill', onTap: () {}),
+          AppButton(text: 'Save Bill', onTap: controller.saveBill),
         ],
       ),
     );
@@ -236,17 +236,31 @@ class BillBudgetNotice extends GetView<BillController> {
           const SizedBox(height: 20),
 
           AppButton(
-            // isInversed: true,
             text:
                 'Increase budget by '
                 '${over.toCurrency()}/$frequency',
-            onTap: () {},
+            onTap: controller.increaseBudgetToFitBill,
           ),
-          const SizedBox(height: 16),
-          AppButton(
-            type: ButtonType.outline,
-            text: 'Set custom budget',
-            onTap: () {},
+          // const SizedBox(height: 16),
+          // AppButton(
+          //   type: ButtonType.outline,
+          //   text: 'Set custom budget',
+          //   onTap: () {},
+          // ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(PhosphorIconsRegular.floppyDisk, size: 16),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  'This bill will be saved if you choose to adjust the budget.',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyle.labelS,
+                ),
+              ),
+            ],
           ),
         ],
       ),

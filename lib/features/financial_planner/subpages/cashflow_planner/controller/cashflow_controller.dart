@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
@@ -14,6 +15,7 @@ import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_plan_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -21,6 +23,13 @@ import 'package:drift/drift.dart' as d;
 import 'dart:math' as math;
 
 class CashflowController extends GetxController {
+  Future<void> makePayment(BillWithNextOccurrence bill) async {
+    await AppSheets.transaction.spendBill(bill);
+  }
+
+  // late final StreamSubscription<List<CurrentMonthBudgetItem>>
+  // _budgetSubscription;
+  late final StreamSubscription<Map<int, double>> _budgetSubscription;
   double getBudgetForCategory(int categoryId) {
     return currentMonthBudgetItems
         .where((item) => item.categoryId == categoryId)
@@ -93,22 +102,105 @@ class CashflowController extends GetxController {
           annualExpense.value = expense;
           annualDebtRepayment.value = debtRepayment;
           annualBudget.value = expense + debtRepayment;
+          // await _refreshCurrentMonthBudgetItems(plans);
+
           await _refreshMonthlyCashflow();
         });
-    _watchCurrentMonthBudgetItems();
+
+    _budgetSubscription = database.transactionsDao
+        .watchCurrentMonthExpensesByCategory(month: DateTime.now())
+        .listen((spent) async {
+          debugPrint('TRANSACTION → BUDGET: $spent');
+
+          await _refreshCurrentMonthBudgetItems();
+        });
+    // _budgetSubscription = watchCurrentMonthBudgetItems().listen((items) {
+    //   debugPrint('CURRENT MONTH ITEMS UPDATED: ${items.length}');
+
+    //   currentMonthBudgetItems.assignAll(items);
+    // });
+    // _budgetSubscription = watchCurrentMonthBudgetItems().listen((items) {
+    //   currentMonthBudgetItems.assignAll(items);
+    // });
+    // _watchCurrentMonthBudgetItems();
   }
 
-  late final StreamSubscription _budgetSubscription;
+  // Future<void> _refreshCurrentMonthBudgetItems(
+  //   List<CashflowPlanWithCategory> plans,
+  // ) async {
+  //   final now = DateTime.now();
+  //   final monthIndex = now.month - 1;
+  //   final year = now.year;
 
-  void _watchCurrentMonthBudgetItems() {
-    _budgetSubscription = cashflowPlanDao.watchAllPlansWithDetails().listen((
-      plans,
-    ) async {
-      currentMonthBudgetItems.assignAll(
-        await _buildCurrentMonthBudgetItems(plans),
-      );
-    });
-  }
+  //   final spentByCategory = await database.transactionsDao
+  //       .watchCurrentMonthExpensesByCategory(month: now)
+  //       .first;
+
+  //   final result = <CurrentMonthBudgetItem>[];
+
+  //   for (final savedPlan in plans) {
+  //     final plan = savedPlan.plan;
+
+  //     // Income is NOT a budget.
+  //     if (plan.planType != 'expense') {
+  //       continue;
+  //     }
+
+  //     final allocations = await cashflowPlanDao.getAllocationsForPlan(plan.id);
+
+  //     final period = BudgetPeriod.values.firstWhere(
+  //       (period) => period.name == plan.period,
+  //     );
+
+  //     final isCustom =
+  //         plan.distributionType == CashFlowDistribution.custom.name;
+
+  //     final amount = calculateSavedPlanBaseAmount(
+  //       plan: plan,
+  //       allocations: allocations,
+  //     );
+
+  //     final customSummary = isCustom
+  //         ? buildSavedPlanCustomSummary(
+  //             period: period,
+  //             allocations: allocations,
+  //           )
+  //         : null;
+
+  //     final monthly = calculateSavedPlanMonthlyDistribution(
+  //       plan: plan,
+  //       allocations: allocations,
+  //       year: year,
+  //     );
+
+  //     final budget = monthly[monthIndex];
+
+  //     if (budget <= 0) {
+  //       continue;
+  //     }
+
+  //     result.add(
+  //       CurrentMonthBudgetItem(
+  //         plan: SavedCashflowPlanData(
+  //           planId: plan.id,
+  //           categoryId: plan.categoryId!,
+  //           category: savedPlan.category.name,
+  //           amount: amount,
+  //           budgetPeriod: period,
+  //           iconKey: savedPlan.category.icon,
+  //           isCustom: isCustom,
+  //           customSummary: customSummary,
+  //           planType: plan.planType,
+  //         ),
+  //         categoryId: plan.categoryId!,
+  //         budget: budget,
+  //         spent: spentByCategory[plan.categoryId] ?? 0,
+  //       ),
+  //     );
+  //   }
+
+  //   currentMonthBudgetItems.assignAll(result);
+  // }
 
   bool get hasDebtRepaymentPlan => savedPlans.any(
     (plan) => plan.plan.planType == CashflowPlanType.debtRepayment.name,
@@ -120,9 +212,82 @@ class CashflowController extends GetxController {
   bool get hasBudgetPlan => hasExpensePlan || hasDebtRepaymentPlan;
   bool get hasIncomePlan =>
       savedPlans.any((plan) => plan.plan.planType == 'income');
-  Future<List<CurrentMonthBudgetItem>> _buildCurrentMonthBudgetItems(
-    List<CashflowPlanWithCategory> plans,
-  ) async {
+  // Future<List<CurrentMonthBudgetItem>> _buildCurrentMonthBudgetItems(
+  //   List<CashflowPlanWithCategory> plans,
+  // ) async {
+  //   final now = DateTime.now();
+  //   final monthIndex = now.month - 1;
+  //   final year = now.year;
+
+  //   final spentByCategory = await database.transactionsDao
+  //       .watchCurrentMonthExpensesByCategory(month: now)
+  //       .first;
+
+  //   final result = <CurrentMonthBudgetItem>[];
+
+  //   for (final savedPlan in plans) {
+  //     final plan = savedPlan.plan;
+
+  //     if (plan.planType != 'expense') {
+  //       continue;
+  //     }
+
+  //     final allocations = await cashflowPlanDao.getAllocationsForPlan(plan.id);
+
+  //     final period = BudgetPeriod.values.firstWhere(
+  //       (period) => period.name == plan.period,
+  //     );
+
+  //     final isCustom =
+  //         plan.distributionType == CashFlowDistribution.custom.name;
+
+  //     final amount = calculateSavedPlanBaseAmount(
+  //       plan: plan,
+  //       allocations: allocations,
+  //     );
+
+  //     final customSummary = isCustom
+  //         ? buildSavedPlanCustomSummary(
+  //             period: period,
+  //             allocations: allocations,
+  //           )
+  //         : null;
+
+  //     final monthly = calculateSavedPlanMonthlyDistribution(
+  //       plan: plan,
+  //       allocations: allocations,
+  //       year: year,
+  //     );
+
+  //     final budget = monthly[monthIndex];
+
+  //     if (budget <= 0) {
+  //       continue;
+  //     }
+
+  //     result.add(
+  //       CurrentMonthBudgetItem(
+  //         plan: SavedCashflowPlanData(
+  //           planId: plan.id,
+  //           categoryId: plan.categoryId!,
+  //           category: savedPlan.category.name,
+  //           amount: amount,
+  //           budgetPeriod: period,
+  //           iconKey: savedPlan.category.icon,
+  //           isCustom: isCustom,
+  //           customSummary: customSummary,
+  //           planType: plan.planType,
+  //         ),
+  //         categoryId: plan.categoryId!,
+  //         budget: budget,
+  //         spent: spentByCategory[plan.categoryId] ?? 0,
+  //       ),
+  //     );
+  //   }
+
+  //   return result;
+  // }
+  Future<void> _refreshCurrentMonthBudgetItems() async {
     final now = DateTime.now();
     final monthIndex = now.month - 1;
     final year = now.year;
@@ -133,7 +298,7 @@ class CashflowController extends GetxController {
 
     final result = <CurrentMonthBudgetItem>[];
 
-    for (final savedPlan in plans) {
+    for (final savedPlan in savedPlans) {
       final plan = savedPlan.plan;
 
       if (plan.planType != 'expense') {
@@ -193,97 +358,252 @@ class CashflowController extends GetxController {
       );
     }
 
-    return result;
+    debugPrint('CURRENT MONTH ITEMS UPDATED: ${result.length}');
+
+    currentMonthBudgetItems.assignAll(result);
   }
+
+  // Future<void> _refreshCurrentMonthBudgetItems() async {
+  //   final now = DateTime.now();
+  //   final monthIndex = now.month - 1;
+  //   final year = now.year;
+
+  //   final spentByCategory = await database.transactionsDao
+  //       .watchCurrentMonthExpensesByCategory(month: now)
+  //       .first;
+
+  //   final result = <CurrentMonthBudgetItem>[];
+
+  //   for (final savedPlan in savedPlans) {
+  //     final plan = savedPlan.plan;
+
+  //     if (plan.planType != 'expense') {
+  //       continue;
+  //     }
+
+  //     final allocations = await cashflowPlanDao.getAllocationsForPlan(plan.id);
+
+  //     final period = BudgetPeriod.values.firstWhere(
+  //       (period) => period.name == plan.period,
+  //     );
+
+  //     final isCustom =
+  //         plan.distributionType == CashFlowDistribution.custom.name;
+
+  //     final amount = calculateSavedPlanBaseAmount(
+  //       plan: plan,
+  //       allocations: allocations,
+  //     );
+
+  //     final customSummary = isCustom
+  //         ? buildSavedPlanCustomSummary(
+  //             period: period,
+  //             allocations: allocations,
+  //           )
+  //         : null;
+
+  //     final monthly = calculateSavedPlanMonthlyDistribution(
+  //       plan: plan,
+  //       allocations: allocations,
+  //       year: year,
+  //     );
+
+  //     final budget = monthly[monthIndex];
+
+  //     if (budget <= 0) {
+  //       continue;
+  //     }
+
+  //     result.add(
+  //       CurrentMonthBudgetItem(
+  //         plan: SavedCashflowPlanData(
+  //           planId: plan.id,
+  //           categoryId: plan.categoryId!,
+  //           category: savedPlan.category.name,
+  //           amount: amount,
+  //           budgetPeriod: period,
+  //           iconKey: savedPlan.category.icon,
+  //           isCustom: isCustom,
+  //           customSummary: customSummary,
+  //           planType: plan.planType,
+  //         ),
+  //         categoryId: plan.categoryId!,
+  //         budget: budget,
+  //         spent: spentByCategory[plan.categoryId] ?? 0,
+  //       ),
+  //     );
+  //   }
+
+  //   currentMonthBudgetItems.assignAll(result);
+  // }
 
   Stream<List<CurrentMonthBudgetItem>> watchCurrentMonthBudgetItems() {
     final now = DateTime.now();
     final monthIndex = now.month - 1;
     final year = now.year;
 
-    return cashflowPlanDao.watchAllPlansWithDetails().asyncExpand((savedPlans) {
-      return database.transactionsDao
+    return cashflowPlanDao.watchAllPlansWithDetails().asyncMap((
+      savedPlans,
+    ) async {
+      final spentByCategory = await database.transactionsDao
           .watchCurrentMonthExpensesByCategory(month: now)
-          .asyncMap((spentByCategory) async {
-            debugPrint(
-              'BUDGET STREAM UPDATED: '
-              'plans=${savedPlans.length}, '
-              'spent=$spentByCategory',
-            );
+          .first;
 
-            final result = <CurrentMonthBudgetItem>[];
+      final result = <CurrentMonthBudgetItem>[];
 
-            for (final savedPlan in savedPlans) {
-              final plan = savedPlan.plan;
+      for (final savedPlan in savedPlans) {
+        final plan = savedPlan.plan;
 
-              // Only expense budgets belong here.
-              if (plan.planType != 'expense') {
-                continue;
-              }
+        if (plan.planType != 'expense') {
+          continue;
+        }
 
-              final allocations = await cashflowPlanDao.getAllocationsForPlan(
-                plan.id,
-              );
+        final allocations = await cashflowPlanDao.getAllocationsForPlan(
+          plan.id,
+        );
 
-              final period = BudgetPeriod.values.firstWhere(
-                (period) => period.name == plan.period,
-              );
+        final period = BudgetPeriod.values.firstWhere(
+          (period) => period.name == plan.period,
+        );
 
-              final isCustom =
-                  plan.distributionType == CashFlowDistribution.custom.name;
+        final isCustom =
+            plan.distributionType == CashFlowDistribution.custom.name;
 
-              final amount = calculateSavedPlanBaseAmount(
-                plan: plan,
+        final amount = calculateSavedPlanBaseAmount(
+          plan: plan,
+          allocations: allocations,
+        );
+
+        final customSummary = isCustom
+            ? buildSavedPlanCustomSummary(
+                period: period,
                 allocations: allocations,
-              );
+              )
+            : null;
 
-              final customSummary = isCustom
-                  ? buildSavedPlanCustomSummary(
-                      period: period,
-                      allocations: allocations,
-                    )
-                  : null;
+        final monthly = calculateSavedPlanMonthlyDistribution(
+          plan: plan,
+          allocations: allocations,
+          year: year,
+        );
 
-              final savedPlanData = SavedCashflowPlanData(
-                planId: plan.id,
-                categoryId: plan.categoryId!,
-                category: savedPlan.category.name,
-                amount: amount,
-                budgetPeriod: period,
-                iconKey: savedPlan.category.icon,
-                isCustom: isCustom,
-                customSummary: customSummary,
-                planType: plan.planType,
-              );
+        final budget = monthly[monthIndex];
 
-              final monthly = calculateSavedPlanMonthlyDistribution(
-                plan: plan,
-                allocations: allocations,
-                year: year,
-              );
+        if (budget <= 0) {
+          continue;
+        }
 
-              final budget = monthly[monthIndex];
+        result.add(
+          CurrentMonthBudgetItem(
+            plan: SavedCashflowPlanData(
+              planId: plan.id,
+              categoryId: plan.categoryId!,
+              category: savedPlan.category.name,
+              amount: amount,
+              budgetPeriod: period,
+              iconKey: savedPlan.category.icon,
+              isCustom: isCustom,
+              customSummary: customSummary,
+              planType: plan.planType,
+            ),
+            categoryId: plan.categoryId!,
+            budget: budget,
+            spent: spentByCategory[plan.categoryId] ?? 0,
+          ),
+        );
+      }
 
-              if (budget <= 0) {
-                continue;
-              }
-
-              final spent = spentByCategory[plan.categoryId] ?? 0;
-
-              result.add(
-                CurrentMonthBudgetItem(
-                  plan: savedPlanData,
-                  categoryId: plan.categoryId!,
-                  budget: budget,
-                  spent: spent,
-                ),
-              );
-            }
-
-            return result;
-          });
+      return result;
     });
   }
+  // Stream<List<CurrentMonthBudgetItem>> watchCurrentMonthBudgetItems() {
+  //   final now = DateTime.now();
+  //   final monthIndex = now.month - 1;
+  //   final year = now.year;
+
+  //   return cashflowPlanDao.watchAllPlansWithDetails().asyncExpand((savedPlans) {
+  //     return database.transactionsDao
+  //         .watchCurrentMonthExpensesByCategory(month: now)
+  //         .asyncMap((spentByCategory) async {
+  //           debugPrint(
+  //             'BUDGET STREAM UPDATED: '
+  //             'plans=${savedPlans.length}, '
+  //             'spent=$spentByCategory',
+  //           );
+
+  //           final result = <CurrentMonthBudgetItem>[];
+
+  //           for (final savedPlan in savedPlans) {
+  //             final plan = savedPlan.plan;
+
+  //             // Only expense budgets belong here.
+  //             if (plan.planType != 'expense') {
+  //               continue;
+  //             }
+
+  //             final allocations = await cashflowPlanDao.getAllocationsForPlan(
+  //               plan.id,
+  //             );
+
+  //             final period = BudgetPeriod.values.firstWhere(
+  //               (period) => period.name == plan.period,
+  //             );
+
+  //             final isCustom =
+  //                 plan.distributionType == CashFlowDistribution.custom.name;
+
+  //             final amount = calculateSavedPlanBaseAmount(
+  //               plan: plan,
+  //               allocations: allocations,
+  //             );
+
+  //             final customSummary = isCustom
+  //                 ? buildSavedPlanCustomSummary(
+  //                     period: period,
+  //                     allocations: allocations,
+  //                   )
+  //                 : null;
+
+  //             final savedPlanData = SavedCashflowPlanData(
+  //               planId: plan.id,
+  //               categoryId: plan.categoryId!,
+  //               category: savedPlan.category.name,
+  //               amount: amount,
+  //               budgetPeriod: period,
+  //               iconKey: savedPlan.category.icon,
+  //               isCustom: isCustom,
+  //               customSummary: customSummary,
+  //               planType: plan.planType,
+  //             );
+
+  //             final monthly = calculateSavedPlanMonthlyDistribution(
+  //               plan: plan,
+  //               allocations: allocations,
+  //               year: year,
+  //             );
+
+  //             final budget = monthly[monthIndex];
+
+  //             if (budget <= 0) {
+  //               continue;
+  //             }
+
+  //             final spent = spentByCategory[plan.categoryId] ?? 0;
+
+  //             result.add(
+  //               CurrentMonthBudgetItem(
+  //                 plan: savedPlanData,
+  //                 categoryId: plan.categoryId!,
+  //                 budget: budget,
+  //                 spent: spent,
+  //               ),
+  //             );
+  //           }
+
+  //           return result;
+  //         });
+  //   });
+  // }
 
   Future<List<CurrentMonthBudgetItem>> getCurrentMonthBudgetItems() async {
     final plans = await cashflowPlanDao.watchAllPlansWithDetails().first;

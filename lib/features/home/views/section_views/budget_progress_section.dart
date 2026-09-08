@@ -182,6 +182,7 @@ class _FilledView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 16,
             children: [
               BudgetProgressIndicator(
@@ -203,31 +204,31 @@ class _FilledView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '${AppMonth.values[currentMonthIndex].fullName} Progress',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        height: 24 / 20,
+                    FittedBox(
+                      child: Text(
+                        '${AppMonth.values[currentMonthIndex].fullName} Progress',
+                        style: AppTextStyle.headlineM,
                       ),
                     ),
-
-                    Row(
-                      children: [
-                        Text(
-                          spentAmount.toCompactCurrency(kThreshold: 1000000),
-                          style: AppTextStyle.amountM,
-                        ),
-                        const Text(' spent of '),
-                        Text(
-                          budgetAmount.toCompactCurrency(kThreshold: 1000000),
-                          style: const TextStyle(
-                            fontFeatures: [FontFeature.tabularFigures()],
+                    SizedBox(height: 8),
+                    FittedBox(
+                      child: Row(
+                        children: [
+                          Text(
+                            spentAmount.toCompactCurrency(kThreshold: 1000000),
+                            style: AppTextStyle.amountM,
                           ),
-                        ),
-                      ],
+                          const Text(' spent of '),
+                          Text(
+                            budgetAmount.toCompactCurrency(kThreshold: 1000000),
+                            style: const TextStyle(
+                              fontFeatures: [FontFeature.tabularFigures()],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-
+                    SizedBox(height: 4),
                     Row(
                       children: [
                         Row(

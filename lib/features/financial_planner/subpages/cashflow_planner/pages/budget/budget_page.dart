@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -8,14 +7,11 @@ import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_summary_section.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_transactions_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/budget_details_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/select_budget_type_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_plan_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
-import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
 class BudgetPage extends GetView<CashflowController> {
   const BudgetPage({super.key});
@@ -81,17 +77,17 @@ class BudgetPage extends GetView<CashflowController> {
     if (plans.isEmpty) {
       return const SizedBox.shrink();
     }
-    final expensePlans = plans
-        .where((plan) => plan.planType == 'expense')
-        .toList();
+    // final expensePlans = plans
+    //     .where((plan) => plan.planType == 'expense')
+    //     .toList();
 
-    final debtRepaymentPlans = plans
-        .where((plan) => plan.planType == 'debtRepayment')
-        .toList();
+    // final debtRepaymentPlans = plans
+    //     .where((plan) => plan.planType == 'debtRepayment')
+    //     .toList();
 
-    debugPrint('TOTAL BUDGET PLANS: ${plans.length}');
-    debugPrint('EXPENSE PLANS: ${expensePlans.length}');
-    debugPrint('DEBT PLANS: ${debtRepaymentPlans.length}');
+    // debugPrint('TOTAL BUDGET PLANS: ${plans.length}');
+    // debugPrint('EXPENSE PLANS: ${expensePlans.length}');
+    // debugPrint('DEBT PLANS: ${debtRepaymentPlans.length}');
 
     final colorScheme = context.colors;
 
@@ -115,40 +111,7 @@ class BudgetPage extends GetView<CashflowController> {
             CashflowPlanCard(
               onTap: () {
                 Get.bottomSheet(
-                  AppSheet(
-                    height: AppSheetHeight.full,
-                    title: '${plan.category} Budget ',
-                    child: Column(
-                      children: [
-                        CashflowPlanSummarySection(
-                          plan: plan,
-                          spent: 0, // temporary
-                          planned: plan.amount,
-                        ),
-
-                        const SizedBox(height: 12),
-
-                        AppDetailsPageActionSection(
-                          selectedIndex: selectedIndex,
-                          actions: ['Transactions', 'Bills'],
-                          onAdd: () {},
-                        ),
-                        Expanded(
-                          child: Obx(
-                            () => IndexedStack(
-                              index: selectedIndex.value,
-                              children: [
-                                CashflowPlanTransactionsView(plan: plan),
-
-                                // Bills — implement later
-                                const SizedBox(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  BudgetDetailsSheet(plan: plan, selectedIndex: selectedIndex),
                   backgroundColor: Colors.transparent,
                   isDismissible: true,
                   isScrollControlled: true,

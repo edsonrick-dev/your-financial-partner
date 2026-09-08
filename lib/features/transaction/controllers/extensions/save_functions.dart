@@ -56,7 +56,7 @@ extension SaveTransactionFunctions on TransactionController {
     final account = selectedAccount.value;
     final payer = selectedPerson.value;
     final amountValue = amount.value;
-
+    final bill = selectedBill.value;
     final isPaidByOthers = paidBy.value == PaidBy.others;
 
     if (!isSpendTransactionValid) {
@@ -181,7 +181,19 @@ extension SaveTransactionFunctions on TransactionController {
           }
         }
       }
+      // ----------------------------------------------------------
+      // LINK BILL OCCURRENCE
+      // ----------------------------------------------------------
 
+      if (bill != null) {
+        await database.billsDao.markOccurrenceAsPaid(
+          occurrenceId: bill.occurrence.id,
+          transactionId: transactionId,
+          actualAmount: amountValue,
+        );
+
+        await database.billsDao.ensureFutureOccurrence(bill.bill.id);
+      }
       // ----------------------------------------------------------
       // REBUILD AFFECTED ACCOUNTS
       // ----------------------------------------------------------

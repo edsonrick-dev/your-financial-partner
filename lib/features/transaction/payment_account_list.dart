@@ -81,22 +81,20 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
           return AppSection(
             child: Column(
               children: [
-                AppCard(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20),
-                      Text(
-                        'No Payment Accounts Yet',
-                        style: AppTextStyle.headlineS,
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        'Add your firs account first.',
-                        style: AppTextStyle.bodyM,
-                      ),
-                      SizedBox(height: 20),
-                    ],
-                  ),
+                Column(
+                  children: [
+                    // SizedBox(height: 20),
+                    Text(
+                      'No Payment Accounts Yet',
+                      style: AppTextStyle.headlineS,
+                    ),
+                    // SizedBox(height: 20),
+                    Text(
+                      'Add your firs account first.',
+                      style: AppTextStyle.bodyM,
+                    ),
+                    // SizedBox(height: 20),
+                  ],
                 ),
 
                 SizedBox(height: 20),

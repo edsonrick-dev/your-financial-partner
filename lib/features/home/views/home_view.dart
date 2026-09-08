@@ -9,6 +9,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_setup/financial_setup_controller.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
+import 'package:getx_drift_app/features/home/views/section_views/bills_reminder_section.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/home/views/section_views/quick_actions_section.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
@@ -88,6 +89,16 @@ class HomeView extends GetView<HomeController> {
                 return Padding(
                   padding: EdgeInsets.only(top: spacingL),
                   child: BudgetProgressSection(),
+                );
+              }),
+              Obx(() {
+                if (cashflowController.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
+                return Padding(
+                  padding: EdgeInsets.only(top: spacingL),
+                  child: BillsReminderSection(),
                 );
               }),
 

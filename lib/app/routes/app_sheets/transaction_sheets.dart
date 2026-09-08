@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/transaction_sheet.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_hydration_ext.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -39,6 +40,18 @@ class TransactionSheets {
 
     await Get.bottomSheet(
       // const SpendTransactionSheet(),
+      const TransactionSheet(transactionType: TransactionType.spend),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
+  Future<void> spendBill(BillWithNextOccurrence bill) async {
+    final controller = Get.find<TransactionController>();
+
+    controller.prepareBillPayment(bill);
+
+    await Get.bottomSheet(
       const TransactionSheet(transactionType: TransactionType.spend),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

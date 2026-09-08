@@ -1,3 +1,5 @@
+import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
@@ -60,4 +62,20 @@ extension DropdownSelectors on TransactionController {
 
   //   selectedCashfLowPlanType.value = result;
   // }
+}
+
+sealed class CategoryOrBillSelection {
+  const CategoryOrBillSelection();
+}
+
+class CategorySelection extends CategoryOrBillSelection {
+  const CategorySelection(this.category);
+
+  final CashflowCategoriesTableData category;
+}
+
+class BillSelection extends CategoryOrBillSelection {
+  const BillSelection(this.bill);
+
+  final BillWithNextOccurrence bill;
 }

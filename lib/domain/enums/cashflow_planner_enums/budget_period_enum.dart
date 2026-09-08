@@ -134,4 +134,8 @@ extension BudgetPeriodExtension on BudgetPeriod {
   double toAnnual(double amount) {
     return amount * occurrencesPerYear;
   }
+
+  double fromAnnual(double annualAmount) {
+    return annualAmount / occurrencesPerYear;
+  }
 }

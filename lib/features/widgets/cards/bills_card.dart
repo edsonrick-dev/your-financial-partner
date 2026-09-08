@@ -4,21 +4,19 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:intl/intl.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
+import 'package:getx_drift_app/domain/enums/app_month.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_category.dart';
 
 class BillsCard extends StatelessWidget {
-  final String billName;
-  final String billType;
-  final DateTime dueDate;
-  final double amountDue;
-  final String iconKey;
+  final BillWithCategory bill;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   const BillsCard({
     super.key,
-    required this.billName,
-    required this.billType,
-    required this.dueDate,
-    required this.amountDue,
-    required this.iconKey,
+    required this.bill,
+    this.onTap,
+    this.onLongPress,
   });
 
   @override
@@ -75,9 +73,39 @@ class BillsCard extends StatelessWidget {
     //   return colors.appText;
     // }
 
-    final dueText = getDueText(dueDate);
+    // final dueText = getDueText(bill.occurrence.dueDate);
+    // final dueDate = bill.occurrence.dueDate;
+    final amountDue = bill.bill.expectedAmount;
+    final frequency = BillsFrequency.values.firstWhere(
+      (e) => e.name == bill.bill.frequency,
+    );
+
+    String getScheduleText() {
+      final day = bill.bill.dayOfMonth;
+
+      if (day == null) {
+        return '';
+      }
+
+      if (frequency == BillsFrequency.monthly) {
+        return 'Every $day${_ordinalSuffix(day)} of the month';
+      }
+
+      final monthMask = bill.bill.monthMask ?? 0;
+
+      final months = AppMonth.values.where((month) {
+        return monthMask & (1 << (month.number - 1)) != 0;
+      }).toList();
+
+      return months.map((month) => '${month.shortName} $day').join(' | ');
+    }
+
+    final scheduleText = getScheduleText();
+
     Color iconColor = colorScheme.appInfo;
     return AdaptivePressable(
+      onLongPress: onLongPress,
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: colorScheme.bgLight,
@@ -86,14 +114,13 @@ class BillsCard extends StatelessWidget {
         ),
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: 8,
+          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Stack(
               alignment: Alignment.center,
               children: [
                 Icon(
-                  AppIcons.categories.resolve(iconKey),
+                  AppIcons.categories.resolve(bill.category.icon),
                   size: 20,
                   color: iconColor,
                 ),
@@ -110,71 +137,48 @@ class BillsCard extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                spacing: 12,
+
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(billName, style: AppTextStyle.bodyM),
-
-                          RichText(
-                            text: TextSpan(
-                              text: billType,
-                              style: AppTextStyle.labelS.copyWith(
-                                color: colorScheme.appTextMuted,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: ' • ',
-                                  style: AppTextStyle.labelS.copyWith(
-                                    color: colorScheme.appTextMuted,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: DateFormat(
-                                    'MMM d, yyyy',
-                                  ).format(dueDate),
-                                  style: AppTextStyle.labelS.copyWith(
-                                    color: colorScheme.appTextMuted,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        child: Text(bill.bill.name, style: AppTextStyle.bodyM),
                       ),
-                      Spacer(),
-                      Column(
-                        // spacing: 2,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              text: amountDue.toCurrency(),
-                              style: AppTextStyle.amountM.copyWith(
-                                color: colorScheme.appText,
-                              ),
-                              children: [],
-                            ),
+                      SizedBox(width: 16),
+                      Text(
+                        amountDue.toCurrency(),
+                        style: AppTextStyle.amountM.copyWith(
+                          color: colorScheme.appText,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          scheduleText,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyle.labelS.copyWith(
+                            color: colorScheme.appTextMuted,
+                            fontWeight: FontWeight.w400,
                           ),
-                          Text(
-                            dueText,
-                            style: AppTextStyle.labelS.copyWith(
-                              color: colorScheme.appTextMuted,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        frequency.label,
+                        style: AppTextStyle.labelS.copyWith(
+                          color: colorScheme.appText,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ],
                   ),
@@ -186,5 +190,22 @@ class BillsCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+String _ordinalSuffix(int day) {
+  if (day >= 11 && day <= 13) {
+    return 'th';
+  }
+
+  switch (day % 10) {
+    case 1:
+      return 'st';
+    case 2:
+      return 'nd';
+    case 3:
+      return 'rd';
+    default:
+      return 'th';
   }
 }
