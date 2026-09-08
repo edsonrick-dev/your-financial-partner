@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+
 enum BudgetPeriod { weekly, fortnightly, monthly, yearly }
 
 // Weekly
@@ -137,5 +142,57 @@ extension BudgetPeriodExtension on BudgetPeriod {
 
   double fromAnnual(double annualAmount) {
     return annualAmount / occurrencesPerYear;
+  }
+}
+
+class PeriodButton extends StatelessWidget {
+  const PeriodButton({
+    required this.period,
+    required this.isSelected,
+    this.onTap,
+    super.key,
+  });
+
+  final BudgetPeriod period;
+  final bool isSelected;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+
+    return Expanded(
+      child: AdaptivePressable(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? colorScheme.pageShifterFillSelected
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(999),
+          ),
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                period.label,
+                maxLines: 1,
+                style: isSelected
+                    ? AppTextStyle.bodyS.copyWith(
+                        color: colorScheme.pageShifterTextSelected,
+                        // fontWeight: FontWeight.w600,
+                      )
+                    : AppTextStyle.titleS.copyWith(
+                        color: colorScheme.pageShifterTextUnselected,
+                        // fontWeight: FontWeight.w400,
+                      ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

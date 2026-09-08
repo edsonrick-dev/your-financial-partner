@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
@@ -68,28 +67,6 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
               ),
               // Category
               SizedBox(height: spacingHeight),
-              // Period
-              // Obx(
-              //   () => AppDropdownField(
-              //     iconKey: 'caretDown',
-              //     label: 'Period',
-              //     value: controller.selectedPeriod.value?.label,
-              //     hint: 'Select period',
-              //     onTap: () async {
-              //       final selected = await Get.bottomSheet<BudgetPeriod>(
-              //         const CashflowPlanPeriodSelectionSheet(),
-              //         backgroundColor: Colors.transparent,
-              //         isScrollControlled: true,
-              //       );
-
-              //       if (selected != null) {
-              //         controller.selectPeriod(selected);
-              //       }
-              //     },
-              //   ),
-              // ),
-
-              // SizedBox(height: spacingHeight),
               Obx(
                 () => AppDropdownField(
                   label: 'Income Source',
@@ -268,58 +245,6 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
               ),
               SizedBox(height: spacingHeight * 4),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PeriodButton extends StatelessWidget {
-  const PeriodButton({
-    required this.period,
-    required this.isSelected,
-    this.onTap,
-    super.key,
-  });
-
-  final BudgetPeriod period;
-  final bool isSelected;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return Expanded(
-      child: AdaptivePressable(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? colorScheme.pageShifterFillSelected
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(999),
-          ),
-          child: Center(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                period.label,
-                maxLines: 1,
-                style: isSelected
-                    ? AppTextStyle.titleM.copyWith(
-                        color: colorScheme.pageShifterTextSelected,
-                        // fontWeight: FontWeight.w600,
-                      )
-                    : AppTextStyle.bodyM.copyWith(
-                        color: colorScheme.pageShifterTextUnselected,
-                        // fontWeight: FontWeight.w400,
-                      ),
-              ),
-            ),
           ),
         ),
       ),

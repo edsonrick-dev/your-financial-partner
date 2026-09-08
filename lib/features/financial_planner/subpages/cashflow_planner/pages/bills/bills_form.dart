@@ -166,86 +166,86 @@ class BillForm extends GetView<BillController> {
                         //   controller: controller.billNameController,
                         //   focusNode: controller.billNameFocusNode,
                         // ),
-                        Obx(
-                          () => Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Set reminder',
-                                          style: AppTextStyle.titleM,
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          controller.reminderEnabled.value
-                                              ? 'Remind me before the bill is due'
-                                              : 'No reminder',
-                                          style: AppTextStyle.bodyM.copyWith(
-                                            color: colorScheme.appTextMuted,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Switch.adaptive(
-                                    value: controller.reminderEnabled.value,
-                                    onChanged: (value) {
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      controller.reminderEnabled.value = value;
+                        // Obx(
+                        //   () => Column(
+                        //     children: [
+                        //       Row(
+                        //         children: [
+                        //           Expanded(
+                        //             child: Column(
+                        //               crossAxisAlignment:
+                        //                   CrossAxisAlignment.start,
+                        //               children: [
+                        //                 Text(
+                        //                   'Set reminder',
+                        //                   style: AppTextStyle.titleM,
+                        //                 ),
+                        //                 const SizedBox(height: 4),
+                        //                 Text(
+                        //                   controller.reminderEnabled.value
+                        //                       ? 'Remind me before the bill is due'
+                        //                       : 'No reminder',
+                        //                   style: AppTextStyle.bodyM.copyWith(
+                        //                     color: colorScheme.appTextMuted,
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //           Switch.adaptive(
+                        //             value: controller.reminderEnabled.value,
+                        //             onChanged: (value) {
+                        //               FocusManager.instance.primaryFocus
+                        //                   ?.unfocus();
+                        //               controller.reminderEnabled.value = value;
 
-                                      if (value) {
-                                        controller.reminderDaysBefore.value ??=
-                                            3;
-                                      } else {
-                                        controller.reminderDaysBefore.value =
-                                            null;
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
+                        //               if (value) {
+                        //                 controller.reminderDaysBefore.value ??=
+                        //                     3;
+                        //               } else {
+                        //                 controller.reminderDaysBefore.value =
+                        //                     null;
+                        //               }
+                        //             },
+                        //           ),
+                        //         ],
+                        //       ),
 
-                              if (controller.reminderEnabled.value) ...[
-                                const SizedBox(height: 12),
+                        //       if (controller.reminderEnabled.value) ...[
+                        //         const SizedBox(height: 12),
 
-                                AppDropdownField(
-                                  showIcon: false,
-                                  label: 'Remind me',
-                                  value: switch (controller
-                                      .reminderDaysBefore
-                                      .value) {
-                                    1 => '1 day before',
-                                    2 => '2 days before',
-                                    3 => '3 days before',
-                                    7 => '1 week before',
-                                    _ => null,
-                                  },
-                                  hint: 'Select reminder',
-                                  onTap: () async {
-                                    final selectedDays = await AppSheets
-                                        .selection
-                                        .selectReminder(
-                                          selectedDaysBefore: controller
-                                              .reminderDaysBefore
-                                              .value,
-                                        );
+                        //         AppDropdownField(
+                        //           showIcon: false,
+                        //           label: 'Remind me',
+                        //           value: switch (controller
+                        //               .reminderDaysBefore
+                        //               .value) {
+                        //             1 => '1 day before',
+                        //             2 => '2 days before',
+                        //             3 => '3 days before',
+                        //             7 => '1 week before',
+                        //             _ => null,
+                        //           },
+                        //           hint: 'Select reminder',
+                        //           onTap: () async {
+                        //             final selectedDays = await AppSheets
+                        //                 .selection
+                        //                 .selectReminder(
+                        //                   selectedDaysBefore: controller
+                        //                       .reminderDaysBefore
+                        //                       .value,
+                        //                 );
 
-                                    if (selectedDays != null) {
-                                      controller.reminderDaysBefore.value =
-                                          selectedDays;
-                                    }
-                                  },
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
+                        //             if (selectedDays != null) {
+                        //               controller.reminderDaysBefore.value =
+                        //                   selectedDays;
+                        //             }
+                        //           },
+                        //         ),
+                        //       ],
+                        //     ],
+                        //   ),
+                        // ),
                         BillScheduleSummary(),
                       ],
                     ),

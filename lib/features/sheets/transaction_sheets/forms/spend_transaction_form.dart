@@ -247,7 +247,7 @@ class AmountPaidByShifter extends StatelessWidget {
                               fit: BoxFit.scaleDown,
                               child: Text(
                                 item.title!,
-                                style: AppTextStyle.titleM.copyWith(
+                                style: AppTextStyle.titleS.copyWith(
                                   color: selected
                                       ? colorScheme.bg
                                       : colorScheme.appText,
@@ -260,7 +260,7 @@ class AmountPaidByShifter extends StatelessWidget {
                 else if (item.title != null)
                   Text(
                     item.title!,
-                    style: AppTextStyle.titleM.copyWith(
+                    style: AppTextStyle.titleS.copyWith(
                       color: selected ? colorScheme.bg : colorScheme.appText,
                     ),
                   ),

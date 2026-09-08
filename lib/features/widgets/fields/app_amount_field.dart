@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/domain/app_calculator.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 import 'package:getx_drift_app/data/enums/field_states.dart';
@@ -57,7 +58,7 @@ class AppAmountField extends StatelessWidget {
               Text(prefixText, style: AppTextStyle.amountM),
               const SizedBox(width: 4),
               Text(
-                amount == 0 ? hintText : amount.toStringAsFixed(2),
+                amount == 0 ? hintText : amount.toCurrency(symbol: ''),
                 style: AppTextStyle.amountM,
               ),
             ],

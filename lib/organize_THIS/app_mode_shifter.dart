@@ -36,7 +36,7 @@ class ModeShifter extends StatelessWidget {
           borderRadius: BorderRadius.circular(999),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2.0),
+          padding: const EdgeInsets.symmetric(vertical: 0.0),
           child: Center(
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -44,7 +44,7 @@ class ModeShifter extends StatelessWidget {
               children: [
                 Icon(
                   selected ? item.selectedIcon : item.unselectedIcon,
-                  size: 24,
+                  size: 20,
                   color: selected ? colorScheme.bg : colorScheme.appTextMuted,
                 ),
 
@@ -57,7 +57,7 @@ class ModeShifter extends StatelessWidget {
                               fit: BoxFit.scaleDown,
                               child: Text(
                                 item.title!,
-                                style: AppTextStyle.titleM.copyWith(
+                                style: AppTextStyle.titleS.copyWith(
                                   color: selected
                                       ? colorScheme.bg
                                       : colorScheme.appText,
@@ -70,7 +70,7 @@ class ModeShifter extends StatelessWidget {
                 else if (item.title != null)
                   Text(
                     item.title!,
-                    style: AppTextStyle.titleM.copyWith(
+                    style: AppTextStyle.titleS.copyWith(
                       color: selected ? colorScheme.bg : colorScheme.appText,
                     ),
                   ),

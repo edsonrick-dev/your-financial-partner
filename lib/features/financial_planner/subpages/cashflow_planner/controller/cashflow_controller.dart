@@ -36,6 +36,13 @@ class CashflowController extends GetxController {
         .fold<double>(0.0, (total, item) => total + item.budget);
   }
 
+  Set<int> get existingBudgetPlanCategoryIds {
+    return savedPlans
+        .where((plan) => plan.plan.planType == 'expense')
+        .map((plan) => plan.category.id)
+        .toSet();
+  }
+
   Set<int> get existingIncomePlanCategoryIds {
     return savedPlans
         .where((plan) => plan.plan.planType == 'income')

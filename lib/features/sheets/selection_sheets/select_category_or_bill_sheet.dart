@@ -173,16 +173,20 @@ class _SelectorItem extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? colorScheme.surface : Colors.transparent,
+          color: selected
+              ? colorScheme.pageShifterFillSelected
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(999),
         ),
         child: Text(
           title,
           textAlign: TextAlign.center,
-          style: AppTextStyle.titleM.copyWith(
-            color: selected ? colorScheme.appText : colorScheme.appTextMuted,
+          style: AppTextStyle.titleS.copyWith(
+            color: selected
+                ? colorScheme.pageShifterTextSelected
+                : colorScheme.pageShifterTextUnselected,
           ),
         ),
       ),
