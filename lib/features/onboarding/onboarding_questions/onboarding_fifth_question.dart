@@ -24,7 +24,7 @@ class OnboardingFifthQuestion extends GetView<OnboardingController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(surfaceTintColor: Colors.transparent),
       body: Column(
         children: [
           AppSection(
@@ -153,6 +153,7 @@ class OnboardingFifthQuestion extends GetView<OnboardingController> {
               },
             ),
           ),
+          SizedBox(height: 8),
           AppSection(
             child: AppButton(
               text: 'Continue',
@@ -161,7 +162,7 @@ class OnboardingFifthQuestion extends GetView<OnboardingController> {
               },
             ),
           ),
-          SizedBox(height: context.bottomPadding),
+          SizedBox(height: context.bottomPaddingSub),
         ],
       ),
     );

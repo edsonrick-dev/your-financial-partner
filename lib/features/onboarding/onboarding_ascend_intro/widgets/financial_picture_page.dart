@@ -7,46 +7,44 @@ class FinancialPicturePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Your finances are more connected than you think.',
-            style: AppTextStyle.displayM,
-          ),
-
-          const SizedBox(height: 16),
-
-          Text(
-            'Every financial decision you make affects something else.',
-            style: AppTextStyle.bodyL,
-          ),
-
-          const SizedBox(height: 32),
-
-          // Temporary illustration area.
-          // Replace this with your actual illustration.
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const _FinancialRelationshipDiagram(),
-
-                  const SizedBox(height: 32),
-
-                  IntroMessageCard(
-                    child: Text(
-                      'Looking at one part alone won’t give you the full picture.',
-                      style: AppTextStyle.bodyM,
-                    ),
-                  ),
-                ],
-              ),
+    return Expanded(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Your finances are more connected than you think.',
+              style: AppTextStyle.displayM,
             ),
-          ),
-        ],
+
+            const SizedBox(height: 16),
+
+            Text(
+              'Every financial decision you make affects something else.',
+              style: AppTextStyle.bodyL,
+            ),
+
+            const SizedBox(height: 32),
+
+            // Temporary illustration area.
+            // Replace this with your actual illustration.
+            Column(
+              children: [
+                const _FinancialRelationshipDiagram(),
+
+                const SizedBox(height: 32),
+
+                IntroMessageCard(
+                  child: Text(
+                    'Looking at one part alone won’t give you the full picture.',
+                    style: AppTextStyle.bodyM,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

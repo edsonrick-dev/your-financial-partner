@@ -510,7 +510,7 @@ class OnboardingFinancialStabilityPreview
                 Get.toNamed(Routes.ONBOARDING_SIXTH_QUESTION);
               },
             ),
-            SizedBox(height: context.bottomPadding),
+            SizedBox(height: context.bottomPaddingSub),
           ],
         ),
       ),

@@ -192,7 +192,7 @@ class OnboardingFinancialStabilityScoreIntro
                 },
               ),
             ),
-            SizedBox(height: context.bottomPadding),
+            SizedBox(height: context.bottomPaddingSub),
           ],
         ),
       ),

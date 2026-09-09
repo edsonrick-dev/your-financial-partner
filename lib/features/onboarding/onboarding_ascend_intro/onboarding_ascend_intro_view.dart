@@ -37,29 +37,30 @@ class OnboardingAscendIntroView extends GetView<OnboardingController> {
           ),
 
           // Page indicators
-          Obx(
-            () => Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) {
-                final isActive = controller.introPageIndex.value == index;
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Obx(
+              () => Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(3, (index) {
+                  final isActive = controller.introPageIndex.value == index;
 
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: isActive ? 20 : 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: isActive
-                        ? colorScheme.appText
-                        : colorScheme.appBorder,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                );
-              }),
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: isActive ? 20 : 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: isActive
+                          ? colorScheme.appText
+                          : colorScheme.appBorder,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  );
+                }),
+              ),
             ),
           ),
-
-          const SizedBox(height: 20),
 
           AppSection(
             child: Obx(
@@ -72,7 +73,7 @@ class OnboardingAscendIntroView extends GetView<OnboardingController> {
             ),
           ),
 
-          SizedBox(height: context.bottomPadding),
+          SizedBox(height: context.bottomPaddingSub),
         ],
       ),
     );
