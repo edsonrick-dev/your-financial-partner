@@ -69,7 +69,7 @@ class BillController extends GetxController {
   List<double> _getExistingPlanMonthlyDistribution(
     CashflowPlanWithCategory existingPlan,
   ) {
-    return cashflowController.calculateSavedPlanMonthlyDistribution(
+    return cashflowController.calculateSavedPlanRecurringMonthlyDistribution(
       plan: existingPlan.plan,
       allocations: existingPlan.allocations,
       year: DateTime.now().year,
@@ -89,21 +89,6 @@ class BillController extends GetxController {
     }
 
     return updated;
-  }
-
-  List<double> _addQuarterlyBillToDistribution({
-    required List<double> existingDistribution,
-    required double billAmount,
-    required MonthPattern pattern,
-  }) {
-    final distribution = List<double>.from(existingDistribution);
-
-    for (final month in pattern.months) {
-      final monthIndex = month.number - 1;
-      distribution[monthIndex] += billAmount;
-    }
-
-    return distribution;
   }
 
   Future<void> increaseBudgetToFitBill() async {

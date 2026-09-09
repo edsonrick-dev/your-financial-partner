@@ -49,11 +49,6 @@ class BillsReminderSection extends GetView<CashflowController> {
                   .where((bill) => !bill.occurrence.isPaid)
                   .toList();
 
-              final totalAmount = bills.fold<double>(
-                0,
-                (sum, bill) => sum + bill.occurrence.expectedAmount,
-              );
-
               final paidAmount = paidBills.fold<double>(
                 0,
                 (sum, bill) => sum + bill.occurrence.expectedAmount,
@@ -66,8 +61,6 @@ class BillsReminderSection extends GetView<CashflowController> {
               final totalBills = bills.length;
               final paidBillCount = paidBills.length;
               final unpaidBillCount = unpaidBills.length;
-
-              final hasBills = bills.isNotEmpty;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,7 +124,7 @@ class BillsReminderSection extends GetView<CashflowController> {
                     ...bills.map(
                       (bill) => _BillReminderItem(
                         bill: bill,
-                        onPay: () => controller.makePayment(bill),
+                        onPay: () => controller.makeBillPayment(bill),
                       ),
                     ),
                   ],

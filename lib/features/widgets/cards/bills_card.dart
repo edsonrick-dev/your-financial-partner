@@ -23,58 +23,6 @@ class BillsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
 
-    String getDueText(DateTime dueDate) {
-      final now = DateTime.now();
-
-      final today = DateTime(now.year, now.month, now.day);
-      final due = DateTime(dueDate.year, dueDate.month, dueDate.day);
-
-      final days = due.difference(today).inDays;
-
-      if (days == 0) {
-        return 'Due today';
-      }
-
-      if (days == 1) {
-        return 'Due tomorrow';
-      }
-
-      if (days == -1) {
-        return 'Overdue by 1 day';
-      }
-
-      if (days < -1) {
-        return 'Overdue by ${days.abs()} days';
-      }
-
-      if (days <= 7) {
-        return 'Due in $days days';
-      }
-
-      return '';
-    }
-
-    // Color getDueDateColor(DateTime dueDate, BuildContext context) {
-    //   final now = DateTime.now();
-
-    //   final today = DateTime(now.year, now.month, now.day);
-    //   final due = DateTime(dueDate.year, dueDate.month, dueDate.day);
-
-    //   final days = due.difference(today).inDays;
-    //   final colors = context.colors;
-    //   if (days <= 2) {
-    //     return colors.appError;
-    //   }
-
-    //   if (days <= 7) {
-    //     return colors.appText;
-    //   }
-
-    //   return colors.appText;
-    // }
-
-    // final dueText = getDueText(bill.occurrence.dueDate);
-    // final dueDate = bill.occurrence.dueDate;
     final amountDue = bill.bill.expectedAmount;
     final frequency = BillsFrequency.values.firstWhere(
       (e) => e.name == bill.bill.frequency,
