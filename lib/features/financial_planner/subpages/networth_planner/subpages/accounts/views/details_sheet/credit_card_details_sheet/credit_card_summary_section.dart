@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
@@ -29,11 +30,7 @@ class CreditCardSummarySection extends StatelessWidget {
         padding: EdgeInsets.all(24),
         width: double.infinity,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [colorScheme.text, colorScheme.gradient2],
-            begin: Alignment.centerLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppGradient.gradientA(colorScheme),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(

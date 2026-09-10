@@ -62,6 +62,16 @@ part 'transactions_dao.g.dart';
 class TransactionsDao extends DatabaseAccessor<AppDatabase>
     with _$TransactionsDaoMixin {
   TransactionsDao(super.db);
+  Stream<List<TransactionWithDetails>> watchDebtRepaymentsForAccount(
+    int accountId,
+  ) {
+    return watchTransactions().map((transactions) {
+      return transactions.where((item) {
+        return item.transaction.type == TransactionType.debtRepayment &&
+            item.transaction.linkedAccountId == accountId;
+      }).toList();
+    });
+  }
 
   Future<TransactionWithDetails?> getTransactionWithDetailsById(
     int transactionId,
@@ -191,6 +201,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
 
           case TransactionType.spend:
           case TransactionType.give:
+          case TransactionType.debtRepayment:
             trend.outflow += tx.amount;
             break;
 
@@ -347,6 +358,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
 
           case TransactionType.spend:
           case TransactionType.give:
+          case TransactionType.debtRepayment:
             totalOut += tx.amount;
             break;
 

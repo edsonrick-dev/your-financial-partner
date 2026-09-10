@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_group/account_group_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_group/account_group_summary.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/add_account_sheet.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class AssetsList extends GetView<NetWorthController> {
@@ -52,31 +48,7 @@ class AssetsList extends GetView<NetWorthController> {
 
                 AppButton(
                   text: 'Record your first asset account',
-                  onTap: () async {
-                    final isAsset =
-                        controller.seletectedDetailsTabIndex.value == 0;
-
-                    final availableTypes = AccountType.values
-                        .where(
-                          (type) => isAsset ? type.isAsset : type.isLiability,
-                        )
-                        .toList();
-
-                    final selectedType = await AppSheets.selection
-                        .selectPaymentAccountType(accountTypes: availableTypes);
-                    if (selectedType == null) return;
-
-                    final accountController = Get.find<AccountController>();
-                    accountController.selectAccountType(selectedType);
-
-                    Get.bottomSheet(
-                      AddAccountSheet(accountType: selectedType),
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                    ).whenComplete(() {
-                      accountController.resetForm();
-                    });
-                  },
+                  onTap: controller.addAccount,
                 ),
                 const SizedBox(height: 8),
                 AppButton(

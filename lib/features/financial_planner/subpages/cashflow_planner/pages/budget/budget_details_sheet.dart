@@ -36,7 +36,7 @@ class BudgetDetailsSheet extends StatelessWidget {
           AppDetailsPageActionSection(
             selectedIndex: selectedIndex,
             actions: ['Transactions', 'Bills'],
-            onAdd: () {},
+            // onAdd: () {},
           ),
           Expanded(
             child: Obx(

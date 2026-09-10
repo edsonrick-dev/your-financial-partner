@@ -21,6 +21,20 @@ import 'package:getx_drift_app/features/transaction/controllers/transaction_cont
 
 class CashflowController extends GetxController {
   // ===========================================================================
+  // AddCashflowPlanMenu
+  // ===========================================================================
+
+  final isCashflowPlanMenuOpen = false.obs;
+
+  void toggleCashflowPlanMenu() {
+    isCashflowPlanMenuOpen.toggle();
+  }
+
+  void closeCashflowPlaneMenu() {
+    isCashflowPlanMenuOpen.value = false;
+  }
+
+  // ===========================================================================
   // Dependencies
   // ===========================================================================
 

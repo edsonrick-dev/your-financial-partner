@@ -1,14 +1,54 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/models/person_balance_summary_model.dart';
 import 'package:getx_drift_app/domain/enums/net_worth_comparison_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_group_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/add_account_sheet.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/balance_sheet_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/models/net_worth_item.dart';
 
 class NetWorthController extends GetxController {
+  Future<void> addAccount() async {
+    final isAsset = seletectedDetailsTabIndex.value == 0;
+
+    final availableTypes = AccountType.values
+        .where((type) => isAsset ? type.isAsset : type.isLiability)
+        .toList();
+
+    final selectedType = await AppSheets.selection.selectPaymentAccountType(
+      accountTypes: availableTypes,
+    );
+
+    if (selectedType == null) return;
+
+    final accountController = Get.find<AccountController>();
+
+    accountController.selectAccountType(selectedType);
+
+    Get.bottomSheet(
+      AddAccountSheet(accountType: selectedType),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    ).whenComplete(() {
+      accountController.resetForm();
+    });
+  }
+
+  final isNetWorthTypesMenuOpen = false.obs;
+
+  void toggleNetWorthTypesMenu() {
+    isNetWorthTypesMenuOpen.toggle();
+  }
+
+  void closeNetWorthTypesMenu() {
+    isNetWorthTypesMenuOpen.value = false;
+  }
+
   bool get isEmpty => assetAccounts.isEmpty && liabilityAccounts.isEmpty;
   bool get hasAssets => assetAccounts.isNotEmpty;
 
@@ -17,6 +57,14 @@ class NetWorthController extends GetxController {
   bool get hasAccounts => hasAssets || hasLiabilities;
   Future<void> deleteAccount(AccountsTableData account) async {
     await database.accountsDao.deleteAccount(account.id);
+  }
+
+  bool get hasPaymentAccounts {
+    return netWorthItems.any(
+      (item) =>
+          item.group == AccountGroup.cashAndBank ||
+          item.group == AccountGroup.creditCards,
+    );
   }
 
   bool get hasLiquidFundAccounts {
@@ -181,6 +229,14 @@ class NetWorthController extends GetxController {
       final type = AccountType.fromName(account.accountType);
 
       return type.isAsset;
+    }).toList();
+  }
+
+  List<AccountsTableData> get cashAndBankAccounts {
+    return accounts.where((account) {
+      final type = AccountType.fromName(account.accountType);
+
+      return type.isPaymentAccount;
     }).toList();
   }
 

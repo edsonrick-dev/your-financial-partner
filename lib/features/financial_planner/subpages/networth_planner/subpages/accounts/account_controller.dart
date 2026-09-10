@@ -6,8 +6,19 @@ import 'package:getx_drift_app/data/enums/add_button_state.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/add_account_sheet.dart';
 
 class AccountController extends GetxController {
+  Future<void> openAddAccount(AccountType accountType) async {
+    selectAccountType(accountType);
+
+    Get.bottomSheet(
+      AddAccountSheet(accountType: accountType),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    ).whenComplete(resetForm);
+  }
+
   Future<bool> isAccountNameTaken() async {
     final name = accountName.value.trim();
 

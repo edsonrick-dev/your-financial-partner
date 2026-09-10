@@ -6,8 +6,8 @@ part of 'bills_dao.dart';
 mixin _$BillsDaoMixin on DatabaseAccessor<AppDatabase> {
   $CashflowCategoriesTableTable get cashflowCategoriesTable =>
       attachedDatabase.cashflowCategoriesTable;
-  $BillsTableTable get billsTable => attachedDatabase.billsTable;
   $AccountsTableTable get accountsTable => attachedDatabase.accountsTable;
+  $BillsTableTable get billsTable => attachedDatabase.billsTable;
   $TransactionsTableTable get transactionsTable =>
       attachedDatabase.transactionsTable;
   $BillOccurrencesTableTable get billOccurrencesTable =>
@@ -23,10 +23,10 @@ class BillsDaoManager {
         _db.attachedDatabase,
         _db.cashflowCategoriesTable,
       );
-  $$BillsTableTableTableManager get billsTable =>
-      $$BillsTableTableTableManager(_db.attachedDatabase, _db.billsTable);
   $$AccountsTableTableTableManager get accountsTable =>
       $$AccountsTableTableTableManager(_db.attachedDatabase, _db.accountsTable);
+  $$BillsTableTableTableManager get billsTable =>
+      $$BillsTableTableTableManager(_db.attachedDatabase, _db.billsTable);
   $$TransactionsTableTableTableManager get transactionsTable =>
       $$TransactionsTableTableTableManager(
         _db.attachedDatabase,

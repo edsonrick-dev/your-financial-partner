@@ -93,10 +93,14 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(billsTable);
         await m.createTable(billOccurrencesTable);
       }
+
+      if (from < 13) {
+        await m.alterTable(TableMigration(billsTable));
+      }
     },
   );
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();

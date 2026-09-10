@@ -4945,11 +4945,25 @@ class $BillsTableTable extends BillsTable
   late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
     'category_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES cashflow_categories_table (id)',
+    ),
+  );
+  static const VerificationMeta _loanAccountIdMeta = const VerificationMeta(
+    'loanAccountId',
+  );
+  @override
+  late final GeneratedColumn<int> loanAccountId = GeneratedColumn<int>(
+    'loan_account_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts_table (id)',
     ),
   );
   static const VerificationMeta _expectedAmountMeta = const VerificationMeta(
@@ -5065,6 +5079,7 @@ class $BillsTableTable extends BillsTable
     id,
     name,
     categoryId,
+    loanAccountId,
     expectedAmount,
     frequency,
     dayOfMonth,
@@ -5103,8 +5118,15 @@ class $BillsTableTable extends BillsTable
         _categoryIdMeta,
         categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_categoryIdMeta);
+    }
+    if (data.containsKey('loan_account_id')) {
+      context.handle(
+        _loanAccountIdMeta,
+        loanAccountId.isAcceptableOrUnknown(
+          data['loan_account_id']!,
+          _loanAccountIdMeta,
+        ),
+      );
     }
     if (data.containsKey('expected_amount')) {
       context.handle(
@@ -5196,7 +5218,11 @@ class $BillsTableTable extends BillsTable
       categoryId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}category_id'],
-      )!,
+      ),
+      loanAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}loan_account_id'],
+      ),
       expectedAmount: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}expected_amount'],
@@ -5245,21 +5271,27 @@ class $BillsTableTable extends BillsTable
 class BillsTableData extends DataClass implements Insertable<BillsTableData> {
   final int id;
   final String name;
-  final int categoryId;
+
+  /// Category paid by this bill.
+  ///
+  /// Null when this is a loan repayment.
+  final int? categoryId;
+
+  /// Loan account paid by this bill.
+  ///
+  /// Null when this is a normal expense bill.
+  final int? loanAccountId;
 
   /// The amount the user normally expects to pay.
   final double expectedAmount;
 
-  /// BillsFrequency.name
+  /// Recurrence frequency.
   final String frequency;
 
   /// Day of month for monthly / quarterly / semi-annual / annual bills.
   final int? dayOfMonth;
 
   /// Bitmask representing the selected MonthPattern.
-  ///
-  /// Example:
-  /// Jan + Jul = bits 1 and 7.
   final int? monthMask;
   final bool reminderEnabled;
   final int? reminderDaysBefore;
@@ -5269,7 +5301,8 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
   const BillsTableData({
     required this.id,
     required this.name,
-    required this.categoryId,
+    this.categoryId,
+    this.loanAccountId,
     required this.expectedAmount,
     required this.frequency,
     this.dayOfMonth,
@@ -5285,7 +5318,12 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
-    map['category_id'] = Variable<int>(categoryId);
+    if (!nullToAbsent || categoryId != null) {
+      map['category_id'] = Variable<int>(categoryId);
+    }
+    if (!nullToAbsent || loanAccountId != null) {
+      map['loan_account_id'] = Variable<int>(loanAccountId);
+    }
     map['expected_amount'] = Variable<double>(expectedAmount);
     map['frequency'] = Variable<String>(frequency);
     if (!nullToAbsent || dayOfMonth != null) {
@@ -5308,7 +5346,12 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
     return BillsTableCompanion(
       id: Value(id),
       name: Value(name),
-      categoryId: Value(categoryId),
+      categoryId: categoryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(categoryId),
+      loanAccountId: loanAccountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(loanAccountId),
       expectedAmount: Value(expectedAmount),
       frequency: Value(frequency),
       dayOfMonth: dayOfMonth == null && nullToAbsent
@@ -5335,7 +5378,8 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
     return BillsTableData(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      categoryId: serializer.fromJson<int>(json['categoryId']),
+      categoryId: serializer.fromJson<int?>(json['categoryId']),
+      loanAccountId: serializer.fromJson<int?>(json['loanAccountId']),
       expectedAmount: serializer.fromJson<double>(json['expectedAmount']),
       frequency: serializer.fromJson<String>(json['frequency']),
       dayOfMonth: serializer.fromJson<int?>(json['dayOfMonth']),
@@ -5353,7 +5397,8 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
-      'categoryId': serializer.toJson<int>(categoryId),
+      'categoryId': serializer.toJson<int?>(categoryId),
+      'loanAccountId': serializer.toJson<int?>(loanAccountId),
       'expectedAmount': serializer.toJson<double>(expectedAmount),
       'frequency': serializer.toJson<String>(frequency),
       'dayOfMonth': serializer.toJson<int?>(dayOfMonth),
@@ -5369,7 +5414,8 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
   BillsTableData copyWith({
     int? id,
     String? name,
-    int? categoryId,
+    Value<int?> categoryId = const Value.absent(),
+    Value<int?> loanAccountId = const Value.absent(),
     double? expectedAmount,
     String? frequency,
     Value<int?> dayOfMonth = const Value.absent(),
@@ -5382,7 +5428,10 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
   }) => BillsTableData(
     id: id ?? this.id,
     name: name ?? this.name,
-    categoryId: categoryId ?? this.categoryId,
+    categoryId: categoryId.present ? categoryId.value : this.categoryId,
+    loanAccountId: loanAccountId.present
+        ? loanAccountId.value
+        : this.loanAccountId,
     expectedAmount: expectedAmount ?? this.expectedAmount,
     frequency: frequency ?? this.frequency,
     dayOfMonth: dayOfMonth.present ? dayOfMonth.value : this.dayOfMonth,
@@ -5402,6 +5451,9 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
       categoryId: data.categoryId.present
           ? data.categoryId.value
           : this.categoryId,
+      loanAccountId: data.loanAccountId.present
+          ? data.loanAccountId.value
+          : this.loanAccountId,
       expectedAmount: data.expectedAmount.present
           ? data.expectedAmount.value
           : this.expectedAmount,
@@ -5428,6 +5480,7 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('categoryId: $categoryId, ')
+          ..write('loanAccountId: $loanAccountId, ')
           ..write('expectedAmount: $expectedAmount, ')
           ..write('frequency: $frequency, ')
           ..write('dayOfMonth: $dayOfMonth, ')
@@ -5446,6 +5499,7 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
     id,
     name,
     categoryId,
+    loanAccountId,
     expectedAmount,
     frequency,
     dayOfMonth,
@@ -5463,6 +5517,7 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
           other.id == this.id &&
           other.name == this.name &&
           other.categoryId == this.categoryId &&
+          other.loanAccountId == this.loanAccountId &&
           other.expectedAmount == this.expectedAmount &&
           other.frequency == this.frequency &&
           other.dayOfMonth == this.dayOfMonth &&
@@ -5477,7 +5532,8 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
 class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
   final Value<int> id;
   final Value<String> name;
-  final Value<int> categoryId;
+  final Value<int?> categoryId;
+  final Value<int?> loanAccountId;
   final Value<double> expectedAmount;
   final Value<String> frequency;
   final Value<int?> dayOfMonth;
@@ -5491,6 +5547,7 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.categoryId = const Value.absent(),
+    this.loanAccountId = const Value.absent(),
     this.expectedAmount = const Value.absent(),
     this.frequency = const Value.absent(),
     this.dayOfMonth = const Value.absent(),
@@ -5504,7 +5561,8 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
   BillsTableCompanion.insert({
     this.id = const Value.absent(),
     required String name,
-    required int categoryId,
+    this.categoryId = const Value.absent(),
+    this.loanAccountId = const Value.absent(),
     required double expectedAmount,
     required String frequency,
     this.dayOfMonth = const Value.absent(),
@@ -5515,13 +5573,13 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : name = Value(name),
-       categoryId = Value(categoryId),
        expectedAmount = Value(expectedAmount),
        frequency = Value(frequency);
   static Insertable<BillsTableData> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<int>? categoryId,
+    Expression<int>? loanAccountId,
     Expression<double>? expectedAmount,
     Expression<String>? frequency,
     Expression<int>? dayOfMonth,
@@ -5536,6 +5594,7 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (categoryId != null) 'category_id': categoryId,
+      if (loanAccountId != null) 'loan_account_id': loanAccountId,
       if (expectedAmount != null) 'expected_amount': expectedAmount,
       if (frequency != null) 'frequency': frequency,
       if (dayOfMonth != null) 'day_of_month': dayOfMonth,
@@ -5552,7 +5611,8 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
   BillsTableCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
-    Value<int>? categoryId,
+    Value<int?>? categoryId,
+    Value<int?>? loanAccountId,
     Value<double>? expectedAmount,
     Value<String>? frequency,
     Value<int?>? dayOfMonth,
@@ -5567,6 +5627,7 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
       id: id ?? this.id,
       name: name ?? this.name,
       categoryId: categoryId ?? this.categoryId,
+      loanAccountId: loanAccountId ?? this.loanAccountId,
       expectedAmount: expectedAmount ?? this.expectedAmount,
       frequency: frequency ?? this.frequency,
       dayOfMonth: dayOfMonth ?? this.dayOfMonth,
@@ -5590,6 +5651,9 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
     }
     if (categoryId.present) {
       map['category_id'] = Variable<int>(categoryId.value);
+    }
+    if (loanAccountId.present) {
+      map['loan_account_id'] = Variable<int>(loanAccountId.value);
     }
     if (expectedAmount.present) {
       map['expected_amount'] = Variable<double>(expectedAmount.value);
@@ -5627,6 +5691,7 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('categoryId: $categoryId, ')
+          ..write('loanAccountId: $loanAccountId, ')
           ..write('expectedAmount: $expectedAmount, ')
           ..write('frequency: $frequency, ')
           ..write('dayOfMonth: $dayOfMonth, ')
@@ -6870,6 +6935,27 @@ final class $$AccountsTableTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$BillsTableTable, List<BillsTableData>>
+  _billsTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.billsTable,
+    aliasName: $_aliasNameGenerator(
+      db.accountsTable.id,
+      db.billsTable.loanAccountId,
+    ),
+  );
+
+  $$BillsTableTableProcessedTableManager get billsTableRefs {
+    final manager = $$BillsTableTableTableManager(
+      $_db,
+      $_db.billsTable,
+    ).filter((f) => f.loanAccountId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_billsTableRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$AccountsTableTableFilterComposer
@@ -6932,6 +7018,31 @@ class $$AccountsTableTableFilterComposer
           }) => $$LoansTableFilterComposer(
             $db: $db,
             $table: $db.loans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> billsTableRefs(
+    Expression<bool> Function($$BillsTableTableFilterComposer f) f,
+  ) {
+    final $$BillsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.billsTable,
+      getReferencedColumn: (t) => t.loanAccountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BillsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.billsTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7047,6 +7158,31 @@ class $$AccountsTableTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> billsTableRefs<T extends Object>(
+    Expression<T> Function($$BillsTableTableAnnotationComposer a) f,
+  ) {
+    final $$BillsTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.billsTable,
+      getReferencedColumn: (t) => t.loanAccountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BillsTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.billsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$AccountsTableTableTableManager
@@ -7062,7 +7198,7 @@ class $$AccountsTableTableTableManager
           $$AccountsTableTableUpdateCompanionBuilder,
           (AccountsTableData, $$AccountsTableTableReferences),
           AccountsTableData,
-          PrefetchHooks Function({bool loansRefs})
+          PrefetchHooks Function({bool loansRefs, bool billsTableRefs})
         > {
   $$AccountsTableTableTableManager(_$AppDatabase db, $AccountsTableTable table)
     : super(
@@ -7119,10 +7255,13 @@ class $$AccountsTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({loansRefs = false}) {
+          prefetchHooksCallback: ({loansRefs = false, billsTableRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (loansRefs) db.loans],
+              explicitlyWatchedTables: [
+                if (loansRefs) db.loans,
+                if (billsTableRefs) db.billsTable,
+              ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
@@ -7147,6 +7286,27 @@ class $$AccountsTableTableTableManager
                           ),
                       typedResults: items,
                     ),
+                  if (billsTableRefs)
+                    await $_getPrefetchedData<
+                      AccountsTableData,
+                      $AccountsTableTable,
+                      BillsTableData
+                    >(
+                      currentTable: table,
+                      referencedTable: $$AccountsTableTableReferences
+                          ._billsTableRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$AccountsTableTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).billsTableRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.loanAccountId == item.id,
+                          ),
+                      typedResults: items,
+                    ),
                 ];
               },
             );
@@ -7167,7 +7327,7 @@ typedef $$AccountsTableTableProcessedTableManager =
       $$AccountsTableTableUpdateCompanionBuilder,
       (AccountsTableData, $$AccountsTableTableReferences),
       AccountsTableData,
-      PrefetchHooks Function({bool loansRefs})
+      PrefetchHooks Function({bool loansRefs, bool billsTableRefs})
     >;
 typedef $$TransactionsTableTableCreateCompanionBuilder =
     TransactionsTableCompanion Function({
@@ -11206,7 +11366,8 @@ typedef $$BillsTableTableCreateCompanionBuilder =
     BillsTableCompanion Function({
       Value<int> id,
       required String name,
-      required int categoryId,
+      Value<int?> categoryId,
+      Value<int?> loanAccountId,
       required double expectedAmount,
       required String frequency,
       Value<int?> dayOfMonth,
@@ -11221,7 +11382,8 @@ typedef $$BillsTableTableUpdateCompanionBuilder =
     BillsTableCompanion Function({
       Value<int> id,
       Value<String> name,
-      Value<int> categoryId,
+      Value<int?> categoryId,
+      Value<int?> loanAccountId,
       Value<double> expectedAmount,
       Value<String> frequency,
       Value<int?> dayOfMonth,
@@ -11245,14 +11407,33 @@ final class $$BillsTableTableReferences
         ),
       );
 
-  $$CashflowCategoriesTableTableProcessedTableManager get categoryId {
-    final $_column = $_itemColumn<int>('category_id')!;
-
+  $$CashflowCategoriesTableTableProcessedTableManager? get categoryId {
+    final $_column = $_itemColumn<int>('category_id');
+    if ($_column == null) return null;
     final manager = $$CashflowCategoriesTableTableTableManager(
       $_db,
       $_db.cashflowCategoriesTable,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTableTable _loanAccountIdTable(_$AppDatabase db) =>
+      db.accountsTable.createAlias(
+        $_aliasNameGenerator(db.billsTable.loanAccountId, db.accountsTable.id),
+      );
+
+  $$AccountsTableTableProcessedTableManager? get loanAccountId {
+    final $_column = $_itemColumn<int>('loan_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableTableManager(
+      $_db,
+      $_db.accountsTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_loanAccountIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -11376,6 +11557,29 @@ class $$BillsTableTableFilterComposer
     return composer;
   }
 
+  $$AccountsTableTableFilterComposer get loanAccountId {
+    final $$AccountsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.loanAccountId,
+      referencedTable: $db.accountsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.accountsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   Expression<bool> billOccurrencesTableRefs(
     Expression<bool> Function($$BillOccurrencesTableTableFilterComposer f) f,
   ) {
@@ -11489,6 +11693,29 @@ class $$BillsTableTableOrderingComposer
         );
     return composer;
   }
+
+  $$AccountsTableTableOrderingComposer get loanAccountId {
+    final $$AccountsTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.loanAccountId,
+      referencedTable: $db.accountsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.accountsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$BillsTableTableAnnotationComposer
@@ -11565,6 +11792,29 @@ class $$BillsTableTableAnnotationComposer
     return composer;
   }
 
+  $$AccountsTableTableAnnotationComposer get loanAccountId {
+    final $$AccountsTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.loanAccountId,
+      referencedTable: $db.accountsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accountsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   Expression<T> billOccurrencesTableRefs<T extends Object>(
     Expression<T> Function($$BillOccurrencesTableTableAnnotationComposer a) f,
   ) {
@@ -11607,6 +11857,7 @@ class $$BillsTableTableTableManager
           BillsTableData,
           PrefetchHooks Function({
             bool categoryId,
+            bool loanAccountId,
             bool billOccurrencesTableRefs,
           })
         > {
@@ -11625,7 +11876,8 @@ class $$BillsTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<int> categoryId = const Value.absent(),
+                Value<int?> categoryId = const Value.absent(),
+                Value<int?> loanAccountId = const Value.absent(),
                 Value<double> expectedAmount = const Value.absent(),
                 Value<String> frequency = const Value.absent(),
                 Value<int?> dayOfMonth = const Value.absent(),
@@ -11639,6 +11891,7 @@ class $$BillsTableTableTableManager
                 id: id,
                 name: name,
                 categoryId: categoryId,
+                loanAccountId: loanAccountId,
                 expectedAmount: expectedAmount,
                 frequency: frequency,
                 dayOfMonth: dayOfMonth,
@@ -11653,7 +11906,8 @@ class $$BillsTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String name,
-                required int categoryId,
+                Value<int?> categoryId = const Value.absent(),
+                Value<int?> loanAccountId = const Value.absent(),
                 required double expectedAmount,
                 required String frequency,
                 Value<int?> dayOfMonth = const Value.absent(),
@@ -11667,6 +11921,7 @@ class $$BillsTableTableTableManager
                 id: id,
                 name: name,
                 categoryId: categoryId,
+                loanAccountId: loanAccountId,
                 expectedAmount: expectedAmount,
                 frequency: frequency,
                 dayOfMonth: dayOfMonth,
@@ -11686,7 +11941,11 @@ class $$BillsTableTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({categoryId = false, billOccurrencesTableRefs = false}) {
+              ({
+                categoryId = false,
+                loanAccountId = false,
+                billOccurrencesTableRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
@@ -11718,6 +11977,20 @@ class $$BillsTableTableTableManager
                                     referencedColumn:
                                         $$BillsTableTableReferences
                                             ._categoryIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (loanAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.loanAccountId,
+                                    referencedTable: $$BillsTableTableReferences
+                                        ._loanAccountIdTable(db),
+                                    referencedColumn:
+                                        $$BillsTableTableReferences
+                                            ._loanAccountIdTable(db)
                                             .id,
                                   )
                                   as T;
@@ -11768,7 +12041,11 @@ typedef $$BillsTableTableProcessedTableManager =
       $$BillsTableTableUpdateCompanionBuilder,
       (BillsTableData, $$BillsTableTableReferences),
       BillsTableData,
-      PrefetchHooks Function({bool categoryId, bool billOccurrencesTableRefs})
+      PrefetchHooks Function({
+        bool categoryId,
+        bool loanAccountId,
+        bool billOccurrencesTableRefs,
+      })
     >;
 typedef $$BillOccurrencesTableTableCreateCompanionBuilder =
     BillOccurrencesTableCompanion Function({

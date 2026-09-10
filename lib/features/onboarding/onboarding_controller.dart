@@ -138,7 +138,7 @@ class OnboardingController extends GetxController {
         curve: Curves.easeOut,
       );
     } else {
-      Get.toNamed(Routes.ONBOARDING_FIFTH_QUESTION);
+      Get.toNamed(Routes.ONBOARDING_BUILD_FINANCIAL_FOUNDATION);
       // Go to Q5
       // Get.toNamed('/onboarding-question-5');
     }

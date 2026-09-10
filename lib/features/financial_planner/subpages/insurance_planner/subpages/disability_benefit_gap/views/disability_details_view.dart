@@ -30,7 +30,7 @@ class DisabilityDetailsView extends GetView<InsurancePlannerController> {
           AppDetailsPageActionSection(
             selectedIndex: controller.selectedDisabilityDetailsIndex,
             actions: const ['Needs', 'Sources'],
-            onAdd: () {},
+            // onAdd: () {},
           ),
           Expanded(
             child: Obx(

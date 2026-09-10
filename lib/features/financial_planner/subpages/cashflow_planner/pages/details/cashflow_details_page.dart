@@ -97,27 +97,25 @@ class CashflowDetailsPage extends GetView<CashflowController> {
           ),
           AppDetailsPageActionSection(
             selectedIndex: controller.seletectedDetailsTabIndex,
-            actions: const [
-              'Income', 'Budget',
-              // AppDetailsPageAction(title: 'Income', page: PlannedIncomeList()),
-              // AppDetailsPageAction(title: 'Budget', page: BudgetList()),
-            ],
+            actions: const ['Income', 'Budget'],
             onAdd: () {
-              controller.seletectedDetailsTabIndex.value == 0
-                  ? Get.bottomSheet(
-                      const CreateIncomePlanSheet(),
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                    ).whenComplete(() {
-                      controller.resetIncomePlan();
-                    })
-                  : Get.bottomSheet(
-                      SelectBudgetTypeSheet(),
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                    ).whenComplete(() {
-                      controller.resetBudgetPlan();
-                    });
+              if (controller.seletectedDetailsTabIndex.value == 0) {
+                Get.bottomSheet(
+                  const CreateIncomePlanSheet(),
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                ).whenComplete(() {
+                  controller.resetIncomePlan();
+                });
+              } else {
+                Get.bottomSheet(
+                  SelectBudgetTypeSheet(),
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                ).whenComplete(() {
+                  controller.resetBudgetPlan();
+                });
+              }
             },
           ),
           Expanded(

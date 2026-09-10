@@ -25,9 +25,9 @@ class CriticalIllnessDetailsView extends GetView<InsurancePlannerController> {
           AppDetailsPageActionSection(
             selectedIndex: controller.selectedCriticalIllnessDetailsIndex,
             actions: const ['Needs', 'Sources'],
-            onAdd: () {
-              // Add source/need action
-            },
+            // onAdd: () {
+            //   // Add source/need action
+            // },
           ),
           Expanded(
             child: Obx(

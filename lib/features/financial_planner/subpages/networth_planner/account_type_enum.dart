@@ -32,12 +32,12 @@ enum AccountType {
     group: AccountGroup.cashAndBank,
     iconKey: 'device-mobile',
   ),
-  realProperty(
-    id: 'realProperty',
-    label: 'Real Estate Property',
-    group: AccountGroup.tangibleProperty,
-    iconKey: 'house',
-  ),
+  // realProperty(
+  //   id: 'realProperty',
+  //   label: 'Real Estate Property',
+  //   group: AccountGroup.tangibleProperty,
+  //   iconKey: 'house',
+  // ),
 
   /// =====================================
   /// LIABILITIES

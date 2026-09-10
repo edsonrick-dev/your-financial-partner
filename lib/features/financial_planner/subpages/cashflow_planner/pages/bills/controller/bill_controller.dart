@@ -449,7 +449,7 @@ class BillController extends GetxController {
       await database.billsDao.insertBillWithFirstOccurrence(
         bill: BillsTableCompanion.insert(
           name: name,
-          categoryId: category.id,
+          categoryId: drift.Value(category.id),
           expectedAmount: amount,
           frequency: frequency.name,
           dayOfMonth: drift.Value(selectedMonthDay.value),

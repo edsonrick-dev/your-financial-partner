@@ -29,11 +29,23 @@ extension DeleteFunctions on TransactionController {
       }
 
       /// TRANSFERS AFFECT TWO ACCOUNTS
-      if (transactionData.type == TransactionType.transfer) {
+      // if (transactionData.type == TransactionType.transfer) {
+      //   final linkedAccountId = transactionData.linkedAccountId;
+
+      //   if (linkedAccountId == null) {
+      //     throw Exception('Transfer transaction missing linked account.');
+      //   }
+
+      //   affectedAccountIds.add(linkedAccountId);
+      // }
+      if (transactionData.type == TransactionType.transfer ||
+          transactionData.type == TransactionType.debtRepayment) {
         final linkedAccountId = transactionData.linkedAccountId;
 
         if (linkedAccountId == null) {
-          throw Exception('Transfer transaction missing linked account.');
+          throw Exception(
+            '${transactionData.type.name} transaction missing linked account.',
+          );
         }
 
         affectedAccountIds.add(linkedAccountId);
@@ -62,7 +74,8 @@ extension DeleteFunctions on TransactionController {
 
         case TransactionType.transfer:
           break;
-
+        case TransactionType.debtRepayment:
+          break;
         case TransactionType.receive:
           await database.deleteFinancialObligationsByTransaction(
             transactionData.id,

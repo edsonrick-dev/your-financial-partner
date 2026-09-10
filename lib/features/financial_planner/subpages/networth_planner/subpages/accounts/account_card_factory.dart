@@ -3,6 +3,7 @@ import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/cash_and_bank_account_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/credit_card_account_card.dart';
+import 'package:getx_drift_app/features/widgets/cards/account_cards/loan_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/person_balance_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/models/net_worth_item.dart';
 
@@ -27,6 +28,13 @@ class AccountCardFactory {
           account: account,
           onTap: () {
             AppSheets.viewCreditCardDetailSheet(account);
+          },
+        );
+      case AccountType.loan:
+        return LoanAccountCard(
+          account: account,
+          onTap: () {
+            AppSheets.viewLoanDetailSheet(account);
           },
         );
 

@@ -83,12 +83,18 @@ extension AccountValidationExtension on AccountController {
       case AccountType.creditCard:
         return isCreditCardAccountValid;
 
-      case AccountType.realProperty:
-        return isRealPropertyAccountValid;
+      case AccountType.loan:
+        return isLoanAccountValid;
+      // case AccountType.realProperty:
+      //   return isRealPropertyAccountValid;
 
       default:
         return false;
     }
+  }
+
+  bool get isLoanAccountValid {
+    return hasValidAccountName && hasValidBalance;
   }
 
   bool get hasValidAccountName {

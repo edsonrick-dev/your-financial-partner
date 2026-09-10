@@ -31,9 +31,9 @@ class DeathBenefitDetailsView extends GetView<InsurancePlannerController> {
           AppDetailsPageActionSection(
             selectedIndex: controller.selectedDeathDetailsIndex,
             actions: const ['Needs', 'Sources'],
-            onAdd: () {
-              // Add source/need action
-            },
+            // onAdd: () {
+            //   // Add source/need action
+            // },
           ),
           Expanded(
             child: Obx(

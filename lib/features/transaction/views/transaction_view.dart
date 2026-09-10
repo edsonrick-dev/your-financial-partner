@@ -24,6 +24,7 @@ class TransactionView extends GetView<TransactionController> {
 
         case TransactionType.spend:
         case TransactionType.give:
+        case TransactionType.debtRepayment:
           return total - item.transaction.amount;
 
         case TransactionType.balanceUpdate:

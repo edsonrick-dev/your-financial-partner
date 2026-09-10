@@ -5,7 +5,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/credit_card_account_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/credit_card_installment_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/ewallet_account_form.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/real_property_form.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/loan_account_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/savings_account_form.dart';
 
 class AccountFormRegistry {
@@ -23,15 +23,17 @@ class AccountFormRegistry {
       case AccountType.eWallet:
         return const EWalletAccountForm();
 
-      case AccountType.realProperty:
-        return const RealPropertyForm();
+      // case AccountType.realProperty:
+      //   return const RealPropertyForm();
 
       case AccountType.creditCard:
         return const CreditCardAccountForm();
 
       case AccountType.creditInstallment:
         return const CreditCardInstallmentForm();
-
+      case AccountType.loan:
+        return const LoanAccountForm();
+      // ignore: unreachable_switch_default
       default:
         return const SizedBox.shrink();
     }

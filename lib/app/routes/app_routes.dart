@@ -20,6 +20,8 @@ abstract class Routes {
       '/onboarding/learn-with-asecnd-intro';
   static const ONBOARDING_LEARN_WITH_ASCEND_PREVIEW =
       '/onboarding/learn-with-asecnd-preview';
+  static const ONBOARDING_BUILD_FINANCIAL_FOUNDATION =
+      '/onboarding/build-financial-foundation';
 
   static const MAINVIEW = '/';
   static const HOME = '/home';

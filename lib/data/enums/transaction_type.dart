@@ -4,6 +4,7 @@ enum TransactionType {
   transfer,
   give,
   receive,
+  debtRepayment,
   balanceUpdate;
 
   static TransactionType fromName(String value) {
@@ -32,3 +33,12 @@ enum TransactionType {
     };
   }
 }
+// enum TransactionType {
+//   earn,
+//   spend,
+//   transfer,
+//   give,
+//   receive,
+//   debtRepayment,
+//   balanceUpdate;
+// }

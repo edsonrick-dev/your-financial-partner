@@ -14,6 +14,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/exports/views/file_export_view.dart';
 import 'package:getx_drift_app/features/home/views/home_view.dart';
 import 'package:getx_drift_app/features/main_shell/views/main_shell_view.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_ascend_intro/build_financial_foundation/onboarding_add_budget_plan.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_controller.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_ascend_intro/onboarding_ascend_intro_view.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_financial_stability_score_intro/onboarding_financial_stability_preview.dart';
@@ -138,6 +139,13 @@ class AppPages {
     GetPage(
       name: Routes.ONBOARDING_LEARN_WITH_ASCEND_PREVIEW,
       page: () => const OnboardingLearnWithAscendPreview(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<OnboardingController>(() => OnboardingController());
+      }),
+    ),
+    GetPage(
+      name: Routes.ONBOARDING_BUILD_FINANCIAL_FOUNDATION,
+      page: () => const OnboardingAddBudgetPlan(),
       binding: BindingsBuilder(() {
         Get.lazyPut<OnboardingController>(() => OnboardingController());
       }),

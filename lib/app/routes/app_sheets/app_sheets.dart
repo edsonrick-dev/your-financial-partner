@@ -10,6 +10,7 @@ import 'package:getx_drift_app/app/routes/app_sheets/transaction_sheets.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/account_action_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/cash_and_bank_details_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_detail_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/loan_detail_sheet/load_detail_sheet.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learning_sheets.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_details_screen_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
@@ -70,6 +71,15 @@ class AppSheets {
   ) async {
     return await Get.bottomSheet(
       CreditCardDetailSheet(account: account),
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      isScrollControlled: true,
+    );
+  }
+
+  static Future<void> viewLoanDetailSheet(AccountsTableData account) async {
+    return await Get.bottomSheet(
+      LoanDetailSheet(account: account),
       backgroundColor: Colors.transparent,
       isDismissible: true,
       isScrollControlled: true,

@@ -68,6 +68,9 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
               return account.group == AccountGroup.cashAndBank ||
                   account.group == AccountGroup.creditCards;
 
+            case TransactionType.debtRepayment:
+              return account.group == AccountGroup.cashAndBank;
+
             case TransactionType.earn:
             case TransactionType.transfer:
             case TransactionType.give:

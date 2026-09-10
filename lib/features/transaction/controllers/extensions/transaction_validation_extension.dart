@@ -115,6 +115,7 @@ extension TransactionValidationExtension on TransactionController {
       case TransactionType.give:
         return isGiveMoneyTransactionValid;
 
+      case TransactionType.debtRepayment:
       case TransactionType.balanceUpdate:
         return false;
     }

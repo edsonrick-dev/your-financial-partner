@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/features/personal_balance/screen/personal_balance_details_sheet.dart';
@@ -39,11 +40,7 @@ class PersonBalanceCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: colorScheme.appText,
                         borderRadius: BorderRadius.circular(18),
-                        gradient: LinearGradient(
-                          colors: [colorScheme.text, colorScheme.gradient2],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        gradient: AppGradient.gradientA(colorScheme),
                       ),
                     ),
 

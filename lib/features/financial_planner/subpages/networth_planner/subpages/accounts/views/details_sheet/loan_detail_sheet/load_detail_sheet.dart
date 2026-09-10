@@ -3,21 +3,19 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_bills_payment_view.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_summary_section.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_transactions_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/loan_detail_sheet/loan_payment_history_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/loan_detail_sheet/loan_summary_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
-class CreditCardDetailSheet extends StatelessWidget {
+class LoanDetailSheet extends StatelessWidget {
   final AccountsTableData account;
 
-  const CreditCardDetailSheet({super.key, required this.account});
+  const LoanDetailSheet({super.key, required this.account});
 
   @override
   Widget build(BuildContext context) {
     final RxInt selectedIndex = 0.obs;
-
     return AppSheet(
       height: AppSheetHeight.full,
       title: account.name,
@@ -40,23 +38,21 @@ class CreditCardDetailSheet extends StatelessWidget {
 
           return Column(
             children: [
-              CreditCardSummarySection(account: currentAccount),
+              LoanSummarySection(account: currentAccount),
 
               const SizedBox(height: 16),
 
               AppDetailsPageActionSection(
                 selectedIndex: selectedIndex,
-                actions: const ['Transactions', 'Bills Payment'],
+                actions: const ['Payment History'],
                 // onAdd: () {},
               ),
-
               Expanded(
                 child: Obx(
                   () => IndexedStack(
                     index: selectedIndex.value,
                     children: [
-                      CreditCardTransactionsView(accountId: currentAccount.id),
-                      CreditCardBillsPaymentView(accountId: currentAccount.id),
+                      LoanPaymentHistoryView(accountId: currentAccount.id),
                     ],
                   ),
                 ),

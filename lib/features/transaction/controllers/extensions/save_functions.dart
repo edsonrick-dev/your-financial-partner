@@ -44,6 +44,7 @@ extension SaveTransactionFunctions on TransactionController {
         if (!isGiveMoneyTransactionValid) return;
         await saveGiveMoneyTransaction();
 
+      case TransactionType.debtRepayment:
       case TransactionType.balanceUpdate:
         return;
     }

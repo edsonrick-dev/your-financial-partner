@@ -369,6 +369,17 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
       );
 
       switch (type) {
+        case TransactionType.debtRepayment:
+          if (tx.accountId == accountId) {
+            // Money leaves the payment account.
+            balance -= tx.amount;
+          }
+
+          if (tx.linkedAccountId == accountId) {
+            // Liability is reduced.
+            balance -= tx.amount;
+          }
+          break;
         case TransactionType.earn:
           if (tx.accountId == accountId) {
             balance += tx.amount;

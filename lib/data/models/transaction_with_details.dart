@@ -39,12 +39,17 @@ class TransactionWithDetails {
     return obligations.isNotEmpty;
   }
 
+  bool get isDebtRepayment {
+    return transaction.type == TransactionType.debtRepayment;
+  }
+
   bool get requiresAccount {
     switch (transaction.type) {
       case TransactionType.earn:
       case TransactionType.give:
       case TransactionType.receive:
       case TransactionType.transfer:
+      case TransactionType.debtRepayment:
         return true;
 
       default:

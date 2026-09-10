@@ -32,6 +32,7 @@ class AddPaymentAccountButton extends GetView<AccountController> {
       case TransactionType.transfer:
       case TransactionType.give:
       case TransactionType.receive:
+      case TransactionType.debtRepayment:
         return AccountType.values
             .where((account) => account.group == AccountGroup.cashAndBank)
             .toList();

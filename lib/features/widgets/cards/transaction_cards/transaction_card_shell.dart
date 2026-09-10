@@ -28,6 +28,8 @@ class TransactionCard extends StatelessWidget {
         return GiveMoneyTransactionCard(item: item);
       case TransactionType.balanceUpdate:
         return UpdateBalanceTransactionCard(item: item);
+      case TransactionType.debtRepayment:
+        return SizedBox.shrink();
     }
   }
 }
