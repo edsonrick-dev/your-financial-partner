@@ -34,6 +34,7 @@ class FinancialProfileController extends GetxController {
       cashflowController.annualDebtRepayment.value;
 
   double get netWorth => netWorthController.netWorth;
+  double get averageMonthlyBudget => cashflowController.annualBudget.value / 12;
 
   // TODO: Include here Liquid Funds & Average Daily Balance
 

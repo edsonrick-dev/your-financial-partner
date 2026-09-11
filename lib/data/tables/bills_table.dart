@@ -26,11 +26,11 @@ class BillsTable extends Table {
   /// Recurrence frequency.
   TextColumn get frequency => text()();
 
-  /// Day of month for monthly / quarterly / semi-annual / annual bills.
+  /// Anchor day used to calculate recurring occurrences.
+  ///
+  /// For example, a bill created for the 31st remains anchored
+  /// to the 31st even when an intermediate month has fewer days.
   IntColumn get dayOfMonth => integer().nullable()();
-
-  /// Bitmask representing the selected MonthPattern.
-  IntColumn get monthMask => integer().nullable()();
 
   BoolColumn get reminderEnabled =>
       boolean().withDefault(const Constant(false))();

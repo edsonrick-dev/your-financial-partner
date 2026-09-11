@@ -40,14 +40,14 @@ class BillsFrequencySelector extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                period.initials,
+                period.label,
                 maxLines: 1,
                 style: isSelected
-                    ? AppTextStyle.titleM.copyWith(
+                    ? AppTextStyle.titleS.copyWith(
                         color: colorScheme.pageShifterTextSelected,
                         // fontWeight: FontWeight.w600,
                       )
-                    : AppTextStyle.bodyM.copyWith(
+                    : AppTextStyle.bodyS.copyWith(
                         color: colorScheme.pageShifterTextUnselected,
                         // fontWeight: FontWeight.w400,
                       ),

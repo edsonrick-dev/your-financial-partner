@@ -4,6 +4,7 @@ import 'package:getx_drift_app/features/profile/controller/financial_profile_con
 import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/emergency_fund_ratio_scoring.dart';
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
+import 'package:getx_drift_app/features/profile/models/ratio_score_band.dart';
 
 extension FinancialProfileEmergencyFundExtension on FinancialProfileController {
   // ---------------------------------------------------------------------------
@@ -15,6 +16,52 @@ extension FinancialProfileEmergencyFundExtension on FinancialProfileController {
     // && averageDailyBalance != null;
   }
 
+  // ---------------------------------------------------------------------------
+  // EMERGENCY FUND (CURRENT)
+  // ---------------------------------------------------------------------------
+  RatioScoreBand? get currentEmergencyFundTargetBand {
+    final ratio = emergencyFundRatio;
+
+    if (ratio == null) {
+      return null;
+    }
+
+    final targets =
+        emergencyFundBands.where((band) => band.threshold > ratio).toList()
+          ..sort((a, b) => a.threshold.compareTo(b.threshold));
+
+    return targets.isEmpty ? null : targets.first;
+  }
+
+  double? get currentEmergencyFundTarget {
+    final band = currentEmergencyFundTargetBand;
+
+    if (band == null) {
+      return null;
+    }
+
+    return annualBudget * (band.threshold / 100);
+  }
+
+  double? get currentEmergencyFundTargetMonths {
+    final band = currentEmergencyFundTargetBand;
+
+    if (band == null) {
+      return null;
+    }
+
+    return band.threshold / 100 * 12;
+  }
+
+  double? get emergencyFundTargetGap {
+    final target = currentEmergencyFundTarget;
+
+    if (target == null) {
+      return null;
+    }
+
+    return max(0, target - (emergencyFundAvailable ?? 0));
+  }
   // ---------------------------------------------------------------------------
   // EMERGENCY FUND
   // ---------------------------------------------------------------------------

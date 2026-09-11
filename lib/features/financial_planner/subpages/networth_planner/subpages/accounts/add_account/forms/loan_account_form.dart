@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/loan_payment_section_form.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
-import 'package:getx_drift_app/features/widgets/fields/icon_picker_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
@@ -11,41 +11,49 @@ class LoanAccountForm extends GetView<AccountController> {
 
   @override
   Widget build(BuildContext context) {
-    return AppSection(
-      child: Column(
-        spacing: 20,
-        children: [
-          Row(
+    return Column(
+      // spacing: 20,
+      children: [
+        AppSection(
+          child: Column(
+            spacing: 20,
             children: [
-              // Obx(
-              //   () => AppIconPickerField(
-              //     iconKey: controller.selectedIconKey.value,
-              //     onTap: () {},
-              //   ),
-              // ),
-              // const SizedBox(width: 8),
-              Expanded(
-                child: AppTextField(
-                  label: 'Name',
-                  focusNode: controller.nameFocusNode,
-                  controller: controller.nameController,
-                  onChanged: controller.setAccountName,
+              Row(
+                children: [
+                  // Obx(
+                  //   () => AppIconPickerField(
+                  //     iconKey: controller.selectedIconKey.value,
+                  //     onTap: () {},
+                  //   ),
+                  // ),
+                  // const SizedBox(width: 8),
+                  Expanded(
+                    child: AppTextField(
+                      label: 'Name',
+                      focusNode: controller.nameFocusNode,
+                      controller: controller.nameController,
+                      onChanged: controller.setAccountName,
+                    ),
+                  ),
+                ],
+              ),
+
+              Obx(
+                () => AppAmountField(
+                  label: 'Current Balance',
+                  amount: controller.enteredBalance.value,
+                  onChanged: (value) {
+                    controller.enteredBalance.value = value;
+                  },
                 ),
               ),
             ],
           ),
-
-          Obx(
-            () => AppAmountField(
-              label: 'Current Balance',
-              amount: controller.enteredBalance.value,
-              onChanged: (value) {
-                controller.enteredBalance.value = value;
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+        SizedBox(height: 20),
+        const LoanPaymentScheduleSection(),
+        SizedBox(height: 16),
+      ],
     );
   }
 }

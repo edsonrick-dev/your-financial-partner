@@ -25,9 +25,9 @@ class TransactionView extends GetView<TransactionController> {
         case TransactionType.spend:
         case TransactionType.give:
         case TransactionType.debtRepayment:
+        case TransactionType.balanceUpdate:
           return total - item.transaction.amount;
 
-        case TransactionType.balanceUpdate:
         case TransactionType.transfer:
           // Transfers are between your own accounts,
           // so they have no effect on net cash flow.

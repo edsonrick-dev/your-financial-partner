@@ -7,7 +7,9 @@ import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/budget_details_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/expense/expense_details_sheet.dart.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/debt_repayment/debt_repayment_list.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/select_budget_type_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_plan_card.dart';
@@ -77,18 +79,6 @@ class BudgetPage extends GetView<CashflowController> {
     if (plans.isEmpty) {
       return const SizedBox.shrink();
     }
-    // final expensePlans = plans
-    //     .where((plan) => plan.planType == 'expense')
-    //     .toList();
-
-    // final debtRepaymentPlans = plans
-    //     .where((plan) => plan.planType == 'debtRepayment')
-    //     .toList();
-
-    // debugPrint('TOTAL BUDGET PLANS: ${plans.length}');
-    // debugPrint('EXPENSE PLANS: ${expensePlans.length}');
-    // debugPrint('DEBT PLANS: ${debtRepaymentPlans.length}');
-
     final colorScheme = context.colors;
 
     final color = switch (planType) {
@@ -111,7 +101,7 @@ class BudgetPage extends GetView<CashflowController> {
             CashflowPlanCard(
               onTap: () {
                 Get.bottomSheet(
-                  BudgetDetailsSheet(plan: plan, selectedIndex: selectedIndex),
+                  ExpenseDetailsSheet(plan: plan, selectedIndex: selectedIndex),
                   backgroundColor: Colors.transparent,
                   isDismissible: true,
                   isScrollControlled: true,
@@ -144,88 +134,91 @@ class BudgetPage extends GetView<CashflowController> {
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: StreamBuilder<List<SavedCashflowPlanData>>(
               stream: controller.watchSavedBudgetPlans(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+              builder: (context, budgetSnapshot) {
+                if (budgetSnapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox.shrink();
                 }
 
-                final plans = snapshot.data ?? [];
+                final plans = budgetSnapshot.data ?? [];
 
                 final expensePlans = plans
                     .where((plan) => plan.planType == 'expense')
                     .toList();
 
-                final debtRepaymentPlans = plans
-                    .where((plan) => plan.planType == 'debtRepayment')
-                    .toList();
+                return StreamBuilder<List<BillWithNextOccurrence>>(
+                  stream: controller.watchDebtRepaymentBills(),
+                  builder: (context, debtSnapshot) {
+                    if (debtSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const SizedBox.shrink();
+                    }
 
-                if (plans.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.account_balance_wallet_outlined,
-                            size: 48,
-                            color: colorScheme.appTextMuted,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'No budget set yet',
-                            style: AppTextStyle.headlineM,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Add your first budget to start planning your cash. flow.',
-                            style: AppTextStyle.bodyM.copyWith(
-                              color: colorScheme.appTextMuted,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 16),
+                    final debtRepaymentBills = debtSnapshot.data ?? [];
 
-                          AppButton(
-                            text: 'Set up your first budget',
-                            onTap: () {
-                              Get.bottomSheet(
-                                const SelectBudgetTypeSheet(),
-                                backgroundColor: Colors.transparent,
-                                isScrollControlled: true,
-                              );
-                            },
+                    if (expensePlans.isEmpty && debtRepaymentBills.isEmpty) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(32),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.account_balance_wallet_outlined,
+                                size: 48,
+                                color: colorScheme.appTextMuted,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No budget set yet',
+                                style: AppTextStyle.headlineM,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Add your first budget to start planning your cash flow.',
+                                style: AppTextStyle.bodyM.copyWith(
+                                  color: colorScheme.appTextMuted,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 16),
+                              AppButton(
+                                text: 'Set up your first budget',
+                                onTap: () {
+                                  Get.bottomSheet(
+                                    const SelectBudgetTypeSheet(),
+                                    backgroundColor: Colors.transparent,
+                                    isScrollControlled: true,
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 8),
+                              AppButton(
+                                type: ButtonType.outline,
+                                text: 'Watch how to set up a budget',
+                                onTap: () {},
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 8),
-                          AppButton(
-                            type: ButtonType.outline,
-                            text: 'Watch how to set up a budget',
-                            onTap: () {},
+                        ),
+                      );
+                    }
+
+                    return Column(
+                      // spacing: 16,
+                      children: [
+                        if (expensePlans.isNotEmpty)
+                          _buildPlanSection(
+                            context,
+                            title: 'Expenses',
+                            planType: 'expense',
+                            plans: expensePlans,
                           ),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-
-                return Column(
-                  spacing: 16,
-                  children: [
-                    _buildPlanSection(
-                      context,
-                      title: 'Expenses',
-                      planType: 'expense',
-                      plans: expensePlans,
-                    ),
-
-                    _buildPlanSection(
-                      context,
-                      title: 'Debt Repayment',
-                      planType: 'debtRepayment',
-                      plans: debtRepaymentPlans,
-                    ),
-                  ],
+                        if (debtRepaymentBills.isNotEmpty)
+                          DebtRepaymentList(bills: debtRepaymentBills),
+                      ],
+                    );
+                  },
                 );
               },
             ),

@@ -31,7 +31,7 @@ class AddAccountSheet extends GetView<AccountController> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
             AppSection(
               child: Obx(
                 () => AppButton(
@@ -40,6 +40,13 @@ class AddAccountSheet extends GetView<AccountController> {
                           final createdAccount = await controller.saveAccount();
 
                           if (createdAccount != null) {
+                            if (accountType == AccountType.loan) {
+                              await controller.loanController
+                                  .savePaymentSchedule(
+                                    loanAccountId: createdAccount.id,
+                                  );
+                            }
+
                             Get.back();
                           }
                         }
@@ -94,7 +101,9 @@ extension AccountValidationExtension on AccountController {
   }
 
   bool get isLoanAccountValid {
-    return hasValidAccountName && hasValidBalance;
+    return hasValidAccountName &&
+        hasValidBalance &&
+        loanController.isPaymentScheduleValid;
   }
 
   bool get hasValidAccountName {

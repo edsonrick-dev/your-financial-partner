@@ -72,14 +72,18 @@ class TransactionSheet extends GetView<TransactionController> {
 
               // const SizedBox(height: 8),
               AppSection(
-                child: Obx(
-                  () => AppButton(
-                    text: 'Record ${transactionType.actionText.toLowerCase()}',
-                    onTap: controller.isTransactionValid(transactionType)
-                        ? () => controller.saveTransaction(transactionType)
+                child: Obx(() {
+                  final effectiveType = transactionType == TransactionType.spend
+                      ? controller.effectiveTransactionType
+                      : transactionType;
+
+                  return AppButton(
+                    text: 'Record ${effectiveType.actionText.toLowerCase()}',
+                    onTap: controller.isTransactionValid(effectiveType)
+                        ? () => controller.saveTransaction(effectiveType)
                         : null,
-                  ),
-                ),
+                  );
+                }),
               ),
 
               SizedBox(height: bottomPadding),

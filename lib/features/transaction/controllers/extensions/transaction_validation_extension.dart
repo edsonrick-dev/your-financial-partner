@@ -3,46 +3,6 @@ import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_tr
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 
 extension TransactionValidationExtension on TransactionController {
-  // bool get isSpendTransactionValid {
-  //   final hasBasicFields =
-  //       selectedCategory.value != null &&
-  //       selectedAccount.value != null &&
-  //       amount.value > 0;
-
-  //   if (!hasBasicFields) {
-  //     return false;
-  //   }
-  //   if (isSharedExpense.value) {
-  //     return participants.length > 1 && isFullyAllocated;
-  //   }
-
-  //   return true;
-  // }
-  // bool get isSpendTransactionValid {
-  //   final hasBasicFields = selectedCategory.value != null && amount.value > 0;
-
-  //   if (!hasBasicFields) {
-  //     return false;
-  //   }
-
-  //   if (paidBy.value == PaidBy.self && selectedAccount.value == null) {
-  //     return false;
-  //   }
-
-  //   if (paidBy.value == PaidBy.others && selectedPerson.value == null) {
-  //     return false;
-  //   }
-
-  //   if (isSharedExpense.value) {
-  //     if (paidBy.value != PaidBy.self) {
-  //       return false;
-  //     }
-
-  //     return participants.length > 1 && isFullyAllocated;
-  //   }
-
-  //   return true;
-  // }
   bool get isSpendTransactionValid {
     if (selectedCategory.value == null || amount.value <= 0) {
       return false;
@@ -98,6 +58,12 @@ extension TransactionValidationExtension on TransactionController {
         amount.value > 0;
   }
 
+  bool get isDebtRepaymentTransactionValid {
+    return selectedAccount.value != null &&
+        selectedLinkedAccount.value != null &&
+        amount.value > 0;
+  }
+
   bool isTransactionValid(TransactionType type) {
     switch (type) {
       case TransactionType.earn:
@@ -116,6 +82,8 @@ extension TransactionValidationExtension on TransactionController {
         return isGiveMoneyTransactionValid;
 
       case TransactionType.debtRepayment:
+        return isDebtRepaymentTransactionValid;
+
       case TransactionType.balanceUpdate:
         return false;
     }

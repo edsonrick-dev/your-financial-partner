@@ -46,13 +46,25 @@ class TransactionSheets {
     );
   }
 
+  // Future<void> billPayment(BillWithNextOccurrence bill) async {
+  //   final transactionType = bill.isLoanPayment
+  //       ? TransactionType.debtRepayment
+  //       : TransactionType.spend;
+
+  //   // Open TransactionSheet with transactionType
+  // }
+
   Future<void> spendBill(BillWithNextOccurrence bill) async {
     final controller = Get.find<TransactionController>();
 
     controller.prepareBillPayment(bill);
 
+    final transactionType = bill.isLoanPayment
+        ? TransactionType.debtRepayment
+        : TransactionType.spend;
+
     await Get.bottomSheet(
-      const TransactionSheet(transactionType: TransactionType.spend),
+      TransactionSheet(transactionType: transactionType),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );

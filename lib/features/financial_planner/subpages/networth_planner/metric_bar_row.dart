@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
@@ -7,6 +8,7 @@ class MetricBarRow extends StatelessWidget {
   final double amount;
   final double ratio;
   final Color color;
+  final Color? textColor;
 
   const MetricBarRow({
     super.key,
@@ -14,6 +16,7 @@ class MetricBarRow extends StatelessWidget {
     required this.amount,
     required this.ratio,
     required this.color,
+    this.textColor,
   });
 
   @override
@@ -37,8 +40,14 @@ class MetricBarRow extends StatelessWidget {
         const SizedBox(width: 8),
 
         SizedBox(
-          width: 60,
-          child: Text(amount.toCompactCurrency(), textAlign: TextAlign.right),
+          width: 56,
+          child: Text(
+            amount.toCompactCurrency(),
+            textAlign: TextAlign.right,
+            style: AppTextStyle.amountXS.copyWith(
+              color: textColor ?? colorScheme.appText,
+            ),
+          ),
         ),
       ],
     );

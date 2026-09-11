@@ -110,19 +110,21 @@ class FilledDebtLoadView extends GetView<FinancialProfileController> {
                       color: context.colors.appInfoSoft,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Debt Repayments ÷ Income',
-                          style: AppTextStyle.bodyM,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '= ${value.toStringAsFixed(1)}%',
-                          style: AppTextStyle.amountL,
-                        ),
-                      ],
+                    child: FittedBox(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Debt Repayments ÷ Income',
+                            style: AppTextStyle.bodyM,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            '= ${value.toStringAsFixed(1)}%',
+                            style: AppTextStyle.amountL,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

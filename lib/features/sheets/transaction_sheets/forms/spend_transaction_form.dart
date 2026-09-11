@@ -6,6 +6,7 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/app_date_picker.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
+import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_validation_extension.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/split_expense_section.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
@@ -19,13 +20,12 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 enum PaidBy { self, others }
 
 class SpendTransactionForm extends GetView<TransactionController> {
-  const SpendTransactionForm({super.key});
+  const SpendTransactionForm({super.key, required this.transactionType});
 
+  final TransactionType transactionType;
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-
-    final transactionType = TransactionType.spend;
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: AppSection(
@@ -60,14 +60,43 @@ class SpendTransactionForm extends GetView<TransactionController> {
                     ? 'Bill'
                     : 'Category',
                 iconKey:
-                    controller.selectedBill.value?.category.icon ??
+                    controller.selectedBill.value?.category?.icon ??
                     controller.selectedCategory.value?.icon ??
                     'category',
                 value:
                     controller.selectedBill.value?.bill.name ??
                     controller.selectedCategory.value?.name,
                 hint: 'Select category or bill',
-                onTap: () => controller.selectCategoryOrBill(transactionType),
+                onTap: () async {
+                  FocusManager.instance.primaryFocus?.unfocus();
+
+                  await controller.selectCategoryOrBill(transactionType);
+                  debugPrint(
+                    '>>> EFFECTIVE TYPE: ${controller.effectiveTransactionType.name}',
+                  );
+                  debugPrint(
+                    '>>> SELECTED BILL: ${controller.selectedBill.value?.bill.name}',
+                  );
+                  debugPrint(
+                    '>>> IS LOAN: ${controller.selectedBill.value?.isLoanPayment}',
+                  );
+                  debugPrint(
+                    '>>> LINKED ACCOUNT: ${controller.selectedLinkedAccount.value?.id}',
+                  );
+                  debugPrint(
+                    '>>> IS TRANSACTION VALIE: ${controller.effectiveTransactionType.name == 'spend' ? controller.isSpendTransactionValid : controller.isDebtRepaymentTransactionValid}',
+                  );
+                },
+                // onTap: () async {
+                //   FocusManager.instance.primaryFocus?.unfocus();
+
+                //   final selectedTransactionType =
+                //       await controller.selectCategoryOrBill(transactionType);
+
+                //   if (selectedTransactionType == null) return;
+
+                //   transactionType = selectedTransactionType;
+                // },
               ),
             ),
             // Obx(
@@ -145,7 +174,9 @@ class SpendTransactionForm extends GetView<TransactionController> {
                       value: controller.selectedAccount.value?.name,
                       hint: 'Select account',
                       onTap: () {
-                        controller.selectAccount(transactionType);
+                        controller.selectAccount(
+                          controller.effectiveTransactionType,
+                        );
                       },
                     ),
                     SplitExpenseSection(

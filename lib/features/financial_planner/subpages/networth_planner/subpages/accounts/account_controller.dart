@@ -7,8 +7,10 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/add_account_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/loan_detail_sheet/loan_controller.dart';
 
 class AccountController extends GetxController {
+  final LoanController loanController = Get.find<LoanController>();
   Future<void> openAddAccount(AccountType accountType) async {
     selectAccountType(accountType);
 

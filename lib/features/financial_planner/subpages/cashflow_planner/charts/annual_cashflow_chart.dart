@@ -82,9 +82,11 @@ BarChartData _barChartData(
           reservedSize: 60,
           getTitlesWidget: (value, meta) {
             return Text(
-              value.toCompactCurrency(),
+              value.abs().toCompactCurrency(),
               style: AppTextStyle.labelXS.copyWith(
-                color: colorScheme.appInversedtext,
+                color: value < 0
+                    ? colorScheme.appOutflowInversed
+                    : colorScheme.appInflowInverse,
               ),
             );
           },
@@ -105,7 +107,7 @@ BarChartData _barChartData(
             return Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Text(
-                AppMonth.values[index].shortName,
+                AppMonth.values[index].shortName.trim().substring(0, 1),
                 style: AppTextStyle.labelXS.copyWith(
                   color: colorScheme.appInversedtext,
                 ),
@@ -123,13 +125,13 @@ BarChartData _barChartData(
         barRods: [
           BarChartRodData(
             toY: income[index],
-            width: 7,
+            width: 6,
             color: colorScheme.appInflowInverse,
             borderRadius: BorderRadius.circular(3),
           ),
           BarChartRodData(
             toY: budget[index],
-            width: 7,
+            width: 6,
             color: colorScheme.appOutflowInversed,
             borderRadius: BorderRadius.circular(3),
           ),
@@ -148,8 +150,8 @@ LineChartData _lineChartData(
   final colorScheme = context.colors;
 
   return LineChartData(
-    minX: -0.5,
-    maxX: 11.5,
+    minX: 0,
+    maxX: 11.6,
     minY: minY,
     maxY: maxY,
 
@@ -167,7 +169,7 @@ LineChartData _lineChartData(
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          reservedSize: 45,
+          reservedSize: 70,
           getTitlesWidget: (_, _) {
             return const SizedBox.shrink();
           },
@@ -194,9 +196,9 @@ LineChartData _lineChartData(
           (index) => FlSpot(index.toDouble(), net[index]),
         ),
 
-        isCurved: false,
+        isCurved: true,
 
-        barWidth: 2.5,
+        barWidth: 1.4,
 
         color: colorScheme.appInfo,
 

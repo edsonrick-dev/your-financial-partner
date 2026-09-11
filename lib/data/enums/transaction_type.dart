@@ -29,6 +29,7 @@ enum TransactionType {
       TransactionType.transfer => 'money transfer',
       TransactionType.give => 'amount given',
       TransactionType.receive => 'amount received',
+      TransactionType.debtRepayment => 'debt payment',
       _ => '',
     };
   }

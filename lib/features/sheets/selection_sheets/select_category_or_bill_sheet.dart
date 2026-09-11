@@ -98,6 +98,11 @@ class _SelectCategoryOrBillSheetState extends State<SelectCategoryOrBillSheet> {
                     CategoryList(
                       transactionType: widget.transactionType,
                       selectedCategory: widget.selectedCategory,
+                      onCategorySelected: (category) {
+                        Get.back<CategoryOrBillSelection>(
+                          result: CategorySelection(category),
+                        );
+                      },
                     ),
 
                     const _BillList(),
@@ -275,7 +280,9 @@ class _BillListItem extends StatelessWidget {
                     ),
                   ),
                   Icon(
-                    AppIcons.categories.resolve(bill.category.icon),
+                    bill.isLoanPayment
+                        ? AppIcons.categories.resolve(bill.loanAccount!.icon)
+                        : AppIcons.categories.resolve(bill.category!.icon),
                     size: 20,
                     color: color,
                   ),
@@ -294,7 +301,9 @@ class _BillListItem extends StatelessWidget {
                   const SizedBox(height: 2),
 
                   Text(
-                    bill.category.name,
+                    bill.isLoanPayment
+                        ? bill.loanAccount!.name
+                        : bill.category!.name,
                     style: AppTextStyle.labelS.copyWith(
                       color: colorScheme.appTextMuted,
                     ),

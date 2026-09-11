@@ -169,7 +169,9 @@ class _BillReminderItem extends StatelessWidget {
                   ),
                 ),
                 Icon(
-                  AppIcons.categories.resolve(bill.category.icon),
+                  bill.isLoanPayment
+                      ? AppIcons.categories.resolve(bill.loanAccount!.icon)
+                      : AppIcons.categories.resolve(bill.category!.icon),
                   size: 20,
                   color: color,
                 ),

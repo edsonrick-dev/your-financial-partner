@@ -63,6 +63,7 @@ class CashflowPlanSummarySection extends StatelessWidget {
             const SizedBox(height: 20),
 
             Row(
+              spacing: 16,
               children: [
                 Expanded(
                   child: _Metric(label: 'Planned', value: planned.toCurrency()),
@@ -153,10 +154,12 @@ class _Metric extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: AppTextStyle.amountM.copyWith(
-            color: valueColor ?? colorScheme.appInversedtext,
+        FittedBox(
+          child: Text(
+            value,
+            style: AppTextStyle.amountM.copyWith(
+              color: valueColor ?? colorScheme.appInversedtext,
+            ),
           ),
         ),
       ],

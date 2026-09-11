@@ -5003,6 +5003,7 @@ class $BillsTableTable extends BillsTable
     'monthMask',
   );
   @override
+  // ignore: override_on_non_overriding_member
   late final GeneratedColumn<int> monthMask = GeneratedColumn<int>(
     'month_mask',
     aliasedName,

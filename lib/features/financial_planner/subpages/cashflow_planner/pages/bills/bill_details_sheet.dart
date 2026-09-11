@@ -10,7 +10,7 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
-import 'package:getx_drift_app/domain/enums/app_month.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/controller/bill_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_payment_history.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_category.dart';
@@ -24,82 +24,6 @@ class BillDetailsSheet extends GetView<BillController> {
   const BillDetailsSheet({super.key, required this.item});
 
   final BillWithCategory item;
-  DateTime? _getNextDueDate({
-    required BillsTableData bill,
-    required List<BillOccurrencesTableData> occurrences,
-  }) {
-    final day = bill.dayOfMonth;
-
-    if (day == null) {
-      return null;
-    }
-
-    final lastDate = occurrences.isEmpty
-        ? DateTime.now()
-        : occurrences
-              .map((e) => e.dueDate)
-              .reduce((a, b) => a.isAfter(b) ? a : b);
-
-    final frequency = BillsFrequency.values.firstWhere(
-      (e) => e.name == bill.frequency,
-    );
-
-    switch (frequency) {
-      case BillsFrequency.monthly:
-        return _nextMonthlyDate(after: lastDate, day: day);
-
-      case BillsFrequency.quarterly:
-      case BillsFrequency.semiAnnual:
-      case BillsFrequency.annual:
-        return _nextPatternDate(
-          after: lastDate,
-          day: day,
-          monthMask: bill.monthMask ?? 0,
-        );
-
-      default:
-        return null;
-    }
-  }
-
-  DateTime _nextMonthlyDate({required DateTime after, required int day}) {
-    var year = after.year;
-    var month = after.month + 1;
-
-    if (month > 12) {
-      month = 1;
-      year++;
-    }
-
-    final lastDay = DateTime(year, month + 1, 0).day;
-
-    return DateTime(year, month, day.clamp(1, lastDay));
-  }
-
-  DateTime? _nextPatternDate({
-    required DateTime after,
-    required int day,
-    required int monthMask,
-  }) {
-    for (var offset = 1; offset <= 12; offset++) {
-      final candidateMonth = after.month + offset;
-
-      final year = after.year + ((candidateMonth - 1) ~/ 12);
-      final month = ((candidateMonth - 1) % 12) + 1;
-
-      final isSelected = monthMask & (1 << (month - 1)) != 0;
-
-      if (!isSelected) {
-        continue;
-      }
-
-      final lastDay = DateTime(year, month + 1, 0).day;
-
-      return DateTime(year, month, day.clamp(1, lastDay));
-    }
-
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,15 +50,15 @@ class BillDetailsSheet extends GetView<BillController> {
             ),
           );
         }
-
         final occurrences = snapshot.data ?? [];
+
+        final firstOccurrence = occurrences.isEmpty ? null : occurrences.first;
+
         final nextOccurrence = occurrences
             .where((occurrence) => !occurrence.isPaid)
             .firstOrNull;
 
-        final nextDueDate =
-            nextOccurrence?.dueDate ??
-            _getNextDueDate(bill: item.bill, occurrences: occurrences);
+        final nextDueDate = nextOccurrence?.dueDate;
 
         final nextAmount =
             nextOccurrence?.expectedAmount ?? item.bill.expectedAmount;
@@ -153,6 +77,7 @@ class BillDetailsSheet extends GetView<BillController> {
                       _buildBillSummary(
                         context,
                         bill: item.bill,
+                        firstOccurrence: firstOccurrence,
                         nextDueDate: nextDueDate,
                         nextAmount: nextAmount,
                         category: item.category,
@@ -207,7 +132,8 @@ class BillDetailsSheet extends GetView<BillController> {
     required BillsTableData bill,
     required DateTime? nextDueDate,
     required double nextAmount,
-    required CashflowCategoriesTableData category,
+    required CashflowCategoriesTableData? category,
+    required BillOccurrencesTableData? firstOccurrence,
   }) {
     final colorScheme = context.colors;
 
@@ -247,29 +173,16 @@ class BillDetailsSheet extends GetView<BillController> {
           ),
 
           Divider(color: colorScheme.appInversedtextMuted),
-
-          // -------------------------------------------------------------------
-          // RECURRENCE
-          // -------------------------------------------------------------------
-          _buildDetailRow(
-            context,
-            label: 'Recurrence',
-            value: _getFrequencyLabel(bill.frequency),
-          ),
-
-          // -------------------------------------------------------------------
-          // MONTH PATTERN
-          // -------------------------------------------------------------------
-          if (bill.monthMask != null)
+          if (firstOccurrence != null)
             _buildDetailRow(
               context,
               label: 'Months',
-              value: _getMonthMaskLabel(bill.monthMask),
+              value: _getScheduledMonthsLabel(
+                startDate: firstOccurrence.dueDate,
+                bill: bill,
+              ),
             ),
 
-          // -------------------------------------------------------------------
-          // DAY OF MONTH
-          // -------------------------------------------------------------------
           if (bill.dayOfMonth != null)
             _buildDetailRow(
               context,
@@ -281,6 +194,34 @@ class BillDetailsSheet extends GetView<BillController> {
     );
   }
 
+  String _getScheduledMonthsLabel({
+    required DateTime startDate,
+    required BillsTableData bill,
+  }) {
+    final frequency = BillsFrequency.values.firstWhere(
+      (value) => value.name == bill.frequency,
+    );
+
+    if (frequency == BillsFrequency.monthly) {
+      return 'Every Month';
+    }
+
+    final anchorDay = bill.dayOfMonth;
+
+    if (anchorDay == null) {
+      return '—';
+    }
+
+    final months = const BillScheduleCalculator().getImpactedMonths(
+      startDate: startDate,
+      frequency: frequency,
+      anchorDay: anchorDay,
+    );
+
+    return months
+        .map((month) => DateFormat('MMM').format(DateTime(2000, month)))
+        .join(' | ');
+  }
   // ---------------------------------------------------------------------------
   // DETAIL ROW
   // ---------------------------------------------------------------------------
@@ -401,47 +342,8 @@ class BillDetailsSheet extends GetView<BillController> {
   // FREQUENCY
   // ---------------------------------------------------------------------------
 
-  String _getFrequencyLabel(String frequency) {
-    switch (frequency) {
-      case 'monthly':
-        return 'Monthly';
-
-      case 'quarterly':
-        return 'Quarterly';
-
-      case 'semiAnnual':
-        return 'Every 6 months';
-
-      case 'annual':
-        return 'Annually';
-
-      default:
-        return frequency;
-    }
-  }
-
   // ---------------------------------------------------------------------------
   // MONTH MASK
-  // ---------------------------------------------------------------------------
-
-  String _getMonthMaskLabel(int? mask) {
-    if (mask == null) {
-      return '—';
-    }
-
-    final months = AppMonth.values.where((month) {
-      return (mask & (1 << (month.number - 1))) != 0;
-    }).toList();
-
-    if (months.isEmpty) {
-      return '—';
-    }
-
-    return months.map((month) => month.shortName).join(' | ');
-  }
-
-  // ---------------------------------------------------------------------------
-  // DAY OF MONTH
   // ---------------------------------------------------------------------------
 
   String _getDayLabel(int day) {

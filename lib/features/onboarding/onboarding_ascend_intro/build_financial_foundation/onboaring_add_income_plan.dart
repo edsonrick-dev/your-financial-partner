@@ -10,7 +10,6 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/update_account_balance_sheet.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_controller.dart';
@@ -25,7 +24,7 @@ class OnboaringAddIncomePlan extends GetView<OnboardingController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    final networthController = Get.find<NetWorthController>();
+    // final networthController = Get.find<NetWorthController>();
     // final accountCount = networthController.cashAndBankAccounts.length;
 
     return Scaffold(

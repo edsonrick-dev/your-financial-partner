@@ -53,7 +53,7 @@ class FinancialPlannerPicker extends GetView<FinancialPlannerController> {
         spacing: 8,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
           ...controller.financialPlannerPages.asMap().entries.map((entry) {
             final index = entry.key;
             final item = entry.value;
@@ -64,7 +64,7 @@ class FinancialPlannerPicker extends GetView<FinancialPlannerController> {
             );
           }),
 
-          SizedBox(width: 16),
+          SizedBox(width: 12),
         ],
       ),
     );

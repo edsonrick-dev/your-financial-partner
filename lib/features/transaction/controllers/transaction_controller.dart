@@ -17,12 +17,42 @@ import 'package:intl/intl.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
 
 class TransactionController extends GetxController {
-  void prepareBillPayment(BillWithNextOccurrence bill) {
-    selectedBill.value = bill;
-    selectedCategory.value = bill.category;
-    amount.value = bill.occurrence.expectedAmount;
+  TransactionType get effectiveTransactionType {
+    final bill = selectedBill.value;
+
+    if (bill == null) {
+      return TransactionType.spend;
+    }
+
+    return bill.isLoanPayment
+        ? TransactionType.debtRepayment
+        : TransactionType.spend;
   }
 
+  void prepareBillPayment(BillWithNextOccurrence bill) {
+    debugPrint(
+      '>>> prepareBillPayment: existing editingTransaction = '
+      '${editingTransaction.value?.transaction.id}',
+    );
+    editingTransaction.value = null;
+
+    selectedBill.value = bill;
+
+    amount.value = bill.occurrence.expectedAmount;
+    selectedDate.value = bill.occurrence.dueDate;
+
+    selectedCategory.value = bill.category;
+
+    if (bill.isLoanPayment) {
+      selectedLinkedAccount.value = bill.loanAccount;
+    } else {
+      selectedLinkedAccount.value = null;
+    }
+    debugPrint(
+      '>>> prepareBillPayment: existing editingTransaction = '
+      '${editingTransaction.value?.transaction.id}',
+    );
+  }
   // Future<void> startBillPayment(BillWithNextOccurrence bill) async {
   //   // resetForm();
 
@@ -49,13 +79,46 @@ class TransactionController extends GetxController {
       case BillSelection(:final bill):
         selectedBill.value = bill;
         selectedCategory.value = bill.category;
+        amount.value = bill.occurrence.expectedAmount;
+
+        if (bill.isLoanPayment) {
+          selectedLinkedAccount.value = bill.loanAccount;
+        } else {
+          selectedLinkedAccount.value = null;
+        }
+    }
+  }
+
+  Future<TransactionType?> selectCategoryOrBill1(
+    TransactionType transactionType,
+  ) async {
+    final result = await AppSheets.selection.selectCategoryOrBill(
+      transactionType,
+      selectedCategory: selectedCategory.value,
+      selectedBill: selectedBill.value,
+    );
+
+    if (result == null) return null;
+
+    switch (result) {
+      case CategorySelection(:final category):
+        selectedCategory.value = category;
+        selectedBill.value = null;
+
+        return transactionType;
+
+      case BillSelection(:final bill):
+        selectedBill.value = bill;
+        selectedCategory.value = bill.category;
 
         // Use the bill's expected amount as the initial
         // transaction amount.
         amount.value = bill.occurrence.expectedAmount;
 
-      // Use the bill's due date as the transaction date.
-      // selectedDate.value = bill.occurrence.dueDate;
+        // Determine the transaction type from the bill.
+        return bill.isLoanPayment
+            ? TransactionType.debtRepayment
+            : TransactionType.spend;
     }
   }
 

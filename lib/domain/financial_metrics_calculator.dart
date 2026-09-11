@@ -79,6 +79,19 @@ class FinancialMetricsCalculator {
     );
   }
 
+  double calculateEmergencyFundTarget({
+    required double plannedAnnualBudget,
+    required double threshold,
+  }) {
+    if (plannedAnnualBudget <= 0 || threshold <= 0) {
+      return 0;
+    }
+
+    final totalLiquidityTarget = plannedAnnualBudget / 0.70;
+
+    return totalLiquidityTarget * (threshold / 100);
+  }
+
   double? calculateEmergencyFundRatio({
     required double liquidFunds,
     required double plannedAnnualBudget,

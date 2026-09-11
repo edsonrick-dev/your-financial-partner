@@ -106,7 +106,7 @@ class CashflowPlanCard extends GetView<CashflowController> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -126,6 +126,7 @@ class CashflowPlanCard extends GetView<CashflowController> {
                                 style: AppTextStyle.bodyS,
                               ),
                             ),
+                            SizedBox(width: 12),
                             Text(
                               amount.toCurrency(),
                               style: AppTextStyle.amountS,

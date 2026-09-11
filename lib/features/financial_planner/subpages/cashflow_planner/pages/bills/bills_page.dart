@@ -27,43 +27,6 @@ class BillsPage extends GetView<BillController> {
             },
             icon: Icon(PhosphorIconsRegular.plus),
           ),
-          IconButton(
-            onPressed: () async {
-              final bills = await database.billsDao.getAllBills();
-
-              debugPrint('========== SAVED BILLS ==========');
-
-              for (final bill in bills) {
-                debugPrint('Bill ID: ${bill.id}');
-                debugPrint('Name: ${bill.name}');
-                debugPrint('Category ID: ${bill.categoryId}');
-                debugPrint('Amount: ${bill.expectedAmount}');
-                debugPrint('Frequency: ${bill.frequency}');
-                debugPrint('Day: ${bill.dayOfMonth}');
-                debugPrint('Month Mask: ${bill.monthMask}');
-                debugPrint('Reminder: ${bill.reminderEnabled}');
-                debugPrint('Reminder Days: ${bill.reminderDaysBefore}');
-                debugPrint('--------------------------------');
-              }
-
-              final occurrences = await database.billsDao
-                  .getAllBillOccurrences();
-
-              debugPrint('========== SAVED OCCURRENCES ==========');
-
-              for (final occurrence in occurrences) {
-                debugPrint('Occurrence ID: ${occurrence.id}');
-                debugPrint('Bill ID: ${occurrence.billId}');
-                debugPrint('Due Date: ${occurrence.dueDate}');
-                debugPrint('Expected Amount: ${occurrence.expectedAmount}');
-                debugPrint('Actual Amount: ${occurrence.actualAmount}');
-                debugPrint('Is Paid: ${occurrence.isPaid}');
-                debugPrint('Transaction ID: ${occurrence.transactionId}');
-                debugPrint('--------------------------------');
-              }
-            },
-            icon: Icon(PhosphorIconsRegular.bug),
-          ),
         ],
       ),
 

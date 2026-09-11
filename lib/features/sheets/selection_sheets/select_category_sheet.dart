@@ -62,6 +62,9 @@ class SelectCategorySheet extends StatelessWidget {
                   transactionType: transactionType,
                   selectedCategory: selectedCategory,
                   excludedCategoryIds: excludedCategoryIds,
+                  onCategorySelected: (category) {
+                    Get.back<CashflowCategoriesTableData>(result: category);
+                  },
                 ),
               ),
 

@@ -8,18 +8,23 @@ import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/app_day.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_plan_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 
 class CashflowController extends GetxController {
+  Stream<List<BillWithNextOccurrence>> watchDebtRepaymentBills() {
+    return database.billsDao.watchLoanBills();
+  }
   // ===========================================================================
   // AddCashflowPlanMenu
   // ===========================================================================
@@ -44,6 +49,9 @@ class CashflowController extends GetxController {
 
   late final StreamSubscription<List<CashflowPlanWithCategory>>
   _cashflowPlansSubscription;
+
+  late final StreamSubscription<List<BillWithNextOccurrence>>
+  _debtRepaymentBillsSubscription;
 
   // ===========================================================================
   // Actions
@@ -117,6 +125,15 @@ class CashflowController extends GetxController {
     return result;
   }
 
+  double get minimumEmergencyFund => annualBudget.value / 4;
+  double get idealEmergencyFund => annualBudget.value;
+  double get idealAnnualIncome => annualBudget.value / 0.7;
+  double get idealMonthlyIncome => idealAnnualIncome / 12;
+  double get idealAnnualBudget => plannedAnnualIncome.value * 0.7;
+  double get idealMonthlyBudget => idealAnnualBudget / 12;
+  double get annualBudgetGap => annualBudget.value - idealAnnualBudget;
+  // double get currentEmergencyFund => financialProfileController.liquidFunds;
+  // double get emergencyFundGap => minimumEmergencyFund - currentEmergencyFund;
   // ===========================================================================
   // Lifecycle
   // ===========================================================================
@@ -131,7 +148,6 @@ class CashflowController extends GetxController {
           savedPlans.assignAll(plans);
           var income = 0.0;
           var expense = 0.0;
-          var debtRepayment = 0.0;
 
           for (final savedPlan in plans) {
             final annual = calculateSavedPlanAnnualAmount(
@@ -147,21 +163,46 @@ class CashflowController extends GetxController {
               case 'expense':
                 expense += annual;
                 break;
-
-              case 'debtRepayment':
-                debtRepayment += annual;
-                break;
             }
           }
           plannedAnnualIncome.value = income;
           annualExpense.value = expense;
-          annualDebtRepayment.value = debtRepayment;
-          annualBudget.value = expense + debtRepayment;
+
+          annualBudget.value = annualExpenseRatio + annualDebtRepayment.value;
+          // annualDebtRepayment.value = debtRepayment;
+          // annualBudget.value = expense + debtRepayment;
 
           await _refreshCurrentMonthBudgetItems();
           await _refreshMonthlyCashflow();
         });
+    _debtRepaymentBillsSubscription = watchDebtRepaymentBills().listen((
+      bills,
+    ) async {
+      annualDebtRepayment.value = calculateAnnualDebtRepayment(bills);
 
+      annualBudget.value = annualExpense.value + annualDebtRepayment.value;
+
+      await _refreshMonthlyCashflow();
+    });
+    // _debtRepaymentBillsSubscription = watchDebtRepaymentBills().listen((
+    //   bills,
+    // ) async {
+    //   var total = 0.0;
+
+    //   for (final bill in bills) {
+    //     final frequency = BillsFrequency.values.firstWhere(
+    //       (frequency) => frequency.name == bill.bill.frequency,
+    //     );
+
+    //     total += frequency.toAnnual(bill.bill.expectedAmount);
+    //   }
+
+    //   annualDebtRepayment.value = total;
+
+    //   annualBudget.value = annualExpense.value + annualDebtRepayment.value;
+
+    //   await _refreshMonthlyCashflow();
+    // });
     _budgetSubscription = database.transactionsDao
         .watchCurrentMonthExpensesByCategory(month: DateTime.now())
         .listen((spent) async {
@@ -172,7 +213,7 @@ class CashflowController extends GetxController {
   @override
   void onClose() {
     _cashflowPlansSubscription.cancel();
-
+    _debtRepaymentBillsSubscription.cancel();
     disposeDistributionFields();
     _budgetSubscription.cancel();
     super.onClose();
@@ -531,15 +572,24 @@ class CashflowController extends GetxController {
 
   List<double> get monthlyNetCashflow =>
       List.generate(12, (index) => monthlyIncome[index] - monthlyBudget[index]);
+
   Future<void> _refreshMonthlyCashflow() async {
     final year = DateTime.now().year;
+
     final plans = await database.cashflowPlanDao.getAllPlans();
+    final debtBills = await watchDebtRepaymentBills().first;
 
     final income = List<double>.filled(12, 0);
     final expense = List<double>.filled(12, 0);
     final debt = List<double>.filled(12, 0);
 
+    // Income + Expenses
     for (final plan in plans) {
+      // Debt repayment is no longer stored as a cash-flow plan.
+      if (plan.planType == 'debtRepayment') {
+        continue;
+      }
+
       final allocations = await database.cashflowPlanDao.getAllocationsForPlan(
         plan.id,
       );
@@ -562,12 +612,25 @@ class CashflowController extends GetxController {
             expense[i] += monthly[i];
           }
           break;
+      }
+    }
 
-        case 'debtRepayment':
-          for (var i = 0; i < 12; i++) {
-            debt[i] += monthly[i];
-          }
-          break;
+    // Debt Repayment
+    for (final bill in debtBills) {
+      final frequency = BillsFrequency.values.firstWhere(
+        (frequency) => frequency.name == bill.bill.frequency,
+      );
+
+      final scheduledMonths = BillScheduleCalculator().getImpactedMonths(
+        startDate: bill.occurrence.dueDate,
+        frequency: frequency,
+        anchorDay: bill.occurrence.dueDate.day,
+      );
+
+      for (final month in scheduledMonths) {
+        if (month >= 1 && month <= 12) {
+          debt[month - 1] += bill.bill.expectedAmount;
+        }
       }
     }
 
@@ -595,8 +658,26 @@ class CashflowController extends GetxController {
 
   final RxDouble plannedAnnualIncome = 0.0.obs;
   final RxDouble annualBudget = 0.0.obs;
+  double get averageMonthlyBudget => annualBudget.value / 12;
   final RxDouble annualExpense = 0.0.obs;
   final RxDouble annualDebtRepayment = 0.0.obs;
+
+  double calculateAnnualDebtRepayment(List<BillWithNextOccurrence> bills) {
+    return bills.fold<double>(0, (total, bill) {
+      final frequency = BillsFrequency.values
+          .cast<BillsFrequency?>()
+          .firstWhere(
+            (frequency) => frequency?.name == bill.bill.frequency,
+            orElse: () => null,
+          );
+
+      if (frequency == null) {
+        return total;
+      }
+
+      return total + frequency.toAnnual(bill.occurrence.expectedAmount);
+    });
+  }
 
   bool get hasAnnualSurplus {
     return annualCashflowDifference >= 0;

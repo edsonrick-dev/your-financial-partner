@@ -11,8 +11,10 @@ class TransactionFormRegistry {
     switch (type) {
       case TransactionType.earn:
         return EarnTransactionForm();
+
       case TransactionType.spend:
-        return SpendTransactionForm();
+      case TransactionType.debtRepayment:
+        return SpendTransactionForm(transactionType: type);
 
       case TransactionType.transfer:
         return TransferTransactionForm();

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/domain/enums/app_month.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/controller/bill_controller.dart';
+import 'package:intl/intl.dart';
 
 class BillScheduleSummary extends GetView<BillController> {
   const BillScheduleSummary({super.key});
@@ -13,57 +14,122 @@ class BillScheduleSummary extends GetView<BillController> {
     final colorScheme = context.colors;
 
     return Obx(() {
-      final nextDueDate = controller.nextDueDate.value;
+      final startDate = controller.nextPaymentDate.value;
+      final frequency = controller.selectedPeriod.value;
 
-      if (nextDueDate == null) {
+      if (startDate == null || frequency == null) {
         return const SizedBox.shrink();
       }
 
-      final reminderDays = controller.reminderDaysBefore.value;
+      final dates = _generateNext12Months(
+        startDate: startDate,
+        frequency: frequency,
+      );
 
-      final reminderDate =
-          controller.reminderEnabled.value && reminderDays != null
-          ? nextDueDate.subtract(Duration(days: reminderDays))
-          : null;
+      if (dates.isEmpty) {
+        return const SizedBox.shrink();
+      }
 
-      return Container(
-        // height: 44,
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: colorScheme.bgLight,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: colorScheme.appBorderMuted),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 8,
-          children: [
-            Text('Bill Summary', style: AppTextStyle.titleM),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Payment Schedule', style: AppTextStyle.bodyM),
+          const SizedBox(height: 8),
 
-            Text(
-              'Your next bill is due on '
-              '${_formatDate(nextDueDate)}.',
-              style: AppTextStyle.bodyM,
-            ),
+          ...dates.map(
+            (date) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      DateFormat('MMMM d, yyyy').format(date),
+                      style: AppTextStyle.bodyM.copyWith(
+                        color: colorScheme.appText,
+                      ),
+                    ),
+                  ),
 
-            if (reminderDate != null)
-              Text(
-                'You\'ll be reminded on '
-                '${_formatDate(reminderDate)}.',
-                style: AppTextStyle.bodyM.copyWith(
-                  color: colorScheme.appTextMuted,
-                ),
+                  Text(
+                    '₱${controller.billAmount.value.toStringAsFixed(2)}',
+                    style: AppTextStyle.bodyM.copyWith(
+                      color: colorScheme.appText,
+                    ),
+                  ),
+                ],
               ),
-          ],
-        ),
+            ),
+          ),
+        ],
       );
     });
   }
 
-  String _formatDate(DateTime date) {
-    final month = AppMonth.values[date.month - 1];
+  List<DateTime> _generateNext12Months({
+    required DateTime startDate,
+    required BillsFrequency frequency,
+  }) {
+    final dates = <DateTime>[];
 
-    return '${month.fullName} ${date.day}, ${date.year}';
+    final endDate = DateTime(
+      startDate.year + 1,
+      startDate.month,
+      startDate.day,
+    );
+
+    final anchorDay = startDate.day;
+
+    var currentDate = startDate;
+
+    while (currentDate.isBefore(endDate)) {
+      dates.add(currentDate);
+
+      currentDate = _getNextOccurrence(
+        currentDate,
+        frequency,
+        anchorDay: anchorDay,
+      );
+    }
+
+    return dates;
+  }
+
+  DateTime _getNextOccurrence(
+    DateTime date,
+    BillsFrequency frequency, {
+    required int anchorDay,
+  }) {
+    switch (frequency) {
+      case BillsFrequency.monthly:
+        return _addMonthsClamped(date, 1, anchorDay: anchorDay);
+
+      case BillsFrequency.quarterly:
+        return _addMonthsClamped(date, 3, anchorDay: anchorDay);
+
+      case BillsFrequency.semiAnnual:
+        return _addMonthsClamped(date, 6, anchorDay: anchorDay);
+
+      case BillsFrequency.annual:
+        return _addMonthsClamped(date, 12, anchorDay: anchorDay);
+
+      case BillsFrequency.weekly:
+        return date.add(const Duration(days: 7));
+
+      case BillsFrequency.biWeekly:
+      case BillsFrequency.fortnightly:
+        return date.add(const Duration(days: 14));
+    }
+  }
+
+  DateTime _addMonthsClamped(
+    DateTime date,
+    int months, {
+    required int anchorDay,
+  }) {
+    final target = DateTime(date.year, date.month + months, 1);
+
+    final lastDay = DateTime(target.year, target.month + 1, 0).day;
+
+    return DateTime(target.year, target.month, anchorDay.clamp(1, lastDay));
   }
 }

@@ -4,13 +4,11 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
-
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
-import 'package:getx_drift_app/domain/enums/app_day.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
-import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/enums/bill_budget_status_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_payment_history.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_category.dart';
@@ -21,6 +19,33 @@ import 'package:drift/drift.dart' as drift;
 import 'package:intl/intl.dart';
 
 class BillController extends GetxController {
+  final RxDouble billAmount = 0.0.obs;
+
+  final billNameFocusNode = FocusNode();
+  final billNameController = TextEditingController();
+
+  final Rxn<BillsFrequency> selectedPeriod = Rxn<BillsFrequency>(
+    BillsFrequency.monthly,
+  );
+
+  final isBillValid = false.obs;
+
+  final Rxn<DateTime> nextPaymentDate = Rxn<DateTime>();
+  String? get formattedNextPaymentDate {
+    final date = nextPaymentDate.value;
+
+    if (date == null) return null;
+
+    return DateFormat('MMMM d, yyyy').format(date);
+  }
+
+  ///==========================================================================================
+  ///==========================================================================================
+
+  // String get formattedNextPaymentDateHint {
+  //   return DateFormat('MMMM d, yyyy').format(DateTime.now());
+  // }
+
   @override
   void onInit() {
     super.onInit();
@@ -74,149 +99,6 @@ class BillController extends GetxController {
       allocations: existingPlan.allocations,
       year: DateTime.now().year,
     );
-  }
-
-  List<double> _addBillToMonthlyDistribution({
-    required List<double> distribution,
-    required double billAmount,
-    required MonthPattern pattern,
-  }) {
-    final updated = List<double>.from(distribution);
-
-    for (final month in pattern.months) {
-      final index = month.number - 1;
-      updated[index] += billAmount;
-    }
-
-    return updated;
-  }
-
-  Future<void> increaseBudgetToFitBill() async {
-    final category = transactionController.selectedCategory.value;
-    final billFrequency = selectedPeriod.value;
-
-    if (category == null || billFrequency == null) {
-      return;
-    }
-
-    try {
-      // Get all existing expense plans for this category.
-      final existingPlans = await database.cashflowPlanDao
-          .getExpensePlansForCategory(category.id);
-      debugPrint('========== EXISTING PLANS ==========');
-      debugPrint('Selected category: ${category.name}');
-      debugPrint('Selected category ID: ${category.id}');
-      debugPrint('Found plans: ${existingPlans.length}');
-
-      for (final plan in existingPlans) {
-        debugPrint(
-          'PLAN ID: ${plan.plan.id} | '
-          'categoryId: ${plan.plan.categoryId} | '
-          'category: ${plan.category.name} | '
-          'type: ${plan.plan.planType} | '
-          'amount: ${plan.plan.amount} | '
-          'period: ${plan.plan.period}',
-        );
-      }
-
-      debugPrint('====================================');
-      // No existing budget.
-      if (existingPlans.isEmpty) {
-        await createMinimumBudget();
-        return;
-      }
-
-      // For now, use the existing budget plan.
-      //
-      // If your product allows multiple expense plans for the
-      // same category, we should decide which one this bill belongs to.
-      final existingPlan = existingPlans.first;
-
-      // ============================================================
-      // MONTHLY
-      // ============================================================
-
-      if (existingPlan.plan.period == BudgetPeriod.monthly.name &&
-          existingPlan.plan.distributionType ==
-              CashFlowDistribution.defaultDistribution.name &&
-          billFrequency == BillsFrequency.monthly) {
-        final existingBillsMonthlyAmount = existingBillsAnnualAmount / 12;
-
-        final requiredMonthlyBudget =
-            existingBillsMonthlyAmount + billAmount.value;
-
-        final currentBudget = existingPlan.plan.amount;
-
-        if (requiredMonthlyBudget <= currentBudget) {
-          await saveBill();
-          return;
-        }
-
-        await database.cashflowPlanDao.updatePlanAmount(
-          planId: existingPlan.plan.id,
-          amount: requiredMonthlyBudget,
-        );
-
-        await saveBill();
-        return;
-      }
-
-      if (billFrequency == BillsFrequency.quarterly ||
-          billFrequency == BillsFrequency.semiAnnual ||
-          billFrequency == BillsFrequency.annual) {
-        final pattern = selectedMonthPattern.value;
-
-        if (pattern == null) {
-          debugPrint(
-            '${billFrequency.name.toUpperCase()} BILL FAILED: '
-            'no month pattern selected',
-          );
-          return;
-        }
-
-        final existingDistribution = _getExistingPlanMonthlyDistribution(
-          existingPlan,
-        );
-
-        final updatedDistribution = _addBillToMonthlyDistribution(
-          distribution: existingDistribution,
-          billAmount: billAmount.value,
-          pattern: pattern,
-        );
-
-        debugPrint(
-          '========== ${billFrequency.name.toUpperCase()} '
-          'BUDGET UPDATE ==========',
-        );
-
-        debugPrint('Existing distribution: $existingDistribution');
-        debugPrint('Bill amount: ${billAmount.value}');
-        debugPrint(
-          'Pattern: ${pattern.months.map((e) => e.shortName).join(' | ')}',
-        );
-        debugPrint('Updated distribution: $updatedDistribution');
-
-        await database.cashflowPlanDao.convertPlanToYearlyCustom(
-          planId: existingPlan.plan.id,
-          monthlyAllocations: updatedDistribution,
-        );
-
-        final allocations = await database.cashflowPlanDao
-            .getAllocationsForPlan(existingPlan.plan.id);
-
-        for (final allocation in allocations) {
-          debugPrint(
-            'ALLOCATION ${allocation.allocationIndex}: ${allocation.amount}',
-          );
-        }
-
-        await saveBill();
-        return;
-      }
-    } catch (e, stackTrace) {
-      debugPrint('INCREASE BUDGET FAILED: $e');
-      debugPrint('$stackTrace');
-    }
   }
 
   Future<void> deletePaymentHistory(BillPaymentHistory payment) async {
@@ -326,6 +208,7 @@ class BillController extends GetxController {
       bill: item.bill,
       occurrence: nextOccurrence,
       category: item.category,
+      loanAccount: item.loanAccount,
     );
 
     Get.back();
@@ -364,15 +247,26 @@ class BillController extends GetxController {
 
   Future<void> createMinimumBudget() async {
     final category = transactionController.selectedCategory.value;
+    final frequency = selectedPeriod.value;
+    final dueDate = nextPaymentDate.value;
+    final amount = billAmount.value;
 
     if (category == null) {
       debugPrint('CREATE MINIMUM BUDGET FAILED: category is null');
       return;
     }
 
-    final monthlyAmount = annualBill / 12;
+    if (frequency == null) {
+      debugPrint('CREATE MINIMUM BUDGET FAILED: frequency is null');
+      return;
+    }
 
-    if (monthlyAmount <= 0) {
+    if (dueDate == null) {
+      debugPrint('CREATE MINIMUM BUDGET FAILED: due date is null');
+      return;
+    }
+
+    if (amount <= 0) {
       debugPrint('CREATE MINIMUM BUDGET FAILED: amount <= 0');
       return;
     }
@@ -380,19 +274,247 @@ class BillController extends GetxController {
     debugPrint('========== CREATE MINIMUM BUDGET ==========');
     debugPrint('category: ${category.name}');
     debugPrint('categoryId: ${category.id}');
-    debugPrint('monthlyAmount: $monthlyAmount');
+    debugPrint('frequency: ${frequency.name}');
+    debugPrint('amount: $amount');
+    debugPrint('annualBill: $annualBill');
+    debugPrint('first due date: $dueDate');
 
     try {
-      await _createMonthlyExpenseBudget(
-        categoryId: category.id,
-        amount: monthlyAmount,
+      // ============================================================
+      // MONTHLY
+      // ============================================================
+
+      if (frequency == BillsFrequency.monthly) {
+        await _createMonthlyExpenseBudget(
+          categoryId: category.id,
+          amount: amount,
+        );
+
+        debugPrint(
+          'MONTHLY BUDGET CREATED: '
+          '$amount/month',
+        );
+
+        await saveBill();
+        return;
+      }
+
+      // ============================================================
+      // YEARLY CUSTOM
+      // ============================================================
+
+      if (frequency == BillsFrequency.quarterly ||
+          frequency == BillsFrequency.semiAnnual ||
+          frequency == BillsFrequency.annual) {
+        final impactedMonths = const BillScheduleCalculator().getImpactedMonths(
+          startDate: dueDate,
+          frequency: frequency,
+          anchorDay: dueDate.day,
+        );
+
+        final monthlyAllocations = List<double>.filled(12, 0);
+
+        for (final month in impactedMonths) {
+          monthlyAllocations[month - 1] = amount;
+        }
+
+        debugPrint('Impacted months: ${impactedMonths.join(' | ')}');
+
+        debugPrint('Monthly allocations: $monthlyAllocations');
+
+        final now = DateTime.now();
+
+        final planId = await database.cashflowPlanDao.insertPlan(
+          CashFlowPlansCompanion.insert(
+            categoryId: drift.Value<int?>(category.id),
+            loanId: const drift.Value<int?>(null),
+            planType: 'expense',
+            amount: 0.0,
+            period: BudgetPeriod.yearly.name,
+            distributionType: CashFlowDistribution.custom.name,
+            startDate: now,
+            endDate: const drift.Value<DateTime?>(null),
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
+
+        await database.cashflowPlanDao.insertAllocations(
+          List.generate(
+            12,
+            (index) => CashFlowPlanAllocationsCompanion.insert(
+              planId: planId,
+              allocationIndex: index,
+              amount: monthlyAllocations[index],
+            ),
+          ),
+        );
+
+        debugPrint(
+          'YEARLY CUSTOM BUDGET CREATED: '
+          'planId=$planId '
+          'annualBill=$annualBill',
+        );
+
+        await saveBill();
+        return;
+      }
+
+      debugPrint(
+        'CREATE MINIMUM BUDGET FAILED: '
+        'unsupported frequency ${frequency.name}',
       );
-
-      debugPrint('MINIMUM BUDGET CREATED');
-
-      await saveBill();
     } catch (e, stackTrace) {
       debugPrint('CREATE MINIMUM BUDGET FAILED: $e');
+      debugPrint('$stackTrace');
+    }
+  }
+
+  Future<void> increaseBudgetToFitBill() async {
+    final category = transactionController.selectedCategory.value;
+    final billFrequency = selectedPeriod.value;
+    final dueDate = nextPaymentDate.value;
+
+    if (category == null || billFrequency == null || dueDate == null) {
+      return;
+    }
+
+    try {
+      // ============================================================
+      // GET EXISTING PLANS
+      // ============================================================
+
+      final existingPlans = await database.cashflowPlanDao
+          .getExpensePlansForCategory(category.id);
+
+      debugPrint('========== EXISTING PLANS ==========');
+      debugPrint('Selected category: ${category.name}');
+      debugPrint('Selected category ID: ${category.id}');
+      debugPrint('Found plans: ${existingPlans.length}');
+
+      for (final plan in existingPlans) {
+        debugPrint(
+          'PLAN ID: ${plan.plan.id} | '
+          'categoryId: ${plan.plan.categoryId} | '
+          'category: ${plan.category.name} | '
+          'type: ${plan.plan.planType} | '
+          'amount: ${plan.plan.amount} | '
+          'period: ${plan.plan.period} | '
+          'distribution: ${plan.plan.distributionType}',
+        );
+      }
+
+      debugPrint('====================================');
+
+      // ============================================================
+      // NO EXISTING BUDGET
+      // ============================================================
+
+      if (existingPlans.isEmpty) {
+        await createMinimumBudget();
+        return;
+      }
+
+      final existingPlan = existingPlans.first;
+
+      // ============================================================
+      // MONTHLY
+      // ============================================================
+
+      if (billFrequency == BillsFrequency.monthly &&
+          existingPlan.plan.period == BudgetPeriod.monthly.name &&
+          existingPlan.plan.distributionType ==
+              CashFlowDistribution.defaultDistribution.name) {
+        final existingBillsMonthlyAmount = existingBillsAnnualAmount / 12;
+
+        final requiredMonthlyBudget =
+            existingBillsMonthlyAmount + billAmount.value;
+
+        final currentBudget = existingPlan.plan.amount;
+
+        debugPrint('========== MONTHLY BUDGET UPDATE ==========');
+        debugPrint('Existing bills monthly: $existingBillsMonthlyAmount');
+        debugPrint('New bill monthly: ${billAmount.value}');
+        debugPrint('Required monthly budget: $requiredMonthlyBudget');
+        debugPrint('Current budget: $currentBudget');
+
+        if (requiredMonthlyBudget <= currentBudget) {
+          await saveBill();
+          return;
+        }
+
+        await database.cashflowPlanDao.updatePlanAmount(
+          planId: existingPlan.plan.id,
+          amount: requiredMonthlyBudget,
+        );
+
+        debugPrint('MONTHLY BUDGET UPDATED: $requiredMonthlyBudget/month');
+
+        await saveBill();
+        return;
+      }
+
+      // ============================================================
+      // QUARTERLY / SEMI-ANNUAL / ANNUAL
+      // ============================================================
+
+      if (billFrequency == BillsFrequency.quarterly ||
+          billFrequency == BillsFrequency.semiAnnual ||
+          billFrequency == BillsFrequency.annual) {
+        final existingDistribution = _getExistingPlanMonthlyDistribution(
+          existingPlan,
+        );
+
+        final impactedMonths = const BillScheduleCalculator().getImpactedMonths(
+          startDate: dueDate,
+          frequency: billFrequency,
+          anchorDay: dueDate.day,
+        );
+
+        final updatedDistribution = List<double>.from(existingDistribution);
+
+        for (final month in impactedMonths) {
+          updatedDistribution[month - 1] += billAmount.value;
+        }
+
+        debugPrint(
+          '========== ${billFrequency.name.toUpperCase()} '
+          'BUDGET UPDATE ==========',
+        );
+
+        debugPrint('Existing distribution: $existingDistribution');
+
+        debugPrint('Bill amount: ${billAmount.value}');
+
+        debugPrint('Impacted months: ${impactedMonths.join(' | ')}');
+
+        debugPrint('Updated distribution: $updatedDistribution');
+
+        await database.cashflowPlanDao.convertPlanToYearlyCustom(
+          planId: existingPlan.plan.id,
+          monthlyAllocations: updatedDistribution,
+        );
+
+        final allocations = await database.cashflowPlanDao
+            .getAllocationsForPlan(existingPlan.plan.id);
+
+        for (final allocation in allocations) {
+          debugPrint(
+            'ALLOCATION ${allocation.allocationIndex}: '
+            '${allocation.amount}',
+          );
+        }
+
+        await saveBill();
+        return;
+      }
+
+      debugPrint(
+        'INCREASE BUDGET FAILED: '
+        'unsupported frequency ${billFrequency.name}',
+      );
+    } catch (e, stackTrace) {
+      debugPrint('INCREASE BUDGET FAILED: $e');
       debugPrint('$stackTrace');
     }
   }
@@ -404,19 +526,16 @@ class BillController extends GetxController {
     final amount = billAmount.value;
     final frequency = selectedPeriod.value;
     final category = transactionController.selectedCategory.value;
-    final dueDate = nextDueDate.value;
-    final monthMask = selectedMonthPattern.value?.monthMask;
+    final dueDate = nextPaymentDate.value;
 
     debugPrint('name: $name');
     debugPrint('amount: $amount');
     debugPrint('frequency: ${frequency?.name}');
     debugPrint('categoryId: ${category?.id}');
     debugPrint('categoryName: ${category?.name}');
-    debugPrint('dayOfMonth: ${selectedMonthDay.value}');
-    debugPrint('monthMask: $monthMask');
     debugPrint('dueDate: $dueDate');
-    debugPrint('reminderEnabled: ${reminderEnabled.value}');
-    debugPrint('reminderDaysBefore: ${reminderDaysBefore.value}');
+    // debugPrint('reminderEnabled: ${reminderEnabled.value}');
+    // debugPrint('reminderDaysBefore: ${reminderDaysBefore.value}');
 
     if (name.isEmpty) {
       debugPrint('SAVE FAILED: name is empty');
@@ -439,7 +558,7 @@ class BillController extends GetxController {
     }
 
     if (dueDate == null) {
-      debugPrint('SAVE FAILED: nextDueDate is null');
+      debugPrint('SAVE FAILED: nextPaymentDate is null');
       return;
     }
 
@@ -450,12 +569,13 @@ class BillController extends GetxController {
         bill: BillsTableCompanion.insert(
           name: name,
           categoryId: drift.Value(category.id),
+          loanAccountId: const drift.Value(null),
           expectedAmount: amount,
           frequency: frequency.name,
-          dayOfMonth: drift.Value(selectedMonthDay.value),
-          monthMask: drift.Value(monthMask),
-          reminderEnabled: drift.Value(reminderEnabled.value),
-          reminderDaysBefore: drift.Value(reminderDaysBefore.value),
+          dayOfMonth: drift.Value(dueDate.day),
+          monthMask: const drift.Value(null),
+          // reminderEnabled: drift.Value(reminderEnabled.value),
+          // reminderDaysBefore: drift.Value(reminderDaysBefore.value),
         ),
         dueDate: dueDate,
         expectedAmount: amount,
@@ -465,7 +585,6 @@ class BillController extends GetxController {
 
       Get.back();
 
-      debugPrint('FORM RESET');
       debugPrint('BOTTOM SHEET CLOSED');
       debugPrint('================================');
     } catch (e, stackTrace) {
@@ -479,29 +598,11 @@ class BillController extends GetxController {
 
   void resetForm() {
     billNameController.clear();
-
-    billAmount.value = 0.0;
-
-    selectedPeriod.value = BillsFrequency.monthly;
-
-    selectedWeekday.value = null;
-
-    firstBiWeeklyDay.value = null;
-    secondBiWeeklyDay.value = null;
-
-    fortnightlyNextBill.value = null;
-
-    selectedMonthDay.value = null;
-    selectedMonthPattern.value = null;
-
-    reminderEnabled.value = false;
-    reminderDaysBefore.value = null;
-
-    nextDueDate.value = null;
-
-    isBillValid.value = false;
-
     transactionController.selectedCategory.value = null;
+    billAmount.value = 0.0;
+    nextPaymentDate.value = null;
+    selectedPeriod.value = BillsFrequency.monthly;
+    isBillValid.value = false;
   }
 
   double get selectedCategoryAnnualBudget {
@@ -621,123 +722,85 @@ class BillController extends GetxController {
     return cashflowController.getBudgetForCategory(category.id) > 0;
   }
 
-  final nextDueDate = Rxn<DateTime>();
-  void updateNextDueDate() {
-    final day = selectedMonthDay.value;
+  // void updateNextDueDate() {
+  //   final day = selectedMonthDay.value;
+  //   final frequency = selectedPeriod.value;
 
-    if (day == null) {
-      nextDueDate.value = null;
-      return;
-    }
+  //   if (day == null || frequency == null) {
+  //     nextDueDate.value = null;
+  //     return;
+  //   }
 
-    final frequency = selectedPeriod.value;
+  //   final now = DateTime.now();
+  //   final today = DateTime(now.year, now.month, now.day);
 
-    if (frequency == null) {
-      nextDueDate.value = null;
-      return;
-    }
+  //   DateTime createSafeDate(int year, int month, int day) {
+  //     final lastDayOfMonth = DateTime(year, month + 1, 0).day;
 
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
+  //     return DateTime(year, month, day.clamp(1, lastDayOfMonth));
+  //   }
 
-    DateTime createSafeDate(int year, int month, int day) {
-      final lastDayOfMonth = DateTime(year, month + 1, 0).day;
+  //   // The current month is the anchor month.
+  //   var dueDate = createSafeDate(now.year, now.month, day);
 
-      return DateTime(year, month, day > lastDayOfMonth ? lastDayOfMonth : day);
-    }
+  //   // If this month's occurrence has already passed,
+  //   // move to the next occurrence according to the frequency.
+  //   if (dueDate.isBefore(today)) {
+  //     dueDate = _scheduleCalculator.getNextOccurrence(
+  //       currentDate: dueDate,
+  //       frequency: frequency,
+  //       anchorDay: day,
+  //     );
+  //   }
 
-    if (frequency == BillsFrequency.monthly) {
-      var dueDate = createSafeDate(now.year, now.month, day);
+  //   nextDueDate.value = dueDate;
+  // }
 
-      if (dueDate.isBefore(today)) {
-        dueDate = createSafeDate(now.year, now.month + 1, day);
-      }
-
-      nextDueDate.value = dueDate;
-      return;
-    }
-
-    final pattern = selectedMonthPattern.value;
-
-    if (pattern == null || pattern.months.isEmpty) {
-      nextDueDate.value = null;
-      return;
-    }
-
-    DateTime? nextDate;
-
-    for (final month in pattern.months) {
-      final candidate = createSafeDate(now.year, month.number, day);
-
-      if (!candidate.isBefore(today)) {
-        nextDate = candidate;
-        break;
-      }
-    }
-
-    nextDate ??= createSafeDate(now.year + 1, pattern.months.first.number, day);
-
-    nextDueDate.value = nextDate;
-  }
-
-  final reminderEnabled = false.obs;
-  final reminderDaysBefore = Rxn<int>();
-  final RxDouble billAmount = 0.0.obs;
-  final billNameFocusNode = FocusNode();
-  final billNameController = TextEditingController();
+  // final RxDouble billAmount = 0.0.obs;
+  // final billNameFocusNode = FocusNode();
+  // final billNameController = TextEditingController();
   // final selectedFrequency = Rxn();
-  final Rxn<BillsFrequency> selectedPeriod = Rxn<BillsFrequency>(
-    BillsFrequency.monthly,
-  );
+  // final Rxn<BillsFrequency> selectedPeriod = Rxn<BillsFrequency>(
+  //   BillsFrequency.monthly,
+  // );
 
   // Weekly
-  final selectedWeekday = Rxn<AppDay>();
+  // final selectedWeekday = Rxn<AppDay>();
 
   // Bi-weekly
-  final firstBiWeeklyDay = Rxn<int>();
-  final secondBiWeeklyDay = Rxn<int>();
+  // final firstBiWeeklyDay = Rxn<int>();
+  // final secondBiWeeklyDay = Rxn<int>();
 
-  // Fortnightly
-  final fortnightlyNextBill = Rxn<DateTime>();
+  // // Fortnightly
+  // final fortnightlyNextBill = Rxn<DateTime>();
 
-  // Monthly
-  final selectedMonthDay = Rxn<int>();
+  // // Monthly
+  // final selectedMonthDay = Rxn<int>();
 
-  // Quarterly / Semi-annual / Annual
-  final selectedMonthPattern = Rxn<MonthPattern>();
-  void selectPeriod(BillsFrequency period) {
-    selectedPeriod.value = period;
-    _resetOccurrenceSelections();
-    validateBill();
-  }
+  // // Quarterly / Semi-annual / Annual
+  // final selectedMonthPattern = Rxn<MonthPattern>();
+  // void selectPeriod(BillsFrequency period) {
+  //   selectedPeriod.value = period;
+  //   _resetOccurrenceSelections();
+  //   validateBill();
+  // }
 
-  void _resetOccurrenceSelections() {
-    selectedWeekday.value = null;
+  // void _resetOccurrenceSelections() {
+  //   selectedWeekday.value = null;
 
-    firstBiWeeklyDay.value = null;
-    secondBiWeeklyDay.value = null;
+  //   firstBiWeeklyDay.value = null;
+  //   secondBiWeeklyDay.value = null;
 
-    fortnightlyNextBill.value = null;
+  //   fortnightlyNextBill.value = null;
 
-    selectedMonthDay.value = null;
+  //   selectedMonthDay.value = null;
 
-    selectedMonthPattern.value = null;
-    updateNextDueDate();
-  }
+  //   selectedMonthPattern.value = null;
+  //   updateNextDueDate();
+  // }
 
-  final isBillValid = false.obs;
-  void validateBill() {
-    final category = transactionController.selectedCategory.value;
+  // final isBillValid = false.obs;
 
-    isBillValid.value =
-        billNameController.text.trim().isNotEmpty &&
-        billAmount.value > 0 &&
-        selectedPeriod.value != null &&
-        selectedMonthDay.value != null &&
-        category != null &&
-        (selectedPeriod.value == BillsFrequency.monthly ||
-            selectedMonthPattern.value != null);
-  }
   // bool get isBillValid {
   //   if (billNameController.text.trim().isEmpty) {
   //     return false;

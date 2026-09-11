@@ -2,8 +2,10 @@ import 'package:drift/drift.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/tables/bills_table.dart';
+import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/data/tables/bill_occurrences_table.dart';
 import 'package:getx_drift_app/data/tables/cashflow_categories_table.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_payment_history.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_category.dart';
@@ -11,10 +13,64 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 part 'bills_dao.g.dart';
 
 @DriftAccessor(
-  tables: [BillsTable, BillOccurrencesTable, CashflowCategoriesTable],
+  tables: [
+    BillsTable,
+    BillOccurrencesTable,
+    CashflowCategoriesTable,
+    AccountsTable,
+  ],
 )
 class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
   BillsDao(super.db);
+  static const _scheduleCalculator = BillScheduleCalculator();
+  Stream<List<BillWithNextOccurrence>> watchLoanBills() {
+    return watchBillsWithNextOccurrence().map(
+      (bills) => bills.where((bill) => bill.isLoanPayment).toList(),
+    );
+  }
+
+  Future<void> insertLoanBill({
+    required String name,
+    required int loanAccountId,
+    required double paymentAmount,
+    required BillsFrequency frequency,
+    required DateTime firstPaymentDate,
+    required bool reminderEnabled,
+    int? reminderDaysBefore,
+  }) async {
+    final bill = BillsTableCompanion.insert(
+      name: name,
+      categoryId: const Value(null),
+      loanAccountId: Value(loanAccountId),
+      expectedAmount: paymentAmount,
+      frequency: frequency.name,
+      dayOfMonth: Value(firstPaymentDate.day),
+      reminderEnabled: Value(reminderEnabled),
+      reminderDaysBefore: Value(reminderDaysBefore),
+    );
+
+    await insertBillWithFirstOccurrence(
+      bill: bill,
+      dueDate: firstPaymentDate,
+      expectedAmount: paymentAmount,
+    );
+  }
+
+  DateTime _calculateNextDueDate({
+    required BillsTableData bill,
+    required DateTime from,
+  }) {
+    final frequency = BillsFrequency.values.firstWhere(
+      (value) => value.name == bill.frequency,
+    );
+
+    return _scheduleCalculator.getNextOccurrence(
+      currentDate: from,
+      frequency: frequency,
+      anchorDay: bill.dayOfMonth!,
+    );
+  }
+
   Future<List<BillsTableData>> getActiveBillsForCategory(int categoryId) {
     return (select(billsTable)..where(
           (tbl) =>
@@ -60,74 +116,6 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
     );
   }
 
-  DateTime _calculateNextDueDate({
-    required BillsTableData bill,
-    required DateTime from,
-  }) {
-    final frequency = BillsFrequency.values.firstWhere(
-      (value) => value.name == bill.frequency,
-    );
-
-    switch (frequency) {
-      case BillsFrequency.monthly:
-        return _nextMonthlyDate(from: from, dayOfMonth: bill.dayOfMonth!);
-
-      case BillsFrequency.quarterly:
-      case BillsFrequency.semiAnnual:
-      case BillsFrequency.annual:
-        return _nextPatternDate(
-          from: from,
-          dayOfMonth: bill.dayOfMonth!,
-          monthMask: bill.monthMask!,
-        );
-
-      case BillsFrequency.weekly:
-      case BillsFrequency.biWeekly:
-      case BillsFrequency.fortnightly:
-        throw UnsupportedError(
-          'Frequency ${frequency.name} is not currently supported for bills.',
-        );
-    }
-  }
-
-  DateTime _nextMonthlyDate({required DateTime from, required int dayOfMonth}) {
-    final nextMonth = DateTime(from.year, from.month + 1, 1);
-
-    final lastDay = DateTime(nextMonth.year, nextMonth.month + 1, 0).day;
-
-    return DateTime(
-      nextMonth.year,
-      nextMonth.month,
-      dayOfMonth.clamp(1, lastDay),
-    );
-  }
-
-  DateTime _nextPatternDate({
-    required DateTime from,
-    required int dayOfMonth,
-    required int monthMask,
-  }) {
-    var year = from.year;
-    var month = from.month + 1;
-
-    while (true) {
-      if (month > 12) {
-        month = 1;
-        year++;
-      }
-
-      final isScheduledMonth = (monthMask & (1 << (month - 1))) != 0;
-
-      if (isScheduledMonth) {
-        final lastDay = DateTime(year, month + 1, 0).day;
-
-        return DateTime(year, month, dayOfMonth.clamp(1, lastDay));
-      }
-
-      month++;
-    }
-  }
-
   bool _isSameDate(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
@@ -168,14 +156,18 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
     final end = DateTime(month.year, month.month + 1, 1);
 
     final query =
-        select(billOccurrencesTable).join([
+        select(billsTable).join([
             innerJoin(
-              billsTable,
-              billsTable.id.equalsExp(billOccurrencesTable.billId),
+              billOccurrencesTable,
+              billOccurrencesTable.billId.equalsExp(billsTable.id),
             ),
-            innerJoin(
+            leftOuterJoin(
               cashflowCategoriesTable,
               cashflowCategoriesTable.id.equalsExp(billsTable.categoryId),
+            ),
+            leftOuterJoin(
+              accountsTable,
+              accountsTable.id.equalsExp(billsTable.loanAccountId),
             ),
           ])
           ..where(
@@ -192,7 +184,8 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
         return BillWithNextOccurrence(
           bill: row.readTable(billsTable),
           occurrence: row.readTable(billOccurrencesTable),
-          category: row.readTable(cashflowCategoriesTable),
+          category: row.readTableOrNull(cashflowCategoriesTable),
+          loanAccount: row.readTableOrNull(accountsTable),
         );
       }).toList();
     });
@@ -201,19 +194,24 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
   Stream<List<BillWithCategory>> watchAllActiveBills() {
     final query =
         select(billsTable).join([
-            innerJoin(
+            leftOuterJoin(
               cashflowCategoriesTable,
               cashflowCategoriesTable.id.equalsExp(billsTable.categoryId),
             ),
+            leftOuterJoin(
+              accountsTable,
+              accountsTable.id.equalsExp(billsTable.loanAccountId),
+            ),
           ])
           ..where(billsTable.isActive.equals(true))
-          ..orderBy([OrderingTerm.asc(billsTable.name)]);
+          ..orderBy([OrderingTerm.desc(billsTable.updatedAt)]);
 
     return query.watch().map((rows) {
       return rows.map((row) {
         return BillWithCategory(
           bill: row.readTable(billsTable),
-          category: row.readTable(cashflowCategoriesTable),
+          category: row.readTableOrNull(cashflowCategoriesTable),
+          loanAccount: row.readTableOrNull(accountsTable),
         );
       }).toList();
     });
@@ -250,13 +248,17 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
   Stream<List<BillWithNextOccurrence>> watchBillsWithNextOccurrence() {
     final query =
         select(billsTable).join([
-            innerJoin(
+            leftOuterJoin(
               cashflowCategoriesTable,
               cashflowCategoriesTable.id.equalsExp(billsTable.categoryId),
             ),
             innerJoin(
               billOccurrencesTable,
               billOccurrencesTable.billId.equalsExp(billsTable.id),
+            ),
+            leftOuterJoin(
+              accountsTable,
+              accountsTable.id.equalsExp(billsTable.loanAccountId),
             ),
           ])
           ..where(
@@ -270,12 +272,12 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
         return BillWithNextOccurrence(
           bill: row.readTable(billsTable),
           occurrence: row.readTable(billOccurrencesTable),
-          category: row.readTable(cashflowCategoriesTable),
+          category: row.readTableOrNull(cashflowCategoriesTable),
+          loanAccount: row.readTableOrNull(accountsTable),
         );
       }).toList();
     });
   }
-
   // Future<void> debugPrintBills() async {
   //   final bills = await select(billsTable).get();
 

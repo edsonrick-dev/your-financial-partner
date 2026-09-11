@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
-import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
@@ -67,11 +67,6 @@ class BillsCard extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Icon(
-                  AppIcons.categories.resolve(bill.category.icon),
-                  size: 20,
-                  color: iconColor,
-                ),
                 Opacity(
                   opacity: 0.1,
                   child: Container(
@@ -82,6 +77,14 @@ class BillsCard extends StatelessWidget {
                     height: 44,
                     width: 44,
                   ),
+                ),
+                Icon(
+                  AppIcons.categories.resolve(
+                    bill.isLoanPayment
+                        ? bill.loanAccount!.icon
+                        : bill.category!.icon,
+                  ),
+                  size: 20,
                 ),
               ],
             ),

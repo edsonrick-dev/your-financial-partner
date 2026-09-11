@@ -2,6 +2,7 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
+import 'package:getx_drift_app/features/widgets/cards/transaction_cards/debt_repayment_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/earn_transaction_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/give_money_transaction_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/receive_money_transaction_card.dart';
@@ -29,7 +30,7 @@ class TransactionCard extends StatelessWidget {
       case TransactionType.balanceUpdate:
         return UpdateBalanceTransactionCard(item: item);
       case TransactionType.debtRepayment:
-        return SizedBox.shrink();
+        return DebtRepaymentTransactionCard(item: item);
     }
   }
 }

@@ -8,8 +8,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
-class BudgetDetailsSheet extends StatelessWidget {
-  const BudgetDetailsSheet({
+class ExpenseDetailsSheet extends StatelessWidget {
+  const ExpenseDetailsSheet({
     super.key,
     required this.plan,
     required this.selectedIndex,

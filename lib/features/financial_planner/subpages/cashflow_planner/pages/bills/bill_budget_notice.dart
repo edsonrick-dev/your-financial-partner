@@ -18,6 +18,8 @@ class BillBudgetNotice extends GetView<BillController> {
     return Obx(() {
       final category = controller.transactionController.selectedCategory.value;
 
+      // Budget notices apply only to category-based expense bills.
+      // Loan payment bills have no category and therefore no expense budget impact.
       if (category == null) {
         return const SizedBox.shrink();
       }
@@ -84,12 +86,6 @@ class BillBudgetNotice extends GetView<BillController> {
             onTap: controller.createMinimumBudget,
           ),
 
-          // SizedBox(height: 8),
-          // AppButton(
-          //   type: ButtonType.outline,
-          //   text: 'Set custom budget',
-          //   onTap: () {},
-          // ),
           const SizedBox(height: 8),
 
           Row(
@@ -259,9 +255,15 @@ class BillBudgetNotice extends GetView<BillController> {
             amount: existingBills,
             frequency: frequency,
             title: 'Existing bills',
+            isMain: false,
           ),
 
-          BillsRow(amount: amount, frequency: frequency, title: 'New bill'),
+          BillsRow(
+            amount: amount,
+            frequency: frequency,
+            title: 'New bill',
+            isMain: false,
+          ),
 
           BillsRow(
             amount: totalBills,
