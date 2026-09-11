@@ -7,9 +7,10 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/cashflow_planner_page/financial_target_cards/budget_target_card.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/cashflow_planner_page/financial_target_cards/income_target_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sections/cashflow_summary_container_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/metric_bar_row.dart';
-import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_emergency_fund_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -71,65 +72,65 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
                                 : colorScheme.appOutflow,
                           ),
 
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Min. Emergency Fund Need (3mo.)',
-                                  style: AppTextStyle.labelS,
-                                ),
-                              ),
-                              Text(
-                                controller.minimumEmergencyFund
-                                    .toCompactCurrency(),
-                                style: AppTextStyle.labelS,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Ideal Annual Income',
-                                  style: AppTextStyle.labelS,
-                                ),
-                              ),
-                              Text(
-                                controller.idealAnnualIncome
-                                    .toCompactCurrency(),
-                                style: AppTextStyle.labelS,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Target Monthly Income',
-                                  style: AppTextStyle.labelS,
-                                ),
-                              ),
-                              Text(
-                                controller.idealMonthlyIncome
-                                    .toCompactCurrency(),
-                                style: AppTextStyle.labelS,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Budget Gap',
-                                  style: AppTextStyle.labelS,
-                                ),
-                              ),
-                              Text(
-                                controller.annualBudgetGap.toCompactCurrency(),
-                                style: AppTextStyle.labelS,
-                              ),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Expanded(
+                          //       child: Text(
+                          //         'Min. Emergency Fund Need (3mo.)',
+                          //         style: AppTextStyle.labelS,
+                          //       ),
+                          //     ),
+                          //     Text(
+                          //       controller.minimumEmergencyFund
+                          //           .toCompactCurrency(),
+                          //       style: AppTextStyle.labelS,
+                          //     ),
+                          //   ],
+                          // ),
+                          // Row(
+                          //   children: [
+                          //     Expanded(
+                          //       child: Text(
+                          //         'Ideal Annual Income',
+                          //         style: AppTextStyle.labelS,
+                          //       ),
+                          //     ),
+                          //     Text(
+                          //       controller.idealAnnualIncome
+                          //           .toCompactCurrency(),
+                          //       style: AppTextStyle.labelS,
+                          //     ),
+                          //   ],
+                          // ),
+                          // Row(
+                          //   children: [
+                          //     Expanded(
+                          //       child: Text(
+                          //         'Target Monthly Income',
+                          //         style: AppTextStyle.labelS,
+                          //       ),
+                          //     ),
+                          //     Text(
+                          //       controller.idealMonthlyIncome
+                          //           .toCompactCurrency(),
+                          //       style: AppTextStyle.labelS,
+                          //     ),
+                          //   ],
+                          // ),
+                          // Row(
+                          //   children: [
+                          //     Expanded(
+                          //       child: Text(
+                          //         'Budget Gap',
+                          //         style: AppTextStyle.labelS,
+                          //       ),
+                          //     ),
+                          //     Text(
+                          //       controller.annualBudgetGap.toCompactCurrency(),
+                          //       style: AppTextStyle.labelS,
+                          //     ),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ),
@@ -140,8 +141,25 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
           ),
           SizedBox(height: 20),
           AppSection(
-            sectionTitle: 'Your Financial Targets',
-            child: Column(children: [EmergencyFundTargetCard()]),
+            sectionTitle: 'Cashflow Interpretation',
+
+            child: AppSectionBody(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  spacing: 16,
+                  children: [
+                    Text(
+                      'These targets are based on the 70/30 rule--70% for your lifestyle'
+                      ' and 30% for savings and investments. We identify the next steps '
+                      'based on your planned income and',
+                    ),
+                    IncomeTargetCard(),
+                    BudgetTargetCard(),
+                  ],
+                ),
+              ),
+            ),
           ),
           SizedBox(height: 20),
           AppSection(
@@ -198,91 +216,6 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
           ),
 
           SizedBox(height: 24),
-        ],
-      ),
-    );
-  }
-}
-
-class EmergencyFundTargetCard extends GetView<FinancialProfileController> {
-  const EmergencyFundTargetCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-
-    final targetBand = controller.currentEmergencyFundTargetBand;
-    final target = controller.currentEmergencyFundTarget;
-    final targetMonths = controller.currentEmergencyFundTargetMonths;
-    final gap = controller.emergencyFundTargetGap;
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        color: colorScheme.bgLight,
-        boxShadow: AppShadows.card(colorScheme.appText),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Stack(children: [Icon(PhosphorIconsRegular.shield)]),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  targetBand == null
-                      ? 'Emergency Fund Complete'
-                      : '${targetMonths!.round()}-Month Emergency Fund',
-                  style: AppTextStyle.titleL,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 8),
-
-          if (target != null) ...[
-            Text(target.toCurrency(), style: AppTextStyle.amountL),
-
-            Text(
-              '3x of your average monthly budget',
-              style: AppTextStyle.bodyS,
-            ),
-
-            RichText(
-              text: TextSpan(
-                style: AppTextStyle.bodyS.copyWith(
-                  color: colorScheme.appTextMuted,
-                ),
-                children: [
-                  const TextSpan(text: '('),
-                  TextSpan(
-                    text: controller.averageMonthlyBudget.toCurrency(),
-                    style: AppTextStyle.amountS,
-                  ),
-                  const TextSpan(text: '/mo)'),
-                ],
-              ),
-            ),
-
-            RichText(
-              text: TextSpan(
-                style: AppTextStyle.bodyS.copyWith(
-                  color: colorScheme.appTextMuted,
-                ),
-                children: [
-                  const TextSpan(text: 'Your emergency fund is '),
-                  TextSpan(
-                    text: gap!.toCurrency(),
-                    style: AppTextStyle.amountS,
-                  ),
-                  const TextSpan(text: ' short of your target.'),
-                ],
-              ),
-            ),
-          ],
         ],
       ),
     );

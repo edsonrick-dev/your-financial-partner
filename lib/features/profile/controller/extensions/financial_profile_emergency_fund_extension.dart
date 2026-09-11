@@ -19,8 +19,24 @@ extension FinancialProfileEmergencyFundExtension on FinancialProfileController {
   // ---------------------------------------------------------------------------
   // EMERGENCY FUND (CURRENT)
   // ---------------------------------------------------------------------------
+  double? get currentEmergencyFundRatio {
+    if (!canAssessEmergencyFund) {
+      return null;
+    }
+
+    final available = emergencyFundAvailable;
+
+    if (available == null || averageMonthlyBudget <= 0) {
+      return null;
+    }
+
+    final annualBudgetBasis = averageMonthlyBudget * 12;
+
+    return (available / annualBudgetBasis) * 100;
+  }
+
   RatioScoreBand? get currentEmergencyFundTargetBand {
-    final ratio = emergencyFundRatio;
+    final ratio = currentEmergencyFundRatio;
 
     if (ratio == null) {
       return null;
@@ -34,13 +50,13 @@ extension FinancialProfileEmergencyFundExtension on FinancialProfileController {
   }
 
   double? get currentEmergencyFundTarget {
-    final band = currentEmergencyFundTargetBand;
+    final months = currentEmergencyFundTargetMonths;
 
-    if (band == null) {
+    if (months == null) {
       return null;
     }
 
-    return annualBudget * (band.threshold / 100);
+    return averageMonthlyBudget * months;
   }
 
   double? get currentEmergencyFundTargetMonths {

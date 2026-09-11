@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/cashflow_insight_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/budget_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/create_income_plan_sheet.dart';
@@ -21,6 +22,17 @@ class CashflowDetailsPage extends GetView<CashflowController> {
       body: Column(
         children: [
           AppDetailsHeader(
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Get.bottomSheet(
+                    CashflowInsightSheet(),
+                    isScrollControlled: true,
+                  );
+                },
+                icon: Icon(Icons.tips_and_updates_outlined),
+              ),
+            ],
             title: 'Cash Flow',
             child: Column(
               children: [
@@ -64,6 +76,12 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                           Text(
                             'Annual Income',
                             style: AppTextStyle.titleM.copyWith(
+                              color: colorScheme.appInversedtextMuted,
+                            ),
+                          ),
+                          Text(
+                            '~${controller.plannedMonthlyIncome.toCurrency()}/month',
+                            style: AppTextStyle.amountXS.copyWith(
                               color: colorScheme.appInversedtext,
                             ),
                           ),
@@ -84,6 +102,12 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                           Text(
                             'Annual Budget',
                             style: AppTextStyle.titleM.copyWith(
+                              color: colorScheme.appInversedtextMuted,
+                            ),
+                          ),
+                          Text(
+                            '~${controller.averageMonthlyBudget.toCurrency()}/month',
+                            style: AppTextStyle.amountXS.copyWith(
                               color: colorScheme.appInversedtext,
                             ),
                           ),

@@ -25,8 +25,10 @@ class FinancialProfileController extends GetxController {
   // ---------------------------------------------------------------------------
 
   double get annualIncome => cashflowController.plannedAnnualIncome.value;
+  double get monthlyIncome => cashflowController.plannedAnnualIncome.value / 12;
 
   double get annualBudget => cashflowController.annualBudget.value;
+  double get monthlyBudget => annualBudget / 12;
 
   double get annualExpenses => cashflowController.annualExpense.value;
 
@@ -35,8 +37,91 @@ class FinancialProfileController extends GetxController {
 
   double get netWorth => netWorthController.netWorth;
   double get averageMonthlyBudget => cashflowController.annualBudget.value / 12;
+  // ---------------------------------------------------------------------------
+  // IDEAL BUDGET TARGET
+  // ---------------------------------------------------------------------------
 
-  // TODO: Include here Liquid Funds & Average Daily Balance
+  double get idealAnnualBudget => annualIncome * 0.70;
+
+  double get idealMonthlyBudget => idealAnnualBudget / 12;
+
+  bool get isBudgetAboveIncome {
+    return annualBudget > annualIncome;
+  }
+
+  bool get isBudgetAboveIdeal {
+    return annualBudget > idealAnnualBudget;
+  }
+
+  bool get hasIdealBudget {
+    return annualBudget <= idealAnnualBudget;
+  }
+
+  double get budgetTarget {
+    if (isBudgetAboveIncome) {
+      return annualIncome;
+    }
+
+    return idealAnnualBudget;
+  }
+
+  double get budgetGap {
+    return max(0, annualBudget - budgetTarget);
+  }
+
+  double get monthlyBudgetGap => budgetGap / 12;
+
+  // ---------------------------------------------------------------------------
+  // IDEAL INCOME TARGET
+  // ---------------------------------------------------------------------------
+
+  double? get idealAnnualIncome {
+    if (annualBudget <= 0) {
+      return null;
+    }
+
+    return annualBudget / 0.70;
+  }
+
+  double? get idealMonthlyIncome {
+    final annual = idealAnnualIncome;
+
+    if (annual == null) {
+      return null;
+    }
+
+    return annual / 12;
+  }
+
+  bool get hasIdealIncome {
+    final ideal = idealAnnualIncome;
+
+    if (ideal == null) {
+      return false;
+    }
+
+    return annualIncome >= ideal;
+  }
+
+  double? get idealIncomeGap {
+    final ideal = idealAnnualIncome;
+
+    if (ideal == null) {
+      return null;
+    }
+
+    return max(0, ideal - annualIncome);
+  }
+
+  double? get monthlyIncomeGap {
+    final gap = idealIncomeGap;
+
+    if (gap == null) {
+      return null;
+    }
+
+    return gap / 12;
+  } // TODO: Include here Liquid Funds & Average Daily Balance
 
   // ---------------------------------------------------------------------------
   // Liquid funds
@@ -46,7 +131,7 @@ class FinancialProfileController extends GetxController {
   double get liquidFunds => netWorthController.liquidFunds;
   bool get hasNetWorth => netWorthController.hasAccounts;
   double? get averageDailyBalance =>
-      0; // netWorthController.averageDailyBalance;
+      null; // netWorthController.averageDailyBalance;
 
   double? get emergencyFundAvailable {
     final adb = averageDailyBalance;

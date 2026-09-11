@@ -10,8 +10,14 @@ class MetricRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: Text(label, style: AppTextStyle.bodyM)),
+        Expanded(
+          child: Text(
+            label,
+            style: AppTextStyle.bodyM.copyWith(height: 24 / 16),
+          ),
+        ),
         Text(value, style: AppTextStyle.amountL),
       ],
     );

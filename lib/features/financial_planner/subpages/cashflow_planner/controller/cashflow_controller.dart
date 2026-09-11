@@ -656,6 +656,7 @@ class CashflowController extends GetxController {
   // Annual Financial Summary
   // ===========================================================================
 
+  double get plannedMonthlyIncome => plannedAnnualIncome / 12;
   final RxDouble plannedAnnualIncome = 0.0.obs;
   final RxDouble annualBudget = 0.0.obs;
   double get averageMonthlyBudget => annualBudget.value / 12;

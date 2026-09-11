@@ -96,20 +96,18 @@ class FilledEmergencyFundView extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Column(
                   children: [
-                    MetricRow(
-                      label: 'Liquid funds',
-                      value: controller.liquidFunds.toCurrency(),
-                    ),
+                    // MetricRow(
+                    //   label: 'Liquid funds',
+                    //   value: controller.liquidFunds.toCurrency(),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // if (controller.averageDailyBalance != null)
+                    //   MetricRow(
+                    //     label: 'Average daily balance',
+                    //     value: controller.averageDailyBalance!.toCurrency(),
+                    //   ),
 
-                    const SizedBox(height: 8),
-
-                    MetricRow(
-                      label: 'Average daily balance',
-                      value: controller.averageDailyBalance!.toCurrency(),
-                    ),
-
-                    const SizedBox(height: 8),
-
+                    // const SizedBox(height: 8),
                     MetricRow(
                       label: 'Available emergency funds',
                       value: controller.emergencyFundAvailable!.toCurrency(),

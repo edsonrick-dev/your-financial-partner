@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
@@ -121,25 +122,30 @@ class IncomePlanPage extends GetView<CashflowController> {
                   );
                 }
 
-                return AppSection(
-                  child: Column(
-                    spacing: 8,
-                    children: [
-                      for (final plan in plans)
-                        CashflowPlanCard(
-                          color: colorScheme.appInflow,
-                          category: plan.category,
-                          amount: plan.amount,
-                          budgetPeriod: plan.budgetPeriod,
-                          iconKey: plan.iconKey,
-                          isCustom: plan.isCustom,
-                          onLongPress: () {
-                            _confirmDeletePlan(context, plan);
-                          },
-                          customSummary: plan.customSummary,
-                        ),
-                    ],
-                  ),
+                return Column(
+                  children: [
+                    AppSection(
+                      child: Column(
+                        spacing: 8,
+                        children: [
+                          for (final plan in plans)
+                            CashflowPlanCard(
+                              color: colorScheme.appInflow,
+                              category: plan.category,
+                              amount: plan.amount,
+                              budgetPeriod: plan.budgetPeriod,
+                              iconKey: plan.iconKey,
+                              isCustom: plan.isCustom,
+                              onLongPress: () {
+                                _confirmDeletePlan(context, plan);
+                              },
+                              customSummary: plan.customSummary,
+                            ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: context.bottomPaddingSub),
+                  ],
                 );
               },
             ),

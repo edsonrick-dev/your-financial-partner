@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
@@ -205,7 +206,6 @@ class BudgetPage extends GetView<CashflowController> {
                     }
 
                     return Column(
-                      // spacing: 16,
                       children: [
                         if (expensePlans.isNotEmpty)
                           _buildPlanSection(
@@ -216,6 +216,7 @@ class BudgetPage extends GetView<CashflowController> {
                           ),
                         if (debtRepaymentBills.isNotEmpty)
                           DebtRepaymentList(bills: debtRepaymentBills),
+                        SizedBox(height: context.bottomPaddingSub),
                       ],
                     );
                   },

@@ -29,8 +29,8 @@ class AppSectionHeader extends StatelessWidget {
 
     return Padding(
       padding: AppPadding.pageHorizontal,
-      child: SizedBox(
-        height: 44,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: 44),
         child: Row(
           children: [
             if (subtitle != null && subtitle!.isNotEmpty)
@@ -40,13 +40,10 @@ class AppSectionHeader extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(sectionTitle, style: AppTextStyle.titleL),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        subtitle!,
-                        style: AppTextStyle.bodyS.copyWith(
-                          color: colorScheme.appTextMuted,
-                        ),
+                    Text(
+                      subtitle!,
+                      style: AppTextStyle.bodyS.copyWith(
+                        color: colorScheme.appTextMuted,
                       ),
                     ),
                   ],

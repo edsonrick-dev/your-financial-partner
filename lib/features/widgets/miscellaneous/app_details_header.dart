@@ -5,8 +5,14 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 class AppDetailsHeader extends StatelessWidget {
   final String title;
   final Widget child;
+  final List<Widget>? actions;
 
-  const AppDetailsHeader({super.key, required this.title, required this.child});
+  const AppDetailsHeader({
+    super.key,
+    required this.title,
+    required this.child,
+    this.actions,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +36,7 @@ class AppDetailsHeader extends StatelessWidget {
                 color: colorScheme.appInversedtext,
               ),
             ),
+            actions: actions,
             surfaceTintColor: Colors.transparent,
           ),
           Padding(

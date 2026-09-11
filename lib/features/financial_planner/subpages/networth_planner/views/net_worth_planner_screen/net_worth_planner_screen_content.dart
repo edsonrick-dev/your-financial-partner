@@ -4,6 +4,7 @@ import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/cashflow_planner_page/financial_target_cards/emergency_fund_target.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/metric_bar_row.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/sections/networth_summary_section.dart';
@@ -170,7 +171,6 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
                           ).toList(),
                         );
                       }),
-                      SizedBox(height: 20),
 
                       // Divider(color: colorScheme.appTextMuted),
 
@@ -189,6 +189,11 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
               ),
             ],
           ),
+        ),
+
+        AppSection(
+          sectionTitle: 'Your Financial Targets',
+          child: Column(spacing: 16, children: [EmergencyFundTargetCard()]),
         ),
       ],
     );
