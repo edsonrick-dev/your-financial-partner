@@ -79,10 +79,12 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                               color: colorScheme.appInversedtextMuted,
                             ),
                           ),
-                          Text(
-                            '~${controller.plannedMonthlyIncome.toCurrency()}/month',
-                            style: AppTextStyle.amountXS.copyWith(
-                              color: colorScheme.appInversedtext,
+                          Obx(
+                            () => Text(
+                              '~${controller.plannedMonthlyIncome.toCurrency()}/month',
+                              style: AppTextStyle.amountXS.copyWith(
+                                color: colorScheme.appInversedtext,
+                              ),
                             ),
                           ),
                         ],
@@ -105,10 +107,12 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                               color: colorScheme.appInversedtextMuted,
                             ),
                           ),
-                          Text(
-                            '~${controller.averageMonthlyBudget.toCurrency()}/month',
-                            style: AppTextStyle.amountXS.copyWith(
-                              color: colorScheme.appInversedtext,
+                          Obx(
+                            () => Text(
+                              '~${controller.averageMonthlyBudget.toCurrency()}/month',
+                              style: AppTextStyle.amountXS.copyWith(
+                                color: colorScheme.appInversedtext,
+                              ),
                             ),
                           ),
                         ],

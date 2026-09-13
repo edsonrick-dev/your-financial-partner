@@ -174,93 +174,101 @@ class BudgetListView extends StatelessWidget {
         AppSheets.transaction.spend(categoryId: categoryId);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         constraints: BoxConstraints(minHeight: 60),
-        child: Column(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Icon(
-                      AppIcons.categories.resolve(iconKey),
-                      // color: iconColor,
-                    ),
-                    Opacity(
-                      opacity: 0.2,
-                      child: Container(
-                        height: 48,
-                        width: 48,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          // color: iconColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                // SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            // Stack(
+            //   alignment: Alignment.topCenter,
+            //   children: [
+            //     Icon(
+            //       AppIcons.categories.resolve(iconKey),
+            //       // color: iconColor,
+            //     ),
+            //     Opacity(
+            //       opacity: 0.2,
+            //       child: Container(
+            //         height: 48,
+            //         width: 48,
+            //         decoration: BoxDecoration(
+            //           shape: BoxShape.circle,
+            //           // color: iconColor,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Text(budgetName, style: AppTextStyle.bodyM),
-                          Spacer(),
-                          Text(
-                            '${remainingBalance.abs().toCurrency()} ${isOverBudget ? 'over' : 'left'}',
-                            style: TextStyle(
-                              color: progressColor,
-                              fontWeight: FontWeight.w500,
-                              fontFeatures: [FontFeature.tabularFigures()],
-                            ),
-                          ),
-                        ],
+                      Icon(
+                        AppIcons.categories.resolve(iconKey),
+                        size: 14,
+                        // color: iconColor,
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            consumption.toCurrency(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontFeatures: [FontFeature.tabularFigures()],
-                            ),
-                          ),
-
-                          Text(
-                            ' / ${budget.toCurrency()}',
-                            style: TextStyle(
-                              color: colorScheme.appTextMuted,
-                              fontFeatures: [FontFeature.tabularFigures()],
-                            ),
-                          ),
-                          Spacer(),
-
-                          Text(
-                            '${(consumptionPercentage * 100).round()}%',
-                            style: TextStyle(
-                              color: colorScheme.appTextMuted,
-                              fontWeight: FontWeight.w500,
-                              fontFeatures: [FontFeature.tabularFigures()],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 4),
-                      BudgetProgressBar(
-                        progress: consumptionPercentage,
-                        // marker: 0.90, // optional
-                        color: progressColor,
+                      Spacer(),
+                      Text('Monthly', style: AppTextStyle.labelXS),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(budgetName, style: AppTextStyle.bodyM),
+                      Spacer(),
+                      Text(
+                        '${remainingBalance.abs().toCurrency()} ${isOverBudget ? 'over' : 'left'}',
+                        style: TextStyle(
+                          color: progressColor,
+                          fontWeight: FontWeight.w500,
+                          fontFeatures: [FontFeature.tabularFigures()],
+                        ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(width: 8),
-              ],
+                  Row(
+                    children: [
+                      Text(
+                        consumption.toCurrency(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontFeatures: [FontFeature.tabularFigures()],
+                        ),
+                      ),
+
+                      Text(
+                        ' / ${budget.toCurrency()}',
+                        style: TextStyle(
+                          color: colorScheme.appTextMuted,
+                          fontFeatures: [FontFeature.tabularFigures()],
+                        ),
+                      ),
+                      Spacer(),
+
+                      Text(
+                        '${(consumptionPercentage * 100).round()}%',
+                        style: TextStyle(
+                          color: colorScheme.appTextMuted,
+                          fontWeight: FontWeight.w500,
+                          fontFeatures: [FontFeature.tabularFigures()],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  BudgetProgressBar(
+                    progress: consumptionPercentage,
+                    // marker: 0.90, // optional
+                    color: progressColor,
+                  ),
+                ],
+              ),
             ),
+            SizedBox(width: 8),
           ],
         ),
       ),

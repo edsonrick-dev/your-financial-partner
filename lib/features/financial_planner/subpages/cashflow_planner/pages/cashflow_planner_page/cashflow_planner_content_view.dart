@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
-import 'package:getx_drift_app/core/constants/sheet_height.dart';
-import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
@@ -11,11 +8,9 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/cashflow_planner_page/financial_target_cards/income_target_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sections/cashflow_summary_container_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/metric_bar_row.dart';
-import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CashflowPlannerContentView extends GetView<CashflowController> {
   const CashflowPlannerContentView({super.key});

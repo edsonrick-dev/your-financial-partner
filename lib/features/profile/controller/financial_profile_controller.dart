@@ -144,8 +144,7 @@ class FinancialProfileController extends GetxController {
   // ---------------------------------------------------------------------------
   // Derived  values
   // ---------------------------------------------------------------------------
-  bool get hasIncome => cashflowController.hasIncomePlan;
-  bool get hasBudget => cashflowController.hasBudgetPlan;
+
   bool get hasDebtRepayment => cashflowController.hasDebtRepaymentPlan;
   double get annualSavings => annualIncome - annualBudget;
 

@@ -168,7 +168,7 @@ class CashflowController extends GetxController {
           plannedAnnualIncome.value = income;
           annualExpense.value = expense;
 
-          annualBudget.value = annualExpenseRatio + annualDebtRepayment.value;
+          annualBudget.value = annualExpense.value + annualDebtRepayment.value;
           // annualDebtRepayment.value = debtRepayment;
           // annualBudget.value = expense + debtRepayment;
 
