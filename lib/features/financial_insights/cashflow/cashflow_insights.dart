@@ -51,17 +51,20 @@ final cashflowInsights = <CashflowInsightType, CashflowInsight>{
       final budget = controller.annualBudget;
       final gap = budget - income;
 
-      return 'Your annual budget is ${budget.toCurrency()}, '
-          'while your annual income is ${income.toCurrency()}. '
-          'You are currently budgeting ${gap.toCurrency()} more '
-          'than you earn.';
+      return 'You have set a budget of ${budget.toCurrency()}, but your '
+          'planned income is only ${income.toCurrency()}.\n\n'
+          // 'You currently earn ${income.toCurrency()} per year, but your '
+          // 'budget is ${budget.toCurrency()} per year.\n\n'
+          '''That is ${gap.toCurrency()} more than you earn, so '''
+          '''your current spending plan is not sustainable '''
+          'with your income.';
     },
 
     recommendedAction: (controller) {
       final gap = controller.budgetGap;
 
       return 'Start by reducing your budget by '
-          '${gap.toCurrency()} per year to bring it within your income. '
+          '${(gap / 12).toCurrency()} per month to bring it within your income. '
           'Once your cashflow is sustainable, work toward your '
           '70% budget target.';
     },

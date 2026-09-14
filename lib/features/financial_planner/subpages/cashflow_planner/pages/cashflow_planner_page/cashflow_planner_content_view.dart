@@ -135,28 +135,28 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
             ),
           ),
           SizedBox(height: 20),
-          AppSection(
-            sectionTitle: 'Cashflow Interpretation',
+          // AppSection(
+          //   sectionTitle: 'Cashflow Interpretation',
 
-            child: AppSectionBody(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  spacing: 16,
-                  children: [
-                    Text(
-                      'These targets are based on the 70/30 rule--70% for your lifestyle'
-                      ' and 30% for savings and investments. We identify the next steps '
-                      'based on your planned income and',
-                    ),
-                    IncomeTargetCard(),
-                    BudgetTargetCard(),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 20),
+          //   child: AppSectionBody(
+          //     child: Padding(
+          //       padding: const EdgeInsets.all(8.0),
+          //       child: Column(
+          //         spacing: 16,
+          //         children: [
+          //           Text(
+          //             'These targets are based on the 70/30 rule--70% for your lifestyle'
+          //             ' and 30% for savings and investments. We identify the next steps '
+          //             'based on your planned income and',
+          //           ),
+          //           IncomeTargetCard(),
+          //           BudgetTargetCard(),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // SizedBox(height: 20),
           AppSection(
             sectionTitle: 'Cashflow Tools',
             child: Column(

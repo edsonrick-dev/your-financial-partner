@@ -9,8 +9,6 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_insights/cashflow/models/budget_allocation_position.dart';
 import 'package:getx_drift_app/features/financial_insights/cashflow/models/cashflow_insight_type.dart';
-import 'package:getx_drift_app/features/financial_insights/cashflow/models/cashflow_position.dart';
-import 'package:getx_drift_app/features/financial_insights/cashflow/models/cashflow_status.dart';
 import 'package:getx_drift_app/features/financial_insights/financial_profile_cashflow_controller_extension.dart';
 import 'package:getx_drift_app/features/financial_insights/insight_engine.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
@@ -88,6 +86,7 @@ class CashflowInsightSheet extends GetView<FinancialProfileController> {
                         Text(
                           insight.recommendedAction(controller),
                           style: AppTextStyle.bodyM,
+                          textAlign: TextAlign.justify,
                         ),
                       ],
                     ),
@@ -319,7 +318,7 @@ class _IfBudgetExceedsIncome extends StatelessWidget {
             final incomeRatio = maxValue == 0 ? 0.0 : income / maxValue;
             final budgetRatio = maxValue == 0 ? 0.0 : budget / maxValue;
 
-            const labelWidth = 60.0;
+            const labelWidth = 52.0;
             const labelGap = 4.0;
             const amountGap = 8.0;
 
@@ -343,21 +342,21 @@ class _IfBudgetExceedsIncome extends StatelessWidget {
             return Column(
               children: [
                 _CashflowBarRow(
-                  label: 'Income',
-                  ratio: incomeRatio,
-                  amount: income.toCompactCurrency(),
-                  color: colorScheme.appInflow,
-                  barWidth: availableWidth * incomeRatio,
+                  label: 'Budget',
+                  ratio: budgetRatio,
+                  amount: budget.toCompactCurrency(),
+                  color: colorScheme.appOutflow,
+                  barWidth: availableWidth * budgetRatio,
                 ),
 
                 const SizedBox(height: 4),
 
                 _CashflowBarRow(
-                  label: 'Expense',
-                  ratio: budgetRatio,
-                  amount: budget.toCompactCurrency(),
-                  color: colorScheme.appOutflow,
-                  barWidth: availableWidth * budgetRatio,
+                  label: 'Income',
+                  ratio: incomeRatio,
+                  amount: income.toCompactCurrency(),
+                  color: colorScheme.appInflow,
+                  barWidth: availableWidth * incomeRatio,
                 ),
               ],
             );
@@ -423,24 +422,27 @@ class AmountCard extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: color?.withValues(alpha: 0.2) ?? colorScheme.appNeutralSoft,
+        border: Border.all(
+          color: color?.withValues(alpha: 0.5) ?? colorScheme.appNeutralSoft,
+        ),
+        color: color?.withValues(alpha: 0.1) ?? colorScheme.appNeutralSoft,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20),
+          Icon(icon, size: 20, color: color ?? colorScheme.appText),
 
-          const SizedBox(height: 8),
-
+          const SizedBox(height: 4),
           Text(
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: AppTextStyle.titleS,
+            style: AppTextStyle.titleS.copyWith(
+              color: color ?? colorScheme.appText,
+            ),
           ),
 
-          const SizedBox(height: 4),
-
+          // const SizedBox(height: 4),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -451,7 +453,6 @@ class AmountCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 4),
-
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -651,8 +652,7 @@ class _CashflowBarRow extends StatelessWidget {
       children: [
         SizedBox(width: 60, child: Text(label, style: AppTextStyle.labelM)),
 
-        const SizedBox(width: 4),
-
+        const SizedBox(width: 0),
         SizedBox(
           width: barWidth,
           child: Container(
@@ -664,9 +664,9 @@ class _CashflowBarRow extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(width: 8),
+        const SizedBox(width: 4),
 
-        Text(amount, style: AppTextStyle.amountXS),
+        Text(amount, style: AppTextStyle.amountXS.copyWith(color: color)),
       ],
     );
   }
