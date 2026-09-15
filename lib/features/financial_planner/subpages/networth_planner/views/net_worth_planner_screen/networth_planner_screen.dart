@@ -12,8 +12,12 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
+    return Obx(() {
+      if (controller.isEmpty) {
+        return const NetWorthEmptyView();
+      }
+
+      return SingleChildScrollView(
         padding: EdgeInsets.only(
           top: context.topPadding,
           bottom: context.bottomPadding,
@@ -21,13 +25,7 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
         child: Column(
           spacing: 20,
           children: [
-            Obx(() {
-              if (controller.isEmpty) {
-                return const NetWorthEmptyView();
-              }
-
-              return NetWorthPlannerContent();
-            }),
+            NetWorthPlannerContent(),
             LearningSection(
               subtitle: 'Build a good understanding of your net worth',
               state: LearningSectionState.available,
@@ -39,7 +37,33 @@ class NetworthPlannerScreen extends GetView<NetWorthController> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    });
+
+    // if (controller.isEmpty) {
+    //   return SingleChildScrollView(
+    //         child: Padding(
+    //           padding: EdgeInsets.only(
+    //             top: context.topPadding,
+    //             bottom: context.bottomPadding,
+    //           ),
+    //           child: Column(
+    //             spacing: 20,
+    //             children: [
+    //               Obx(() {
+    //                 if (controller.isEmpty) {
+    //                   return const NetWorthEmptyView();
+    //                 }
+
+    //                 return NetWorthPlannerContent();
+    //               }),
+
+    //             ],
+    //           ),
+    //         ),
+    //       );
+    // } else {
+    //   return Expanded(child: Column());
+    // }
   }
 }

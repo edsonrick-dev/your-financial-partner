@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_group/account_group_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_group/account_group_summary.dart';
@@ -25,9 +24,9 @@ class AssetsList extends GetView<NetWorthController> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  PhosphorIconsFill.piggyBank,
+                  PhosphorIconsRegular.bank,
                   size: 48,
-                  color: colorScheme.appTextMuted,
+                  color: colorScheme.appInflow,
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -37,25 +36,33 @@ class AssetsList extends GetView<NetWorthController> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "Add your first asset account so Ascend can help you picture how much you own.",
+                  "Tap + to add your first asset account.",
+                  style: AppTextStyle.bodyM.copyWith(
+                    color: colorScheme.appText,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Keep track of what you own–cash, banks accounts, and e-wallets.",
                   style: AppTextStyle.bodyM.copyWith(
                     color: colorScheme.appTextMuted,
                   ),
                   textAlign: TextAlign.center,
                 ),
 
-                const SizedBox(height: 16),
+                // const SizedBox(height: 16),
 
-                AppButton(
-                  text: 'Record your first asset account',
-                  onTap: controller.addAccount,
-                ),
-                const SizedBox(height: 8),
-                AppButton(
-                  type: ButtonType.outline,
-                  text: 'Watch how to set up an asset account',
-                  onTap: () {},
-                ),
+                // AppButton(
+                //   text: 'Record your first asset account',
+                //   onTap: controller.addAccount,
+                // ),
+                // const SizedBox(height: 8),
+                // AppButton(
+                //   type: ButtonType.outline,
+                //   text: 'Watch how to set up an asset account',
+                //   onTap: () {},
+                // ),
               ],
             ),
           ),

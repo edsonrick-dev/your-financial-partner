@@ -11,6 +11,7 @@ import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../controllers/transaction_controller.dart';
 
 class TransactionView extends GetView<TransactionController> {
@@ -94,7 +95,44 @@ class TransactionView extends GetView<TransactionController> {
             }
           }
           if (groupedTransactions.isEmpty) {
-            return const Center(child: Text('No transactions yet.'));
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      PhosphorIconsRegular.listHeart,
+                      size: 48,
+                      color: colorScheme.appAccent,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No transactions yet',
+                      style: AppTextStyle.headlineM,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Track your actual cashflow—Record your income, expenses, "
+                      "transfers, and money you lend or borrow.",
+                      style: AppTextStyle.bodyM.copyWith(
+                        color: colorScheme.appTextMuted,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Tap + to record your first transaction.",
+                      style: AppTextStyle.bodyM.copyWith(
+                        color: colorScheme.appTextMuted,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
           return ListView(

@@ -1,9 +1,30 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 
 class HomeController extends GetxController {
+  String get timeBasedGreeting {
+    final hour = DateTime.now().hour;
+
+    if (hour < 12) {
+      return 'Good morning';
+    }
+
+    if (hour < 18) {
+      return 'Good afternoon';
+    }
+
+    return 'Good evening';
+  }
+
+  final GetStorage _storage = GetStorage();
+
+  static const _userNameKey = 'user_name';
+
+  final userName = ''.obs;
+
   final isFundHidden = false.obs;
   final RxBool hasAccounts = false.obs;
   void toggleIsFundHidden() {
@@ -15,7 +36,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+    userName.value = _storage.read<String>(_userNameKey) ?? '';
     _accountSubscription = database.accountsDao.watchAccounts().listen((
       accounts,
     ) {

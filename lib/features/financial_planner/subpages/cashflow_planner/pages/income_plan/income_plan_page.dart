@@ -6,8 +6,6 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/create_income_plan_sheet.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_plan_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -77,9 +75,9 @@ class IncomePlanPage extends GetView<CashflowController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            PhosphorIconsFill.piggyBank,
+                            PhosphorIconsRegular.piggyBank,
                             size: 48,
-                            color: colorScheme.appTextMuted,
+                            color: colorScheme.appInflow,
                           ),
                           const SizedBox(height: 16),
                           Text(
@@ -89,32 +87,19 @@ class IncomePlanPage extends GetView<CashflowController> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            "Add your first income plan so Ascend can help you plan where your money should go.",
+                            "Tap + to add your first income plan.",
+                            style: AppTextStyle.bodyM.copyWith(
+                              color: colorScheme.appText,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "Plan where your money comes from–salary, allowance, business, remittances.",
                             style: AppTextStyle.bodyM.copyWith(
                               color: colorScheme.appTextMuted,
                             ),
                             textAlign: TextAlign.center,
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          AppButton(
-                            text: 'Set up your first income plan',
-                            onTap: () {
-                              Get.bottomSheet(
-                                const CreateIncomePlanSheet(),
-                                backgroundColor: Colors.transparent,
-                                isScrollControlled: true,
-                              ).whenComplete(() {
-                                controller.resetIncomePlan();
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 8),
-                          AppButton(
-                            type: ButtonType.outline,
-                            text: 'Watch how to set up an income plan',
-                            onTap: () {},
                           ),
                         ],
                       ),

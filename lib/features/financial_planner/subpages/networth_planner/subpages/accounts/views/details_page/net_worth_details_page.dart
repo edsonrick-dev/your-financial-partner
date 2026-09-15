@@ -38,7 +38,7 @@ class NetWorthDetailsPage extends GetView<NetWorthController> {
                           child: Text(
                             controller.netWorth.abs().toCurrency(),
                             style: AppTextStyle.amountXL.copyWith(
-                              color: controller.netWorth <= 0
+                              color: controller.netWorth < 0
                                   ? colorScheme.appOutflowInversed
                                   : colorScheme.appInversedtext,
                             ),

@@ -9,6 +9,7 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
@@ -65,11 +66,33 @@ class BillsReminderSection extends GetView<CashflowController> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$totalBills bills this month',
-                    style: AppTextStyle.bodyM.copyWith(
-                      color: colorScheme.appTextMuted,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          bills.isEmpty
+                              ? 'You have no bills'
+                              : '$totalBills bills this month',
+                          style: AppTextStyle.titleM.copyWith(
+                            // color: colorScheme.appTextMuted,
+                          ),
+                        ),
+                      ),
+                      if (bills.isNotEmpty)
+                        RichText(
+                          text: TextSpan(
+                            style: AppTextStyle.labelM.copyWith(
+                              color: colorScheme.appText,
+                            ),
+                            children: [
+                              TextSpan(text: paidBillCount.toString()),
+                              const TextSpan(text: '/'),
+                              TextSpan(text: unpaidBillCount.toString()),
+                              const TextSpan(text: ' bills paid'),
+                            ],
+                          ),
+                        ),
+                    ],
                   ),
                   // Text('Recurring Bills', style: AppTextStyle.titleL),
                   // FittedBox(
@@ -93,32 +116,46 @@ class BillsReminderSection extends GetView<CashflowController> {
                   // Text(totalAmount.toCurrency(), style: AppTextStyle.amountXL),
                   const SizedBox(height: 2),
 
-                  _BillSummaryRow(
-                    label: 'Remaining',
-                    amount: unpaidAmount,
-                    count: unpaidBillCount,
-                    color: colorScheme.appOutflow,
-                  ),
-                  _BillSummaryRow(
-                    label: 'Paid',
-                    amount: paidAmount,
-                    count: paidBillCount,
-                    color: colorScheme.appSuccess,
+                  Row(
+                    spacing: 16,
+                    children: [
+                      Expanded(
+                        child: _BillSummaryColumn(
+                          label: 'Remaining',
+                          amount: unpaidAmount,
+                          count: unpaidBillCount,
+                          color: colorScheme.appOutflow,
+                        ),
+                      ),
+                      // SizedBox(width: 16),
+                      // const Divider(),
+                      Container(
+                        height: 32,
+
+                        width: 1,
+                        decoration: BoxDecoration(
+                          color: colorScheme.appBorder,
+                          borderRadius: BorderRadius.circular(9),
+                        ),
+                      ),
+                      Expanded(
+                        child: _BillSummaryColumn(
+                          label: 'Paid',
+                          amount: paidAmount,
+                          count: paidBillCount,
+                          color: colorScheme.appSuccess,
+                        ),
+                      ),
+                    ],
                   ),
 
-                  const Divider(),
+                  if (bills.isEmpty) ...[
+                    SizedBox(height: 12),
+                    AppButton(text: 'Add your first bill', onTap: () {}),
+                  ],
 
-                  // Text(
-                  //   !hasBills
-                  //       ? 'No bills this month'
-                  //       : unpaidBills.isEmpty
-                  //       ? 'All bills paid this month'
-                  //       : 'Bills remaining this month',
-                  //   style: AppTextStyle.bodyM.copyWith(
-                  //     color: colorScheme.appTextMuted,
-                  //   ),
-                  // ),
                   if (bills.isNotEmpty) ...[
+                    Divider(color: colorScheme.appBorder),
                     const SizedBox(height: 8),
 
                     ...bills.map(
@@ -243,8 +280,8 @@ class _BillReminderItem extends StatelessWidget {
   }
 }
 
-class _BillSummaryRow extends StatelessWidget {
-  const _BillSummaryRow({
+class _BillSummaryColumn extends StatelessWidget {
+  const _BillSummaryColumn({
     required this.label,
     required this.amount,
     required this.count,
@@ -261,19 +298,25 @@ class _BillSummaryRow extends StatelessWidget {
     final billText = count == 1 ? 'bill' : 'bills';
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Text(label, style: AppTextStyle.bodyM)),
-          Text(
-            '$count $billText',
-            style: AppTextStyle.labelS.copyWith(
-              color: context.colors.appTextMuted,
-            ),
+          Row(
+            children: [
+              Expanded(child: Text(label, style: AppTextStyle.labelM)),
+              Text(
+                '$count $billText',
+                style: AppTextStyle.labelS.copyWith(
+                  color: context.colors.appTextMuted,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
+
+          const SizedBox(height: 4),
           Text(
             amount.toCurrency(),
-            style: AppTextStyle.amountM.copyWith(color: color),
+            style: AppTextStyle.amountL.copyWith(color: color),
           ),
         ],
       ),

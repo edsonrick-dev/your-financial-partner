@@ -4,13 +4,10 @@ import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/cashflow_planner_page/financial_target_cards/emergency_fund_target.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/metric_bar_row.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/sections/networth_summary_section.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_overview.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/balance_sheet_type_enum.dart';
-import 'package:getx_drift_app/features/widgets/app_tab_switcher.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 
@@ -74,127 +71,127 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
                   ),
                 ),
               ),
-              AppSectionBody(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
-                  child: Column(
-                    children: [
-                      // Obx(
-                      //   () => AdaptivePressable(
-                      //     onTap: () {
-                      //       Get.toNamed(Routes.NETWORTHDETAILS);
-                      //     },
-                      //     child: SizedBox(
-                      //       height: 32,
-                      //       child: Text(
-                      //         'Open ${controller.selectedView.value.plural} Details Page',
-                      //         style: AppTextStyle.bodyM,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      Obx(
-                        () => Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: colorScheme.bg,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: colorScheme.appBorder),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TabSwitcher(
-                                    label: 'Assets',
-                                    isActive:
-                                        controller.selectedView.value ==
-                                        BalanceSheetType.asset,
-                                    onTap: () {
-                                      controller.seletectedDetailsTabIndex(0);
-                                      controller.selectBalanceSheetType(
-                                        BalanceSheetType.asset,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Expanded(
-                                  child: TabSwitcher(
-                                    label: 'Liabilities',
-                                    isActive:
-                                        controller.selectedView.value ==
-                                        BalanceSheetType.liability,
-                                    onTap: () {
-                                      controller.seletectedDetailsTabIndex(1);
-                                      controller.selectBalanceSheetType(
-                                        BalanceSheetType.liability,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Obx(() {
-                        final isEmpty = controller.displayedGroupTotals.isEmpty;
+              // AppSectionBody(
+              //   child: Padding(
+              //     padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
+              //     child: Column(
+              //       children: [
+              //         // Obx(
+              //         //   () => AdaptivePressable(
+              //         //     onTap: () {
+              //         //       Get.toNamed(Routes.NETWORTHDETAILS);
+              //         //     },
+              //         //     child: SizedBox(
+              //         //       height: 32,
+              //         //       child: Text(
+              //         //         'Open ${controller.selectedView.value.plural} Details Page',
+              //         //         style: AppTextStyle.bodyM,
+              //         //       ),
+              //         //     ),
+              //         //   ),
+              //         // ),
+              //         Obx(
+              //           () => Container(
+              //             width: double.infinity,
+              //             decoration: BoxDecoration(
+              //               color: colorScheme.bg,
+              //               borderRadius: BorderRadius.circular(8),
+              //               border: Border.all(color: colorScheme.appBorder),
+              //             ),
+              //             child: ClipRRect(
+              //               borderRadius: BorderRadius.circular(8),
+              //               child: Row(
+              //                 children: [
+              //                   Expanded(
+              //                     child: TabSwitcher(
+              //                       label: 'Assets',
+              //                       isActive:
+              //                           controller.selectedView.value ==
+              //                           BalanceSheetType.asset,
+              //                       onTap: () {
+              //                         controller.seletectedDetailsTabIndex(0);
+              //                         controller.selectBalanceSheetType(
+              //                           BalanceSheetType.asset,
+              //                         );
+              //                       },
+              //                     ),
+              //                   ),
+              //                   Expanded(
+              //                     child: TabSwitcher(
+              //                       label: 'Liabilities',
+              //                       isActive:
+              //                           controller.selectedView.value ==
+              //                           BalanceSheetType.liability,
+              //                       onTap: () {
+              //                         controller.seletectedDetailsTabIndex(1);
+              //                         controller.selectBalanceSheetType(
+              //                           BalanceSheetType.liability,
+              //                         );
+              //                       },
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //         SizedBox(height: 20),
+              //         Obx(() {
+              //           final isEmpty = controller.displayedGroupTotals.isEmpty;
 
-                        if (isEmpty) {
-                          return EmptyBalanceSheetView(
-                            type: controller.selectedView.value,
-                          );
-                        }
+              //           if (isEmpty) {
+              //             return EmptyBalanceSheetView(
+              //               type: controller.selectedView.value,
+              //             );
+              //           }
 
-                        return Column(
-                          spacing: 12,
-                          children: controller.displayedGroupTotals.entries.map(
-                            (entry) {
-                              final group = entry.key;
-                              final amount = entry.value;
+              //           return Column(
+              //             spacing: 12,
+              //             children: controller.displayedGroupTotals.entries.map(
+              //               (entry) {
+              //                 final group = entry.key;
+              //                 final amount = entry.value;
 
-                              return AccountOverview(
-                                icon: group.icon,
-                                type: group.label,
-                                amount: amount,
-                                percentage: controller.groupPercentage(group),
-                                color: group.color,
-                                percentageLabel:
-                                    controller.selectedView.value ==
-                                        BalanceSheetType.asset
-                                    ? 'Assets'
-                                    : 'Liabilities',
-                              );
-                            },
-                          ).toList(),
-                        );
-                      }),
+              //                 return AccountOverview(
+              //                   icon: group.icon,
+              //                   type: group.label,
+              //                   amount: amount,
+              //                   percentage: controller.groupPercentage(group),
+              //                   color: group.color,
+              //                   percentageLabel:
+              //                       controller.selectedView.value ==
+              //                           BalanceSheetType.asset
+              //                       ? 'Assets'
+              //                       : 'Liabilities',
+              //                 );
+              //               },
+              //             ).toList(),
+              //           );
+              //         }),
 
-                      // Divider(color: colorScheme.appTextMuted),
+              //         // Divider(color: colorScheme.appTextMuted),
 
-                      // Obx(
-                      //   () => AppButton(
-                      //     onTap: () {
-                      //       Get.toNamed(Routes.NETWORTHDETAILS);
-                      //     },
-                      //     type: ButtonType.ghost,
-                      //     text: 'View ${controller.selectedView.value.plural}',
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),
-              ),
+              //         // Obx(
+              //         //   () => AppButton(
+              //         //     onTap: () {
+              //         //       Get.toNamed(Routes.NETWORTHDETAILS);
+              //         //     },
+              //         //     type: ButtonType.ghost,
+              //         //     text: 'View ${controller.selectedView.value.plural}',
+              //         //   ),
+              //         // ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
 
-        AppSection(
-          sectionTitle: 'Your Financial Targets',
-          child: Column(spacing: 16, children: [EmergencyFundTargetCard()]),
-        ),
+        // AppSection(
+        //   sectionTitle: 'Emergency Preparedness',
+        //   child: Column(spacing: 16, children: [EmergencyFundTargetCard()]),
+        // ),
       ],
     );
   }

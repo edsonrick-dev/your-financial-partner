@@ -1,8 +1,108 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
+import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 
 class OnboardingController extends GetxController {
+  static const _userNameKey = 'user_name';
+  final FinancialProfileController financialProfileController =
+      Get.find<FinancialProfileController>();
+  @override
+  void onClose() {
+    plannerScrollController.dispose();
+    introPageController.dispose();
+    pageController.dispose();
+    nameController.dispose();
+    nameFocusNode.dispose();
+    super.onClose();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    nameController.addListener(() {
+      name.value = nameController.text.trim();
+    });
+  }
+
+  Future<void> completeAssessment() async {
+    await financialProfileController.markAssessmentCompleted();
+    final storage = GetStorage();
+
+    await storage.write(_userNameKey, name.value);
+    Get.offAllNamed(Routes.MAINVIEW, arguments: {'initialTab': 3});
+  }
+
+  bool get canContinue {
+    switch (currentPage.value) {
+      case 0:
+        return name.value.isNotEmpty;
+
+      case 1:
+        return selectedImprovementAreas.isNotEmpty;
+
+      case 2:
+        return selectedConfidence.value != null;
+
+      case 3:
+        return currentManagement.value != null;
+
+      default:
+        return false;
+    }
+  }
+
+  final PageController pageController = PageController();
+
+  final currentPage = 0.obs;
+
+  final nameController = TextEditingController();
+  final nameFocusNode = FocusNode();
+  final name = ''.obs;
+  final selectedGoals = <String>{}.obs;
+  final selectedConfidence = Rxn<String>();
+  final selectedManagementStyle = Rxn<String>();
+
+  final totalPages = 4;
+
+  bool get isFirstPage => currentPage.value == 0;
+  bool get isLastPage => currentPage.value == totalPages - 1;
+
+  void nextPage() {
+    if (isLastPage) {
+      submitAssessment();
+      return;
+    }
+
+    pageController.nextPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
+  void previousPage() {
+    if (isFirstPage) {
+      Get.back();
+      return;
+    }
+
+    pageController.previousPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
+  void onPageChanged(int index) {
+    currentPage.value = index;
+  }
+
+  void submitAssessment() {
+    Get.toNamed(Routes.ASSESSMENT_SUMMARY);
+  }
+
+  // final currentPage = 0.obs;
   final financialFocus = <String>[].obs;
   final learningSource = <String>[].obs;
   static const noLearningSource = "I don't really learn about it";
@@ -144,13 +244,6 @@ class OnboardingController extends GetxController {
     }
   }
 
-  @override
-  void onClose() {
-    plannerScrollController.dispose();
-    introPageController.dispose();
-    super.onClose();
-  }
-
   final RxnString currentManagement = RxnString();
 
   void selectCurrentManagement(String value) {
@@ -185,8 +278,8 @@ class OnboardingController extends GetxController {
     return selectedFinancialGoals.contains(value);
   }
 
-  final selectedGoals = <String>{}.obs;
-  final selectedConfidence = RxnString();
+  // final selectedGoals = <String>{}.obs;
+  // final selectedConfidence = RxnString();
   void toggleGoal(String goal) {
     if (selectedGoals.contains(goal)) {
       selectedGoals.remove(goal);

@@ -5,4 +5,5 @@ extension BuildContextExtension on BuildContext {
   double get bottomPaddingSub => MediaQuery.of(this).padding.bottom;
 
   double get topPadding => MediaQuery.of(this).padding.top + 12;
+  double get topPaddingSub => MediaQuery.of(this).padding.top;
 }

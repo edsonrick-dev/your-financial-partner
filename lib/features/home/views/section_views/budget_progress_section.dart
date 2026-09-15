@@ -25,12 +25,32 @@ class BudgetProgressSection extends GetView<CashflowController> {
       sectionTitle: 'Budget Progress',
       trailingWidget: AdaptivePressable(
         onTap: () {
-          controller.seletectedDetailsTabIndex(1);
-          Get.toNamed(Routes.CASHFLOWDETAILS);
+          if (controller.currentMonthBudgetItems.isEmpty) {
+            controller.seletectedDetailsTabIndex(1);
+            Get.toNamed(Routes.CASHFLOWDETAILS);
+          }
+          if (controller.currentMonthBudgetItems.isEmpty) {
+            controller.seletectedDetailsTabIndex(1);
+            Get.toNamed(Routes.CASHFLOWDETAILS);
+          }
         },
         child: Obx(
           () => controller.currentMonthBudgetItems.isEmpty
               ? SizedBox.shrink()
+              // (
+              // height: 44,
+              // child: Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              //   child: Center(
+              //     child: Text(
+              //       'Set Budget',
+              //       style: AppTextStyle.titleM.copyWith(
+              //         color: colorScheme.appText,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // )
               : SizedBox(
                   height: 44,
                   child: Padding(
@@ -93,26 +113,25 @@ class BudgetProgressSection extends GetView<CashflowController> {
             color: colorScheme.bgLight,
             borderRadius: BorderRadius.circular(24),
           ),
-          child: items.isEmpty
-              ? _EmptyView()
-              : _FilledView(
-                  progress: progress,
-                  statusColor: statusColor,
-                  currentMonthIndex: currentMonthIndex,
-                  spentAmount: spentAmount,
-                  budgetAmount: budgetAmount,
-                  statusText: statusText,
-                  daysLeft: daysLeft,
-                  colorScheme: colorScheme,
-                  items: items,
-                  controller: controller,
-                ),
+          child: _FilledView(
+            progress: progress,
+            statusColor: statusColor,
+            currentMonthIndex: currentMonthIndex,
+            spentAmount: spentAmount,
+            budgetAmount: budgetAmount,
+            statusText: statusText,
+            daysLeft: daysLeft,
+            colorScheme: colorScheme,
+            items: items,
+            controller: controller,
+          ),
         );
       }),
     );
   }
 }
 
+// ignore: unused_element
 class _EmptyView extends GetView<CashflowController> {
   // const _EmptyView({super.key});
 
@@ -120,24 +139,27 @@ class _EmptyView extends GetView<CashflowController> {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     return Padding(
-      padding: EdgeInsets.all(24),
+      padding: EdgeInsets.all(16),
       child: Column(
         children: [
-          Text('Set up your monthly budget', style: AppTextStyle.headlineM),
-          SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              textAlign: TextAlign.center,
-              'Plan how much you want to spend in each category and track your progress throughout the month.',
-              style: AppTextStyle.labelM.copyWith(
-                color: colorScheme.appTextMuted,
-              ),
-            ),
-          ),
-          SizedBox(height: 16),
+          // Text(
+          //   'Set your budget with Casfhlow Planner',
+          //   style: AppTextStyle.titleM,
+          //   textAlign: TextAlign.center,
+          // ),
+          // SizedBox(height: 8),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          //   child: Text(
+          //     textAlign: TextAlign.center,
+          //     'You can see your budget per category here once your setup your cashflow plan',
+          //     style: AppTextStyle.bodyS.copyWith(color: colorScheme.appText),
+          //   ),
+          // ),
+          // SizedBox(height: 16),
           AppButton(
-            text: 'Create Budget',
+            // type: ButtonType.outline,
+            text: 'Go to Cashflow Planner',
             onTap: () {
               controller.seletectedDetailsTabIndex(1);
               Get.toNamed(Routes.CASHFLOWDETAILS, arguments: 1);
@@ -182,22 +204,29 @@ class _FilledView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 16,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 12,
             children: [
               BudgetProgressIndicator(
+                size: 90,
                 progress: progress.clamp(0.0, 1.0),
                 progressColor: statusColor,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${(progress * 100).round()}%',
-                      style: AppTextStyle.amountM,
-                    ),
-                    Text('of budget', style: AppTextStyle.labelS),
-                  ],
-                ),
+                child: items.isNotEmpty
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '${(progress * 100).round()}%',
+                            style: AppTextStyle.amountL,
+                          ),
+                          Text('of budget', style: AppTextStyle.labelXS),
+                        ],
+                      )
+                    : Text(
+                        'No\nBudget',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyle.cardTitle,
+                      ),
               ),
 
               Expanded(
@@ -210,45 +239,67 @@ class _FilledView extends StatelessWidget {
                         style: AppTextStyle.headlineM,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 4),
+                    // if (items.isNotEmpty)
                     FittedBox(
-                      child: Row(
-                        children: [
-                          Text(
-                            spentAmount.toCompactCurrency(kThreshold: 1000000),
-                            style: AppTextStyle.amountM,
-                          ),
-                          const Text(' spent of '),
-                          Text(
-                            budgetAmount.toCompactCurrency(kThreshold: 1000000),
-                            style: const TextStyle(
-                              fontFeatures: [FontFeature.tabularFigures()],
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(color: colorScheme.appText),
+                          children: [
+                            TextSpan(
+                              text: spentAmount.toCompactCurrency(
+                                kThreshold: 1000000,
+                              ),
+                              style: AppTextStyle.amountM,
                             ),
+                            const TextSpan(text: ' spent of '),
+                            TextSpan(
+                              text: budgetAmount.toCompactCurrency(
+                                kThreshold: 1000000,
+                              ),
+                              style: AppTextStyle.amountS,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 4),
+                    if (items.isNotEmpty)
+                      Row(
+                        children: [
+                          Row(
+                            spacing: 4,
+                            children: [
+                              Container(
+                                width: 6,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: statusColor,
+                                ),
+                              ),
+                              Text(statusText, style: AppTextStyle.labelM),
+                            ],
+                          ),
+                          const Spacer(),
+                          Text(
+                            '$daysLeft days left',
+                            style: AppTextStyle.labelM,
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Row(
-                          spacing: 4,
-                          children: [
-                            Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: statusColor,
-                              ),
-                            ),
-                            Text(statusText),
-                          ],
-                        ),
-                        const Spacer(),
-                        Text('$daysLeft days left'),
-                      ],
-                    ),
+                    if (items.isEmpty)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Text('No budget yet', style: AppTextStyle.titleS),
+                          Text(
+                            'Create a cashflow plan to start tracking your spending.',
+                            style: AppTextStyle.bodyS,
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
@@ -258,7 +309,9 @@ class _FilledView extends StatelessWidget {
 
         const SizedBox(height: 4),
 
-        Divider(indent: 16, endIndent: 16, color: colorScheme.appBorderMuted),
+        if (items.isNotEmpty)
+          Divider(indent: 16, endIndent: 16, color: colorScheme.appBorderMuted),
+        // _EmptyView(),
         if (items.length >= 3)
           Obx(
             () => DisplayModeToggle(
@@ -325,6 +378,15 @@ class _FilledView extends StatelessWidget {
             ],
           );
         }),
+        if (items.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: AppButton(
+              text: 'Set up your budget',
+              onTap: () {},
+              borderRadius: 12,
+            ),
+          ),
       ],
     );
   }

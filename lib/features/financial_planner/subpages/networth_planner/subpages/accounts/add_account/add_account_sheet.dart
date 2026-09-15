@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
@@ -14,7 +15,6 @@ class AddAccountSheet extends GetView<AccountController> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -56,7 +56,7 @@ class AddAccountSheet extends GetView<AccountController> {
               ),
             ),
 
-            SizedBox(height: bottomPadding),
+            SizedBox(height: context.bottomPaddingSub),
           ],
         ),
       ),
@@ -142,7 +142,7 @@ extension AccountValidationExtension on AccountController {
 
   bool get isCreditCardAccountValid {
     return hasValidAccountName &&
-        hasSelectedFinancialInstitution &&
+        // hasSelectedFinancialInstitution &&
         hasValidBalance &&
         enteredCreditLimit.value > 0;
   }

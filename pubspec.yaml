@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+
   flutter:
     sdk: flutter
   fl_chart: ^1.2.0
@@ -47,7 +48,8 @@ dependencies:
   intl: ^0.20.2
   hugeicons: ^1.0.0
   month_picker_dialog: ^6.7.2
-
+  get_storage: ^2.1.1
+  
 dev_dependencies:
 
   flutter_launcher_icons: ^0.14.4

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
@@ -14,21 +13,37 @@ class AccountGroupSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppSection(
-      sectionTitle: summary.group.label,
-      trailingWidget: Text(
-        summary.total.toCurrency(),
-        style: AppTextStyle.amountM,
-      ),
-      trailingType: SectionTrailingType.custom,
-      child: Column(
-        children: [
-          for (final item in summary.items) ...[
-            AccountCardFactory.build(item),
-            const SizedBox(height: 16),
-          ],
-        ],
-      ),
+    return Column(
+      children: [
+        AppSection(
+          sectionTitle: summary.group.label,
+          trailingWidget: Text(
+            summary.total.toCurrency(),
+            style: AppTextStyle.amountM,
+          ),
+          trailingType: SectionTrailingType.custom,
+          child:
+              // Row(
+              //   children: [
+              //     Text(summary.group.label, style: AppTextStyle.titleL),
+              //     // SizedBox(width: 2),
+              //     AdaptivePressable(
+              //       child: Icon(PhosphorIconsRegular.caretRight, size: 20),
+              //     ),
+              //     Spacer(),
+              //     Text(summary.total.toCurrency(), style: AppTextStyle.amountL),
+              //   ],
+              // ),
+              Column(
+                children: [
+                  for (final item in summary.items) ...[
+                    AccountCardFactory.build(item),
+                    const SizedBox(height: 16),
+                  ],
+                ],
+              ),
+        ),
+      ],
     );
   }
 }

@@ -204,6 +204,18 @@ class BudgetListView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Row(
+                  //   children: [
+                  //     Icon(
+                  //       AppIcons.categories.resolve(iconKey),
+                  //       size: 14,
+                  //       // color: iconColor,
+                  //     ),
+                  //     Spacer(),
+                  //     Text('Monthly', style: AppTextStyle.labelXS),
+                  //   ],
+                  // ),
+                  SizedBox(height: 4),
                   Row(
                     children: [
                       Icon(
@@ -211,13 +223,7 @@ class BudgetListView extends StatelessWidget {
                         size: 14,
                         // color: iconColor,
                       ),
-                      Spacer(),
-                      Text('Monthly', style: AppTextStyle.labelXS),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  Row(
-                    children: [
+                      SizedBox(width: 6),
                       Text(budgetName, style: AppTextStyle.bodyM),
                       Spacer(),
                       Text(

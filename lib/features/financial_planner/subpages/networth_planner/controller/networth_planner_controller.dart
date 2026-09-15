@@ -51,10 +51,9 @@ class NetWorthController extends GetxController {
 
   bool get isEmpty => assetAccounts.isEmpty && liabilityAccounts.isEmpty;
   bool get hasAssets => assetAccounts.isNotEmpty;
-
   bool get hasLiabilities => liabilityAccounts.isNotEmpty;
-
   bool get hasAccounts => hasAssets || hasLiabilities;
+
   Future<void> deleteAccount(AccountsTableData account) async {
     await database.accountsDao.deleteAccount(account.id);
   }

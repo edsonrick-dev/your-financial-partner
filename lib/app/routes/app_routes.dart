@@ -4,6 +4,7 @@ abstract class Routes {
   Routes._();
   static const PAYWALL = '/paywall';
   static const ONBOARDING = '/onboarding';
+  static const ASSESSMENT_SUMMARY = '/onboarding/summary';
   static const ONBOARDING_FIRST_QUESTION = '/onboarding/first-question';
   static const ONBOARDING_SECOND_QUESTION = '/onboarding/second-question';
   static const ONBOARDING_THIRD_QUESTION = '/onboarding/third-question';

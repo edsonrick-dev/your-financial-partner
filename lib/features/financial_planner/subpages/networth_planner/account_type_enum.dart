@@ -56,7 +56,8 @@ enum AccountType {
     group: AccountGroup.loan,
     iconKey: 'creditCard',
   ),
-  loan(id: 'loan', label: 'Loan', group: AccountGroup.loan, iconKey: 'car');
+
+  loan(id: 'loan', label: 'Loan', group: AccountGroup.loan, iconKey: 'bank');
 
   final String id;
   final String label;

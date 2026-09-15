@@ -30,80 +30,8 @@ class FundSummaryCard extends GetView<HomeController> {
         ),
         child: controller.hasAccounts.value
             ? _buildFilledView(context)
-            : _buildEmptyState(context),
+            : _buildFilledView(context),
       ),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return Stack(
-      alignment: Alignment.centerRight,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Let's get your finances ready",
-              style: AppTextStyle.headlineL.copyWith(
-                color: colorScheme.appInversedtext,
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            Text(
-              'Add your accounts to start tracking your available funds, spending, and progress towards your financial goals.',
-              style: AppTextStyle.bodyL.copyWith(
-                color: colorScheme.appInversedtextMuted,
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            AdaptivePressable(
-              onTap: () {
-                // Navigate to Add Account
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: colorScheme.inversePrimary,
-                  borderRadius: BorderRadius.circular(32),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.add, color: colorScheme.appText),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Add an account',
-                      style: AppTextStyle.titleL.copyWith(
-                        color: colorScheme.appText,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        Opacity(
-          opacity: 0.12,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              PhosphorIconsRegular.wallet,
-              size: 160,
-              color: colorScheme.appAccent,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -189,6 +117,79 @@ class FundSummaryCard extends GetView<HomeController> {
               ],
             );
           },
+        ),
+      ],
+    );
+  }
+
+  // ignore: unused_element
+  Widget _buildEmptyState(BuildContext context) {
+    final colorScheme = context.colors;
+
+    return Stack(
+      alignment: Alignment.centerRight,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Let's get your finances ready",
+              style: AppTextStyle.headlineL.copyWith(
+                color: colorScheme.appInversedtext,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            Text(
+              'Add your accounts to start tracking your available funds, spending, and progress towards your financial goals.',
+              style: AppTextStyle.bodyL.copyWith(
+                color: colorScheme.appInversedtextMuted,
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            AdaptivePressable(
+              onTap: () {
+                // Navigate to Add Account
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: colorScheme.inversePrimary,
+                  borderRadius: BorderRadius.circular(32),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.add, color: colorScheme.appText),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Add an account',
+                      style: AppTextStyle.titleL.copyWith(
+                        color: colorScheme.appText,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        Opacity(
+          opacity: 0.12,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              PhosphorIconsRegular.wallet,
+              size: 160,
+              color: colorScheme.appAccent,
+            ),
+          ),
         ),
       ],
     );

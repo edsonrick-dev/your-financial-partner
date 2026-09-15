@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:getx_drift_app/domain/financial_metrics_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
@@ -14,6 +15,46 @@ import 'package:getx_drift_app/features/profile/controller/extensions/financial_
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_wealth_building_extension.dart';
 
 class FinancialProfileController extends GetxController {
+  Future<void> revealFinancialStabilityProfile() async {
+    hasRevealedProfile.value = true;
+
+    await _storage.write(_profileRevealedKey, true);
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    hasCompletedAssessment.value =
+        _storage.read<bool>(_assessmentCompletedKey) ?? false;
+    hasRevealedProfile.value =
+        _storage.read<bool>(_profileRevealedKey) ?? false;
+    stabilityDetailKeys = List.generate(
+      stabilityProfileDetails.length,
+      (_) => GlobalKey(),
+    );
+  }
+
+  final GetStorage _storage = GetStorage();
+
+  static const _assessmentCompletedKey = 'financial_assessment_completed';
+
+  static const _profileRevealedKey = 'financial_profile_revealed';
+
+  final hasCompletedAssessment = false.obs;
+  final hasRevealedProfile = false.obs;
+  Future<void> markAssessmentCompleted() async {
+    hasCompletedAssessment.value = true;
+
+    await _storage.write(_assessmentCompletedKey, true);
+  }
+
+  // final GetStorage _storage = GetStorage();
+
+  // static const _assessmentCompletedKey = 'financial_assessment_completed';
+
+  // final hasCompletedAssessment = false.obs;
+
   final CashflowController cashflowController = Get.find<CashflowController>();
 
   final NetWorthController netWorthController = Get.find<NetWorthController>();
@@ -161,15 +202,6 @@ class FinancialProfileController extends GetxController {
   }
 
   late final List<GlobalKey> stabilityDetailKeys;
-  @override
-  void onInit() {
-    super.onInit();
-
-    stabilityDetailKeys = List.generate(
-      stabilityProfileDetails.length,
-      (_) => GlobalKey(),
-    );
-  }
 
   List<FinancialRatio> get ratios => [
     debtLoad,

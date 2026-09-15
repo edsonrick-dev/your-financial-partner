@@ -45,7 +45,9 @@ class MetricBarRow extends StatelessWidget {
             amount.toCompactCurrency(),
             textAlign: TextAlign.right,
             style: AppTextStyle.amountXS.copyWith(
-              color: textColor ?? colorScheme.appText,
+              color: amount < 0
+                  ? colorScheme.appOutflow
+                  : textColor ?? colorScheme.appText,
             ),
           ),
         ),

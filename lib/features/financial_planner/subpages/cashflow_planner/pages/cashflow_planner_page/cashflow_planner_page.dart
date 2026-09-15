@@ -11,8 +11,11 @@ class CashflowPlannerPage extends GetView<CashflowController> {
   const CashflowPlannerPage({super.key});
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
+    return Obx(() {
+      if (controller.isEmpty) {
+        return const CashflowPlannerEmptyView();
+      }
+      return SingleChildScrollView(
         padding: EdgeInsets.only(
           top: context.topPadding,
           bottom: context.bottomPadding,
@@ -20,13 +23,7 @@ class CashflowPlannerPage extends GetView<CashflowController> {
         child: Column(
           spacing: 20,
           children: [
-            Obx(() {
-              if (controller.isEmpty) {
-                return const CashflowPlannerEmptyView();
-              }
-
-              return CashflowPlannerContentView();
-            }),
+            CashflowPlannerContentView(),
             LearningSection(
               subtitle: 'Build a good understanding of your net worth',
               state: LearningSectionState.available,
@@ -38,7 +35,28 @@ class CashflowPlannerPage extends GetView<CashflowController> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    });
+    //  SingleChildScrollView(
+    //   child: Padding(
+    //     padding: EdgeInsets.only(
+    //       top: context.topPadding,
+    //       bottom: context.bottomPadding,
+    //     ),
+    //     child: Column(
+    //       spacing: 20,
+    //       children: [
+    //         Obx(() {
+    //           if (controller.isEmpty) {
+    //             return const CashflowPlannerEmptyView();
+    //           }
+
+    //           return CashflowPlannerContentView();
+    //         }),
+
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }

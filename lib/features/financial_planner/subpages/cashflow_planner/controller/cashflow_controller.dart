@@ -22,6 +22,15 @@ import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 
 class CashflowController extends GetxController {
+  void setInitialDetailsTab() {
+    if (hasIncomePlan && !hasBudgetPlan) {
+      seletectedDetailsTabIndex.value = 1;
+      return;
+    }
+
+    seletectedDetailsTabIndex.value = 0;
+  }
+
   Stream<List<BillWithNextOccurrence>> watchDebtRepaymentBills() {
     return database.billsDao.watchLoanBills();
   }

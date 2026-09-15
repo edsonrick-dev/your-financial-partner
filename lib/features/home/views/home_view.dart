@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
@@ -14,10 +13,91 @@ import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell
 import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final spacingM = AppScale.x5;
+    final spacingL = AppScale.x6;
+    final colorScheme = context.colors;
+
+    return Scaffold(
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: context.topPaddingSub,
+              bottom: context.bottomPadding,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // HEADER
+                AppSection(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Obx(
+                        () => Text(
+                          controller.userName.value.isEmpty
+                              ? '${controller.timeBasedGreeting}!'
+                              : '${controller.timeBasedGreeting}, '
+                                    '${controller.userName.value}!',
+                          style: AppTextStyle.headlineL,
+                        ),
+                      ),
+                      Text(
+                        'Let’s make today a great financial day.',
+                        style: AppTextStyle.labelM.copyWith(
+                          color: colorScheme.appTextMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: spacingL),
+                  child: AppSection(
+                    child: Column(children: [FundSummaryCard()]),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: spacingM),
+                  child: BudgetProgressSection(),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: spacingM),
+                  child: BillsReminderSection(),
+                ),
+
+                // LEARNING
+                Padding(
+                  padding: EdgeInsets.only(top: spacingM),
+                  child: LearningSection(
+                    state: LearningSectionState.available,
+                    contents: [
+                      LearnThumbnail(
+                        title: 'Why Financial Planning Matters',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class HomeView1 extends GetView<HomeController> {
+  const HomeView1({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -146,129 +226,6 @@ class HomeView extends GetView<HomeController> {
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-enum GuideState {
-  available,
-  locked,
-  completed;
-
-  String get statusLabel => switch (this) {
-    GuideState.available => 'In Progress',
-    GuideState.locked => 'Locked',
-    GuideState.completed => 'Completed',
-  };
-  IconData get statusIcon => switch (this) {
-    GuideState.available => PhosphorIconsRegular.caretRight,
-    GuideState.locked => PhosphorIconsFill.lock,
-    GuideState.completed => PhosphorIconsRegular.check,
-  };
-
-  Color statusColor(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return switch (this) {
-      GuideState.available => colorScheme.appText,
-      GuideState.locked => colorScheme.appOutflow,
-      GuideState.completed => colorScheme.appInflow,
-    };
-  }
-
-  bool get isLocked => this == GuideState.locked;
-
-  bool get isCompleted => this == GuideState.completed;
-}
-
-class GetStartedTile extends StatelessWidget {
-  const GetStartedTile({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.iconColor,
-    required this.icon,
-    required this.guideState,
-  });
-  final String title;
-  final String description;
-  final Color iconColor;
-  final IconData icon;
-  final GuideState guideState;
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    final unavailable = guideState == GuideState.locked;
-    return Opacity(
-      opacity: unavailable ? 0.5 : 1,
-      child: AdaptivePressable(
-        onTap: unavailable ? null : () {},
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: guideState == GuideState.completed
-                ? colorScheme.appInflow.withAlpha(36)
-                : colorScheme.bgLight,
-          ),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 12,
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(icon, color: iconColor, size: 20),
-                        Opacity(
-                          opacity: 0.2,
-                          child: Container(
-                            height: 36,
-                            width: 36,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: iconColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: Row(
-                        spacing: 12,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(title, style: AppTextStyle.titleM),
-                                Text(
-                                  description,
-                                  style: AppTextStyle.bodyS.copyWith(
-                                    color: colorScheme.appTextMuted,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Icon(
-                            guideState.statusIcon,
-                            size: 16,
-                            color: guideState.statusColor(context),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
         ),
       ),

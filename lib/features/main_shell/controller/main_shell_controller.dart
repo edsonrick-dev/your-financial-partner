@@ -7,6 +7,17 @@ import 'package:getx_drift_app/features/transaction/views/transaction_view.dart'
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 
 class MainShellController extends GetxController {
+  @override
+  void onInit() {
+    super.onInit();
+
+    final arguments = Get.arguments;
+
+    if (arguments is Map && arguments['initialTab'] is int) {
+      selectedTabIndex.value = arguments['initialTab'] as int;
+    }
+  }
+
   final selectedTabIndex = 0.obs;
   final isAddSheetOpen = false.obs;
 

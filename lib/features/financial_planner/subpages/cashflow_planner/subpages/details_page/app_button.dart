@@ -12,14 +12,24 @@ class AppButton extends StatelessWidget {
   final ButtonType type;
   final VoidCallback? onTap;
   final bool isInversed;
-
+  final double borderRadius;
+  final ButtonSize size;
   const AppButton({
     super.key,
     this.type = ButtonType.primary,
+    this.size = ButtonSize.large,
     this.onTap,
     this.isInversed = false,
+    this.borderRadius = 8,
     required this.text,
   });
+  double _buttonSize(ButtonSize size) {
+    return switch (size) {
+      ButtonSize.small => 28,
+      ButtonSize.medium => 36,
+      ButtonSize.large => 40,
+    };
+  }
 
   Color _backgroundColor(BuildContext context) {
     final colorScheme = context.colors;
@@ -70,12 +80,12 @@ class AppButton extends StatelessWidget {
     return AdaptivePressable(
       onTap: onTap,
       child: Container(
-        height: 44,
+        height: _buttonSize(size),
         width: double.infinity,
         decoration: BoxDecoration(
           color: _backgroundColor(context),
           border: _border(context),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: Center(

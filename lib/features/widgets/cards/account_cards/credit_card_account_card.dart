@@ -6,6 +6,7 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CreditCardAccountCard extends StatelessWidget {
   final AccountsTableData account;
@@ -25,7 +26,7 @@ class CreditCardAccountCard extends StatelessWidget {
 
     return AppCard(
       onTap: onTap,
-      child: _CardDesign2(
+      child: _CardDesign1(
         account: account,
         colorScheme: colorScheme,
         availableCredit: availableCredit,
@@ -36,6 +37,7 @@ class CreditCardAccountCard extends StatelessWidget {
   }
 }
 
+// ignore: unused_element
 class _CardDesign2 extends StatelessWidget {
   const _CardDesign2({
     required this.account,
@@ -117,35 +119,40 @@ class _CardDesign1 extends StatelessWidget {
       children: [
         // Header
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(AppIcons.categories.resolve(account.icon), size: 24),
+                Icon(PhosphorIconsRegular.creditCard, size: 24),
                 const SizedBox(width: 12),
                 Text(account.name, style: AppTextStyle.titleM),
               ],
             ),
             Spacer(),
-            // Text(
-            //   account.currentValue.toCurrency(),
-            //   style: AppTextStyle.amountL.copyWith(
-            //     color: colorScheme.appOutflow,
-            //   ),
-            // ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  account.currentValue.toCurrency(),
+                  style: AppTextStyle.amountL.copyWith(
+                    color: colorScheme.appOutflow,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
 
         const SizedBox(height: 16),
 
         // Current payable
-        Text('Current payable', style: AppTextStyle.bodyS),
-        const SizedBox(height: 2),
-        Text(
-          account.currentValue.toCurrency(),
-          style: AppTextStyle.amountL.copyWith(color: colorScheme.appOutflow),
-        ),
-
-        const SizedBox(height: 16),
+        // Text('Current payable', style: AppTextStyle.bodyS),
+        // const SizedBox(height: 2),
+        // Text(
+        //   account.currentValue.toCurrency(),
+        //   style: AppTextStyle.amountL.copyWith(color: colorScheme.appOutflow),
+        // ),
+        // const SizedBox(height: 16),
 
         // Available / limit
         Row(
@@ -199,10 +206,14 @@ class _CreditMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyle.bodyS),
+        Text(
+          label,
+          style: AppTextStyle.bodyS.copyWith(color: colorScheme.appTextMuted),
+        ),
         const SizedBox(height: 2),
         Text(value, style: AppTextStyle.amountM),
       ],
