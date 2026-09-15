@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 
@@ -45,10 +46,10 @@ class _PersonCardState extends State<PersonCard> {
           duration: const Duration(milliseconds: 120),
           width: double.infinity,
           constraints: const BoxConstraints(minHeight: 44),
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: colorScheme.bgLight,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.grey, width: 0.5),
           ),
           child: Row(
@@ -58,7 +59,8 @@ class _PersonCardState extends State<PersonCard> {
                 height: 36,
                 width: 36,
                 decoration: BoxDecoration(
-                  color: colorScheme.appText,
+                  gradient: AppGradient.gradientA(colorScheme),
+                  // color: colorScheme.appText,
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Text(
@@ -81,9 +83,9 @@ class _PersonCardState extends State<PersonCard> {
                 Container(
                   width: 14,
                   height: 14,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.orange,
+                    color: colorScheme.appAccent,
                   ),
                   child: const Icon(Icons.check, size: 10, color: Colors.white),
                 ),

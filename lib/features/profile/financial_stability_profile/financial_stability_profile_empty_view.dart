@@ -48,7 +48,7 @@ class FinancialStabilityProfileEmptyState
           Icon(
             PhosphorIconsRegular.userCircle,
             size: 64,
-            color: colorScheme.appText,
+            color: colorScheme.appAccent,
           ),
 
           const SizedBox(height: 16),
@@ -71,7 +71,7 @@ class FinancialStabilityProfileEmptyState
 
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: colorScheme.bgLight,
               borderRadius: BorderRadius.circular(20),
