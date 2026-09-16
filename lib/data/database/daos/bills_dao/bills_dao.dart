@@ -29,6 +29,36 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
     );
   }
 
+  Future<BillWithNextOccurrence?> getBillWithOccurrenceByTransactionId(
+    int transactionId,
+  ) async {
+    final query = select(billsTable).join([
+      innerJoin(
+        billOccurrencesTable,
+        billOccurrencesTable.billId.equalsExp(billsTable.id),
+      ),
+      leftOuterJoin(
+        cashflowCategoriesTable,
+        cashflowCategoriesTable.id.equalsExp(billsTable.categoryId),
+      ),
+      leftOuterJoin(
+        accountsTable,
+        accountsTable.id.equalsExp(billsTable.loanAccountId),
+      ),
+    ])..where(billOccurrencesTable.transactionId.equals(transactionId));
+
+    final row = await query.getSingleOrNull();
+
+    if (row == null) return null;
+
+    return BillWithNextOccurrence(
+      bill: row.readTable(billsTable),
+      occurrence: row.readTable(billOccurrencesTable),
+      category: row.readTableOrNull(cashflowCategoriesTable),
+      loanAccount: row.readTableOrNull(accountsTable),
+    );
+  }
+
   Future<void> insertLoanBill({
     required String name,
     required int loanAccountId,

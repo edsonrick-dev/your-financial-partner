@@ -206,6 +206,49 @@ class AccountController extends GetxController {
     Get.back();
   }
 
+  Future<void> deleteAccount(AccountsTableData account) async {
+    if (account.isSystem) {
+      Get.snackbar(
+        'Account cannot be deleted',
+        'This account is required by Ascend.',
+      );
+      return;
+    }
+
+    final confirmed = await Get.dialog<bool>(
+      AlertDialog(
+        title: const Text('Delete account?'),
+        content: Text(
+          'This will remove "${account.name}" from your net worth. '
+          'Accounts with transaction history may need their transactions deleted first.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Get.back(result: true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await database.accountsDao.deleteAccount(account.id);
+      Get.back();
+      Get.snackbar('Account deleted', '${account.name} was removed.');
+    } catch (_) {
+      Get.snackbar(
+        'Account not deleted',
+        'Delete or move linked transactions before deleting this account.',
+      );
+    }
+  }
+
   // ============================================================
   // CREATE ACCOUNT
   // ============================================================

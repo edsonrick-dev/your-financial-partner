@@ -25,32 +25,12 @@ class BudgetProgressSection extends GetView<CashflowController> {
       sectionTitle: 'Budget Progress',
       trailingWidget: AdaptivePressable(
         onTap: () {
-          if (controller.currentMonthBudgetItems.isEmpty) {
-            controller.seletectedDetailsTabIndex(1);
-            Get.toNamed(Routes.CASHFLOWDETAILS);
-          }
-          if (controller.currentMonthBudgetItems.isEmpty) {
-            controller.seletectedDetailsTabIndex(1);
-            Get.toNamed(Routes.CASHFLOWDETAILS);
-          }
+          controller.seletectedDetailsTabIndex(1);
+          Get.toNamed(Routes.CASHFLOWDETAILS);
         },
         child: Obx(
           () => controller.currentMonthBudgetItems.isEmpty
               ? SizedBox.shrink()
-              // (
-              // height: 44,
-              // child: Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              //   child: Center(
-              //     child: Text(
-              //       'Set Budget',
-              //       style: AppTextStyle.titleM.copyWith(
-              //         color: colorScheme.appText,
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // )
               : SizedBox(
                   height: 44,
                   child: Padding(
@@ -137,7 +117,6 @@ class _EmptyView extends GetView<CashflowController> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
     return Padding(
       padding: EdgeInsets.all(16),
       child: Column(
@@ -208,7 +187,6 @@ class _FilledView extends StatelessWidget {
             spacing: 12,
             children: [
               BudgetProgressIndicator(
-                size: 90,
                 progress: progress.clamp(0.0, 1.0),
                 progressColor: statusColor,
                 child: items.isNotEmpty
@@ -219,7 +197,7 @@ class _FilledView extends StatelessWidget {
                             '${(progress * 100).round()}%',
                             style: AppTextStyle.amountL,
                           ),
-                          Text('of budget', style: AppTextStyle.labelXS),
+                          Text('used', style: AppTextStyle.labelM),
                         ],
                       )
                     : Text(
@@ -236,11 +214,11 @@ class _FilledView extends StatelessWidget {
                     FittedBox(
                       child: Text(
                         '${AppMonth.values[currentMonthIndex].fullName} Progress',
-                        style: AppTextStyle.headlineM,
+                        style: AppTextStyle.headlineL,
                       ),
                     ),
                     SizedBox(height: 4),
-                    // if (items.isNotEmpty)
+
                     FittedBox(
                       child: RichText(
                         text: TextSpan(
@@ -383,7 +361,9 @@ class _FilledView extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: AppButton(
               text: 'Set up your budget',
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(Routes.CASHFLOWDETAILS);
+              },
               borderRadius: 12,
             ),
           ),

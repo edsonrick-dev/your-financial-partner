@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/core/constants/app_opacity.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
@@ -174,107 +175,106 @@ class BudgetListView extends StatelessWidget {
         AppSheets.transaction.spend(categoryId: categoryId);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        // color: colorScheme.appAccent,
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         constraints: BoxConstraints(minHeight: 60),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Column(
           children: [
-            // Stack(
-            //   alignment: Alignment.topCenter,
-            //   children: [
-            //     Icon(
-            //       AppIcons.categories.resolve(iconKey),
-            //       // color: iconColor,
-            //     ),
-            //     Opacity(
-            //       opacity: 0.2,
-            //       child: Container(
-            //         height: 48,
-            //         width: 48,
-            //         decoration: BoxDecoration(
-            //           shape: BoxShape.circle,
-            //           // color: iconColor,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Row(
-                  //   children: [
-                  //     Icon(
-                  //       AppIcons.categories.resolve(iconKey),
-                  //       size: 14,
-                  //       // color: iconColor,
-                  //     ),
-                  //     Spacer(),
-                  //     Text('Monthly', style: AppTextStyle.labelXS),
-                  //   ],
-                  // ),
-                  SizedBox(height: 4),
-                  Row(
+            Row(
+              children: [
+                SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: Stack(
+                    alignment: Alignment.center,
                     children: [
+                      Opacity(
+                        opacity: AppOpacity.transactionIcon,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(999),
+                            color: colorScheme.appText,
+                          ),
+                        ),
+                      ),
                       Icon(
                         AppIcons.categories.resolve(iconKey),
-                        size: 14,
-                        // color: iconColor,
-                      ),
-                      SizedBox(width: 6),
-                      Text(budgetName, style: AppTextStyle.bodyM),
-                      Spacer(),
-                      Text(
-                        '${remainingBalance.abs().toCurrency()} ${isOverBudget ? 'over' : 'left'}',
-                        style: TextStyle(
-                          color: progressColor,
-                          fontWeight: FontWeight.w500,
-                          fontFeatures: [FontFeature.tabularFigures()],
-                        ),
+                        size: 20,
+                        color: colorScheme.appText,
                       ),
                     ],
                   ),
-                  Row(
+                ),
+
+                SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        consumption.toCurrency(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFeatures: [FontFeature.tabularFigures()],
-                        ),
+                      Row(
+                        children: [
+                          Text(budgetName, style: AppTextStyle.titleL),
+                          Spacer(),
+                          RichText(
+                            text: TextSpan(
+                              style: AppTextStyle.titleL.copyWith(
+                                color: progressColor,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: remainingBalance.abs().toCurrency(),
+                                  style: AppTextStyle.amountL,
+                                ),
+
+                                TextSpan(
+                                  text: ' ${isOverBudget ? 'over' : 'left'}',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
 
-                      Text(
-                        ' / ${budget.toCurrency()}',
-                        style: TextStyle(
-                          color: colorScheme.appTextMuted,
-                          fontFeatures: [FontFeature.tabularFigures()],
-                        ),
-                      ),
-                      Spacer(),
+                      Row(
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              style: AppTextStyle.amountS.copyWith(
+                                color: colorScheme.appTextMuted,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: consumption.toCurrency(),
+                                  style: AppTextStyle.amountM.copyWith(
+                                    color: colorScheme.appText,
+                                  ),
+                                ),
+                                const TextSpan(text: ' / '),
+                                TextSpan(text: budget.toCurrency()),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
 
-                      Text(
-                        '${(consumptionPercentage * 100).round()}%',
-                        style: TextStyle(
-                          color: colorScheme.appTextMuted,
-                          fontWeight: FontWeight.w500,
-                          fontFeatures: [FontFeature.tabularFigures()],
-                        ),
+                          Text(
+                            '${(consumptionPercentage * 100).round()}% utilized',
+                            style: AppTextStyle.amountM.copyWith(
+                              color: colorScheme.appTextMuted,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 4),
-                  BudgetProgressBar(
-                    progress: consumptionPercentage,
-                    // marker: 0.90, // optional
-                    color: progressColor,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            SizedBox(width: 8),
+            SizedBox(height: 8),
+            BudgetProgressBar(
+              height: 12,
+              progress: consumptionPercentage,
+              color: progressColor,
+            ),
           ],
         ),
       ),

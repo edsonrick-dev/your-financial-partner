@@ -45,7 +45,7 @@ class CreateCategoryController extends GetxController {
 
     if (name.isEmpty) return null;
 
-    final insertedId = await database.insertCashflowCategory(
+    final insertedId = await database.categoryDao.createCategory(
       CashflowCategoriesTableCompanion.insert(
         name: name,
         icon: selectedIconKey.value,
@@ -53,7 +53,9 @@ class CreateCategoryController extends GetxController {
       ),
     );
 
-    final createdCategory = await database.getCategoryById(insertedId);
+    final createdCategory = await database.categoryDao.getCategoryById(
+      insertedId,
+    );
 
     // resetForm();
 

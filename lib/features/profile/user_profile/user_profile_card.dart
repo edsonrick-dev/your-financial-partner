@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class UserProfileCard extends StatelessWidget {
+class UserProfileCard extends GetView<HomeController> {
   const UserProfileCard({super.key});
 
   @override
@@ -22,13 +24,23 @@ class UserProfileCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.appInversedtext,
-              ),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: AppGradient.gradientA(colorScheme),
+                    border: Border.all(color: colorScheme.bg),
+                  ),
+                ),
+                Text(
+                  controller.userName.trim()[0],
+                  style: AppTextStyle.displayL.copyWith(color: colorScheme.bg),
+                ),
+              ],
             ),
             SizedBox(width: 12),
             Expanded(
@@ -37,20 +49,14 @@ class UserProfileCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FittedBox(
-                    child: Text(
-                      'Juan Dela Cruz',
-                      style: AppTextStyle.headlineM.copyWith(
-                        color: colorScheme.appInversedtext,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  FittedBox(
-                    child: Text(
-                      'juand_dela_cruz@gmail.com',
-                      style: AppTextStyle.titleM.copyWith(
-                        color: colorScheme.appInversedtext,
+                    child: Obx(
+                      () => Text(
+                        controller.userName.value,
+                        style: AppTextStyle.headlineM.copyWith(
+                          color: colorScheme.appInversedtext,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),

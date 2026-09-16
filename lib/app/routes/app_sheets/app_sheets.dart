@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/add_transaction_sheet.dart';
-import 'package:getx_drift_app/features/balances/views/people_balances_view.dart';
-import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/selection_sheets.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/transaction_sheets.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/account_action_sheet.dart';
@@ -16,8 +13,6 @@ import 'package:getx_drift_app/features/profile/controller/extensions/financial_
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/shell/financial_stability_sheet_shell.dart';
-
-import 'package:getx_drift_app/features/widgets/cards/category_card.dart';
 
 class AppSheets {
   static final transaction = TransactionSheets();
@@ -143,88 +138,14 @@ class _EndDrawerSheets {
 
               child: SafeArea(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.bottomSheet(
-                          FutureBuilder(
-                            future: database.getAllCashflowCategories(),
-                            builder: (context, snapshot) {
-                              /// LOADING
-
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              }
-
-                              /// ERROR
-
-                              if (snapshot.hasError) {
-                                debugPrint('ERROR: ${snapshot.error}');
-
-                                debugPrint('STACK: ${snapshot.stackTrace}');
-
-                                return Text('Error: ${snapshot.error}');
-                              }
-
-                              /// NO DATA
-
-                              if (!snapshot.hasData) {
-                                return const Text('No data');
-                              }
-
-                              /// SAFE DATA ACCESS
-
-                              final categories = snapshot.data!;
-
-                              for (final category in categories) {
-                                debugPrint(
-                                  'CATEGORY: ${category.name}'
-                                  ' | ICON: ${category.icon}',
-                                );
-                              }
-
-                              return Container(
-                                padding: EdgeInsets.symmetric(vertical: 24),
-                                color: Colors.white,
-                                child: ListView.separated(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                  ),
-
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-
-                                  itemCount: categories.length,
-
-                                  separatorBuilder: (_, _) =>
-                                      const SizedBox(height: 12),
-
-                                  itemBuilder: (context, index) {
-                                    final category = categories[index];
-
-                                    return CategoryCard(category: category);
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                      child: Text('List of Categories in DB'),
-                    ),
-
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.toNamed(Routes.NETWORTHDETAILS);
-                      },
-                      child: Text('List of Accounts in DB'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.to(() => const PeopleBalancesView());
-                      },
-                      child: const Text('People Balances'),
+                    const Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Text(
+                        'Menu options will appear here as launch-ready actions are added.',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ],
                 ),

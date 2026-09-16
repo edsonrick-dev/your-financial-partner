@@ -18,9 +18,9 @@ abstract class Routes {
   static const ONBOARDING_ASCEND_STABILITY_PREVIEW_VIEW =
       '/onboarding/ascend-stability-score-preview-view';
   static const ONBOARDING_LEARN_WITH_ASCEND_INTRO =
-      '/onboarding/learn-with-asecnd-intro';
+      '/onboarding/learn-with-ascend-intro';
   static const ONBOARDING_LEARN_WITH_ASCEND_PREVIEW =
-      '/onboarding/learn-with-asecnd-preview';
+      '/onboarding/learn-with-ascend-preview';
   static const ONBOARDING_BUILD_FINANCIAL_FOUNDATION =
       '/onboarding/build-financial-foundation';
 
@@ -48,6 +48,7 @@ abstract class Routes {
   static const CASHFLOWDETAILS = '/financial-planner/cashflow/details';
   static const BUDGETS = '/financial-planner/cashflow/budgets';
   static const BILLS = '/financial-planner/cashflow/bills';
+  static const CATEGORIES = '/financial-planner/cashflow/categories';
 
   //NET WORTH
   static const NETWORTHDETAILS = '/financial-planner/networth/details';

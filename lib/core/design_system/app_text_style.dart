@@ -140,7 +140,7 @@ class AppTextStyle {
     letterSpacing: 0,
   );
 
-  static TextStyle get cardTitle => titleM;
+  static TextStyle get cardTitle => titleL;
   static TextStyle get cardTitleSmall => titleS;
-  static TextStyle get cardAmount => amountM;
+  static TextStyle get cardAmount => amountL;
 }

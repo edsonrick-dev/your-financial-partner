@@ -5,7 +5,6 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
-import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_category.dart';
 
 class BillsCard extends StatelessWidget {
@@ -27,7 +26,6 @@ class BillsCard extends StatelessWidget {
     final frequency = BillsFrequency.values.firstWhere(
       (e) => e.name == bill.bill.frequency,
     );
-
     String getScheduleText() {
       final day = bill.bill.dayOfMonth;
 
@@ -39,14 +37,27 @@ class BillsCard extends StatelessWidget {
         return 'Every $day${_ordinalSuffix(day)} of the month';
       }
 
-      final monthMask = bill.bill.monthMask ?? 0;
-
-      final months = AppMonth.values.where((month) {
-        return monthMask & (1 << (month.number - 1)) != 0;
-      }).toList();
-
-      return months.map((month) => '${month.shortName} $day').join(' | ');
+      return 'Every $day${_ordinalSuffix(day)}';
     }
+    // String getScheduleText() {
+    //   final day = bill.bill.dayOfMonth;
+
+    //   if (day == null) {
+    //     return '';
+    //   }
+
+    //   if (frequency == BillsFrequency.monthly) {
+    //     return 'Every $day${_ordinalSuffix(day)} of the month';
+    //   }
+
+    //   final monthMask = bill.bill ?? 0;
+
+    //   final months = AppMonth.values.where((month) {
+    //     return monthMask & (1 << (month.number - 1)) != 0;
+    //   }).toList();
+
+    //   return months.map((month) => '${month.shortName} $day').join(' | ');
+    // }
 
     final scheduleText = getScheduleText();
 

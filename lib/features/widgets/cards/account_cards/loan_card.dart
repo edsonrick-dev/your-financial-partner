@@ -21,12 +21,12 @@ class LoanAccountCard extends StatelessWidget {
       child: Row(
         children: [
           Icon(AppIcons.categories.resolve(account.icon), size: 24),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
 
           Expanded(
             child: Text(
               account.name,
-              style: AppTextStyle.bodyM,
+              style: AppTextStyle.titleL,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

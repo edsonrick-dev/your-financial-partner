@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/controller/bill_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/categories/categories_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/cashflow_details_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/beneficiaries/views/beneficiaries_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/critical_illness_benefit_gap/views/critical_illness_details_view.dart';
@@ -142,13 +143,6 @@ class AppPages {
       }),
     ),
     GetPage(
-      name: Routes.ONBOARDING_LEARN_WITH_ASCEND_INTRO,
-      page: () => const OnboardingLearnWithAscendIntro(),
-      binding: BindingsBuilder(() {
-        Get.lazyPut<OnboardingController>(() => OnboardingController());
-      }),
-    ),
-    GetPage(
       name: Routes.ONBOARDING_LEARN_WITH_ASCEND_PREVIEW,
       page: () => const OnboardingLearnWithAscendPreview(),
       binding: BindingsBuilder(() {
@@ -168,12 +162,6 @@ class AppPages {
       binding: BindingsBuilder(() {
         Get.lazyPut<PaywallController>(() => PaywallController());
       }),
-    ),
-
-    GetPage(
-      name: Routes.MAINVIEW,
-      page: () => const MainShell(),
-      binding: HomeBinding(),
     ),
 
     GetPage(
@@ -267,6 +255,11 @@ class AppPages {
     GetPage(
       name: Routes.NETWORTHEXPORT,
       page: () => const FileExportView(),
+      // binding: TransactionBinding(),
+    ),
+    GetPage(
+      name: Routes.CATEGORIES,
+      page: () => const CategoriesPage(),
       // binding: TransactionBinding(),
     ),
   ];

@@ -52,7 +52,7 @@ class _CategoryListState extends State<CategoryList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: database.watchCategoriesByType(
+      stream: database.categoryDao.watchCategoriesByType(
         widget.transactionType == TransactionType.earn
             ? TransactionType.earn.name
             : TransactionType.spend.name,

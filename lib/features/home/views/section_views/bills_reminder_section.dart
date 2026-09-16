@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
-import 'package:getx_drift_app/core/constants/app_opacity.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
@@ -42,6 +41,8 @@ class BillsReminderSection extends GetView<CashflowController> {
 
               final bills = snapshot.data ?? [];
 
+              final billText = bills.length == 1 ? 'bill' : 'bills';
+
               final paidBills = bills
                   .where((bill) => bill.occurrence.isPaid)
                   .toList();
@@ -72,7 +73,7 @@ class BillsReminderSection extends GetView<CashflowController> {
                         child: Text(
                           bills.isEmpty
                               ? 'You have no bills'
-                              : '$totalBills bills this month',
+                              : '$totalBills $billText this month',
                           style: AppTextStyle.titleM.copyWith(
                             // color: colorScheme.appTextMuted,
                           ),
@@ -85,10 +86,14 @@ class BillsReminderSection extends GetView<CashflowController> {
                               color: colorScheme.appText,
                             ),
                             children: [
-                              TextSpan(text: paidBillCount.toString()),
-                              const TextSpan(text: '/'),
-                              TextSpan(text: unpaidBillCount.toString()),
-                              const TextSpan(text: ' bills paid'),
+                              if (paidBillCount < totalBills) ...[
+                                TextSpan(text: paidBillCount.toString()),
+                                const TextSpan(text: '/'),
+                                TextSpan(text: totalBills.toString()),
+                                const TextSpan(text: ' bills paid'),
+                              ],
+                              if (paidBillCount == totalBills)
+                                const TextSpan(text: 'All bills paid'),
                             ],
                           ),
                         ),
@@ -183,45 +188,54 @@ class _BillReminderItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    final color = colorScheme.appOutflow;
+    // final color = colorScheme.appOutflow;
     final occurrence = bill.occurrence;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          SizedBox(
-            width: 36,
-            height: 36,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Opacity(
-                  opacity: AppOpacity.transactionIcon,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(999),
-                      color: color,
-                    ),
-                  ),
-                ),
-                Icon(
-                  bill.isLoanPayment
-                      ? AppIcons.categories.resolve(bill.loanAccount!.icon)
-                      : AppIcons.categories.resolve(bill.category!.icon),
-                  size: 20,
-                  color: color,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
+          // SizedBox(
+          //   width: 36,
+          //   height: 36,
+          //   child: Stack(
+          //     alignment: Alignment.center,
+          //     children: [
+          //       Opacity(
+          //         opacity: AppOpacity.transactionIcon,
+          //         child: Container(
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(999),
+          //             color: color,
+          //           ),
+          //         ),
+          //       ),
+          //       Icon(
+          //         bill.isLoanPayment
+          //             ? AppIcons.categories.resolve(bill.loanAccount!.icon)
+          //             : AppIcons.categories.resolve(bill.category!.icon),
+          //         size: 20,
+          //         color: color,
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
+                    Icon(
+                      AppIcons.categories.resolve(
+                        bill.isLoanPayment
+                            ? bill.loanAccount!.icon
+                            : bill.category!.icon,
+                      ),
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
                     Expanded(
                       child: Text(bill.bill.name, style: AppTextStyle.titleL),
                     ),
@@ -237,7 +251,7 @@ class _BillReminderItem extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Due ${DateFormat('MMM d').format(occurrence.dueDate)}',
-                        style: AppTextStyle.labelS.copyWith(
+                        style: AppTextStyle.labelM.copyWith(
                           color: colorScheme.appTextMuted,
                         ),
                       ),
@@ -245,7 +259,7 @@ class _BillReminderItem extends StatelessWidget {
                     if (occurrence.isPaid)
                       Text(
                         'Paid',
-                        style: AppTextStyle.labelS.copyWith(
+                        style: AppTextStyle.labelM.copyWith(
                           color: colorScheme.appSuccess,
                         ),
                       )
@@ -263,7 +277,7 @@ class _BillReminderItem extends StatelessWidget {
                           ),
                           child: Text(
                             'Pay',
-                            style: AppTextStyle.labelS.copyWith(
+                            style: AppTextStyle.labelM.copyWith(
                               color: colorScheme.appInversedtext,
                             ),
                           ),

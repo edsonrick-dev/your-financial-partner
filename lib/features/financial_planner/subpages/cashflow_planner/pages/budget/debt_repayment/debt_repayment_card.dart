@@ -44,42 +44,30 @@ class DebtRepaymentCard extends StatelessWidget {
         constraints: BoxConstraints(minHeight: 60),
         child: Row(
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Icon(
-                  AppIcons.categories.resolve(item.category?.icon ?? 'wallet'),
-                  color: colorScheme.appOutflow,
-                ),
-                Opacity(
-                  opacity: 0.2,
-                  child: Container(
-                    height: 48,
-                    width: 48,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.appOutflow,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
+                      Icon(
+                        AppIcons.categories.resolve(
+                          item.category?.icon ?? 'wallet',
+                        ),
+                        size: 20,
+                        color: colorScheme.appOutflow,
+                      ),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           loan?.name ?? bill.name,
-                          style: AppTextStyle.bodyM,
+                          style: AppTextStyle.titleL,
                         ),
                       ),
+                      const SizedBox(width: 16),
                       Text(
                         annualAmount.toCurrency(),
-                        style: AppTextStyle.amountM.copyWith(
+                        style: AppTextStyle.amountL.copyWith(
                           color: colorScheme.appOutflow,
                         ),
                       ),

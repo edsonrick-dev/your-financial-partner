@@ -39,7 +39,7 @@ class CategoryIconContainer extends StatelessWidget {
               ),
             ),
           ),
-          Icon(AppIcons.categories.resolve(iconKey), size: 24, color: color),
+          Icon(AppIcons.categories.resolve(iconKey), size: 20, color: color),
         ],
       ),
     );

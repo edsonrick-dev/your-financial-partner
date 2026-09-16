@@ -70,6 +70,18 @@ class TransactionSheets {
     );
   }
 
+  Future<void> debtRepayment(TransactionWithDetails item) async {
+    final controller = Get.find<TransactionController>();
+
+    await controller.loadDebtRepaymentTransaction(item);
+
+    await Get.bottomSheet(
+      const TransactionSheet(transactionType: TransactionType.debtRepayment),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
   Future<void> transfer([TransactionWithDetails? item]) async {
     final controller = Get.find<TransactionController>();
 

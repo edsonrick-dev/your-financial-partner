@@ -27,6 +27,7 @@ import 'package:getx_drift_app/data/database/daos/people_balance_dao/people_bala
 import 'package:getx_drift_app/data/database/daos/entities_dao/entities_dao.dart';
 import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
 import 'package:getx_drift_app/data/database/daos/bills_dao/bills_dao.dart';
+import 'package:getx_drift_app/data/database/daos/category_dao/category_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -51,10 +52,13 @@ part 'app_database.g.dart';
     EntitiesDao,
     CashflowPlanDao,
     BillsDao,
+    CategoryDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
+
+  AppDatabase.forTesting(super.executor);
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -111,12 +115,6 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<CashflowCategoriesTableData?> getCategoryById(int id) {
-    return (select(
-      cashflowCategoriesTable,
-    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
-  }
-
   ///Transactions
 
   /// Low-level transaction deletion.
@@ -143,25 +141,6 @@ class AppDatabase extends _$AppDatabase {
 
   ///Accounts
   ///Cash Flows
-  Future<int> insertCashflowCategory(CashflowCategoriesTableCompanion entry) {
-    return into(cashflowCategoriesTable).insert(entry);
-  }
-
-  Future<List<CashflowCategoriesTableData>> getAllCashflowCategories() {
-    return select(cashflowCategoriesTable).get();
-  }
-
-  Stream<List<CashflowCategoriesTableData>> watchCategoriesByType(String type) {
-    return (select(
-      cashflowCategoriesTable,
-    )..where((tbl) => tbl.type.equals(type))).watch();
-  }
-
-  Future<List<CashflowCategoriesTableData>> getCategoriesByType(String type) {
-    return (select(
-      cashflowCategoriesTable,
-    )..where((tbl) => tbl.type.equals(type))).get();
-  }
 
   Future<void> seedDefaultCategories() async {
     final existing = await select(cashflowCategoriesTable).get();

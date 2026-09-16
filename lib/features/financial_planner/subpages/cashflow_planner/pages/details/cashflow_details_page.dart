@@ -133,6 +133,7 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                   backgroundColor: Colors.transparent,
                   isScrollControlled: true,
                 ).whenComplete(() {
+                  controller.resetBudgetPlan();
                   controller.resetIncomePlan();
                 });
               } else {
@@ -142,6 +143,7 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                   isScrollControlled: true,
                 ).whenComplete(() {
                   controller.resetBudgetPlan();
+                  controller.resetIncomePlan();
                 });
               }
             },

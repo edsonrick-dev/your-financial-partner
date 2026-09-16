@@ -64,7 +64,8 @@ class FinancialProfileController extends GetxController {
   // ---------------------------------------------------------------------------
   // Raw financial data
   // ---------------------------------------------------------------------------
-
+  bool get hasAssets => netWorthController.hasAssets;
+  bool get hasLiabilities => netWorthController.hasLiabilities;
   double get annualIncome => cashflowController.plannedAnnualIncome.value;
   double get monthlyIncome => cashflowController.plannedAnnualIncome.value / 12;
 
@@ -77,6 +78,8 @@ class FinancialProfileController extends GetxController {
       cashflowController.annualDebtRepayment.value;
 
   double get netWorth => netWorthController.netWorth;
+  double get liabilities => netWorthController.totalLiabilities;
+  double get assets => netWorthController.totalAssets;
   double get averageMonthlyBudget => cashflowController.annualBudget.value / 12;
   // ---------------------------------------------------------------------------
   // IDEAL BUDGET TARGET

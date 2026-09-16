@@ -15,4 +15,5 @@ class CashflowState {
     this.allocation,
     this.composition,
   });
+  bool get isComplete => status == CashflowStatus.complete;
 }

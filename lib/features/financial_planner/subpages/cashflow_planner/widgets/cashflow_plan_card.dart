@@ -60,33 +60,39 @@ class CashflowPlanCard extends GetView<CashflowController> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Icon(
-                  AppIcons.categories.resolve(iconKey),
-                  color: color ?? colorScheme.appText,
-                ),
-                Opacity(
-                  opacity: 0.2,
-                  child: Container(
-                    height: 48,
-                    width: 48,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: color ?? colorScheme.appText,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(width: 12),
+            // Stack(
+            //   alignment: Alignment.center,
+            //   children: [
+            //     Icon(
+            //       AppIcons.categories.resolve(iconKey),
+            //       color: color ?? colorScheme.appText,
+            //     ),
+            //     Opacity(
+            //       opacity: 0.2,
+            //       child: Container(
+            //         height: 48,
+            //         width: 48,
+            //         decoration: BoxDecoration(
+            //           shape: BoxShape.circle,
+            //           color: color ?? colorScheme.appText,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // SizedBox(width: 12),
             Expanded(
               child: Column(
                 children: [
                   // SizedBox(height: 7),
                   Row(
                     children: [
+                      Icon(
+                        AppIcons.categories.resolve(iconKey),
+                        color: color ?? colorScheme.appText,
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
                       Text(category, style: AppTextStyle.cardTitle),
                       Spacer(),
                       Row(

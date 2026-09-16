@@ -573,7 +573,7 @@ class BillController extends GetxController {
           expectedAmount: amount,
           frequency: frequency.name,
           dayOfMonth: drift.Value(dueDate.day),
-          monthMask: const drift.Value(null),
+          // monthMask: const drift.Value(null),
           // reminderEnabled: drift.Value(reminderEnabled.value),
           // reminderDaysBefore: drift.Value(reminderDaysBefore.value),
         ),

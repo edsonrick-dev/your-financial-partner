@@ -34,11 +34,6 @@ class DefaultCategories {
       iconKey: 'houseLine',
       type: TransactionType.earn.name,
     ),
-    DefaultCategory(
-      name: 'Gifts',
-      iconKey: 'gift',
-      type: TransactionType.earn.name,
-    ),
   ];
 
   static var expense = [
@@ -102,11 +97,7 @@ class DefaultCategories {
       iconKey: 'island',
       type: TransactionType.spend.name,
     ),
-    DefaultCategory(
-      name: 'Gifts',
-      iconKey: 'gifts',
-      type: TransactionType.spend.name,
-    ),
+
     DefaultCategory(
       name: 'Pets',
       iconKey: 'pawPrint',

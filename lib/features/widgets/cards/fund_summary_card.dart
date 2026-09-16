@@ -15,23 +15,17 @@ class FundSummaryCard extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
 
-    return Obx(
-      () => Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          gradient: AppGradient.gradientA(colorScheme),
-        ),
-        padding: const EdgeInsets.only(
-          top: 24,
-          bottom: 24,
-          left: 24,
-          right: 12,
-        ),
-        child: controller.hasAccounts.value
-            ? _buildFilledView(context)
-            : _buildFilledView(context),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: AppGradient.gradientA(colorScheme),
       ),
+      padding: const EdgeInsets.only(top: 24, bottom: 24, left: 24, right: 12),
+      child: _buildFilledView(context),
+      // controller.hasAccounts.value
+      //     ? _buildFilledView(context)
+      //     : _buildFilledView(context),
     );
   }
 
@@ -73,7 +67,7 @@ class FundSummaryCard extends GetView<HomeController> {
                                 availableFunds.abs().toCurrency(),
                                 style: AppTextStyle.amountXL.copyWith(
                                   color: availableFunds.isNegative
-                                      ? colorScheme.appOutflow
+                                      ? colorScheme.appOutflowInversed
                                       : colorScheme.appInversedtext,
                                 ),
                               ),

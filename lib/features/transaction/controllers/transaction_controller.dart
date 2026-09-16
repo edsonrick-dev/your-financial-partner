@@ -13,10 +13,22 @@ import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_transaction_form.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
+import 'package:getx_drift_app/features/transaction/views/transaction_view.dart';
 import 'package:intl/intl.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
 
 class TransactionController extends GetxController {
+  final selectedTransactionFilter = Rx<TransactionFilter>(
+    const AllTransactionFilter(),
+  );
+
+  void selectTransactionFilter(TransactionFilter filter) {
+    selectedTransactionFilter.value = filter;
+  }
+  // void selectCategory(int? categoryId) {
+  //   selectedCategoryId.value = categoryId;
+  // }
+
   TransactionType get effectiveTransactionType {
     final bill = selectedBill.value;
 
@@ -190,7 +202,7 @@ class TransactionController extends GetxController {
   }
 
   Future<void> selectCategoryById(int categoryId) async {
-    final category = await database.getCategoryById(categoryId);
+    final category = await database.categoryDao.getCategoryById(categoryId);
 
     if (category == null) return;
 
@@ -273,8 +285,15 @@ class TransactionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+    _debugCategories();
     loadCurrentUserEntity();
+  }
+
+  Future<void> _debugCategories() async {
+    // await database.transactionsDao.clearCategories();
+    // await database.transactionsDao.debugDuplicateCategories();
+    // await database.transactionsDao.debugCategoryUsage();
+    // await database.transactionsDao.debugUsedCategories();
   }
 
   List<ParticipantModel> get sortedParticipants {

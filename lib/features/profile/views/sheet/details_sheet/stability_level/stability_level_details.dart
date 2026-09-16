@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
+import 'package:getx_drift_app/features/financial_state/financial_state.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learn_content_library.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learn_context.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learn_engine.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learn_thumbnail.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_stability_profile_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/details_sheet/financial_score_disclaimer_section.dart';
@@ -16,6 +20,7 @@ class StabilityLevelDetails extends GetView<FinancialProfileController> {
     final isAssessed = controller.hasCompleteFinancialStabilityProfile;
 
     const spacing = 20.0;
+    const learnEngine = LearnEngine();
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     return SingleChildScrollView(
       child: Column(
@@ -28,18 +33,34 @@ class StabilityLevelDetails extends GetView<FinancialProfileController> {
             const EmptyStabilityLevelView(),
 
           SizedBox(height: spacing),
+          Obx(() {
+            final recommendations = learnEngine.getRecommendedContent(
+              state: controller.financialState,
+              context: LearnContext.financialStability,
+              contents: learnContentLibrary,
+            );
 
-          LearningSection(
-            state: LearningSectionState.available,
-            subtitle: 'Build a better understanding of your debt.',
-            contents: [
-              LearnThumbnail(
-                title: 'What is debt load and why is it important to keep low?',
-              ),
-              LearnThumbnail(title: 'What counts as debt repayment?'),
-              LearnThumbnail(title: 'How to improve your Debt Load'),
-            ],
-          ),
+            if (recommendations.isEmpty) {
+              return const SizedBox.shrink();
+            }
+
+            return LearningSection(
+              subtitle: 'Build a good understanding of your net worth.',
+              state: LearningSectionState.available,
+              contents: recommendations
+                  .map(
+                    (content) => LearnThumbnail(
+                      title: content.title,
+                      description: content.description,
+                      type: content.type,
+                      onTap: () {
+                        // Open lesson
+                      },
+                    ),
+                  )
+                  .toList(),
+            );
+          }),
 
           SizedBox(height: spacing),
 

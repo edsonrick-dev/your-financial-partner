@@ -1,5 +1,6 @@
 import 'package:get_storage/get_storage.dart';
 import 'package:getx_drift_app/app/bootstrap/database_initializer.dart';
+import 'package:getx_drift_app/app/bootstrap/posthog_initializer.dart';
 import 'package:getx_drift_app/app/bootstrap/seed_initializer.dart';
 
 abstract final class AppBootstrap {
@@ -9,5 +10,7 @@ abstract final class AppBootstrap {
     await DatabaseInitializer.initialize();
 
     await SeedInitializer.initialize();
+
+    await PostHogInitializer.initialize();
   }
 }

@@ -4999,18 +4999,6 @@ class $BillsTableTable extends BillsTable
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _monthMaskMeta = const VerificationMeta(
-    'monthMask',
-  );
-  @override
-  // ignore: override_on_non_overriding_member
-  late final GeneratedColumn<int> monthMask = GeneratedColumn<int>(
-    'month_mask',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _reminderEnabledMeta = const VerificationMeta(
     'reminderEnabled',
   );
@@ -5084,7 +5072,6 @@ class $BillsTableTable extends BillsTable
     expectedAmount,
     frequency,
     dayOfMonth,
-    monthMask,
     reminderEnabled,
     reminderDaysBefore,
     isActive,
@@ -5155,12 +5142,6 @@ class $BillsTableTable extends BillsTable
           data['day_of_month']!,
           _dayOfMonthMeta,
         ),
-      );
-    }
-    if (data.containsKey('month_mask')) {
-      context.handle(
-        _monthMaskMeta,
-        monthMask.isAcceptableOrUnknown(data['month_mask']!, _monthMaskMeta),
       );
     }
     if (data.containsKey('reminder_enabled')) {
@@ -5236,10 +5217,6 @@ class $BillsTableTable extends BillsTable
         DriftSqlType.int,
         data['${effectivePrefix}day_of_month'],
       ),
-      monthMask: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}month_mask'],
-      ),
       reminderEnabled: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}reminder_enabled'],
@@ -5289,11 +5266,11 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
   /// Recurrence frequency.
   final String frequency;
 
-  /// Day of month for monthly / quarterly / semi-annual / annual bills.
+  /// Anchor day used to calculate recurring occurrences.
+  ///
+  /// For example, a bill created for the 31st remains anchored
+  /// to the 31st even when an intermediate month has fewer days.
   final int? dayOfMonth;
-
-  /// Bitmask representing the selected MonthPattern.
-  final int? monthMask;
   final bool reminderEnabled;
   final int? reminderDaysBefore;
   final bool isActive;
@@ -5307,7 +5284,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
     required this.expectedAmount,
     required this.frequency,
     this.dayOfMonth,
-    this.monthMask,
     required this.reminderEnabled,
     this.reminderDaysBefore,
     required this.isActive,
@@ -5329,9 +5305,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
     map['frequency'] = Variable<String>(frequency);
     if (!nullToAbsent || dayOfMonth != null) {
       map['day_of_month'] = Variable<int>(dayOfMonth);
-    }
-    if (!nullToAbsent || monthMask != null) {
-      map['month_mask'] = Variable<int>(monthMask);
     }
     map['reminder_enabled'] = Variable<bool>(reminderEnabled);
     if (!nullToAbsent || reminderDaysBefore != null) {
@@ -5358,9 +5331,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
       dayOfMonth: dayOfMonth == null && nullToAbsent
           ? const Value.absent()
           : Value(dayOfMonth),
-      monthMask: monthMask == null && nullToAbsent
-          ? const Value.absent()
-          : Value(monthMask),
       reminderEnabled: Value(reminderEnabled),
       reminderDaysBefore: reminderDaysBefore == null && nullToAbsent
           ? const Value.absent()
@@ -5384,7 +5354,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
       expectedAmount: serializer.fromJson<double>(json['expectedAmount']),
       frequency: serializer.fromJson<String>(json['frequency']),
       dayOfMonth: serializer.fromJson<int?>(json['dayOfMonth']),
-      monthMask: serializer.fromJson<int?>(json['monthMask']),
       reminderEnabled: serializer.fromJson<bool>(json['reminderEnabled']),
       reminderDaysBefore: serializer.fromJson<int?>(json['reminderDaysBefore']),
       isActive: serializer.fromJson<bool>(json['isActive']),
@@ -5403,7 +5372,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
       'expectedAmount': serializer.toJson<double>(expectedAmount),
       'frequency': serializer.toJson<String>(frequency),
       'dayOfMonth': serializer.toJson<int?>(dayOfMonth),
-      'monthMask': serializer.toJson<int?>(monthMask),
       'reminderEnabled': serializer.toJson<bool>(reminderEnabled),
       'reminderDaysBefore': serializer.toJson<int?>(reminderDaysBefore),
       'isActive': serializer.toJson<bool>(isActive),
@@ -5420,7 +5388,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
     double? expectedAmount,
     String? frequency,
     Value<int?> dayOfMonth = const Value.absent(),
-    Value<int?> monthMask = const Value.absent(),
     bool? reminderEnabled,
     Value<int?> reminderDaysBefore = const Value.absent(),
     bool? isActive,
@@ -5436,7 +5403,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
     expectedAmount: expectedAmount ?? this.expectedAmount,
     frequency: frequency ?? this.frequency,
     dayOfMonth: dayOfMonth.present ? dayOfMonth.value : this.dayOfMonth,
-    monthMask: monthMask.present ? monthMask.value : this.monthMask,
     reminderEnabled: reminderEnabled ?? this.reminderEnabled,
     reminderDaysBefore: reminderDaysBefore.present
         ? reminderDaysBefore.value
@@ -5462,7 +5428,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
       dayOfMonth: data.dayOfMonth.present
           ? data.dayOfMonth.value
           : this.dayOfMonth,
-      monthMask: data.monthMask.present ? data.monthMask.value : this.monthMask,
       reminderEnabled: data.reminderEnabled.present
           ? data.reminderEnabled.value
           : this.reminderEnabled,
@@ -5485,7 +5450,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
           ..write('expectedAmount: $expectedAmount, ')
           ..write('frequency: $frequency, ')
           ..write('dayOfMonth: $dayOfMonth, ')
-          ..write('monthMask: $monthMask, ')
           ..write('reminderEnabled: $reminderEnabled, ')
           ..write('reminderDaysBefore: $reminderDaysBefore, ')
           ..write('isActive: $isActive, ')
@@ -5504,7 +5468,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
     expectedAmount,
     frequency,
     dayOfMonth,
-    monthMask,
     reminderEnabled,
     reminderDaysBefore,
     isActive,
@@ -5522,7 +5485,6 @@ class BillsTableData extends DataClass implements Insertable<BillsTableData> {
           other.expectedAmount == this.expectedAmount &&
           other.frequency == this.frequency &&
           other.dayOfMonth == this.dayOfMonth &&
-          other.monthMask == this.monthMask &&
           other.reminderEnabled == this.reminderEnabled &&
           other.reminderDaysBefore == this.reminderDaysBefore &&
           other.isActive == this.isActive &&
@@ -5538,7 +5500,6 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
   final Value<double> expectedAmount;
   final Value<String> frequency;
   final Value<int?> dayOfMonth;
-  final Value<int?> monthMask;
   final Value<bool> reminderEnabled;
   final Value<int?> reminderDaysBefore;
   final Value<bool> isActive;
@@ -5552,7 +5513,6 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
     this.expectedAmount = const Value.absent(),
     this.frequency = const Value.absent(),
     this.dayOfMonth = const Value.absent(),
-    this.monthMask = const Value.absent(),
     this.reminderEnabled = const Value.absent(),
     this.reminderDaysBefore = const Value.absent(),
     this.isActive = const Value.absent(),
@@ -5567,7 +5527,6 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
     required double expectedAmount,
     required String frequency,
     this.dayOfMonth = const Value.absent(),
-    this.monthMask = const Value.absent(),
     this.reminderEnabled = const Value.absent(),
     this.reminderDaysBefore = const Value.absent(),
     this.isActive = const Value.absent(),
@@ -5584,7 +5543,6 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
     Expression<double>? expectedAmount,
     Expression<String>? frequency,
     Expression<int>? dayOfMonth,
-    Expression<int>? monthMask,
     Expression<bool>? reminderEnabled,
     Expression<int>? reminderDaysBefore,
     Expression<bool>? isActive,
@@ -5599,7 +5557,6 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
       if (expectedAmount != null) 'expected_amount': expectedAmount,
       if (frequency != null) 'frequency': frequency,
       if (dayOfMonth != null) 'day_of_month': dayOfMonth,
-      if (monthMask != null) 'month_mask': monthMask,
       if (reminderEnabled != null) 'reminder_enabled': reminderEnabled,
       if (reminderDaysBefore != null)
         'reminder_days_before': reminderDaysBefore,
@@ -5617,7 +5574,6 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
     Value<double>? expectedAmount,
     Value<String>? frequency,
     Value<int?>? dayOfMonth,
-    Value<int?>? monthMask,
     Value<bool>? reminderEnabled,
     Value<int?>? reminderDaysBefore,
     Value<bool>? isActive,
@@ -5632,7 +5588,6 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
       expectedAmount: expectedAmount ?? this.expectedAmount,
       frequency: frequency ?? this.frequency,
       dayOfMonth: dayOfMonth ?? this.dayOfMonth,
-      monthMask: monthMask ?? this.monthMask,
       reminderEnabled: reminderEnabled ?? this.reminderEnabled,
       reminderDaysBefore: reminderDaysBefore ?? this.reminderDaysBefore,
       isActive: isActive ?? this.isActive,
@@ -5665,9 +5620,6 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
     if (dayOfMonth.present) {
       map['day_of_month'] = Variable<int>(dayOfMonth.value);
     }
-    if (monthMask.present) {
-      map['month_mask'] = Variable<int>(monthMask.value);
-    }
     if (reminderEnabled.present) {
       map['reminder_enabled'] = Variable<bool>(reminderEnabled.value);
     }
@@ -5696,7 +5648,6 @@ class BillsTableCompanion extends UpdateCompanion<BillsTableData> {
           ..write('expectedAmount: $expectedAmount, ')
           ..write('frequency: $frequency, ')
           ..write('dayOfMonth: $dayOfMonth, ')
-          ..write('monthMask: $monthMask, ')
           ..write('reminderEnabled: $reminderEnabled, ')
           ..write('reminderDaysBefore: $reminderDaysBefore, ')
           ..write('isActive: $isActive, ')
@@ -6276,6 +6227,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this as AppDatabase,
   );
   late final BillsDao billsDao = BillsDao(this as AppDatabase);
+  late final CategoryDao categoryDao = CategoryDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -11372,7 +11324,6 @@ typedef $$BillsTableTableCreateCompanionBuilder =
       required double expectedAmount,
       required String frequency,
       Value<int?> dayOfMonth,
-      Value<int?> monthMask,
       Value<bool> reminderEnabled,
       Value<int?> reminderDaysBefore,
       Value<bool> isActive,
@@ -11388,7 +11339,6 @@ typedef $$BillsTableTableUpdateCompanionBuilder =
       Value<double> expectedAmount,
       Value<String> frequency,
       Value<int?> dayOfMonth,
-      Value<int?> monthMask,
       Value<bool> reminderEnabled,
       Value<int?> reminderDaysBefore,
       Value<bool> isActive,
@@ -11501,11 +11451,6 @@ class $$BillsTableTableFilterComposer
 
   ColumnFilters<int> get dayOfMonth => $composableBuilder(
     column: $table.dayOfMonth,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get monthMask => $composableBuilder(
-    column: $table.monthMask,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11641,11 +11586,6 @@ class $$BillsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get monthMask => $composableBuilder(
-    column: $table.monthMask,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<bool> get reminderEnabled => $composableBuilder(
     column: $table.reminderEnabled,
     builder: (column) => ColumnOrderings(column),
@@ -11746,9 +11686,6 @@ class $$BillsTableTableAnnotationComposer
     column: $table.dayOfMonth,
     builder: (column) => column,
   );
-
-  GeneratedColumn<int> get monthMask =>
-      $composableBuilder(column: $table.monthMask, builder: (column) => column);
 
   GeneratedColumn<bool> get reminderEnabled => $composableBuilder(
     column: $table.reminderEnabled,
@@ -11882,7 +11819,6 @@ class $$BillsTableTableTableManager
                 Value<double> expectedAmount = const Value.absent(),
                 Value<String> frequency = const Value.absent(),
                 Value<int?> dayOfMonth = const Value.absent(),
-                Value<int?> monthMask = const Value.absent(),
                 Value<bool> reminderEnabled = const Value.absent(),
                 Value<int?> reminderDaysBefore = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
@@ -11896,7 +11832,6 @@ class $$BillsTableTableTableManager
                 expectedAmount: expectedAmount,
                 frequency: frequency,
                 dayOfMonth: dayOfMonth,
-                monthMask: monthMask,
                 reminderEnabled: reminderEnabled,
                 reminderDaysBefore: reminderDaysBefore,
                 isActive: isActive,
@@ -11912,7 +11847,6 @@ class $$BillsTableTableTableManager
                 required double expectedAmount,
                 required String frequency,
                 Value<int?> dayOfMonth = const Value.absent(),
-                Value<int?> monthMask = const Value.absent(),
                 Value<bool> reminderEnabled = const Value.absent(),
                 Value<int?> reminderDaysBefore = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
@@ -11926,7 +11860,6 @@ class $$BillsTableTableTableManager
                 expectedAmount: expectedAmount,
                 frequency: frequency,
                 dayOfMonth: dayOfMonth,
-                monthMask: monthMask,
                 reminderEnabled: reminderEnabled,
                 reminderDaysBefore: reminderDaysBefore,
                 isActive: isActive,

@@ -7,13 +7,13 @@ import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_insights/financial_profile_cashflow_controller_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_debt_load_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_emergency_fund_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_lifestyle_coverage_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_wealth_building_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/profile/financial_stability_profile/financial_stability_profile_empty_view.dart';
+import 'package:getx_drift_app/features/profile/user_profile/user_profile_card.dart';
 import 'package:getx_drift_app/features/profile/widgets/financial_ratio_card.dart';
 import 'package:getx_drift_app/features/profile/widgets/financial_stability_profile_card.dart';
 import 'package:getx_drift_app/features/settings/settings_page_view.dart';
@@ -27,6 +27,8 @@ class ProfilePage extends GetView<FinancialProfileController> {
   @override
   Widget build(BuildContext context) {
     final spacing = 20.0;
+
+    // const learnEngine = LearnEngine();
 
     return Scaffold(
       body: Column(
@@ -53,16 +55,14 @@ class ProfilePage extends GetView<FinancialProfileController> {
 
           Expanded(
             child: Obx(() {
-              final isProfileComplete =
-                  controller.isCashflowComplete &&
-                  controller.hasNetWorth &&
-                  controller.hasCompletedAssessment.value &&
-                  controller.hasRevealedProfile.value;
+              final isProfileComplete = controller.hasRevealedProfile.value;
 
               if (isProfileComplete) {
                 return SingleChildScrollView(
                   child: Column(
                     children: [
+                      UserProfileCard(),
+                      SizedBox(height: 20),
                       AppSection(
                         sectionTitle: 'Financial Stability Profile',
                         child: FinancialStabilityProfileCard(),
@@ -122,9 +122,36 @@ class ProfilePage extends GetView<FinancialProfileController> {
                       ),
 
                       SizedBox(height: spacing),
+                      // Obx(() {
+                      //   final recommendations = learnEngine
+                      //       .getRecommendedContent(
+                      //         state: controller.financialState,
+                      //         context: LearnContext.,
+                      //         contents: learnContentLibrary,
+                      //       );
 
-                      LearningSection(),
+                      //   if (recommendations.isEmpty) {
+                      //     return const SizedBox.shrink();
+                      //   }
 
+                      //   return LearningSection(
+                      //     subtitle:
+                      //         'Build a good understanding of your net worth.',
+                      //     state: LearningSectionState.available,
+                      //     contents: recommendations
+                      //         .map(
+                      //           (content) => LearnThumbnail(
+                      //             title: content.title,
+                      //             description: content.description,
+                      //             type: content.type,
+                      //             onTap: () {
+                      //               // Open lesson
+                      //             },
+                      //           ),
+                      //         )
+                      //         .toList(),
+                      //   );
+                      // }),
                       SizedBox(height: context.bottomPadding),
                     ],
                   ),

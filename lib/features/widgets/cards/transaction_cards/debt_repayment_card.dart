@@ -4,6 +4,7 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/delete_functions.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -20,7 +21,7 @@ class DebtRepaymentTransactionCard extends GetView<TransactionController> {
 
     return AdaptivePressable(
       onTap: () {
-        // TODO: Open debt repayment transaction for editing.
+        AppSheets.transaction.debtRepayment(item);
       },
       onLongPress: () async {
         final confirmed = await showDialog<bool>(

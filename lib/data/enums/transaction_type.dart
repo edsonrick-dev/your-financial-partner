@@ -15,6 +15,7 @@ enum TransactionType {
     return switch (this) {
       TransactionType.earn => 'Earn',
       TransactionType.spend => 'Spend',
+      TransactionType.debtRepayment => 'Spend',
       TransactionType.transfer => 'Transfer',
       TransactionType.give => 'Give',
       TransactionType.receive => 'Receive',
@@ -26,6 +27,7 @@ enum TransactionType {
     return switch (this) {
       TransactionType.earn => 'earning',
       TransactionType.spend => 'expense',
+      // TransactionType.debtRepayment => '',
       TransactionType.transfer => 'money transfer',
       TransactionType.give => 'amount given',
       TransactionType.receive => 'amount received',
@@ -34,6 +36,7 @@ enum TransactionType {
     };
   }
 }
+
 // enum TransactionType {
 //   earn,
 //   spend,

@@ -41,6 +41,12 @@ class FinancialStabilityProfileEmptyState
       CashflowStatus.complete =>
         'Show where your money comes from and where it goes.',
     };
+    final cashflowTitle = switch (controller.cashflowStatus) {
+      CashflowStatus.empty => 'Cashflow Plan',
+      CashflowStatus.onlyIncome => 'Cashflow Plan | Budget Needed',
+      CashflowStatus.onlyBudget => 'Cashflow Plan | Income Plan Needed',
+      CashflowStatus.complete => 'Cashflow Plan',
+    };
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -92,7 +98,7 @@ class FinancialStabilityProfileEmptyState
                 const SizedBox(height: 16),
 
                 _ProfileRequirement(
-                  title: 'Cashflow Plan',
+                  title: cashflowTitle,
                   description: cashflowText,
                   isComplete: hasCashflowPlan,
                 ),

@@ -166,7 +166,12 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
                     Get.toNamed(Routes.BILLS);
                   },
                 ),
-                OthersCard(title: 'Categories'),
+                OthersCard(
+                  title: 'Categories',
+                  onTap: () {
+                    Get.toNamed(Routes.CATEGORIES);
+                  },
+                ),
                 // AppSectionBody(
                 //   child: Column(
                 //     children: [

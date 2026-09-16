@@ -124,7 +124,7 @@ class _CardDesign1 extends StatelessWidget {
             Row(
               children: [
                 Icon(PhosphorIconsRegular.creditCard, size: 24),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 Text(account.name, style: AppTextStyle.titleM),
               ],
             ),

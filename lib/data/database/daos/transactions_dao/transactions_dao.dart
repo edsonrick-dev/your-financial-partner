@@ -8,6 +8,7 @@ import 'package:getx_drift_app/data/tables/transaction_participants_table.dart';
 import 'package:getx_drift_app/data/tables/financial_obligations_table.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
+import 'package:getx_drift_app/features/transaction/views/transaction_view.dart';
 import 'package:intl/intl.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 
@@ -567,9 +568,6 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
             financialObligationsTable,
           )..where((tbl) => tbl.transactionId.equals(transaction.id))).get();
 
-          debugPrint(
-            'Transaction ${transaction.id}: ${obligations.length} obligations',
-          );
           // final obligation =
           //     await (select(
           //           financialObligationsTable,
@@ -635,11 +633,224 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
   ///
   /// Used by:
   /// Transaction History Screen
-  Stream<Map<String, List<TransactionWithDetails>>> watchGroupedTransactions() {
+  Stream<List<AccountsTableData>> watchLoansWithDebtRepayments() {
+    final query = select(accountsTable).join([
+      innerJoin(
+        transactionsTable,
+        transactionsTable.linkedAccountId.equalsExp(accountsTable.id) &
+            transactionsTable.transactionType.equals(
+              TransactionType.debtRepayment.name,
+            ),
+      ),
+    ]);
+
+    query.orderBy([OrderingTerm.asc(accountsTable.name)]);
+
+    return query.watch().map((rows) {
+      final loans = <int, AccountsTableData>{};
+
+      for (final row in rows) {
+        final loan = row.readTable(accountsTable);
+
+        loans[loan.id] = loan;
+      }
+
+      return loans.values.toList();
+    });
+  }
+  // Stream<List<AccountsTableData>> watchLoansWithDebtRepayments() {
+  //   final query = select(accountsTable).join([
+  //     innerJoin(
+  //       transactionsTable,
+  //       transactionsTable.linkedAccountId.equalsExp(accountsTable.id) &
+  //           transactionsTable.transactionType.equals(
+  //             TransactionType.debtRepayment.name,
+  //           ),
+  //     ),
+  //   ]);
+
+  //   query.orderBy([OrderingTerm.asc(accountsTable.name)]);
+
+  //   return query.watch().map((rows) {
+  //     final loans = <int, AccountsTableData>{};
+
+  //     for (final row in rows) {
+  //       final loan = row.readTable(accountsTable);
+
+  //       loans[loan.id] = loan;
+  //     }
+
+  //     return loans.values.toList();
+  //   });
+  // }
+
+  Stream<List<EntitiesTableData>> watchPeopleWithTransactions() {
     return watchTransactions().map((transactions) {
+      final people = <int, EntitiesTableData>{};
+
+      for (final transaction in transactions) {
+        for (final participant in transaction.participants) {
+          // Exclude yourself.
+          if (participant.entity.id == 1) {
+            continue;
+          }
+
+          people[participant.entity.id] = participant.entity;
+        }
+      }
+
+      final result = people.values.toList()
+        ..sort((a, b) => a.name.compareTo(b.name));
+
+      return result;
+    });
+  }
+
+  Future<void> clearCategories() async {
+    await delete(cashflowCategoriesTable).go();
+  }
+
+  Future<void> debugUsedCategories() async {
+    final categories = await select(cashflowCategoriesTable).get();
+    final transactions = await select(transactionsTable).get();
+
+    for (final category in categories) {
+      final count = transactions
+          .where((tx) => tx.categoryId == category.id)
+          .length;
+
+      if (count > 0) {
+        debugPrint(
+          'USED CATEGORY: '
+          'id=${category.id} '
+          'name="${category.name}" '
+          'transactions=$count',
+        );
+      }
+    }
+  }
+
+  Future<void> debugCategoryUsage() async {
+    final categories = await select(cashflowCategoriesTable).get();
+    final transactions = await select(transactionsTable).get();
+
+    final grouped = <String, List<CashflowCategoriesTableData>>{};
+
+    for (final category in categories) {
+      grouped.putIfAbsent(category.name, () => []).add(category);
+    }
+
+    for (final entry in grouped.entries) {
+      if (entry.value.length <= 1) {
+        continue;
+      }
+
+      debugPrint('────────────────────────────');
+      debugPrint('DUPLICATE CATEGORY: ${entry.key}');
+
+      for (final category in entry.value) {
+        final count = transactions
+            .where((tx) => tx.categoryId == category.id)
+            .length;
+
+        debugPrint('  id=${category.id} → $count transactions');
+      }
+    }
+  }
+
+  Future<void> debugDuplicateCategories() async {
+    final categories = await select(cashflowCategoriesTable).get();
+
+    final grouped = <String, List<CashflowCategoriesTableData>>{};
+
+    for (final category in categories) {
+      grouped.putIfAbsent(category.name, () => []).add(category);
+    }
+
+    for (final entry in grouped.entries) {
+      if (entry.value.length > 1) {
+        debugPrint(
+          'DUPLICATE CATEGORY: ${entry.key} '
+          '${entry.value.map((e) => 'id=${e.id}').join(', ')}',
+        );
+      }
+    }
+  }
+
+  Stream<List<CashflowCategoriesTableData>> watchCategoriesWithTransactions() {
+    final query = select(cashflowCategoriesTable).join([
+      innerJoin(
+        transactionsTable,
+        transactionsTable.categoryId.equalsExp(cashflowCategoriesTable.id),
+      ),
+    ]);
+
+    query.orderBy([OrderingTerm.asc(cashflowCategoriesTable.name)]);
+
+    return query.watch().map((rows) {
+      final categories = <int, CashflowCategoriesTableData>{};
+
+      for (final row in rows) {
+        final category = row.readTable(cashflowCategoriesTable);
+
+        categories[category.id] = category;
+      }
+
+      return categories.values.toList();
+    });
+  }
+
+  Stream<int> watchVisibleTransactionCount() {
+    final query = selectOnly(transactionsTable)
+      ..addColumns([transactionsTable.id.count()])
+      ..where(
+        transactionsTable.transactionType.isNotValue(
+          TransactionType.balanceUpdate.name,
+        ),
+      );
+
+    return query.watchSingle().map(
+      (row) => row.read(transactionsTable.id.count()) ?? 0,
+    );
+  }
+
+  Stream<Map<String, List<TransactionWithDetails>>> watchGroupedTransactions({
+    TransactionFilter filter = const AllTransactionFilter(),
+  }) {
+    return watchTransactions().map((transactions) {
+      final List<TransactionWithDetails> filteredTransactions;
+
+      switch (filter) {
+        case AllTransactionFilter():
+          filteredTransactions = transactions;
+
+        case CategoryTransactionFilter(:final category):
+          filteredTransactions = transactions
+              .where((item) => item.transaction.categoryId == category.id)
+              .toList();
+
+        case LoanTransactionFilter(:final account):
+          filteredTransactions = transactions
+              .where(
+                (item) =>
+                    item.transaction.type == TransactionType.debtRepayment &&
+                    item.transaction.linkedAccountId == account.id,
+              )
+              .toList();
+
+        case PersonTransactionFilter(:final entity):
+          filteredTransactions = transactions
+              .where(
+                (item) => item.participants.any(
+                  (participant) => participant.entity.id == entity.id,
+                ),
+              )
+              .toList();
+      }
+
       final grouped = <DateTime, List<TransactionWithDetails>>{};
 
-      for (final item in transactions) {
+      for (final item in filteredTransactions) {
         final date = item.transaction.date;
 
         final normalizedDate = DateTime(date.year, date.month, date.day);
@@ -649,12 +860,8 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
         grouped[normalizedDate]!.add(item);
       }
 
-      /// SORT DATES DESCENDING
-
       final sortedEntries = grouped.entries.toList()
         ..sort((a, b) => b.key.compareTo(a.key));
-
-      /// CONVERT TO STRING LABELS
 
       final result = <String, List<TransactionWithDetails>>{};
 

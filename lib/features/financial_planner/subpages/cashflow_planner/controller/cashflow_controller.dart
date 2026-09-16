@@ -75,8 +75,8 @@ class CashflowController extends GetxController {
   // ===========================================================================
 
   final savedPlans = <CashflowPlanWithCategory>[].obs;
-
-  bool get isEmpty => savedPlans.isEmpty;
+  final hasDebtRepaymentBills = false.obs;
+  bool get isEmpty => savedPlans.isEmpty && !hasDebtRepaymentBills.value;
 
   Set<int> get existingBudgetPlanCategoryIds {
     return savedPlans
@@ -103,7 +103,8 @@ class CashflowController extends GetxController {
     (plan) => plan.plan.planType == CashflowPlanType.debtRepayment.name,
   );
 
-  bool get hasBudgetPlan => hasExpensePlan || hasDebtRepaymentPlan;
+  bool get hasBudgetPlan =>
+      hasExpensePlan || hasDebtRepaymentBills.value == true;
 
   // ===========================================================================
   // Budget State
@@ -188,7 +189,7 @@ class CashflowController extends GetxController {
       bills,
     ) async {
       annualDebtRepayment.value = calculateAnnualDebtRepayment(bills);
-
+      hasDebtRepaymentBills.value = bills.isNotEmpty;
       annualBudget.value = annualExpense.value + annualDebtRepayment.value;
 
       await _refreshMonthlyCashflow();

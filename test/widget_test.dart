@@ -1,30 +1,43 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:get/get.dart';
 import 'package:getx_drift_app/app/app.dart';
+import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/features/main_shell/widgets/add_button.dart';
+import 'package:drift/native.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() async {
+    Get.testMode = true;
+    database = AppDatabase.forTesting(NativeDatabase.memory());
+    await database.seedDefaultCategories();
+    await database.seedDefaultPaymentAccounts();
+    await database.seedDefaultEntities();
+  });
+
+  tearDownAll(() async {
+    await database.close();
+    Get.reset();
+  });
+
+  testWidgets('main shell opens add transaction actions', (tester) async {
     await tester.pumpWidget(const App());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Home'), findsWidgets);
+    expect(find.text('Transactions'), findsOneWidget);
+    expect(find.text('Planner'), findsOneWidget);
+    expect(find.text('Profile'), findsOneWidget);
+
+    await tester.tap(find.byType(AddButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Earn Money'), findsOneWidget);
+    expect(find.text('Spend Money'), findsOneWidget);
+    expect(find.text('Transfer Money'), findsOneWidget);
+    expect(find.text('Receive Money'), findsOneWidget);
+    expect(find.text('Give Money'), findsOneWidget);
   });
 }

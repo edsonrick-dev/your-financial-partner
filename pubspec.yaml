@@ -49,6 +49,7 @@ dependencies:
   hugeicons: ^1.0.0
   month_picker_dialog: ^6.7.2
   get_storage: ^2.1.1
+  posthog_flutter: ^5.43.1
   
 dev_dependencies:
 

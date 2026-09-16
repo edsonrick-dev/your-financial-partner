@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/settings/pages/notifications_page.dart';
 import 'package:getx_drift_app/features/settings/pages/preferences_page.dart';
@@ -16,8 +16,7 @@ class SettingsPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppSheet(
-      height: AppSheetHeight.threeQuarter,
-
+      adaptiveHeight: true,
       title: 'Settings',
       child: SingleChildScrollView(
         child: Column(
@@ -120,19 +119,18 @@ class SettingsPageView extends StatelessWidget {
               ],
             ),
 
-            SettingsSection(
-              children: [
-                SettingsTile(
-                  icon: PhosphorIconsRegular.signOut,
-                  title: 'Sign out',
-                  subtitle: 'Sign out your account',
-                  onTap: () {},
-                  color: Colors.red,
-                ),
-              ],
-            ),
-
-            SizedBox(height: 12),
+            // SettingsSection(
+            //   children: [
+            //     SettingsTile(
+            //       icon: PhosphorIconsRegular.signOut,
+            //       title: 'Sign out',
+            //       subtitle: 'Sign out your account',
+            //       onTap: () {},
+            //       color: Colors.red,
+            //     ),
+            //   ],
+            // ),
+            SizedBox(height: context.bottomPaddingSub),
           ],
         ),
       ),

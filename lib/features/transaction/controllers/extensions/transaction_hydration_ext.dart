@@ -1,3 +1,4 @@
+import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_transaction_form.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
@@ -184,4 +185,54 @@ extension TransactionHydration on TransactionController {
     amount.value = item.transaction.amount;
     amountController.text = item.transaction.amount.toCurrency();
   }
+
+  // void loadDebtRepaymentTransaction(TransactionWithDetails item) {
+  //   editingTransaction.value = item;
+  //   selectedBill.value = null;
+  //   selectedDate.value = item.transaction.date;
+  //   selectedCategory.value = item.category;
+  //   selectedAccount.value = item.account;
+  //   selectedLinkedAccount.value = item.linkedAccount;
+  //   amount.value = item.transaction.amount;
+  //   amountController.text = item.transaction.amount.toCurrency();
+  // }
+  // void loadDebtRepaymentTransaction(TransactionWithDetails item) {
+
+  //   editingTransaction.value = item;
+  //   selectedBill.value = null;
+  //   selectedDate.value = item.transaction.date;
+  //   selectedCategory.value = item.category;
+  //   selectedAccount.value = item.account;
+  //   selectedLinkedAccount.value = item.linkedAccount;
+  //   amount.value = item.transaction.amount;
+  //   amountController.text = item.transaction.amount.toCurrency();
+  // }
+  Future<void> loadDebtRepaymentTransaction(TransactionWithDetails item) async {
+    editingTransaction.value = item;
+
+    selectedDate.value = item.transaction.date;
+    selectedCategory.value = item.category;
+    selectedAccount.value = item.account;
+    selectedLinkedAccount.value = item.linkedAccount;
+
+    amount.value = item.transaction.amount;
+    amountController.text = item.transaction.amount.toCurrency();
+
+    selectedBill.value = await database.billsDao
+        .getBillWithOccurrenceByTransactionId(item.transaction.id);
+  }
+
+  // void loadDebtRepaymentTransaction(TransactionWithDetails item) {
+  //   editingTransaction.value = item;
+  //   // selectedBill.value = null;
+
+  //   selectedDate.value = item.transaction.date;
+  //   selectedCategory.value = item.category;
+  //   selectedAccount.value = item.account;
+  //   selectedLinkedAccount.value = item.linkedAccount;
+  //   amount.value = item.transaction.amount;
+  //   amountController.text = item.transaction.amount.toCurrency();
+
+  //   print('HYDRATED LINKED ACCOUNT: ${selectedLinkedAccount.value?.name}');
+  // }
 }

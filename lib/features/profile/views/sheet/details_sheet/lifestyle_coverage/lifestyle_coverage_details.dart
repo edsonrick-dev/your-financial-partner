@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
+import 'package:getx_drift_app/features/financial_state/financial_state.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learn_content_library.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learn_context.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learn_engine.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learn_thumbnail.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_lifestyle_coverage_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
@@ -16,6 +20,7 @@ class LifestyleCoverageDetails extends GetView<FinancialProfileController> {
 
   @override
   Widget build(BuildContext context) {
+    const learnEngine = LearnEngine();
     final isAssessed = controller.canAssessLifestyleCoverage;
     const spacing = 20.0;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -32,19 +37,34 @@ class LifestyleCoverageDetails extends GetView<FinancialProfileController> {
 
           SizedBox(height: spacing),
 
-          LearningSection(
-            state: LearningSectionState.available,
-            subtitle: 'Build a better understanding of lifestyle coverage.',
-            contents: [
-              LearnThumbnail(
-                title: 'What is lifestyle coverage and why does it matter?',
-              ),
-              LearnThumbnail(
-                title: 'How long could your net worth support your lifestyle?',
-              ),
-              LearnThumbnail(title: 'How to improve your lifestyle coverage'),
-            ],
-          ),
+          Obx(() {
+            final recommendations = learnEngine.getRecommendedContent(
+              state: controller.financialState,
+              context: LearnContext.lcr,
+              contents: learnContentLibrary,
+            );
+
+            if (recommendations.isEmpty) {
+              return const SizedBox.shrink();
+            }
+
+            return LearningSection(
+              subtitle: 'Build a good understanding of your net worth.',
+              state: LearningSectionState.available,
+              contents: recommendations
+                  .map(
+                    (content) => LearnThumbnail(
+                      title: content.title,
+                      description: content.description,
+                      type: content.type,
+                      onTap: () {
+                        // Open lesson
+                      },
+                    ),
+                  )
+                  .toList(),
+            );
+          }),
           SizedBox(height: spacing),
 
           FinancialScoreDisclaimerSection(),

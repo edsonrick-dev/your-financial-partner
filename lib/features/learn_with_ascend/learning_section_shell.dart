@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
+import 'package:getx_drift_app/features/learn_with_ascend/learn_thumbnail.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
@@ -25,6 +25,10 @@ class LearningSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (state == LearningSectionState.noContent) {
+      return const SizedBox.shrink();
+    }
+
     return AppSection(
       sectionTitle: 'Learn With Ascend',
       trailingType: SectionTrailingType.textButton,
@@ -44,11 +48,7 @@ class LearningSection extends StatelessWidget {
           children: contents,
         ),
 
-        LearningSectionState.noContent => const _LearningEmptyView(
-          icon: Icons.menu_book_outlined,
-          title: 'No lessons available yet',
-          description: 'New lessons are coming soon.',
-        ),
+        LearningSectionState.noContent => const SizedBox.shrink(),
 
         LearningSectionState.allCompleted => const _LearningEmptyView(
           icon: Icons.check_circle_outline,
