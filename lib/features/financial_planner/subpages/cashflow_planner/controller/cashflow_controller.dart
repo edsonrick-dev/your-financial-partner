@@ -665,7 +665,11 @@ class CashflowController extends GetxController {
   // ===========================================================================
   // Annual Financial Summary
   // ===========================================================================
+  double get annualCashflowDifference {
+    return plannedAnnualIncome.value - annualBudget.value;
+  }
 
+  double get monthlyCashflowDifference => annualCashflowDifference / 12;
   double get plannedMonthlyIncome => plannedAnnualIncome / 12;
   final RxDouble plannedAnnualIncome = 0.0.obs;
   final RxDouble annualBudget = 0.0.obs;
@@ -1303,10 +1307,6 @@ class CashflowController extends GetxController {
   // ===========================================================================
   // ===========================================================================
   // ===========================================================================
-
-  double get annualCashflowDifference {
-    return plannedAnnualIncome.value - annualBudget.value;
-  }
 
   Future<List<double>> calculateRecurringMonthlyDistribution({
     required TransactionType transactionType,

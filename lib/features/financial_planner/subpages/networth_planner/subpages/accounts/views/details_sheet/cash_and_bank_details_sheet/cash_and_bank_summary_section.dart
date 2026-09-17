@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/update_account_balance_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_card_metric.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class CashAndBankSummarySection extends StatelessWidget {
+class CashAndBankSummarySection extends GetView<AccountController> {
   final AccountsTableData account;
 
   const CashAndBankSummarySection({super.key, required this.account});
@@ -33,6 +36,7 @@ class CashAndBankSummarySection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Column(
@@ -63,25 +67,9 @@ class CashAndBankSummarySection extends StatelessWidget {
                   onTap: () {
                     AppSheets.openAccountActionSheet(account);
                   },
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Opacity(
-                        opacity: 0.2,
-                        child: Container(
-                          height: 44,
-                          width: 44,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(999),
-                            color: colorScheme.appInversedtext,
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        PhosphorIconsRegular.dotsThree,
-                        color: colorScheme.text,
-                      ),
-                    ],
+                  child: Icon(
+                    Icons.more_horiz,
+                    color: colorScheme.appInversedtext,
                   ),
                 ),
               ],
@@ -105,6 +93,23 @@ class CashAndBankSummarySection extends StatelessWidget {
                 ),
               ],
             ),
+            if (totalFund < 0) ...[
+              const SizedBox(height: 20),
+              AppButton(
+                size: ButtonSize.medium,
+                text: 'Balance update needed',
+                isInversed: true,
+                onTap: () {
+                  controller.initializeBalanceUpdate(account);
+                  Get.bottomSheet(
+                    UpdateAccountBalanceSheet(account: account),
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                  );
+                },
+                type: ButtonType.outline,
+              ),
+            ],
           ],
         ),
       ),

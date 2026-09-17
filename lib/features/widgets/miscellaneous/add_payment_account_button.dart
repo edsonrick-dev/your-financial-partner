@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_group_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
-import 'package:getx_drift_app/features/widgets/fields/icon_picker_field.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
@@ -51,25 +51,21 @@ class AddPaymentAccountButton extends GetView<AccountController> {
 
       final isExpanded = state != AddButtonState.collapsed;
 
-      return AnimatedContainer(
-        duration: Duration(milliseconds: 180),
+      return isExpanded
+          ? AnimatedContainer(
+              duration: Duration(milliseconds: 180),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: colorScheme.appBorder),
+              ),
 
-        padding: isExpanded
-            ? const EdgeInsets.all(12)
-            : const EdgeInsets.all(0),
-        decoration: BoxDecoration(
-          // color: isExpanded ? colorScheme.secondaryBg : Colors.transparent,
-          borderRadius: BorderRadius.circular(isExpanded ? 20 : 12),
-          border: Border.all(color: colorScheme.appBorder),
-        ),
-
-        child: isExpanded
-            ? _BuildExpanded(
+              child: _BuildExpanded(
                 controller: controller,
                 availableAccountTypes: availableAccountTypes,
-              )
-            : _BuildCollapsed(controller: controller, onExpand: onExpand),
-      );
+              ),
+            )
+          : _BuildCollapsed(controller: controller, onExpand: onExpand);
     });
   }
 }
@@ -97,6 +93,7 @@ class _BuildExpanded extends StatelessWidget {
             spacing: 12,
             children: [
               AppDropdownField(
+                showIcon: type?.iconKey != null,
                 iconKey: type?.iconKey,
                 label: 'Account Type',
                 value: type?.label,
@@ -113,31 +110,10 @@ class _BuildExpanded extends StatelessWidget {
                 },
               ),
 
-              Row(
-                children: [
-                  AppIconPickerField(
-                    iconKey: controller.selectedIconKey.value,
-                    onTap: () {},
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: AppTextField(
-                      label: 'Name',
-                      focusNode: controller.nameFocusNode,
-                      controller: controller.nameController,
-                    ),
-                  ),
-                  // Expanded(
-                  //   child: Container(
-                  //     color: Colors.red,
-                  //     child: AppTextField(
-                  //       label: 'Name',
-                  //       focusNode: controller.nameFocusNode,
-                  //       controller: controller.nameController,
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+              AppTextField(
+                label: 'Name',
+                focusNode: controller.nameFocusNode,
+                controller: controller.nameController,
               ),
 
               if (type == AccountType.creditCard)
@@ -158,45 +134,46 @@ class _BuildExpanded extends StatelessWidget {
           spacing: 8,
           children: [
             ///CANCEL BUTTON
+            // Flexible(flex: 1, child: AppButton(text: 'Cancel')),
+            // Expanded(child: AppButton(text: 'Save account')),
             AdaptivePressable(
-              child: GestureDetector(
-                onTap: controller.collapseButton,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  decoration: BoxDecoration(
-                    // color: colorScheme.text,
-                    border: Border.all(color: context.colors.appText),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  height: 44,
-                  child: Row(
-                    spacing: 8,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Text('Cancel', style: TextStyle())],
-                  ),
+              onTap: controller.collapseButton,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  border: Border.all(color: context.colors.appText),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                height: ButtonSize.medium.height,
+                child: Row(
+                  spacing: 8,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Cancel', style: ButtonSize.medium.textStyle),
+                  ],
                 ),
               ),
             ),
 
-            ///SAVE BUTTON
+            // ///SAVE BUTTON
             Expanded(
               child: AdaptivePressable(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
-                    final createdCategory = await controller.saveAccount();
+                    final createdAccount = await controller.saveAccount();
 
-                    if (createdCategory != null) {
-                      Get.back(result: createdCategory);
+                    if (createdAccount != null) {
+                      Get.back(result: createdAccount);
                     }
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 24),
                     decoration: BoxDecoration(
-                      color: context.colors.appText,
+                      color: context.colors.buttonBackground,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    height: 44,
+                    height: ButtonSize.medium.height,
                     child: Row(
                       spacing: 8,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -209,7 +186,9 @@ class _BuildExpanded extends StatelessWidget {
                               )
                             : Text(
                                 'Save Account',
-                                style: TextStyle(color: context.colors.surface),
+                                style: ButtonSize.medium.textStyle.copyWith(
+                                  color: context.colors.surface,
+                                ),
                               ),
                       ],
                     ),
@@ -232,29 +211,17 @@ class _BuildCollapsed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AdaptivePressable(
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () {
-          controller.expandButton();
-
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            onExpand?.call();
-          });
-        },
-        child: SizedBox(
-          height: 52,
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Icon(Icons.add),
-              SizedBox(width: 8),
-              Text('Add New Payment Account'),
-            ],
-          ),
-        ),
-      ),
+    return AppButton(
+      size: ButtonSize.xLarge,
+      type: ButtonType.outline,
+      text: 'Add new payment account',
+      onTap: () {
+        controller.expandButton();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          onExpand?.call();
+        });
+      },
+      leadingIcon: Icons.add,
     );
   }
 }

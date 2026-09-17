@@ -6,6 +6,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/credit_card_installment_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/select_institution_sheet.dart';
+import 'package:getx_drift_app/features/sheets/create_sheets/create_category_sheet/create_category_controller.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_category_or_bill_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_category_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_day_of_month.dart';
@@ -25,12 +26,14 @@ class SelectionSheets {
     CashflowCategoriesTableData? selectedCategory,
     BillWithNextOccurrence? selectedBill,
   }) {
+    Get.put(CreateCategoryController(transactionType));
     return Get.bottomSheet<CategoryOrBillSelection>(
       SelectCategoryOrBillSheet(
         transactionType: transactionType,
         selectedCategory: selectedCategory,
         selectedBill: selectedBill,
       ),
+      isScrollControlled: true,
     );
   }
 
@@ -55,6 +58,7 @@ class SelectionSheets {
     CashflowCategoriesTableData? selectedCategory,
     Set<int> excludedCategoryIds = const {},
   }) {
+    Get.put(CreateCategoryController(transactionType));
     return Get.bottomSheet<CashflowCategoriesTableData>(
       SelectCategorySheet(
         transactionType: transactionType,
@@ -83,6 +87,7 @@ class SelectionSheets {
 
         excludedAccountId: excludedAccountId,
       ),
+      isScrollControlled: true,
     );
   }
 

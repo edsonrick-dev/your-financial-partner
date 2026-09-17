@@ -69,9 +69,10 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
               Obx(
                 () => AppDropdownField(
                   label: 'Expense Category',
-                  iconKey:
-                      transactionController.selectedCategory.value?.icon ??
-                      'category',
+                  showIcon:
+                      transactionController.selectedCategory.value?.icon !=
+                      null,
+                  iconKey: transactionController.selectedCategory.value?.icon,
                   value: transactionController.selectedCategory.value?.name,
                   hint: 'Select expense category',
                   onTap: () {

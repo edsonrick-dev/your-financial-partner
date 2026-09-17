@@ -5,7 +5,17 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
 enum ButtonType { primary, outline, ghost }
 
-enum ButtonSize { small, medium, large }
+enum ButtonSize {
+  small(height: 28, textStyle: AppTextStyle.titleS),
+  medium(height: 36, textStyle: AppTextStyle.titleM),
+  large(height: 40, textStyle: AppTextStyle.titleL),
+  xLarge(height: 52, textStyle: AppTextStyle.titleL);
+
+  const ButtonSize({required this.height, required this.textStyle});
+
+  final double height;
+  final TextStyle textStyle;
+}
 
 class AppButton extends StatelessWidget {
   final String text;
@@ -16,6 +26,7 @@ class AppButton extends StatelessWidget {
   final ButtonSize size;
   final IconData? leadingIcon;
   final IconData? trailingIcon;
+
   const AppButton({
     super.key,
     this.type = ButtonType.primary,
@@ -27,13 +38,6 @@ class AppButton extends StatelessWidget {
     this.trailingIcon,
     required this.text,
   });
-  double _buttonSize(ButtonSize size) {
-    return switch (size) {
-      ButtonSize.small => 28,
-      ButtonSize.medium => 36,
-      ButtonSize.large => 40,
-    };
-  }
 
   Color _backgroundColor(BuildContext context) {
     final colorScheme = context.colors;
@@ -60,7 +64,8 @@ class AppButton extends StatelessWidget {
     return switch (type) {
       ButtonType.primary =>
         isInversed ? colorScheme.color900 : colorScheme.pageShifterTextSelected,
-      ButtonType.outline => colorScheme.appText,
+      ButtonType.outline =>
+        isInversed ? colorScheme.appInversedtext : colorScheme.appText,
       ButtonType.ghost => colorScheme.appText,
     };
   }
@@ -74,17 +79,20 @@ class AppButton extends StatelessWidget {
 
     return switch (type) {
       ButtonType.primary => null,
-      ButtonType.outline => Border.all(color: colorScheme.appText),
+      ButtonType.outline => Border.all(
+        color: isInversed ? colorScheme.appInversedtext : colorScheme.appText,
+      ),
       ButtonType.ghost => null,
     };
   }
 
   @override
   Widget build(BuildContext context) {
+    final foregroundColor = _foregroundColor(context);
     return AdaptivePressable(
       onTap: onTap,
       child: Container(
-        height: _buttonSize(size),
+        height: size.height,
         width: double.infinity,
         decoration: BoxDecoration(
           color: _backgroundColor(context),
@@ -100,9 +108,7 @@ class AppButton extends StatelessWidget {
             FittedBox(
               child: Text(
                 text,
-                style: AppTextStyle.titleL.copyWith(
-                  color: _foregroundColor(context),
-                ),
+                style: size.textStyle.copyWith(color: foregroundColor),
               ),
             ),
             Icon(trailingIcon, color: _foregroundColor(context)),

@@ -8,6 +8,54 @@ import 'package:getx_drift_app/data/enums/transaction_type.dart';
 // enum CategoryType { income, expense }
 
 class CreateCategoryController extends GetxController {
+  final CashflowCategoriesTableData? category;
+  CreateCategoryController(TransactionType transactionType, {this.category})
+    : _categoryType = transactionType.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    if (category != null) {
+      nameController.text = category!.name;
+    }
+  }
+
+  @override
+  void onClose() {
+    nameController.dispose();
+    nameFocusNode.dispose();
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  final Rx<TransactionType> _categoryType;
+
+  Rx<TransactionType> get categoryType => _categoryType;
+
+  static const icons = [
+    'food',
+    'transport',
+    'shopping',
+    'home',
+    'health',
+    'education',
+    'entertainment',
+    'salary',
+    'business',
+    'other',
+  ];
+  final ScrollController scrollController = ScrollController();
+  void scrollToAddCategory() {
+    if (!scrollController.hasClients) return;
+
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
   final Rx<AddButtonState> buttonState = AddButtonState.collapsed.obs;
   void expandButton() {
     buttonState.value = AddButtonState.expanded;
@@ -21,10 +69,9 @@ class CreateCategoryController extends GetxController {
     buttonState.value = AddButtonState.loading;
   }
 
-  CreateCategoryController(TransactionType transactionType)
-    : _categoryType = transactionType.obs;
-
-  final Rx<TransactionType> _categoryType;
+  // CreateCategoryController(TransactionType transactionType)
+  //   : _categoryType = transactionType.obs;
+  // final Rx<TransactionType> _categoryType;
   final TextEditingController nameController = TextEditingController();
   final FocusNode nameFocusNode = FocusNode();
 
@@ -62,12 +109,5 @@ class CreateCategoryController extends GetxController {
     collapseButton();
 
     return createdCategory;
-  }
-
-  @override
-  void onClose() {
-    nameController.dispose();
-
-    super.onClose();
   }
 }

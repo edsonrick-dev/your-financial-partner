@@ -2,10 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/categories/category_form_sheet.dart';
+import 'package:getx_drift_app/features/sheets/create_sheets/create_category_sheet/create_category_controller.dart';
 
 class CategoryController extends GetxController {
+  void openEditCategory(CashflowCategoriesTableData category) {
+    final transactionType = category.type == 'earn'
+        ? TransactionType.earn
+        : TransactionType.spend;
+
+    Get.put(CreateCategoryController(transactionType));
+
+    Get.bottomSheet(
+      CategoryFormSheet(category: category),
+      isScrollControlled: true,
+    );
+  }
+
+  final selectedCategoryTypeIndex = 0.obs;
   // final CategoryDao categoryDao;
+  @override
+  void onInit() {
+    super.onInit();
+    loadCategories();
+  }
 
   // CategoryController({required this.categoryDao});
 
@@ -21,71 +42,66 @@ class CategoryController extends GetxController {
     return categories.where((category) => category.type == 'spend').toList();
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    loadCategories();
-  }
-
-  // Future<void> loadCategories() async {
-  //   isLoading.value = true;
-
-  //   try {
-  //     final result = await database.categoryDao.getAllCategories();
-
-  //     categories.assignAll(result);
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
   Future<void> loadCategories() async {
     isLoading.value = true;
 
     try {
       final result = await database.categoryDao.getAllCategories();
 
+      debugPrint('==============================');
       debugPrint('CATEGORY COUNT: ${result.length}');
 
       for (final category in result) {
-        debugPrint('CATEGORY: ${category.name} | TYPE: ${category.type}');
+        debugPrint(
+          'ID: ${category.id} | '
+          'NAME: ${category.name} | '
+          'TYPE: "${category.type}"',
+        );
       }
+
+      debugPrint(
+        'INCOME COUNT: ${result.where((c) => c.type == 'earn').length}',
+      );
+
+      debugPrint(
+        'EXPENSE COUNT: ${result.where((c) => c.type == 'spend').length}',
+      );
+
+      debugPrint('==============================');
 
       categories.assignAll(result);
     } finally {
       isLoading.value = false;
     }
   }
+  // Future<void> loadCategories() async {
+  //   isLoading.value = true;
+
+  //   try {
+  //     final result = await database.categoryDao.getAllCategories();
+
+  //     debugPrint('CATEGORY COUNT: ${result.length}');
+
+  //     for (final category in result) {
+  //       debugPrint('CATEGORY: ${category.name} | TYPE: ${category.type}');
+  //     }
+
+  //     categories.assignAll(result);
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
 
   void openCreateCategory() {
-    Get.bottomSheet(
-      CategoryFormSheet(
-        onSave: (name, icon, type) async {
-          await createCategory(name: name, icon: icon, type: type);
-
-          Get.back();
-        },
+    Get.put(
+      CreateCategoryController(
+        selectedCategoryTypeIndex.value == 0
+            ? TransactionType.earn
+            : TransactionType.spend,
       ),
-      isScrollControlled: true,
     );
-  }
 
-  void openEditCategory(CashflowCategoriesTableData category) {
-    Get.bottomSheet(
-      CategoryFormSheet(
-        category: category,
-        onSave: (name, icon, type) async {
-          await updateCategory(
-            category: category,
-            name: name,
-            icon: icon,
-            type: type,
-          );
-
-          Get.back();
-        },
-      ),
-      isScrollControlled: true,
-    );
+    Get.bottomSheet(const CategoryFormSheet(), isScrollControlled: true);
   }
 
   Future<void> createCategory({
@@ -101,7 +117,7 @@ class CategoryController extends GetxController {
       ),
     );
 
-    await loadCategories();
+    // await loadCategories();
   }
 
   Future<void> updateCategory({

@@ -56,6 +56,16 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                           color: colorScheme.appInversedtext,
                         ),
                       ),
+                      Obx(
+                        () => Text(
+                          '~${controller.monthlyCashflowDifference.abs().toCurrency()}/month',
+                          style: AppTextStyle.amountXS.copyWith(
+                            color: controller.monthlyCashflowDifference < 0
+                                ? colorScheme.appOutflowInversed
+                                : colorScheme.appInversedtext,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

@@ -34,7 +34,7 @@ extension AccountExtensions on AccountsTableData {
     if (type != AccountType.creditCard) return null;
     if (creditLimit == null) return null;
 
-    return creditLimit! + currentValue;
+    return creditLimit! - currentValue;
   }
 
   double? get creditUtilization {

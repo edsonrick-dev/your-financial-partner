@@ -25,22 +25,12 @@ class BudgetProgressSection extends GetView<CashflowController> {
 
     return AppSection(
       sectionTitle: 'Budget Progress',
-      trailingWidget: AdaptivePressable(
-        onTap: () {
-          controller.seletectedDetailsTabIndex(1);
-          Get.toNamed(Routes.CASHFLOWDETAILS);
-        },
-        child: SizedBox(
-          height: 44,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Center(
-              child: Text('See all budgets', style: AppTextStyle.titleS),
-            ),
-          ),
-        ),
-      ),
-      trailingType: SectionTrailingType.custom,
+      trailingType: SectionTrailingType.textButton,
+      trailingText: 'See all budgets',
+      onTrailingPressed: () {
+        controller.seletectedDetailsTabIndex(1);
+        Get.toNamed(Routes.CASHFLOWDETAILS);
+      },
 
       child: Obx(() {
         final items = controller.currentMonthBudgetItems;

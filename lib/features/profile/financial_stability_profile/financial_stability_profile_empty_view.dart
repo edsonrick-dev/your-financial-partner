@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
@@ -47,7 +48,7 @@ class FinancialStabilityProfileEmptyState
       CashflowStatus.onlyBudget => 'Cashflow Plan | Income Plan Needed',
       CashflowStatus.complete => 'Cashflow Plan',
     };
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [

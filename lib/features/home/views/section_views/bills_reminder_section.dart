@@ -27,21 +27,11 @@ class BillsReminderSection extends GetView<CashflowController> {
     final billController = Get.find<BillController>();
     return AppSection(
       sectionTitle: 'Bills Reminder',
-      trailingWidget: AdaptivePressable(
-        onTap: () {
-          Get.toNamed(Routes.BILLS);
-        },
-        child: SizedBox(
-          height: 44,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Center(
-              child: Text('See all bills', style: AppTextStyle.titleS),
-            ),
-          ),
-        ),
-      ),
-      trailingType: SectionTrailingType.custom,
+      trailingType: SectionTrailingType.textButton,
+      trailingText: 'See all bills',
+      onTrailingPressed: () {
+        Get.toNamed(Routes.BILLS);
+      },
 
       child: AppSectionBody(
         child: Padding(

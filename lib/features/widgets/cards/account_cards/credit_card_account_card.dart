@@ -26,12 +26,87 @@ class CreditCardAccountCard extends StatelessWidget {
 
     return AppCard(
       onTap: onTap,
-      child: _CardDesign1(
-        account: account,
-        colorScheme: colorScheme,
-        availableCredit: availableCredit,
-        creditLimit: creditLimit,
-        utilization: utilization,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(PhosphorIconsRegular.creditCard, size: 24),
+                  const SizedBox(width: 8),
+                  Text(account.name, style: AppTextStyle.titleM),
+                ],
+              ),
+              Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    account.currentValue.toCurrency(),
+                    style: AppTextStyle.amountL.copyWith(
+                      color: colorScheme.appOutflow,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // Current payable
+          // Text('Current payable', style: AppTextStyle.bodyS),
+          // const SizedBox(height: 2),
+          // Text(
+          //   account.currentValue.toCurrency(),
+          //   style: AppTextStyle.amountL.copyWith(color: colorScheme.appOutflow),
+          // ),
+          // const SizedBox(height: 16),
+
+          // Available / limit
+          Row(
+            children: [
+              Expanded(
+                child: _CreditMetric(
+                  label: 'Available credit',
+                  value: availableCredit?.toCurrency() ?? '—',
+                ),
+              ),
+              Expanded(
+                child: _CreditMetric(
+                  label: 'Credit limit',
+                  value: creditLimit?.toCurrency() ?? '—',
+                ),
+              ),
+            ],
+          ),
+
+          if (utilization != null) ...[
+            const SizedBox(height: 16),
+
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                color: colorScheme.appOutflow,
+                backgroundColor: colorScheme.bgDark,
+                borderRadius: BorderRadius.circular(999),
+                value: utilization.clamp(0.0, 1.0),
+                minHeight: 6,
+              ),
+            ),
+
+            const SizedBox(height: 6),
+
+            Text(
+              '${(utilization * 100).toStringAsFixed(1)}% utilized',
+              style: AppTextStyle.bodyS,
+            ),
+          ],
+        ],
       ),
     );
   }

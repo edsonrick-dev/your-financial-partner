@@ -20,8 +20,6 @@ class SelectPaymentAccountSheet extends StatelessWidget {
     final colorScheme = context.colors;
     return AppSheet(
       adaptiveHeight: true,
-      minHeightFactor: AppSheetHeight.quarter,
-      height: AppSheetHeight.full,
       title: 'Select Payment Account',
       child: Column(
         children: [

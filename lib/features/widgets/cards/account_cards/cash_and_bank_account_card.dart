@@ -25,80 +25,71 @@ class CashAndBankAccountCard extends GetView<AccountController> {
     final accountType = AccountType.fromName(account.accountType);
 
     final accountIcon = AppIcons.categories.resolve(accountType.iconKey);
-    // final IconData? accountIcon = switch (account.accountType) {
-    //   AccountType.cash.name => Icons.account_balance_wallet,
-    //   'savings' => Icons.account_balance,
-    //   'checking' => Icons.account_balance,
-    //   'eWallet' => Icons.phone_android,
-    //   _ => null,
-    // };
+
     return AppCard(
       onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Opacity(
-            opacity: 0.6,
-            child: Row(
-              children: [
-                Icon(accountIcon, size: 20),
-                SizedBox(width: 4),
-                Expanded(
-                  child: Text(accountType.label, style: AppTextStyle.labelS),
-                ),
-                if (isNegative) ...[
-                  // const SizedBox(width: 16),
-
-                  // Expanded(
-                  //   child: Text(
-                  //     '',
-                  //     style: AppTextStyle.labelS.copyWith(
-                  //       color: colorScheme.appOutflow,
-                  //     ),
-                  //   ),
-                  // ),
-                  AdaptivePressable(
-                    onTap: () {
-                      controller.initializeBalanceUpdate(account);
-                      Get.bottomSheet(
-                        UpdateAccountBalanceSheet(account: account),
-                        backgroundColor: Colors.transparent,
-                        isScrollControlled: true,
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        // color: colorScheme.appText,
-                        border: Border.all(color: colorScheme.appOutflow),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 2,
-                          horizontal: 4,
+          Row(
+            children: [
+              Expanded(
+                child: Opacity(
+                  opacity: 0.6,
+                  child: Row(
+                    children: [
+                      Icon(accountIcon, size: 20),
+                      SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          accountType.label,
+                          style: AppTextStyle.labelS,
                         ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.warning_amber_rounded,
-                              size: 16,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              if (isNegative) ...[
+                AdaptivePressable(
+                  onTap: () {
+                    controller.initializeBalanceUpdate(account);
+                    Get.bottomSheet(
+                      UpdateAccountBalanceSheet(account: account),
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      // color: colorScheme.appText,
+                      border: Border.all(color: colorScheme.appOutflow),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.warning_amber_rounded,
+                            size: 16,
+                            color: colorScheme.appOutflow,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Update balance',
+                            style: AppTextStyle.labelS.copyWith(
                               color: colorScheme.appOutflow,
                             ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Update balance',
-                              style: AppTextStyle.labelS.copyWith(
-                                color: colorScheme.appOutflow,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
+                ),
               ],
-            ),
+            ],
           ),
           Row(
             children: [

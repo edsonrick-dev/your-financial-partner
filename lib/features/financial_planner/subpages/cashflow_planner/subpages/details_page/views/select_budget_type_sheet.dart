@@ -34,7 +34,7 @@ class SelectBudgetTypeSheet extends GetView<CashflowController> {
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
                   ).whenComplete(() {
-                    // controller.resetBudgetPlan();
+                    controller.resetBudgetPlan();
                   });
                 },
                 padding: 12,

@@ -23,24 +23,23 @@ class EWalletAccountForm extends GetView<AccountController> {
             onChanged: controller.setAccountName,
           ),
 
-          Obx(
-            () => AppDropdownField(
-              iconKey: 'wallet',
-              label: 'E-Wallet Provider',
-              value:
-                  controller.selectedInstitution.value?.displayName ??
-                  controller.selectedInstitution.value?.name,
-              onTap: () async {
-                final institution = await AppSheets.selection
-                    .selectInstitution();
+          // Obx(
+          //   () => AppDropdownField(
+          //     iconKey: 'wallet',
+          //     label: 'E-Wallet Provider',
+          //     value:
+          //         controller.selectedInstitution.value?.displayName ??
+          //         controller.selectedInstitution.value?.name,
+          //     onTap: () async {
+          //       final institution = await AppSheets.selection
+          //           .selectInstitution();
 
-                if (institution == null) return;
+          //       if (institution == null) return;
 
-                controller.selectInstitution(institution);
-              },
-            ),
-          ),
-
+          //       controller.selectInstitution(institution);
+          //     },
+          //   ),
+          // ),
           Obx(
             () => AppAmountField(
               label: 'Initial Balance',

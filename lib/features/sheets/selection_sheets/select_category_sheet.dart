@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/app_border_radius.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/features/sheets/create_sheets/create_category_sheet/create_category_controller.dart';
 import 'package:getx_drift_app/features/transaction/category_list.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_toolbar.dart';
@@ -9,7 +10,7 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 
-class SelectCategorySheet extends StatelessWidget {
+class SelectCategorySheet extends GetView<CreateCategoryController> {
   final TransactionType transactionType;
   final CashflowCategoriesTableData? selectedCategory;
   final Set<int> excludedCategoryIds;
@@ -19,6 +20,9 @@ class SelectCategorySheet extends StatelessWidget {
     this.selectedCategory,
     this.excludedCategoryIds = const {},
   });
+
+  @override
+  String? get tag => transactionType.name;
 
   @override
   Widget build(BuildContext context) {

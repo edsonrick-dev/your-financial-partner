@@ -24,14 +24,12 @@ class AddAccountSheet extends GetView<AccountController> {
         adaptiveHeight: true,
         title: 'Add ${accountType.label}',
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: AccountForm(accountType: accountType),
-              ),
-            ),
+            SingleChildScrollView(child: AccountForm(accountType: accountType)),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 20),
+
             AppSection(
               child: Obx(
                 () => AppButton(
@@ -63,8 +61,6 @@ class AddAccountSheet extends GetView<AccountController> {
     );
   }
 }
-// import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
-// import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 
 extension AccountValidationExtension on AccountController {
   bool get isAccountFormValid {
@@ -123,21 +119,15 @@ extension AccountValidationExtension on AccountController {
   }
 
   bool get isSavingsAccountValid {
-    return hasValidAccountName &&
-        hasSelectedFinancialInstitution &&
-        hasValidBalance;
+    return hasValidAccountName && hasValidBalance;
   }
 
   bool get isCheckingAccountValid {
-    return hasValidAccountName &&
-        hasSelectedFinancialInstitution &&
-        hasValidBalance;
+    return hasValidAccountName && hasValidBalance;
   }
 
   bool get isEWalletAccountValid {
-    return hasValidAccountName &&
-        hasSelectedFinancialInstitution &&
-        hasValidBalance;
+    return hasValidAccountName && hasValidBalance;
   }
 
   bool get isCreditCardAccountValid {

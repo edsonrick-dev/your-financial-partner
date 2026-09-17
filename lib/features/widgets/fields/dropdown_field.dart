@@ -63,7 +63,7 @@ class AppDropdownField extends StatelessWidget {
 
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Column(
@@ -93,8 +93,7 @@ class AppDropdownField extends StatelessWidget {
                 if (showIcon == true)
                   SizedBox(
                     // width: 28,
-                    height: 42,
-
+                    // height: 42,
                     child: Row(
                       children: [
                         defaultIcon ??

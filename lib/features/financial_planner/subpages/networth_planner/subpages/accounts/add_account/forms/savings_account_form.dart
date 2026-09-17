@@ -22,24 +22,24 @@ class SavingsAccountForm extends GetView<AccountController> {
             controller: controller.nameController,
             onChanged: controller.setAccountName,
           ),
-          Obx(
-            () => AppDropdownField(
-              iconKey: 'bank',
-              label: 'Bank / Financial Institution',
-              value:
-                  controller.selectedInstitution.value?.displayName ??
-                  controller.selectedInstitution.value?.name,
-              onTap: () async {
-                final institution = await AppSheets.selection
-                    .selectInstitution();
 
-                if (institution == null) return;
+          // Obx(
+          //   () => AppDropdownField(
+          //     iconKey: 'bank',
+          //     label: 'Bank / Financial Institution',
+          //     value:
+          //         controller.selectedInstitution.value?.displayName ??
+          //         controller.selectedInstitution.value?.name,
+          //     onTap: () async {
+          //       final institution = await AppSheets.selection
+          //           .selectInstitution();
 
-                controller.selectInstitution(institution);
-              },
-            ),
-          ),
+          //       if (institution == null) return;
 
+          //       controller.selectInstitution(institution);
+          //     },
+          //   ),
+          // ),
           Obx(
             () => AppAmountField(
               label: 'Initial Balance',

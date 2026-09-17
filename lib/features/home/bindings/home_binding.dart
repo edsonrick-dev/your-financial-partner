@@ -14,6 +14,7 @@ import 'package:getx_drift_app/features/financial_setup/financial_setup_controll
 import 'package:getx_drift_app/features/main_shell/controller/main_shell_controller.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/settings/pages/notifications_page.dart';
+import 'package:getx_drift_app/features/sheets/create_sheets/create_category_sheet/create_category_controller.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 
 import '../controllers/home_controller.dart';
@@ -30,6 +31,7 @@ class HomeBinding extends Bindings {
     Get.lazyPut<LoanController>(() => LoanController(), fenix: true);
     Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
     Get.lazyPut<FinancialPlannerController>(() => FinancialPlannerController());
+    Get.lazyPut<CategoryController>(() => CategoryController());
     Get.lazyPut<NetWorthController>(() => NetWorthController());
     Get.lazyPut<SavingsPlannerController>(() => SavingsPlannerController());
 

@@ -57,12 +57,16 @@ class BillForm extends GetView<BillController> {
                         Obx(
                           () => AppDropdownField(
                             label: 'Category',
-                            iconKey:
+                            showIcon:
                                 transactionController
                                     .selectedCategory
                                     .value
-                                    ?.icon ??
-                                'category',
+                                    ?.icon !=
+                                null,
+                            iconKey: transactionController
+                                .selectedCategory
+                                .value
+                                ?.icon,
                             value: transactionController
                                 .selectedCategory
                                 .value

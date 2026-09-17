@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/constants/app_border_radius.dart';
+import 'package:getx_drift_app/core/constants/app_scale.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
@@ -26,73 +28,67 @@ class AppSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+    final minHeight = AppTapArea.medium;
 
     return Padding(
       padding: AppPadding.pageHorizontal,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: 44),
-        child: Row(
-          children: [
-            if (subtitle != null && subtitle!.isNotEmpty)
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(sectionTitle, style: AppTextStyle.titleL),
-                    Text(
-                      subtitle!,
-                      style: AppTextStyle.bodyS.copyWith(
-                        color: colorScheme.appTextMuted,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            else
-              Expanded(child: Text(sectionTitle, style: AppTextStyle.titleL)),
-
-            SizedBox(width: 16),
-
-            // Explicit trailing type takes priority.
-            if (trailingType != null)
-              switch (trailingType) {
-                SectionTrailingType.text => Text(
-                  trailingText ?? '',
-                  style: TextStyle(
-                    fontSize: 15,
-                    height: 20 / 15,
-                    color: colorScheme.primary,
+                child: Container(
+                  constraints: BoxConstraints(minHeight: minHeight),
+                  // color: colorScheme.appOutflow,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(sectionTitle, style: AppTextStyle.titleL),
+                      if (subtitle != null && subtitle!.isNotEmpty) ...[
+                        // SizedBox(height: 4),
+                        Text(
+                          subtitle!,
+                          style: AppTextStyle.labelM.copyWith(
+                            color: colorScheme.appTextMuted,
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                      ],
+                    ],
                   ),
-                ),
-
-                SectionTrailingType.textButton => TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: colorScheme.appText,
-                  ),
-                  onPressed: onTrailingPressed,
-                  child: Text(
-                    trailingText ?? 'See all',
-                    style: const TextStyle(fontSize: 15, height: 20 / 15),
-                  ),
-                ),
-
-                SectionTrailingType.custom => child!,
-
-                _ => const SizedBox.shrink(),
-              }
-            // No trailing type, but trailing text exists.
-            else if (trailingText != null && trailingText!.isNotEmpty)
-              Text(
-                trailingText!,
-                style: TextStyle(
-                  fontSize: 15,
-                  height: 20 / 15,
-                  color: colorScheme.primary,
                 ),
               ),
-          ],
-        ),
+
+              if (trailingType != null) ...[
+                SizedBox(width: AppScale.x3),
+                switch (trailingType) {
+                  SectionTrailingType.textButton => AdaptivePressable(
+                    onTap: onTrailingPressed,
+                    child: Container(
+                      constraints: BoxConstraints(minHeight: minHeight),
+                      child: Center(
+                        child: Text(
+                          trailingText ?? 'See all',
+                          style: AppTextStyle.labelM,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SectionTrailingType.custom => child!,
+
+                  _ => const SizedBox.shrink(),
+                },
+              ]
+              // No trailing type, but trailing text exists.
+              else if (trailingText != null && trailingText!.isNotEmpty)
+                Text(trailingText!, style: AppTextStyle.labelM),
+            ],
+          ),
+        ],
       ),
     );
   }
