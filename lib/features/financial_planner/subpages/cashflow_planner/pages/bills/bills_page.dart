@@ -22,8 +22,11 @@ class BillsPage extends GetView<BillController> {
         actions: [
           IconButton(
             onPressed: () {
-              controller.resetForm();
-              Get.bottomSheet(BillForm(), isScrollControlled: true);
+              // controller.resetForm();
+              Get.bottomSheet(
+                BillForm(),
+                isScrollControlled: true,
+              ).whenComplete(controller.resetForm);
             },
             icon: Icon(PhosphorIconsRegular.plus),
           ),

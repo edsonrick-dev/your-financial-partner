@@ -14,6 +14,8 @@ class AppButton extends StatelessWidget {
   final bool isInversed;
   final double borderRadius;
   final ButtonSize size;
+  final IconData? leadingIcon;
+  final IconData? trailingIcon;
   const AppButton({
     super.key,
     this.type = ButtonType.primary,
@@ -21,6 +23,8 @@ class AppButton extends StatelessWidget {
     this.onTap,
     this.isInversed = false,
     this.borderRadius = 8,
+    this.leadingIcon,
+    this.trailingIcon,
     required this.text,
   });
   double _buttonSize(ButtonSize size) {
@@ -88,15 +92,21 @@ class AppButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: Center(
-          child: FittedBox(
-            child: Text(
-              text,
-              style: AppTextStyle.titleL.copyWith(
-                color: _foregroundColor(context),
+        child: Row(
+          spacing: 12,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(leadingIcon, color: _foregroundColor(context)),
+            FittedBox(
+              child: Text(
+                text,
+                style: AppTextStyle.titleL.copyWith(
+                  color: _foregroundColor(context),
+                ),
               ),
             ),
-          ),
+            Icon(trailingIcon, color: _foregroundColor(context)),
+          ],
         ),
       ),
     );

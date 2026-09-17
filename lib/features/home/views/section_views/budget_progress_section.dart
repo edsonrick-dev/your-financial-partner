@@ -8,11 +8,13 @@ import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/create_expense_plan_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_progress_indicator.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class BudgetProgressSection extends GetView<CashflowController> {
   const BudgetProgressSection({super.key});
@@ -28,18 +30,14 @@ class BudgetProgressSection extends GetView<CashflowController> {
           controller.seletectedDetailsTabIndex(1);
           Get.toNamed(Routes.CASHFLOWDETAILS);
         },
-        child: Obx(
-          () => controller.currentMonthBudgetItems.isEmpty
-              ? SizedBox.shrink()
-              : SizedBox(
-                  height: 44,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Center(
-                      child: Text('View budgets', style: AppTextStyle.titleM),
-                    ),
-                  ),
-                ),
+        child: SizedBox(
+          height: 44,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Center(
+              child: Text('See all budgets', style: AppTextStyle.titleS),
+            ),
+          ),
         ),
       ),
       trailingType: SectionTrailingType.custom,
@@ -137,6 +135,7 @@ class _EmptyView extends GetView<CashflowController> {
           // ),
           // SizedBox(height: 16),
           AppButton(
+            leadingIcon: PhosphorIconsRegular.plus,
             // type: ButtonType.outline,
             text: 'Go to Cashflow Planner',
             onTap: () {
@@ -273,7 +272,7 @@ class _FilledView extends StatelessWidget {
                         children: [
                           // Text('No budget yet', style: AppTextStyle.titleS),
                           Text(
-                            'Create a cashflow plan to start tracking your spending.',
+                            'Plan your cash flow to start tracking spending.',
                             style: AppTextStyle.bodyS,
                           ),
                         ],
@@ -360,9 +359,16 @@ class _FilledView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: AppButton(
-              text: 'Set up your budget',
+              leadingIcon: PhosphorIconsRegular.plus,
+              text: 'Add expense budget',
               onTap: () {
-                Get.toNamed(Routes.CASHFLOWDETAILS);
+                Get.bottomSheet(
+                  CreateExpensePlanSheet(),
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                ).whenComplete(() {
+                  controller.resetBudgetPlan();
+                });
               },
               borderRadius: 12,
             ),

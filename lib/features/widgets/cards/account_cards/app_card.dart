@@ -8,10 +8,12 @@ class AppCard extends StatelessWidget {
     required this.child,
     this.onTap,
     this.onLongPressed,
+    this.padding = 16,
   });
   final VoidCallback? onTap;
   final VoidCallback? onLongPressed;
   final Widget child;
+  final double padding;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class AppCard extends StatelessWidget {
       child: Container(
         constraints: BoxConstraints(minHeight: 52),
         width: double.infinity,
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(padding),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: colorScheme.bgLight,
@@ -35,7 +37,7 @@ class AppCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Center(child: child),
+        child: child,
       ),
     );
   }
