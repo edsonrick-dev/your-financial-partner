@@ -349,6 +349,7 @@ class _FilledView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: AppButton(
+              type: ButtonType.outline,
               leadingIcon: PhosphorIconsRegular.plus,
               text: 'Add expense budget',
               onTap: () {

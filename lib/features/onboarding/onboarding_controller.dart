@@ -71,6 +71,7 @@ class OnboardingController extends GetxController {
   bool get isLastPage => currentPage.value == totalPages - 1;
 
   void nextPage() {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (isLastPage) {
       submitAssessment();
       return;

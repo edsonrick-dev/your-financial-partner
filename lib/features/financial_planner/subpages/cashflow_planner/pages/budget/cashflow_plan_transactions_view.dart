@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/data/models/transaction_with_details.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_grouping_section.dart';
@@ -42,7 +43,7 @@ class CashflowPlanTransactionsView extends StatelessWidget {
         );
 
         return ListView(
-          padding: const EdgeInsets.only(top: 12, bottom: 24),
+          padding: EdgeInsets.only(top: 0, bottom: context.bottomPaddingSub),
           children: grouped.entries.map((entry) {
             return AppSection(
               sectionTitle: entry.key,

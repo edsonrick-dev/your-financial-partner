@@ -186,7 +186,7 @@ class ProfilePage extends GetView<FinancialProfileController> {
     }
 
     if (!controller.hasCompletedAssessment.value) {
-      Get.bottomSheet(const AscendAssessment(), isScrollControlled: false);
+      Get.bottomSheet(const AscendAssessment(), isScrollControlled: true);
       return;
     }
 
@@ -227,6 +227,7 @@ class AscendAssessment extends StatelessWidget {
               "Ascend can give you more relevant guidance and a Financial "
               "Stability Profile built around your situation.",
               style: AppTextStyle.bodyL,
+              textAlign: TextAlign.justify,
             ),
 
             SizedBox(height: 20),
@@ -254,6 +255,7 @@ class AscendAssessment extends StatelessWidget {
                         SizedBox(height: 4),
                         Text(
                           'There are no right or wrong answers. Your answers are private and will only be used to personalize your Ascen experience',
+                          textAlign: TextAlign.justify,
                         ),
                       ],
                     ),

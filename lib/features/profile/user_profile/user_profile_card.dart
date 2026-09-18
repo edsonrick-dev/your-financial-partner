@@ -33,12 +33,14 @@ class UserProfileCard extends GetView<HomeController> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: AppGradient.gradientA(colorScheme),
-                    border: Border.all(color: colorScheme.bg),
+                    border: Border.all(color: colorScheme.appInversedtext),
                   ),
                 ),
                 Text(
                   controller.userName.trim()[0],
-                  style: AppTextStyle.displayL.copyWith(color: colorScheme.bg),
+                  style: AppTextStyle.displayL.copyWith(
+                    color: colorScheme.appInversedtext,
+                  ),
                 ),
               ],
             ),
@@ -62,15 +64,15 @@ class UserProfileCard extends GetView<HomeController> {
                   ),
                   SizedBox(height: 4),
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 12),
+                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(999),
-                      color: colorScheme.appAccent,
+                      color: colorScheme.appInfo,
                     ),
                     child: Text(
                       'Free Account',
-                      style: TextStyle(
-                        color: colorScheme.pageShifterTextSelected,
+                      style: AppTextStyle.labelM.copyWith(
+                        color: colorScheme.color100,
                       ),
                     ),
                   ),

@@ -12,8 +12,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
-class ExpenseDetailsSheet extends StatelessWidget {
-  const ExpenseDetailsSheet({
+class IncomePlanDetailsSheet extends StatelessWidget {
+  const IncomePlanDetailsSheet({
     super.key,
     required this.plan,
     required this.selectedIndex,
@@ -26,7 +26,7 @@ class ExpenseDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppSheet(
       height: AppSheetHeight.full,
-      title: '${plan.category} Budget',
+      title: '${plan.category} Income Plan',
       child: StreamBuilder<List<TransactionWithDetails>>(
         stream: database.transactionsDao.watchTransactionsForCashflowPlan(plan),
         builder: (context, snapshot) {
@@ -45,7 +45,7 @@ class ExpenseDetailsSheet extends StatelessWidget {
           final monthStart = DateTime(now.year, now.month, 1);
           final nextMonth = DateTime(now.year, now.month + 1, 1);
 
-          final spent = transactions
+          final transactedAmount = transactions
               .where(
                 (item) =>
                     !item.transaction.date.isBefore(monthStart) &&
@@ -59,9 +59,9 @@ class ExpenseDetailsSheet extends StatelessWidget {
           return Column(
             children: [
               CashflowPlanSummarySection(
-                transactionType: TransactionType.spend,
+                transactionType: TransactionType.earn,
                 plan: plan,
-                transactionAmount: spent, // temporary
+                transactionAmount: transactedAmount, // temporary
                 planned: plan.amount,
               ),
 
@@ -69,7 +69,7 @@ class ExpenseDetailsSheet extends StatelessWidget {
 
               AppDetailsPageActionSection(
                 selectedIndex: selectedIndex,
-                actions: ['Transactions', 'Bills'],
+                actions: ['Transactions'],
                 onAdd: () {},
               ),
               Expanded(
@@ -80,7 +80,7 @@ class ExpenseDetailsSheet extends StatelessWidget {
                       CashflowPlanTransactionsView(plan: plan),
 
                       // Bills — implement later
-                      BillsByCategoryView(plan: plan),
+                      // BillsByCategoryView(plan: plan),
                     ],
                   ),
                 ),

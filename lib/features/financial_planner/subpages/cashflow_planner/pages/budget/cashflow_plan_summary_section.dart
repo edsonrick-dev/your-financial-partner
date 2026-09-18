@@ -3,33 +3,42 @@ import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class CashflowPlanSummarySection extends StatelessWidget {
   final SavedCashflowPlanData plan;
-  final double spent;
+  final double transactionAmount;
   final double planned;
+  final TransactionType transactionType;
 
   const CashflowPlanSummarySection({
     super.key,
     required this.plan,
-    required this.spent,
+    required this.transactionAmount,
     required this.planned,
+    required this.transactionType,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
 
-    final remaining = planned - spent;
+    final remaining = planned - transactionAmount;
 
-    final progress = planned > 0 ? (spent / planned).clamp(0.0, 1.0) : 0.0;
-
-    final isOverBudget = spent > planned;
-
-    final statusColor = isOverBudget
+    final progress = planned > 0
+        ? (transactionAmount / planned).clamp(0.0, 1.0)
+        : 0.0;
+    final percentage = planned > 0
+        ? (transactionAmount / planned * 100).clamp(0, double.infinity)
+        : 0.0;
+    final excessPlanned = transactionAmount > planned;
+    final isIncome = transactionType == TransactionType.earn;
+    final statusColor = isIncome
+        ? colorScheme.appInflowInverse
+        : excessPlanned
         ? colorScheme.appOutflowInversed
         : colorScheme.appInflowInverse;
 
@@ -69,11 +78,20 @@ class CashflowPlanSummarySection extends StatelessWidget {
                   child: _Metric(label: 'Planned', value: planned.toCurrency()),
                 ),
                 Expanded(
-                  child: _Metric(label: 'Spent', value: spent.toCurrency()),
+                  child: _Metric(
+                    label: isIncome ? 'Received' : 'Spent',
+                    value: transactionAmount.toCurrency(),
+                  ),
                 ),
                 Expanded(
                   child: _Metric(
-                    label: isOverBudget ? 'Over' : 'Remaining',
+                    label: isIncome
+                        ? excessPlanned
+                              ? 'Plan reached'
+                              : 'Still to receive'
+                        : excessPlanned
+                        ? 'Over'
+                        : 'Remaining',
                     value: remaining.abs().toCurrency(),
                     valueColor: statusColor,
                   ),
@@ -85,29 +103,51 @@ class CashflowPlanSummarySection extends StatelessWidget {
 
             LinearProgressIndicator(
               value: progress,
-              minHeight: 6,
+              minHeight: 8,
               borderRadius: BorderRadius.circular(10),
               backgroundColor: colorScheme.appInversedtext.withAlpha(40),
               valueColor: AlwaysStoppedAnimation(statusColor),
             ),
 
             const SizedBox(height: 8),
-
             Row(
               children: [
                 Text(
-                  '${(spent / (planned > 0 ? planned : 1) * 100).clamp(0, double.infinity).toStringAsFixed(0)}% used',
+                  isIncome
+                      ? '${percentage.toStringAsFixed(0)}% received'
+                      : '${percentage.toStringAsFixed(0)}% used',
                   style: AppTextStyle.bodyS.copyWith(
                     color: colorScheme.appInversedtext,
                   ),
                 ),
                 const Spacer(),
                 Text(
-                  isOverBudget ? 'Over budget' : 'Within budget',
+                  isIncome
+                      ? transactionAmount >= planned
+                            ? 'Plan reached'
+                            : 'On track'
+                      : excessPlanned
+                      ? 'Over budget'
+                      : 'Within budget',
                   style: AppTextStyle.bodyS.copyWith(color: statusColor),
                 ),
               ],
             ),
+            // Row(
+            //   children: [
+            //     Text(
+            //       '${(transactionAmount / (planned > 0 ? planned : 1) * 100).clamp(0, double.infinity).toStringAsFixed(0)}% used',
+            //       style: AppTextStyle.bodyS.copyWith(
+            //         color: colorScheme.appInversedtext,
+            //       ),
+            //     ),
+            //     const Spacer(),
+            //     Text(
+            //       excessPlanned ? 'Over budget' : 'Within budget',
+            //       style: AppTextStyle.bodyS.copyWith(color: statusColor),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),

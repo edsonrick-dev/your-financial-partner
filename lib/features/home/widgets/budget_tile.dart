@@ -271,7 +271,7 @@ class BudgetListView extends StatelessWidget {
             ),
             SizedBox(height: 8),
             BudgetProgressBar(
-              height: 12,
+              height: 8,
               progress: consumptionPercentage,
               color: progressColor,
             ),

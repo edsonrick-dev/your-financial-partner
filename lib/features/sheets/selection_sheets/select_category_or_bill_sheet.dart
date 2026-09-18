@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/app/globals/app_globals.dart';
-import 'package:getx_drift_app/core/constants/app_border_radius.dart';
-import 'package:getx_drift_app/core/constants/app_opacity.dart';
-import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
-import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
-import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/transaction/bill_list.dart';
 import 'package:getx_drift_app/features/transaction/category_list.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_grabber.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_toolbar.dart';
 
 class SelectCategoryOrBillSheet extends StatefulWidget {
   const SelectCategoryOrBillSheet({

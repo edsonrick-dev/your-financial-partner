@@ -6,6 +6,7 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/income_plan/income_plan_details_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_plan_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -50,7 +51,7 @@ class IncomePlanPage extends GetView<CashflowController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-
+    final RxInt selectedIndex = 0.obs;
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -115,6 +116,17 @@ class IncomePlanPage extends GetView<CashflowController> {
                         children: [
                           for (final plan in plans)
                             CashflowPlanCard(
+                              onTap: () {
+                                Get.bottomSheet(
+                                  IncomePlanDetailsSheet(
+                                    plan: plan,
+                                    selectedIndex: selectedIndex,
+                                  ),
+                                  backgroundColor: Colors.transparent,
+                                  isDismissible: true,
+                                  isScrollControlled: true,
+                                );
+                              },
                               color: colorScheme.appInflow,
                               category: plan.category,
                               amount: plan.amount,

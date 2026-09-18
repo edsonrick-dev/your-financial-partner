@@ -100,20 +100,68 @@ class AppButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          spacing: 12,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(leadingIcon, color: _foregroundColor(context)),
-            FittedBox(
-              child: Text(
-                text,
-                style: size.textStyle.copyWith(color: foregroundColor),
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (leadingIcon != null) ...[
+                Icon(leadingIcon, color: foregroundColor),
+                const SizedBox(width: 8),
+              ],
+
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    text,
+                    style: size.textStyle.copyWith(color: foregroundColor),
+                  ),
+                ),
               ),
-            ),
-            Icon(trailingIcon, color: _foregroundColor(context)),
-          ],
+
+              if (trailingIcon != null) ...[
+                const SizedBox(width: 8),
+                Icon(trailingIcon, color: foregroundColor),
+              ],
+            ],
+          ),
         ),
+        // Stack(
+        //   alignment: Alignment.center,
+        //   // spacing: 12,
+        //   // mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     Row(
+        //       children: [
+        //         if (leadingIcon != null)
+        //           Icon(leadingIcon, color: _foregroundColor(context)),
+
+        //         Spacer(),
+
+        //         if (trailingIcon != null)
+        //           Icon(trailingIcon, color: _foregroundColor(context)),
+        //       ],
+        //     ),
+
+        //     Center(
+        //       child: Row(
+        //         children: [
+        //           if (leadingIcon != null) SizedBox(width: 32),
+        //           Expanded(
+        //             child: FittedBox(
+        //               fit: BoxFit.scaleDown,
+        //               child: Text(
+        //                 text,
+        //                 style: size.textStyle.copyWith(color: foregroundColor),
+        //               ),
+        //             ),
+        //           ),
+        //           if (trailingIcon != null) SizedBox(width: 32),
+        //         ],
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }

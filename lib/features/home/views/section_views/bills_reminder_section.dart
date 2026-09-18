@@ -17,6 +17,7 @@ import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 import 'package:intl/intl.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class BillsReminderSection extends GetView<CashflowController> {
   const BillsReminderSection({super.key});
@@ -167,6 +168,8 @@ class BillsReminderSection extends GetView<CashflowController> {
                   if (bills.isEmpty) ...[
                     SizedBox(height: 12),
                     AppButton(
+                      type: ButtonType.outline,
+                      leadingIcon: PhosphorIconsRegular.plus,
                       text: 'Add your first bill',
                       onTap: () {
                         Get.bottomSheet(
