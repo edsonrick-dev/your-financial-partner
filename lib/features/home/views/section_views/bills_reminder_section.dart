@@ -175,7 +175,7 @@ class BillsReminderSection extends GetView<CashflowController> {
                       Column(
                         children: [
                           Icon(
-                            Icons.receipt_long,
+                            Icons.receipt_long_outlined,
                             size: 60,
                             color: colorScheme.appAccent,
                           ),

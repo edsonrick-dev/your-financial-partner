@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/core/theme/field_themes/field_color.dart';
 import 'package:getx_drift_app/data/enums/field_states.dart';
@@ -11,6 +12,8 @@ class AppFieldContainer extends StatelessWidget {
   final double trailingPadding;
   final double padding;
   final bool fixedHeight;
+  final bool fixedWidth;
+  final double width;
 
   const AppFieldContainer({
     super.key,
@@ -21,6 +24,8 @@ class AppFieldContainer extends StatelessWidget {
     this.state,
     this.value,
     this.fixedHeight = true,
+    this.fixedWidth = false,
+    this.width = 60,
   });
 
   bool get isFilled => value != null && value!.isNotEmpty;
@@ -48,17 +53,17 @@ class AppFieldContainer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            GestureDetector(
+            AdaptivePressable(
               onTap: onTap,
               child: Container(
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(
                   top: 8,
                   bottom: 8,
-                  left: 12,
+                  left: padding,
                   right: trailingPadding,
                 ),
-                width: double.infinity,
+                width: fixedWidth ? width : double.infinity,
                 height: fixedHeight ? 60 : null,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),

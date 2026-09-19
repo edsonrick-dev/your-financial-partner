@@ -102,7 +102,7 @@ class _EmptyView extends GetView<CashflowController> {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(8),
       child: Column(
         children: [
           Icon(Icons.toc_rounded, size: 60, color: colorScheme.appAccent),
@@ -127,7 +127,7 @@ class _EmptyView extends GetView<CashflowController> {
           AppButton(
             type: ButtonType.outline,
             leadingIcon: PhosphorIconsRegular.plus,
-            text: 'Add expense budget',
+            text: 'Budget a category',
             onTap: () {
               Get.bottomSheet(
                 CreateExpensePlanSheet(),
@@ -137,7 +137,6 @@ class _EmptyView extends GetView<CashflowController> {
                 controller.resetBudgetPlan();
               });
             },
-            borderRadius: 12,
           ),
           // AppButton(
           //   leadingIcon: PhosphorIconsRegular.plus,
@@ -441,7 +440,7 @@ class _BudgetList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 8,
+      spacing: 12,
       children: [
         for (final item in items)
           BudgetListView(
@@ -451,7 +450,7 @@ class _BudgetList extends StatelessWidget {
             consumption: item.spent,
             budget: item.budget,
           ),
-        SizedBox(height: 4),
+        // SizedBox(height: 4),
       ],
     );
   }

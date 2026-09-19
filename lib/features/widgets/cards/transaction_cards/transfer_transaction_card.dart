@@ -20,7 +20,7 @@ class TransferTransactionCard extends GetView<TransactionController> {
     final colorScheme = context.colors;
     return AdaptivePressable(
       onTap: () {
-        AppSheets.transaction.transfer(item);
+        AppSheets.transaction.transfer(item: item);
       },
       onLongPress: () async {
         final confirmed = await showDialog<bool>(

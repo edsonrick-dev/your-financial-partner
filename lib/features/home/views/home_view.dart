@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
+import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
@@ -47,7 +48,22 @@ class HomeView extends GetView<HomeController> {
               children: [
                 // HEADER
                 _greetingSection(colorScheme),
-
+                // AppSection(
+                //   child: Column(
+                //     spacing: 8,
+                //     children: AppIcons.categories.availableIcons.map((item) {
+                //       return Row(
+                //         children: [
+                //           Icon(item.icon),
+                //           const SizedBox(width: 8),
+                //           Expanded(child: Text(item.key)),
+                //           const SizedBox(width: 8),
+                //           Text(item.group.name),
+                //         ],
+                //       );
+                //     }).toList(),
+                //   ),
+                // ),
                 Padding(
                   padding: EdgeInsets.only(top: spacingL),
                   child: AppSection(

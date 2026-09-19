@@ -14,7 +14,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/update_account_balance_sheet.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
-import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
+import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 

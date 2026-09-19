@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
@@ -7,11 +8,15 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
+import 'package:getx_drift_app/features/add_transaction_sheet.dart';
 import 'package:getx_drift_app/features/widgets/cards/person_activity_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/models/person_debt_activity.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
+import 'package:getx_drift_app/shared/anchored_action_menu.dart';
+import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class PersonalBalanceDetailsSheet extends StatelessWidget {
   const PersonalBalanceDetailsSheet({super.key, required this.entityId});
@@ -24,10 +29,10 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
 
     switch (item.transaction.type) {
       case TransactionType.give:
-        AppSheets.transaction.giveMoney(item);
+        AppSheets.transaction.giveMoney(item: item);
 
       case TransactionType.receive:
-        AppSheets.transaction.receiveMoney(item);
+        AppSheets.transaction.receiveMoney(item: item);
 
       case TransactionType.spend:
         AppSheets.transaction.spend(item: item);
@@ -39,11 +44,14 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final RxInt selectedIndex = 0.obs;
     final colorScheme = context.colors;
+    final LayerLink addButtonLink = LayerLink();
+    final RxBool isAddMenuOpen = false.obs;
     return AppSheet(
       title: 'Personal Balance',
       height: AppSheetHeight.full,
-      child: Column(
+      child: Stack(
         children: [
           Column(
             children: [
@@ -68,7 +76,6 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Row(
-                            spacing: 8,
                             children: [
                               Stack(
                                 alignment: Alignment.center,
@@ -93,7 +100,7 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
                                   ),
                                 ],
                               ),
-
+                              SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   summary.entity.name,
@@ -104,13 +111,14 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              SizedBox(width: 16),
                               Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   Opacity(
                                     opacity: 0.8,
                                     child: Container(
+                                      alignment: Alignment.center,
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 12,
                                         vertical: 4,
@@ -119,8 +127,8 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
                                         color: summary.isSettled
                                             ? colorScheme.appNeutral
                                             : summary.owesMe
-                                            ? colorScheme.appText
-                                            : colorScheme.appText,
+                                            ? colorScheme.appOutflowInversed
+                                            : colorScheme.appInflowInverse,
                                         borderRadius: BorderRadius.circular(
                                           999,
                                         ),
@@ -131,9 +139,7 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
                                             : summary.iOwe
                                             ? 'You Owe'
                                             : 'Settled',
-                                        style: AppTextStyle.labelM.copyWith(
-                                          color: Colors.transparent,
-                                        ),
+                                        style: AppTextStyle.labelM,
                                       ),
                                     ),
                                   ),
@@ -179,72 +185,103 @@ class PersonalBalanceDetailsSheet extends StatelessWidget {
                   );
                 },
               ),
+              AppDetailsPageActionSection(
+                selectedIndex: selectedIndex,
+                actions: ['Transactions'],
+                addButtonLink: addButtonLink,
+                onAdd: () {
+                  isAddMenuOpen.toggle();
+                },
+                isAddMenuOpen: isAddMenuOpen,
+              ),
+
+              Expanded(
+                child: StreamBuilder<Map<String, List<PersonDebtActivity>>>(
+                  stream: database.peopleBalanceDao
+                      .watchGroupedPersonDebtActivity(entityId),
+                  builder: (context, snapshot) {
+                    final groups = snapshot.data ?? {};
+
+                    return ListView(
+                      children: groups.entries.map((entry) {
+                        return AppSection(
+                          sectionTitle: entry.key,
+                          child: Column(
+                            spacing: 12,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ...entry.value.map(
+                                (activity) => PersonDebtActivityCard(
+                                  activity: activity,
+                                  // onTap: () {
+                                  //   openTransactionSheet(activity);
+                                  // },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8, right: 4.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 44,
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        decoration: BoxDecoration(
-                          // color: Colors.blue,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Transactions',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: Icon(PhosphorIconsRegular.plus),
-                // ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: StreamBuilder<Map<String, List<PersonDebtActivity>>>(
-              stream: database.peopleBalanceDao.watchGroupedPersonDebtActivity(
-                entityId,
-              ),
-              builder: (context, snapshot) {
-                final groups = snapshot.data ?? {};
-
-                return ListView(
-                  children: groups.entries.map((entry) {
-                    return AppSection(
-                      sectionTitle: entry.key,
-                      child: Column(
-                        spacing: 12,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ...entry.value.map(
-                            (activity) => PersonDebtActivityCard(
-                              activity: activity,
-                              // onTap: () {
-                              //   openTransactionSheet(activity);
-                              // },
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                );
+          Obx(
+            () => AnchoredActionMenu(
+              isOpen: isAddMenuOpen.value,
+              link: addButtonLink,
+              onDismiss: () {
+                isAddMenuOpen.value = false;
               },
+              child: selectedIndex.value == 0
+                  ? Column(
+                      spacing: 12,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        NewTransactionButton(
+                          color: colorScheme.appOutflow,
+                          icon: Icons.remove,
+                          label: 'Split Expense',
+                          onTap: () {
+                            // AppSheets.transaction.spend(
+                            //   account: currentAccount,
+                            // );
+                            isAddMenuOpen.toggle();
+                          },
+                        ),
+
+                        NewTransactionButton(
+                          color: colorScheme.appInflow,
+                          icon: PhosphorIconsRegular.handCoins,
+                          label: 'Receive Debt Payment',
+                          onTap: () {
+                            // AppSheets.transaction.receiveMoney(
+                            //   account: currentAccount,
+                            // );
+                            isAddMenuOpen.toggle();
+                          },
+                        ),
+                        NewTransactionButton(
+                          color: colorScheme.appOutflow,
+                          icon: PhosphorIconsRegular.handDeposit,
+                          label: 'Give Debt Payment',
+                          onTap: () {
+                            // AppSheets.transaction.giveMoney(
+                            //   account: currentAccount,
+                            // );
+                            isAddMenuOpen.toggle();
+                          },
+                        ),
+                      ],
+                    )
+                  : const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [Text('Add Goal Reservation')],
+                    ),
             ),
           ),
         ],

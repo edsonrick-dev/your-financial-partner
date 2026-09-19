@@ -25,7 +25,7 @@ class GiveMoneyTransactionCard extends GetView<TransactionController> {
 
     return AdaptivePressable(
       onTap: () {
-        AppSheets.transaction.giveMoney(item);
+        AppSheets.transaction.giveMoney(item: item);
       },
       onLongPress: () async {
         final confirmed = await showDialog<bool>(

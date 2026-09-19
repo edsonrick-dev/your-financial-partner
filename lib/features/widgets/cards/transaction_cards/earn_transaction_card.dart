@@ -19,7 +19,7 @@ class EarnTransactionCard extends GetView<TransactionController> {
     final colorScheme = context.colors;
     return AdaptivePressable(
       onTap: () {
-        AppSheets.transaction.earn(item);
+        AppSheets.transaction.earn(item: item);
       },
       onLongPress: () async {
         final confirmed = await showDialog<bool>(

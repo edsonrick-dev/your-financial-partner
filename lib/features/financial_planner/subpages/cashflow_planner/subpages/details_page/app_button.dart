@@ -6,15 +6,20 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 enum ButtonType { primary, outline, ghost }
 
 enum ButtonSize {
-  small(height: 28, textStyle: AppTextStyle.titleS),
-  medium(height: 36, textStyle: AppTextStyle.titleM),
-  large(height: 40, textStyle: AppTextStyle.titleL),
-  xLarge(height: 52, textStyle: AppTextStyle.titleL);
+  small(height: 28, textStyle: AppTextStyle.titleS, iconSize: 12),
+  medium(height: 36, textStyle: AppTextStyle.titleM, iconSize: 16),
+  large(height: 40, textStyle: AppTextStyle.titleL, iconSize: 20),
+  xLarge(height: 52, textStyle: AppTextStyle.titleL, iconSize: 20);
 
-  const ButtonSize({required this.height, required this.textStyle});
+  const ButtonSize({
+    required this.height,
+    required this.textStyle,
+    required this.iconSize,
+  });
 
   final double height;
   final TextStyle textStyle;
+  final double iconSize;
 }
 
 class AppButton extends StatelessWidget {
@@ -105,7 +110,7 @@ class AppButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (leadingIcon != null) ...[
-                Icon(leadingIcon, color: foregroundColor),
+                Icon(leadingIcon, color: foregroundColor, size: size.iconSize),
                 const SizedBox(width: 8),
               ],
 

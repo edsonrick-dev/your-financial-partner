@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -15,7 +16,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
-import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
+import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/organize_THIS/app_mode_item.dart';
@@ -201,7 +202,32 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
 
                 return Column(
                   spacing: 12,
-                  children: [const CashFlowDistributionFields()],
+                  children: [
+                    const CashFlowDistributionFields(),
+                    Row(
+                      children: [
+                        Spacer(),
+                        AdaptivePressable(
+                          onTap: () {
+                            controller.clearDistributionFields();
+                          },
+                          child: SizedBox(
+                            height: 40,
+                            child: Row(
+                              children: [
+                                Icon(PhosphorIconsRegular.trash, size: 20),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Clear fields',
+                                  style: AppTextStyle.titleM,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 );
               }),
 

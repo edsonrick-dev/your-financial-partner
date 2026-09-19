@@ -8,7 +8,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/loan_detail_sheet/loan_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/app_date_picker.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
-import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
+import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/widgets/bill_frequency_selector.dart';
 import 'package:intl/intl.dart';

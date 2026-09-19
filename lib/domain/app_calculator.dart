@@ -12,7 +12,8 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
 class AppCalculator extends GetView<AppCalculatorController> {
-  const AppCalculator({super.key});
+  const AppCalculator({super.key, this.title});
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class AppCalculator extends GetView<AppCalculatorController> {
     final gridSpacing = 8.0;
     return AppSheet(
       adaptiveHeight: true,
-      title: 'Amount',
+      title: title ?? 'Amount',
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

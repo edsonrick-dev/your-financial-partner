@@ -5,7 +5,7 @@ import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/app_date_picker.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
-import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
+import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/domain/app_calculator.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -39,7 +41,7 @@ class ParticipantCard extends GetView<TransactionController> {
     }
   }
 
-  Future<void> _openCalculator(BuildContext context) async {
+  Future<void> _openCalculator(BuildContext context, String title) async {
     final calculatorController = Get.find<AppCalculatorController>();
 
     final mode = controller.splitMode.value;
@@ -51,7 +53,7 @@ class ParticipantCard extends GetView<TransactionController> {
     calculatorController.initialize(originalValue);
 
     final result = await Get.bottomSheet<double>(
-      const AppCalculator(),
+      AppCalculator(title: title),
       isScrollControlled: true,
     );
 
@@ -96,7 +98,12 @@ class ParticipantCard extends GetView<TransactionController> {
       final isActive = participant.isActive.value;
 
       return AdaptivePressable(
-        onTap: () => _openCalculator(context),
+        onTap: () => _openCalculator(
+          context,
+          controller.splitMode.value == SplitMode.percentage
+              ? 'Percentage'
+              : 'Amount',
+        ),
         onLongPress: isMe
             ? null
             : () async {
@@ -139,10 +146,22 @@ class ParticipantCard extends GetView<TransactionController> {
           ),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: colorScheme.appText,
-                child: Text(participant.name[0].toUpperCase()),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: AppGradient.gradientA(colorScheme),
+                    ),
+                  ),
+                  Text(
+                    participant.name.trim().substring(0, 2).toUpperCase(),
+                    style: AppTextStyle.titleM,
+                  ),
+                ],
               ),
 
               const SizedBox(width: 12),
@@ -151,32 +170,23 @@ class ParticipantCard extends GetView<TransactionController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      participant.name,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
+                    Text(participant.name, style: AppTextStyle.titleL),
 
                     Obx(() {
                       return controller.splitMode.value == SplitMode.percentage
                           ? Text(
                               (participant.amount.value).toCurrency(),
-                              style: const TextStyle(fontSize: 12),
+                              style: AppTextStyle.amountS,
                             )
                           : Text(
                               '${(participant.percentage.value * 100).toStringAsFixed(2)}%',
-                              style: const TextStyle(fontSize: 12),
+                              style: AppTextStyle.amountS,
                             );
                     }),
                   ],
                 ),
               ),
-              Text(
-                participantValue(participant),
-                style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontFeatures: [FontFeature.tabularFigures()],
-                ),
-              ),
+              Text(participantValue(participant), style: AppTextStyle.amountM),
             ],
           ),
         ),

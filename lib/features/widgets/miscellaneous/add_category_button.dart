@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
-import 'package:getx_drift_app/organize_THIS/icon_selector_sheet.dart';
+import 'package:getx_drift_app/core/constants/icons/icon_selector_sheet.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_category_sheet/create_category_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/icon_picker_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
@@ -70,7 +70,10 @@ class _BuildExpanded extends StatelessWidget {
               () => AppIconPickerField(
                 iconKey: controller.selectedIconKey.value,
                 onTap: () {
-                  Get.bottomSheet(IconSelectorSheet(controller: controller));
+                  Get.bottomSheet(
+                    CategoryIconSelector(controller: controller),
+                    isScrollControlled: true,
+                  );
                 },
               ),
             ),

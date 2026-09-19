@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 
@@ -56,8 +57,8 @@ class _PersonCardState extends State<PersonCard> {
             children: [
               Container(
                 alignment: Alignment.center,
-                height: 36,
-                width: 36,
+                height: 40,
+                width: 40,
                 decoration: BoxDecoration(
                   gradient: AppGradient.gradientA(colorScheme),
                   // color: colorScheme.appText,
@@ -65,7 +66,7 @@ class _PersonCardState extends State<PersonCard> {
                 ),
                 child: Text(
                   widget.person.name.trim()[0].toUpperCase(),
-                  style: TextStyle(color: colorScheme.surface),
+                  style: AppTextStyle.titleL,
                 ),
               ),
               const SizedBox(width: 12),
@@ -74,7 +75,7 @@ class _PersonCardState extends State<PersonCard> {
                   widget.person.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 15, height: 20 / 15),
+                  style: AppTextStyle.titleL,
                 ),
               ),
               if (widget.isSelected) ...[

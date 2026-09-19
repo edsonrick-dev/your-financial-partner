@@ -176,7 +176,7 @@ class BudgetListView extends StatelessWidget {
       },
       child: Container(
         // color: colorScheme.appAccent,
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         constraints: BoxConstraints(minHeight: 60),
         child: Column(
           children: [

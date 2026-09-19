@@ -56,6 +56,7 @@ class MainShellController extends GetxController {
     isAddSheetOpen.value = true;
 
     await AppSheets.addTransactionSheet();
+
     isAddSheetOpen.value = false;
   }
 }

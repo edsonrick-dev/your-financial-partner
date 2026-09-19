@@ -49,7 +49,7 @@ class DefaultCategories {
     ),
     DefaultCategory(
       name: 'Fuel',
-      iconKey: 'gasPump',
+      iconKey: 'fuel',
       type: TransactionType.spend.name,
     ),
     DefaultCategory(
@@ -59,17 +59,12 @@ class DefaultCategories {
     ),
     DefaultCategory(
       name: 'Education',
-      iconKey: 'graduationCap',
+      iconKey: 'graduation',
       type: TransactionType.spend.name,
     ),
-    // DefaultCategory(
-    //   name: 'Kids Stuff',
-    //   iconKey: 'babyCarriage',
-    //   type: TransactionType.spend.name,
-    // ),
     DefaultCategory(
       name: 'Rent',
-      iconKey: 'houseLine',
+      iconKey: 'building',
       type: TransactionType.spend.name,
     ),
     DefaultCategory(

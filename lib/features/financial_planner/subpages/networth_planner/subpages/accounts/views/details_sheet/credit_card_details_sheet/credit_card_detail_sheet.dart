@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/features/add_transaction_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_bills_payment_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_summary_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_transactions_view.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
+import 'package:getx_drift_app/shared/anchored_action_menu.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CreditCardDetailSheet extends StatelessWidget {
   final AccountsTableData account;
@@ -17,7 +22,9 @@ class CreditCardDetailSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RxInt selectedIndex = 0.obs;
-
+    final colorScheme = context.colors;
+    final LayerLink addButtonLink = LayerLink();
+    final RxBool isAddMenuOpen = false.obs;
     return AppSheet(
       height: AppSheetHeight.full,
       title: account.name,
@@ -38,27 +45,84 @@ class CreditCardDetailSheet extends StatelessWidget {
             return const Center(child: Text('Account no longer exists.'));
           }
 
-          return Column(
+          return Stack(
             children: [
-              CreditCardSummarySection(account: currentAccount),
+              Column(
+                children: [
+                  CreditCardSummarySection(account: currentAccount),
 
-              const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-              AppDetailsPageActionSection(
-                selectedIndex: selectedIndex,
-                actions: const ['Transactions', 'Bills Payment'],
-                // onAdd: () {},
-              ),
-
-              Expanded(
-                child: Obx(
-                  () => IndexedStack(
-                    index: selectedIndex.value,
-                    children: [
-                      CreditCardTransactionsView(accountId: currentAccount.id),
-                      CreditCardBillsPaymentView(accountId: currentAccount.id),
-                    ],
+                  AppDetailsPageActionSection(
+                    selectedIndex: selectedIndex,
+                    actions: const ['Transactions', 'Payment History'],
+                    addButtonLink: addButtonLink,
+                    onAdd: () {
+                      isAddMenuOpen.toggle();
+                    },
+                    isAddMenuOpen: isAddMenuOpen,
                   ),
+
+                  Expanded(
+                    child: Obx(
+                      () => IndexedStack(
+                        index: selectedIndex.value,
+                        children: [
+                          CreditCardTransactionsView(
+                            accountId: currentAccount.id,
+                          ),
+                          CreditCardBillsPaymentView(
+                            accountId: currentAccount.id,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Obx(
+                () => AnchoredActionMenu(
+                  isOpen: isAddMenuOpen.value,
+                  link: addButtonLink,
+                  onDismiss: () {
+                    isAddMenuOpen.value = false;
+                  },
+                  child: selectedIndex.value == 0
+                      ? Column(
+                          spacing: 12,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            NewTransactionButton(
+                              color: colorScheme.appOutflow,
+                              icon: Icons.remove,
+                              label: 'Spend Money',
+                              onTap: () {
+                                AppSheets.transaction.spend(
+                                  account: currentAccount,
+                                );
+                                isAddMenuOpen.toggle();
+                              },
+                            ),
+                          ],
+                        )
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            NewTransactionButton(
+                              color: colorScheme.appAccent,
+                              icon: Icons.sync_alt_sharp,
+                              label: 'Pay Credit Balance',
+                              onTap: () {
+                                // AppSheets.transaction.transfer(
+                                //   fromAccount: currentAccount,
+                                // );
+                                isAddMenuOpen.toggle();
+                              },
+                            ),
+                          ],
+                        ),
                 ),
               ),
             ],

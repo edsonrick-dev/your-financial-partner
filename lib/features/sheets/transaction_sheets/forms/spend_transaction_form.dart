@@ -9,7 +9,7 @@ import 'package:getx_drift_app/features/transaction/controllers/extensions/dropd
 import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_validation_extension.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/split_expense_section.dart';
-import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
+import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -59,6 +59,9 @@ class SpendTransactionForm extends GetView<TransactionController> {
                 label: controller.selectedBill.value != null
                     ? 'Bill'
                     : 'Category',
+                showIcon:
+                    controller.selectedBill.value?.category?.icon != null ||
+                    controller.selectedCategory.value?.icon != null,
                 iconKey:
                     controller.selectedBill.value?.category?.icon ??
                     controller.selectedCategory.value?.icon ??
@@ -169,6 +172,7 @@ class SpendTransactionForm extends GetView<TransactionController> {
                   children: [
                     AppDropdownField(
                       label: 'Personal Account',
+                      showIcon: controller.selectedAccount.value?.icon != null,
                       iconKey:
                           controller.selectedAccount.value?.icon ?? 'account',
                       value: controller.selectedAccount.value?.name,

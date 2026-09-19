@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
@@ -19,7 +20,7 @@ class SplitModeSelector extends GetView<TransactionController> {
       return Container(
         height: 44,
         decoration: BoxDecoration(
-          color: colorScheme.bgLight,
+          color: colorScheme.pageShifterFillUnselected,
           borderRadius: BorderRadius.circular(999),
         ),
 
@@ -47,7 +48,7 @@ class SplitModeSelector extends GetView<TransactionController> {
 
                     child: Container(
                       decoration: BoxDecoration(
-                        color: colorScheme.appText,
+                        color: colorScheme.pageShifterFillSelected,
                         borderRadius: BorderRadius.circular(999),
                       ),
                     ),
@@ -83,10 +84,10 @@ class SplitModeSelector extends GetView<TransactionController> {
 
                             curve: Curves.easeOut,
 
-                            style: TextStyle(
-                              color: isSelected ? Colors.white : Colors.black,
-
-                              fontWeight: FontWeight.w600,
+                            style: AppTextStyle.titleM.copyWith(
+                              color: isSelected
+                                  ? colorScheme.pageShifterTextSelected
+                                  : colorScheme.pageShifterTextUnselected,
                             ),
 
                             child: Text(mode.name.capitalize!),

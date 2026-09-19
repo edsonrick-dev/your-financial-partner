@@ -55,7 +55,7 @@ class AppTextField extends StatelessWidget {
                 textInputAction: multiLine
                     ? TextInputAction.newline
                     : TextInputAction.done,
-                style: AppTextStyle.titleM,
+                style: AppTextStyle.titleL,
                 decoration: InputDecoration(
                   prefixText: prefixText ?? '',
                   isDense: true,

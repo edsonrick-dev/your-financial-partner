@@ -6,7 +6,7 @@ import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transact
 import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/features/widgets/fields/dropdown_field.dart';
+import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
@@ -16,7 +16,7 @@ class ReceiveMoneyTransactionForm extends GetView<TransactionController> {
 
   @override
   Widget build(BuildContext context) {
-    final transactionType = TransactionType.transfer;
+    final transactionType = TransactionType.receive;
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: AppSection(
@@ -47,6 +47,7 @@ class ReceiveMoneyTransactionForm extends GetView<TransactionController> {
             Obx(
               () => AppDropdownField(
                 label: 'From',
+                showIcon: controller.selectedPerson.value?.name != null,
                 iconKey: 'user',
                 value: controller.selectedPerson.value?.name,
                 hint: 'Select person',
@@ -66,6 +67,7 @@ class ReceiveMoneyTransactionForm extends GetView<TransactionController> {
             Obx(
               () => AppDropdownField(
                 label: 'Account',
+                showIcon: controller.selectedAccount.value?.icon != null,
                 iconKey: controller.selectedAccount.value?.icon ?? 'wallet',
                 value: controller.selectedAccount.value?.name,
                 hint: 'Select account',

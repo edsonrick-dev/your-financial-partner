@@ -1276,6 +1276,12 @@ class CashflowController extends GetxController {
     );
   }
 
+  void clearDistributionFields() {
+    for (final amount in distributionAmounts) {
+      amount.value = 0.0;
+    }
+  }
+
   void disposeDistributionFields() {
     /// Removes all custom allocation state.
 

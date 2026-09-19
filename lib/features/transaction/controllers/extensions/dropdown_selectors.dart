@@ -30,6 +30,14 @@ extension DropdownSelectors on TransactionController {
     selectedCategory.value = result;
   }
 
+  void setSelectedAccount(AccountsTableData account) {
+    selectedAccount.value = account;
+
+    if (selectedLinkedAccount.value?.id == account.id) {
+      selectedLinkedAccount.value = null;
+    }
+  }
+
   Future<void> selectAccount(TransactionType transactionType) async {
     final result = await AppSheets.selection.selectAccount(transactionType);
 

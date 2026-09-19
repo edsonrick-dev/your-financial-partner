@@ -1,0 +1,31 @@
+enum IconGroup {
+  general,
+
+  groceries,
+  shopping,
+  utilities,
+  education,
+
+  realProperty,
+  system,
+  mobilityTravel,
+  entertainment,
+
+  people,
+  clothing,
+  office,
+  workProfession,
+  finance,
+  leisure,
+  health,
+  sports,
+  animals,
+  electronicsCommunication,
+  beauty,
+  musicEntertainment,
+  friendsFamily,
+  household,
+  nature,
+  brands,
+  others,
+}
