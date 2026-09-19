@@ -5,10 +5,11 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class NetWorthEmptyView extends StatelessWidget {
+class NetWorthEmptyView extends GetView<NetWorthController> {
   const NetWorthEmptyView({super.key});
 
   @override
@@ -77,6 +78,7 @@ class NetWorthEmptyView extends StatelessWidget {
                     AppButton(
                       text: 'Build your net worth plan',
                       onTap: () {
+                        controller.seletectedDetailsTabIndex.value = 0;
                         Get.toNamed(Routes.NETWORTHDETAILS);
                       },
                     ),

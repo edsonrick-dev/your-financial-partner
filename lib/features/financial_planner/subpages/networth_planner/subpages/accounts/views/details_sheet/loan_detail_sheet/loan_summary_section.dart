@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
@@ -26,11 +28,26 @@ class LoanSummarySection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Current Balance',
-              style: AppTextStyle.titleL.copyWith(
-                color: colorScheme.appInversedtextMuted,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Current Balance',
+                    style: AppTextStyle.titleL.copyWith(
+                      color: colorScheme.appInversedtextMuted,
+                    ),
+                  ),
+                ),
+                AdaptivePressable(
+                  onTap: () {
+                    AppSheets.openAccountActionSheet(account);
+                  },
+                  child: Icon(
+                    Icons.more_horiz,
+                    color: colorScheme.appInversedtext,
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 4),

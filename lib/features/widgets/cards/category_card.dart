@@ -4,6 +4,7 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CategoryCard extends StatelessWidget {
   final CashflowCategoriesTableData category;
@@ -24,12 +25,13 @@ class CategoryCard extends StatelessWidget {
     return AppCard(
       padding: 0,
       onTap: onTap,
+      borderColor: isSelected ? colorScheme.appText : null,
       // behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
           children: [
-            Icon(AppIcons.categories.resolve(category.icon), size: 16),
+            Icon(AppIcons.categories.resolve(category.icon), size: 20),
 
             const SizedBox(width: 12),
 
@@ -44,16 +46,7 @@ class CategoryCard extends StatelessWidget {
 
             if (isSelected) ...[
               const SizedBox(width: 12),
-
-              Container(
-                width: 14,
-                height: 14,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: colorScheme.appAccent,
-                ),
-                child: const Icon(Icons.check, size: 10, color: Colors.white),
-              ),
+              Icon(PhosphorIconsFill.checkCircle),
             ],
           ],
         ),

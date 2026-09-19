@@ -12,30 +12,16 @@ class LoanAccountForm extends GetView<AccountController> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      // spacing: 20,
       children: [
         AppSection(
           child: Column(
             spacing: 20,
             children: [
-              Row(
-                children: [
-                  // Obx(
-                  //   () => AppIconPickerField(
-                  //     iconKey: controller.selectedIconKey.value,
-                  //     onTap: () {},
-                  //   ),
-                  // ),
-                  // const SizedBox(width: 8),
-                  Expanded(
-                    child: AppTextField(
-                      label: 'Name',
-                      focusNode: controller.nameFocusNode,
-                      controller: controller.nameController,
-                      onChanged: controller.setAccountName,
-                    ),
-                  ),
-                ],
+              AppTextField(
+                label: 'Name',
+                focusNode: controller.nameFocusNode,
+                controller: controller.nameController,
+                onChanged: controller.setAccountName,
               ),
 
               Obx(
@@ -52,7 +38,6 @@ class LoanAccountForm extends GetView<AccountController> {
         ),
         SizedBox(height: 20),
         const LoanPaymentScheduleSection(),
-        SizedBox(height: 16),
       ],
     );
   }

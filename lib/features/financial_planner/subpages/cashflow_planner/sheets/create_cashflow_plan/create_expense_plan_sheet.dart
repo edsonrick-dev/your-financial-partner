@@ -214,12 +214,20 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
               SizedBox(height: spacingHeight),
 
               Obx(() {
+                final isCustom =
+                    controller.selectedDistribution.value ==
+                    CashFlowDistribution.custom;
+
+                final hasValidAmount = isCustom
+                    ? controller.distributionTotal > 0
+                    : controller.amount.value > 0;
+
                 final isValid =
                     transactionController.selectedCategory.value != null &&
-                    controller.amount.value > 0;
+                    hasValidAmount;
+
                 return AppButton(
                   text: 'Save Expense Plan',
-
                   onTap: isValid
                       ? () async {
                           await controller.saveCashflowPlan(

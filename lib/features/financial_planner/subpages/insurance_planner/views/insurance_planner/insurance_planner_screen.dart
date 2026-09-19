@@ -19,52 +19,52 @@ class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
   Widget build(BuildContext context) {
     final financialProfileController = Get.find<FinancialProfileController>();
     const learnEngine = LearnEngine();
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: context.topPadding,
-          bottom: context.bottomPadding,
-        ),
-        child: Column(
-          spacing: 20,
-          children: [
-            Obx(() {
-              if (controller.isUnderConstruction.value) {
-                return InsurancePlannerEmptyView();
-              }
-              return InsurancePlannerContentView();
-            }),
-            Obx(() {
-              final recommendations = learnEngine.getRecommendedContent(
-                state: financialProfileController.financialState,
-                context: LearnContext.insurance,
-                contents: learnContentLibrary,
-              );
+    return Obx(() {
+      if (controller.isUnderConstruction.value) {
+        return InsurancePlannerEmptyView();
+      }
+      return SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: context.topPadding,
+            bottom: context.bottomPadding,
+          ),
+          child: Column(
+            spacing: 20,
+            children: [
+              InsurancePlannerContentView(),
+              Obx(() {
+                final recommendations = learnEngine.getRecommendedContent(
+                  state: financialProfileController.financialState,
+                  context: LearnContext.insurance,
+                  contents: learnContentLibrary,
+                );
 
-              if (recommendations.isEmpty) {
-                return const SizedBox.shrink();
-              }
+                if (recommendations.isEmpty) {
+                  return const SizedBox.shrink();
+                }
 
-              return LearningSection(
-                subtitle: 'Build a good understanding of your net worth',
-                state: LearningSectionState.available,
-                contents: recommendations
-                    .map(
-                      (content) => LearnThumbnail(
-                        title: content.title,
-                        description: content.description,
-                        type: content.type,
-                        onTap: () {
-                          // Open lesson
-                        },
-                      ),
-                    )
-                    .toList(),
-              );
-            }),
-          ],
+                return LearningSection(
+                  subtitle: 'Build a good understanding of your net worth',
+                  state: LearningSectionState.available,
+                  contents: recommendations
+                      .map(
+                        (content) => LearnThumbnail(
+                          title: content.title,
+                          description: content.description,
+                          type: content.type,
+                          onTap: () {
+                            // Open lesson
+                          },
+                        ),
+                      )
+                      .toList(),
+                );
+              }),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

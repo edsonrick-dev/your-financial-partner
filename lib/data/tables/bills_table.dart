@@ -17,8 +17,11 @@ class BillsTable extends Table {
   /// Loan account paid by this bill.
   ///
   /// Null when this is a normal expense bill.
-  IntColumn get loanAccountId =>
-      integer().nullable().references(AccountsTable, #id)();
+  IntColumn get loanAccountId => integer().nullable().references(
+    AccountsTable,
+    #id,
+    onDelete: KeyAction.cascade,
+  )();
 
   /// The amount the user normally expects to pay.
   RealColumn get expectedAmount => real()();

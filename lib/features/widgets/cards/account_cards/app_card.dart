@@ -9,11 +9,13 @@ class AppCard extends StatelessWidget {
     this.onTap,
     this.onLongPressed,
     this.padding = 16,
+    this.borderColor,
   });
   final VoidCallback? onTap;
   final VoidCallback? onLongPressed;
   final Widget child;
   final double padding;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class AppCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: colorScheme.bgLight,
-          border: Border.all(color: colorScheme.appBorder),
+          border: Border.all(color: borderColor ?? colorScheme.appBorder),
           boxShadow: [
             BoxShadow(
               color: colorScheme.text.withValues(alpha: 0.06),

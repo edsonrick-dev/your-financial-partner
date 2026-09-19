@@ -26,6 +26,7 @@ class AccountCardFactory {
       case AccountType.creditCard:
         return CreditCardAccountCard(
           account: account,
+
           onTap: () {
             AppSheets.viewCreditCardDetailSheet(account);
           },

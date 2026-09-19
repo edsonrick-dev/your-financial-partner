@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_state/financial_state.dart';
@@ -35,44 +36,64 @@ class HomeView extends GetView<HomeController> {
       body: SafeArea(
         top: false,
         bottom: false,
-        child: Obx(() {
-          final recommendations = learnEngine.getRecommendedContent(
-            state: financialProfileController.financialState,
-            context: LearnContext.home,
-            contents: learnContentLibrary,
-          );
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: context.topPaddingSub,
+              bottom: context.bottomPadding,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // HEADER
+                _greetingSection(colorScheme),
 
-          return SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: context.topPaddingSub,
-                bottom: context.bottomPadding,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // HEADER
-                  _greetingSection(colorScheme),
-
-                  Padding(
-                    padding: EdgeInsets.only(top: spacingL),
-                    child: AppSection(
-                      child: Column(children: [FundSummaryCard()]),
-                    ),
+                Padding(
+                  padding: EdgeInsets.only(top: spacingL),
+                  child: AppSection(
+                    child: Column(children: [FundSummaryCard()]),
                   ),
+                ),
+                SizedBox(height: 20),
+                AppSection(
+                  sectionTitle: "This Month's Finances",
+                  child: Obx(() {
+                    final index = controller.selectedBudgetIndex.value;
 
-                  Padding(
-                    padding: EdgeInsets.only(top: spacingM),
-                    child: BudgetProgressSection(),
-                  ),
+                    return Column(
+                      children: [
+                        _Selector(
+                          selectedIndex: index,
+                          onChanged: controller.selectBudget,
+                        ),
 
-                  Padding(
-                    padding: EdgeInsets.only(top: spacingM),
-                    child: BillsReminderSection(),
-                  ),
+                        const SizedBox(height: 12),
 
-                  if (recommendations.isNotEmpty)
-                    Padding(
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 160),
+                          curve: Curves.easeInOut,
+                          alignment: Alignment.topCenter,
+                          child: index == 0
+                              ? const BudgetProgressSection(
+                                  key: ValueKey('budget'),
+                                )
+                              : const BillsReminderSection(
+                                  key: ValueKey('bills'),
+                                ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+
+                Obx(() {
+                  final recommendations = learnEngine.getRecommendedContent(
+                    state: financialProfileController.financialState,
+                    context: LearnContext.home,
+                    contents: learnContentLibrary,
+                  );
+                  if (recommendations.isNotEmpty) {
+                    return Padding(
                       padding: EdgeInsets.only(top: spacingM),
                       child: LearningSection(
                         subtitle:
@@ -98,12 +119,15 @@ class HomeView extends GetView<HomeController> {
                             )
                             .toList(),
                       ),
-                    ),
-                ],
-              ),
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }),
+              ],
             ),
-          );
-        }),
+          ),
+        ),
       ),
     );
   }
@@ -127,6 +151,85 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _Selector extends StatelessWidget {
+  const _Selector({required this.selectedIndex, required this.onChanged});
+
+  final int selectedIndex;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: colorScheme.bgLight,
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: colorScheme.appBorderMuted),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _SelectorItem(
+              title: 'My Budget',
+              selected: selectedIndex == 0,
+              onTap: () => onChanged(0),
+            ),
+          ),
+          Expanded(
+            child: _SelectorItem(
+              title: 'My Bills',
+              selected: selectedIndex == 1,
+              onTap: () => onChanged(1),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SelectorItem extends StatelessWidget {
+  const _SelectorItem({
+    required this.title,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String title;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+
+    return AdaptivePressable(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color: selected
+              ? colorScheme.pageShifterFillSelected
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: AppTextStyle.titleM.copyWith(
+            color: selected
+                ? colorScheme.pageShifterTextSelected
+                : colorScheme.pageShifterTextUnselected,
+          ),
+        ),
       ),
     );
   }

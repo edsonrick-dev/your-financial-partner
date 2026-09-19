@@ -18,7 +18,7 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: 20),
+          // SizedBox(height: 20),
           Obx(
             () => ProtectionScoreContainerSection(
               profile: controller.protectionProfile,

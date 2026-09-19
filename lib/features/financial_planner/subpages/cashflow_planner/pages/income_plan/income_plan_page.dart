@@ -69,41 +69,39 @@ class IncomePlanPage extends GetView<CashflowController> {
                 final plans = snapshot.data ?? [];
 
                 if (plans.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            PhosphorIconsRegular.piggyBank,
-                            size: 48,
-                            color: colorScheme.appInflow,
+                  return Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          PhosphorIconsRegular.piggyBank,
+                          size: 48,
+                          color: colorScheme.appInflow,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No income plans yet',
+                          style: AppTextStyle.headlineM,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Tap + to add your first income plan.",
+                          style: AppTextStyle.bodyM.copyWith(
+                            color: colorScheme.appText,
                           ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'No income plans yet',
-                            style: AppTextStyle.headlineM,
-                            textAlign: TextAlign.center,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Plan where your money comes from–salary, allowance, business, remittances.",
+                          style: AppTextStyle.bodyM.copyWith(
+                            color: colorScheme.appTextMuted,
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "Tap + to add your first income plan.",
-                            style: AppTextStyle.bodyM.copyWith(
-                              color: colorScheme.appText,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "Plan where your money comes from–salary, allowance, business, remittances.",
-                            style: AppTextStyle.bodyM.copyWith(
-                              color: colorScheme.appTextMuted,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   );
                 }

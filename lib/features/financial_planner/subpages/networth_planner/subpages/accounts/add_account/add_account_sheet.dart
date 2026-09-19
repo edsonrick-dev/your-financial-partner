@@ -5,6 +5,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/account_form.dart';
+
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
@@ -15,48 +16,47 @@ class AddAccountSheet extends GetView<AccountController> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: AppSheet(
-        adaptiveHeight: true,
-        title: 'Add ${accountType.label}',
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SingleChildScrollView(child: AccountForm(accountType: accountType)),
+    return AppSheet(
+      adaptiveHeight: true,
+      title: 'Add ${accountType.label}',
+      child: Column(
+        // mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: SingleChildScrollView(
+              child: AccountForm(accountType: accountType),
+            ),
+          ),
 
-            const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
-            AppSection(
-              child: Obx(
-                () => AppButton(
-                  onTap: controller.isAccountFormValid
-                      ? () async {
-                          final createdAccount = await controller.saveAccount();
+          AppSection(
+            child: Obx(
+              () => AppButton(
+                onTap: controller.isAccountFormValid
+                    ? () async {
+                        final createdAccount = await controller.saveAccount();
 
-                          if (createdAccount != null) {
-                            if (accountType == AccountType.loan) {
-                              await controller.loanController
-                                  .savePaymentSchedule(
-                                    loanAccountId: createdAccount.id,
-                                  );
-                            }
-
-                            Get.back();
+                        if (createdAccount != null) {
+                          debugPrint('Account not Null');
+                          if (accountType == AccountType.loan) {
+                            debugPrint('Account Paymebnt Created');
+                            await controller.loanController.savePaymentSchedule(
+                              loanAccountId: createdAccount.id,
+                            );
                           }
+                          controller.loanController.resetForm();
+                          Get.back();
                         }
-                      : null,
-                  text: 'Save ${accountType.label.toLowerCase()}',
-                ),
+                      }
+                    : null,
+                text: 'Save ${accountType.label.toLowerCase()}',
               ),
             ),
+          ),
 
-            SizedBox(height: context.bottomPaddingSub),
-          ],
-        ),
+          SizedBox(height: context.bottomPaddingSub),
+        ],
       ),
     );
   }

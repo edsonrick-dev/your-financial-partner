@@ -156,58 +156,56 @@ class BudgetPage extends GetView<CashflowController> {
                     final debtRepaymentBills = debtSnapshot.data ?? [];
 
                     if (expensePlans.isEmpty && debtRepaymentBills.isEmpty) {
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(32),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                PhosphorIconsRegular.wallet,
-                                size: 48,
-                                color: colorScheme.appOutflow,
+                      return Padding(
+                        padding: const EdgeInsets.all(32),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              PhosphorIconsRegular.wallet,
+                              size: 48,
+                              color: colorScheme.appOutflow,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'No budget plans yet',
+                              style: AppTextStyle.headlineM,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Tap + to add your first budget plan.",
+                              style: AppTextStyle.bodyM.copyWith(
+                                color: colorScheme.appText,
                               ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No budget plans yet',
-                                style: AppTextStyle.headlineM,
-                                textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Plan where your money goes–expenses or payment of debts›.',
+                              style: AppTextStyle.bodyM.copyWith(
+                                color: colorScheme.appTextMuted,
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                "Tap + to add your first budget plan.",
-                                style: AppTextStyle.bodyM.copyWith(
-                                  color: colorScheme.appText,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Plan where your money goes–expenses or payment of debts›.',
-                                style: AppTextStyle.bodyM.copyWith(
-                                  color: colorScheme.appTextMuted,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              // const SizedBox(height: 16),
-                              // AppButton(
-                              //   text: 'Set up your first budget',
-                              //   onTap: () {
-                              //     Get.bottomSheet(
-                              //       const SelectBudgetTypeSheet(),
-                              //       backgroundColor: Colors.transparent,
-                              //       isScrollControlled: true,
-                              //     );
-                              //   },
-                              // ),
-                              // const SizedBox(height: 8),
-                              // AppButton(
-                              //   type: ButtonType.outline,
-                              //   text: 'Watch how to set up a budget',
-                              //   onTap: () {},
-                              // ),
-                            ],
-                          ),
+                              textAlign: TextAlign.center,
+                            ),
+                            // const SizedBox(height: 16),
+                            // AppButton(
+                            //   text: 'Set up your first budget',
+                            //   onTap: () {
+                            //     Get.bottomSheet(
+                            //       const SelectBudgetTypeSheet(),
+                            //       backgroundColor: Colors.transparent,
+                            //       isScrollControlled: true,
+                            //     );
+                            //   },
+                            // ),
+                            // const SizedBox(height: 8),
+                            // AppButton(
+                            //   type: ButtonType.outline,
+                            //   text: 'Watch how to set up a budget',
+                            //   onTap: () {},
+                            // ),
+                          ],
                         ),
                       );
                     }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:getx_drift_app/app/routes/app_routes.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -30,92 +33,97 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
     final isGrowth = change > 0;
 
     return AppSection(
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: AppGradient.gradientA(colorScheme),
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 12,
-          children: [
-            Row(
-              children: [
-                Text(
-                  'Net Worth',
-                  style: AppTextStyle.titleL.copyWith(
-                    color: colorScheme.appInversedtextMuted,
-                  ),
-                ),
-
-                const Spacer(),
-
-                // _ComparisonSelector(
-                //   value: comparisonType,
-                //   onChanged: onComparisonChanged,
-                // ),
-              ],
-            ),
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    netWorth.abs().toCurrency(),
-                    style: AppTextStyle.amountXL.copyWith(
-                      color: netWorth < 0
-                          ? colorScheme.appOutflowInversed
-                          : colorScheme.appInversedtext,
+      child: AdaptivePressable(
+        onTap: () {
+          Get.toNamed(Routes.NETWORTHDETAILS);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: AppGradient.gradientA(colorScheme),
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 12,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Net Worth',
+                    style: AppTextStyle.titleL.copyWith(
+                      color: colorScheme.appInversedtextMuted,
                     ),
                   ),
-                ),
 
-                if (baselineNetWorth != 0)
-                  Row(
-                    children: [
-                      Icon(
-                        isGrowth
-                            ? PhosphorIconsFill.caretUp
-                            : PhosphorIconsFill.caretDown,
-                        color: isGrowth
-                            ? colorScheme.appInflowInverse
-                            : colorScheme.appOutflowInversed,
-                        size: 16,
-                      ),
+                  const Spacer(),
 
-                      RichText(
-                        text: TextSpan(
-                          text: '${(change.abs() * 100).toStringAsFixed(1)}%',
-                          style: AppTextStyle.amountM.copyWith(
-                            color: isGrowth
-                                ? colorScheme.appInflowInverse
-                                : colorScheme.appOutflowInversed,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: ' vs ',
-                              style: AppTextStyle.titleM.copyWith(
-                                color: colorScheme.appInversedtext,
-                              ),
-                            ),
-                            TextSpan(
-                              text: comparisonType.comparisonLabel,
-                              style: AppTextStyle.titleM.copyWith(
-                                color: colorScheme.appInversedtext,
-                              ),
-                            ),
-                          ],
-                        ),
+                  // _ComparisonSelector(
+                  //   value: comparisonType,
+                  //   onChanged: onComparisonChanged,
+                  // ),
+                ],
+              ),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      netWorth.abs().toCurrency(),
+                      style: AppTextStyle.amountXL.copyWith(
+                        color: netWorth < 0
+                            ? colorScheme.appOutflowInversed
+                            : colorScheme.appInversedtext,
                       ),
-                    ],
+                    ),
                   ),
-              ],
-            ),
-          ],
+
+                  if (baselineNetWorth != 0)
+                    Row(
+                      children: [
+                        Icon(
+                          isGrowth
+                              ? PhosphorIconsFill.caretUp
+                              : PhosphorIconsFill.caretDown,
+                          color: isGrowth
+                              ? colorScheme.appInflowInverse
+                              : colorScheme.appOutflowInversed,
+                          size: 16,
+                        ),
+
+                        RichText(
+                          text: TextSpan(
+                            text: '${(change.abs() * 100).toStringAsFixed(1)}%',
+                            style: AppTextStyle.amountM.copyWith(
+                              color: isGrowth
+                                  ? colorScheme.appInflowInverse
+                                  : colorScheme.appOutflowInversed,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: ' vs ',
+                                style: AppTextStyle.titleM.copyWith(
+                                  color: colorScheme.appInversedtext,
+                                ),
+                              ),
+                              TextSpan(
+                                text: comparisonType.comparisonLabel,
+                                style: AppTextStyle.titleM.copyWith(
+                                  color: colorScheme.appInversedtext,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -5,6 +5,12 @@ import 'package:get_storage/get_storage.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 
 class HomeController extends GetxController {
+  final selectedBudgetIndex = 0.obs;
+
+  void selectBudget(int index) {
+    selectedBudgetIndex.value = index;
+  }
+
   String get timeBasedGreeting {
     final hour = DateTime.now().hour;
 

@@ -37,9 +37,7 @@ class AnnualCashflowChart extends GetView<CashflowController> {
           children: [
             BarChart(_barChartData(context, income, budget, minY, maxY)),
 
-            IgnorePointer(
-              child: LineChart(_lineChartData(context, net, minY, maxY)),
-            ),
+            LineChart(_lineChartData(context, net, minY, maxY)),
           ],
         ),
       );

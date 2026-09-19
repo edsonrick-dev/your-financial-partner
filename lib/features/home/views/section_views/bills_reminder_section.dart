@@ -26,175 +26,194 @@ class BillsReminderSection extends GetView<CashflowController> {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     final billController = Get.find<BillController>();
-    return AppSection(
-      sectionTitle: 'Bills Reminder',
-      trailingType: SectionTrailingType.textButton,
-      trailingText: 'See all bills',
-      onTrailingPressed: () {
-        Get.toNamed(Routes.BILLS);
-      },
+    // onTrailingPressed: () {
+    //   Get.toNamed(Routes.BILLS);
+    // },
+    return AppSectionBody(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: StreamBuilder<bool>(
+          stream: database.billsDao.watchHasBills(),
+          builder: (context, hasBillsSnapshot) {
+            if (hasBillsSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-      child: AppSectionBody(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: StreamBuilder<List<BillWithNextOccurrence>>(
-            stream: database.billsDao.watchCurrentMonthOccurrences(
-              month: Get.find<HomeController>().selectedMonth.value,
-            ),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
+            final hasBills = hasBillsSnapshot.data ?? false;
 
-              if (snapshot.hasError) {
-                return Text('Unable to load bills.', style: AppTextStyle.bodyM);
-              }
+            return StreamBuilder<List<BillWithNextOccurrence>>(
+              stream: database.billsDao.watchCurrentMonthOccurrences(
+                month: Get.find<HomeController>().selectedMonth.value,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-              final bills = snapshot.data ?? [];
+                if (snapshot.hasError) {
+                  return Text(
+                    'Unable to load bills.',
+                    style: AppTextStyle.bodyM,
+                  );
+                }
 
-              final billText = bills.length == 1 ? 'bill' : 'bills';
+                final bills = snapshot.data ?? [];
 
-              final paidBills = bills
-                  .where((bill) => bill.occurrence.isPaid)
-                  .toList();
+                final billText = bills.length == 1 ? 'bill' : 'bills';
 
-              final unpaidBills = bills
-                  .where((bill) => !bill.occurrence.isPaid)
-                  .toList();
+                final paidBills = bills
+                    .where((bill) => bill.occurrence.isPaid)
+                    .toList();
 
-              final paidAmount = paidBills.fold<double>(
-                0,
-                (sum, bill) => sum + bill.occurrence.expectedAmount,
-              );
+                final unpaidBills = bills
+                    .where((bill) => !bill.occurrence.isPaid)
+                    .toList();
 
-              final unpaidAmount = unpaidBills.fold<double>(
-                0,
-                (sum, bill) => sum + bill.occurrence.expectedAmount,
-              );
-              final totalBills = bills.length;
-              final paidBillCount = paidBills.length;
-              final unpaidBillCount = unpaidBills.length;
+                final paidAmount = paidBills.fold<double>(
+                  0,
+                  (sum, bill) => sum + bill.occurrence.expectedAmount,
+                );
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          bills.isEmpty
-                              ? 'You have no bills'
-                              : '$totalBills $billText this month',
-                          style: AppTextStyle.titleM.copyWith(
-                            // color: colorScheme.appTextMuted,
-                          ),
-                        ),
-                      ),
-                      if (bills.isNotEmpty)
-                        RichText(
-                          text: TextSpan(
-                            style: AppTextStyle.labelM.copyWith(
-                              color: colorScheme.appText,
+                final unpaidAmount = unpaidBills.fold<double>(
+                  0,
+                  (sum, bill) => sum + bill.occurrence.expectedAmount,
+                );
+                final totalBills = bills.length;
+                final paidBillCount = paidBills.length;
+                final unpaidBillCount = unpaidBills.length;
+                final String title;
+
+                if (!hasBills) {
+                  title = 'You have no bills yet';
+                } else if (bills.isEmpty) {
+                  title = 'No bills this month';
+                } else {
+                  title = '$totalBills $billText this month';
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (hasBills) ...[
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              textAlign: hasBills
+                                  ? TextAlign.start
+                                  : TextAlign.center,
+                              title,
+                              style: AppTextStyle.titleM.copyWith(
+                                // color: colorScheme.appTextMuted,
+                              ),
                             ),
-                            children: [
-                              if (paidBillCount < totalBills) ...[
-                                TextSpan(text: paidBillCount.toString()),
-                                const TextSpan(text: '/'),
-                                TextSpan(text: totalBills.toString()),
-                                const TextSpan(text: ' bills paid'),
-                              ],
-                              if (paidBillCount == totalBills)
-                                const TextSpan(text: 'All bills paid'),
-                            ],
+                          ),
+                          if (bills.isNotEmpty)
+                            RichText(
+                              text: TextSpan(
+                                style: AppTextStyle.labelM.copyWith(
+                                  color: colorScheme.appText,
+                                ),
+                                children: [
+                                  if (paidBillCount < totalBills) ...[
+                                    TextSpan(text: paidBillCount.toString()),
+                                    const TextSpan(text: '/'),
+                                    TextSpan(text: totalBills.toString()),
+                                    const TextSpan(text: ' bills paid'),
+                                  ],
+                                  if (paidBillCount == totalBills)
+                                    const TextSpan(text: 'All bills paid'),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                      Row(
+                        spacing: 16,
+                        children: [
+                          Expanded(
+                            child: _BillSummaryColumn(
+                              label: 'Remaining',
+                              amount: unpaidAmount,
+                              count: unpaidBillCount,
+                              color: colorScheme.appOutflow,
+                            ),
+                          ),
+                          // SizedBox(width: 16),
+                          // const Divider(),
+                          Container(
+                            height: 32,
+
+                            width: 1,
+                            decoration: BoxDecoration(
+                              color: colorScheme.appBorder,
+                              borderRadius: BorderRadius.circular(9),
+                            ),
+                          ),
+                          Expanded(
+                            child: _BillSummaryColumn(
+                              label: 'Paid',
+                              amount: paidAmount,
+                              count: paidBillCount,
+                              color: colorScheme.appSuccess,
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (bills.isNotEmpty) ...[
+                        Divider(color: colorScheme.appBorder),
+                        const SizedBox(height: 8),
+
+                        ...bills.map(
+                          (bill) => _BillReminderItem(
+                            bill: bill,
+                            onPay: () => controller.makeBillPayment(bill),
                           ),
                         ),
+                      ],
                     ],
-                  ),
-                  // Text('Recurring Bills', style: AppTextStyle.titleL),
-                  // FittedBox(
-                  //   child: Row(
-                  //     children: [
-                  //       Text(
-                  //         unpaidAmount.toCompactCurrency(kThreshold: 1000000),
-                  //         style: AppTextStyle.amountXL,
-                  //       ),
-                  //       Text(' / ', style: AppTextStyle.displayS),
-                  //       Text(
-                  //         totalAmount.toCompactCurrency(kThreshold: 1000000),
-                  //         style: AppTextStyle.amountXL,
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-
-                  // const SizedBox(height: 4),
-                  // Text(unpaidAmount.toCurrency(), style: AppTextStyle.amountXL),
-                  // Text(totalAmount.toCurrency(), style: AppTextStyle.amountXL),
-                  const SizedBox(height: 2),
-
-                  Row(
-                    spacing: 16,
-                    children: [
-                      Expanded(
-                        child: _BillSummaryColumn(
-                          label: 'Remaining',
-                          amount: unpaidAmount,
-                          count: unpaidBillCount,
-                          color: colorScheme.appOutflow,
-                        ),
+                    if (!hasBills)
+                      Column(
+                        children: [
+                          Icon(
+                            Icons.receipt_long,
+                            size: 60,
+                            color: colorScheme.appAccent,
+                          ),
+                          SizedBox(height: 8),
+                          Text(title, style: AppTextStyle.headlineM),
+                          Text(
+                            "Add your bills to spending categories",
+                            style: AppTextStyle.headlineS,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Keep your bills organized by category—like Meralco or Manila Water under Utilities.",
+                            style: AppTextStyle.bodyM.copyWith(
+                              color: colorScheme.appTextMuted,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 12),
+                          AppButton(
+                            type: ButtonType.outline,
+                            leadingIcon: PhosphorIconsRegular.plus,
+                            text: 'Add your first bill',
+                            onTap: () {
+                              Get.bottomSheet(
+                                BillForm(),
+                                isScrollControlled: true,
+                              ).whenComplete(billController.resetForm);
+                            },
+                          ),
+                        ],
                       ),
-                      // SizedBox(width: 16),
-                      // const Divider(),
-                      Container(
-                        height: 32,
 
-                        width: 1,
-                        decoration: BoxDecoration(
-                          color: colorScheme.appBorder,
-                          borderRadius: BorderRadius.circular(9),
-                        ),
-                      ),
-                      Expanded(
-                        child: _BillSummaryColumn(
-                          label: 'Paid',
-                          amount: paidAmount,
-                          count: paidBillCount,
-                          color: colorScheme.appSuccess,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  if (bills.isEmpty) ...[
-                    SizedBox(height: 12),
-                    AppButton(
-                      type: ButtonType.outline,
-                      leadingIcon: PhosphorIconsRegular.plus,
-                      text: 'Add your first bill',
-                      onTap: () {
-                        Get.bottomSheet(
-                          BillForm(),
-                          isScrollControlled: true,
-                        ).whenComplete(billController.resetForm);
-                      },
-                    ),
+                    const SizedBox(height: 2),
                   ],
-
-                  if (bills.isNotEmpty) ...[
-                    Divider(color: colorScheme.appBorder),
-                    const SizedBox(height: 8),
-
-                    ...bills.map(
-                      (bill) => _BillReminderItem(
-                        bill: bill,
-                        onPay: () => controller.makeBillPayment(bill),
-                      ),
-                    ),
-                  ],
-                ],
-              );
-            },
-          ),
+                );
+              },
+            );
+          },
         ),
       ),
     );

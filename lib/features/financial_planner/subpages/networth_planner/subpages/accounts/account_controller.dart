@@ -238,7 +238,16 @@ class AccountController extends GetxController {
     if (confirmed != true) return;
 
     try {
-      await database.accountsDao.deleteAccount(account.id);
+      await database.transaction(() async {
+        // Loan payment schedules are stored as bills.
+        // Delete them before deleting the loan account.
+        if (account.accountType == AccountType.loan.name) {
+          await database.billsDao.deleteLoanBillsForAccount(account.id);
+        }
+
+        // Delete the account after its linked loan bills are gone.
+        await database.accountsDao.deleteAccount(account.id);
+      });
       Get.back();
       Get.snackbar('Account deleted', '${account.name} was removed.');
     } catch (_) {

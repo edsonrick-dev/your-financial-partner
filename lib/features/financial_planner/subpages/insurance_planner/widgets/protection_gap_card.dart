@@ -52,7 +52,7 @@ class ProtectionGapCard extends StatelessWidget {
     return AdaptivePressable(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(16),
         constraints: const BoxConstraints(minHeight: 44),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
@@ -65,107 +65,107 @@ class ProtectionGapCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
+        child: Column(
           children: [
-            Stack(
-              alignment: Alignment.center,
+            Row(
               children: [
-                Opacity(
-                  opacity: 0.2,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: severityColor,
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Opacity(
+                      opacity: 0.2,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: severityColor,
+                        ),
+                      ),
+                    ),
+                    Icon(icon, color: severityColor),
+                  ],
+                ),
+
+                const SizedBox(width: 8),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              gapTitle,
+                              style: AppTextStyle.titleM,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            gapAmount.toCompactCurrency(kThreshold: 100000),
+                            style: AppTextStyle.amountL,
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 4),
+                      RichText(
+                        text: TextSpan(
+                          style: AppTextStyle.bodyS.copyWith(
+                            color: colorScheme.appTextMuted,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: amountCovered.toCurrency(),
+                              style: AppTextStyle.bodyS.copyWith(
+                                color: colorScheme.text,
+                              ),
+                            ),
+                            const TextSpan(text: ' covered out of '),
+                            TextSpan(
+                              text: amountNeed.toCurrency(),
+                              style: AppTextStyle.bodyS.copyWith(
+                                color: colorScheme.text,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+
+            Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: coveragePercentage / 100,
+                      minHeight: 8,
+                      backgroundColor: colorScheme.bgDark,
+                      valueColor: AlwaysStoppedAnimation(severityColor),
                     ),
                   ),
                 ),
-                Icon(icon, color: severityColor),
+
+                const SizedBox(width: 8),
+
+                SizedBox(
+                  width: 40,
+                  child: Text(
+                    '${coveragePercentage.toStringAsFixed(0)}%',
+                    textAlign: TextAlign.right,
+                    style: AppTextStyle.amountS.copyWith(color: severityColor),
+                  ),
+                ),
               ],
-            ),
-
-            const SizedBox(width: 12),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          gapTitle,
-                          style: AppTextStyle.titleM,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        gapAmount.toCompactCurrency(kThreshold: 10000000),
-                        style: AppTextStyle.amountM,
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 6),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: coveragePercentage / 100,
-                            minHeight: 8,
-                            backgroundColor: colorScheme.bgDark,
-                            valueColor: AlwaysStoppedAnimation(severityColor),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(width: 8),
-
-                      SizedBox(
-                        width: 40,
-                        child: Text(
-                          '${coveragePercentage.toStringAsFixed(0)}%',
-                          textAlign: TextAlign.right,
-                          style: AppTextStyle.amountS.copyWith(
-                            color: severityColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 4),
-
-                  RichText(
-                    text: TextSpan(
-                      style: AppTextStyle.bodyS.copyWith(
-                        color: colorScheme.appTextMuted,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: amountCovered.toCurrency(),
-                          style: AppTextStyle.bodyS.copyWith(
-                            color: colorScheme.text,
-                          ),
-                        ),
-                        const TextSpan(text: ' covered out of '),
-                        TextSpan(
-                          text: amountNeed.toCurrency(),
-                          style: AppTextStyle.bodyS.copyWith(
-                            color: colorScheme.text,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
         ),

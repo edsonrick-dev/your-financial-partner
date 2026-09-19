@@ -47,6 +47,7 @@ class FinancialStabilityProfileEmptyState
       CashflowStatus.onlyBudget => 'Cashflow Plan | Income Plan Needed',
       CashflowStatus.complete => 'Cashflow Plan',
     };
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -118,6 +119,7 @@ class FinancialStabilityProfileEmptyState
           const SizedBox(height: 20),
           AppButton(
             onTap: onAction,
+            trailingIcon: PhosphorIconsRegular.arrowRight,
             text: isProfileComplete
                 ? 'View Financial Stability Profile'
                 : !hasNetWorthPlan

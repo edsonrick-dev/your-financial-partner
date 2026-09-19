@@ -17,54 +17,50 @@ class AssetsList extends GetView<NetWorthController> {
       final groups = controller.groupedAssetItems;
 
       if (groups.isEmpty) {
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  PhosphorIconsRegular.bank,
-                  size: 48,
-                  color: colorScheme.appInflow,
+        return Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                PhosphorIconsRegular.bank,
+                size: 48,
+                color: colorScheme.appInflow,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'No asset accounts yet',
+                style: AppTextStyle.headlineM,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Tap + to add your first asset account.",
+                style: AppTextStyle.bodyM.copyWith(color: colorScheme.appText),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Keep track of what you own–cash, banks accounts, and e-wallets.",
+                style: AppTextStyle.bodyM.copyWith(
+                  color: colorScheme.appTextMuted,
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  'No asset accounts yet',
-                  style: AppTextStyle.headlineM,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Tap + to add your first asset account.",
-                  style: AppTextStyle.bodyM.copyWith(
-                    color: colorScheme.appText,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Keep track of what you own–cash, banks accounts, and e-wallets.",
-                  style: AppTextStyle.bodyM.copyWith(
-                    color: colorScheme.appTextMuted,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                textAlign: TextAlign.center,
+              ),
 
-                // const SizedBox(height: 16),
+              // const SizedBox(height: 16),
 
-                // AppButton(
-                //   text: 'Record your first asset account',
-                //   onTap: controller.addAccount,
-                // ),
-                // const SizedBox(height: 8),
-                // AppButton(
-                //   type: ButtonType.outline,
-                //   text: 'Watch how to set up an asset account',
-                //   onTap: () {},
-                // ),
-              ],
-            ),
+              // AppButton(
+              //   text: 'Record your first asset account',
+              //   onTap: controller.addAccount,
+              // ),
+              // const SizedBox(height: 8),
+              // AppButton(
+              //   type: ButtonType.outline,
+              //   text: 'Watch how to set up an asset account',
+              //   onTap: () {},
+              // ),
+            ],
           ),
         );
       }

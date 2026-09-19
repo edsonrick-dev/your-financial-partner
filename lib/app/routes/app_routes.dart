@@ -3,6 +3,7 @@
 abstract class Routes {
   Routes._();
   static const PAYWALL = '/paywall';
+
   static const ONBOARDING = '/onboarding';
   static const ASSESSMENT_SUMMARY = '/onboarding/summary';
   static const ONBOARDING_FIRST_QUESTION = '/onboarding/first-question';
@@ -36,6 +37,8 @@ abstract class Routes {
   //INSURANCE
   static const DEATHBENEFITGAP =
       '/financial-planner/insurance/death-benefit-gap';
+  static const DEATHEBENFITQUESTIONNAIRE =
+      '/financial-planner/insurance/death-benefit-questionnaire';
   static const CRITICALILLNESSBENEFITGAP =
       '/financial-planner/insurance/critical-illness-benefit-gap';
   static const DISABILITYBENEFITGAP =

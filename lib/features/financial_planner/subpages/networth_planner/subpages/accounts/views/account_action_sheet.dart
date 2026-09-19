@@ -5,9 +5,11 @@ import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/edit_loan_details_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/update_account_balance_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/cash_and_bank_details_sheet/edit_cash_account_detail.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/edit_credit_card_details.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/loan_detail_sheet/loan_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -51,7 +53,7 @@ class AccountActionsSheet extends GetView<AccountController> {
               account: account,
               title: 'Edit Account',
               icon: PhosphorIconsRegular.pencilSimple,
-              onTap: () {
+              onTap: () async {
                 Get.back();
 
                 final accountType = AccountType.values.firstWhere(
@@ -75,6 +77,20 @@ class AccountActionsSheet extends GetView<AccountController> {
                     controller.initializeEditAccount(account);
                     Get.bottomSheet(
                       EditCreditCardDetails(account: account),
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                    );
+                    break;
+
+                  case AccountType.loan:
+                    controller.initializeEditAccount(account);
+
+                    final loanController = Get.put(LoanController());
+
+                    await loanController.initializeLoanEdit(account);
+
+                    Get.bottomSheet(
+                      EditLoanDetails(account: account),
                       backgroundColor: Colors.transparent,
                       isScrollControlled: true,
                     );

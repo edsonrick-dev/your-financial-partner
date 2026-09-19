@@ -29,6 +29,18 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
     );
   }
 
+  Future<BillsTableData?> getLoanBillForAccount(int loanAccountId) {
+    return (select(billsTable)
+          ..where((tbl) => tbl.loanAccountId.equals(loanAccountId)))
+        .getSingleOrNull();
+  }
+
+  Future<void> deleteLoanBillsForAccount(int loanAccountId) {
+    return (delete(
+      billsTable,
+    )..where((tbl) => tbl.loanAccountId.equals(loanAccountId))).go();
+  }
+
   Future<BillWithNextOccurrence?> getBillWithOccurrenceByTransactionId(
     int transactionId,
   ) async {
@@ -56,6 +68,31 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
       occurrence: row.readTable(billOccurrencesTable),
       category: row.readTableOrNull(cashflowCategoriesTable),
       loanAccount: row.readTableOrNull(accountsTable),
+    );
+  }
+
+  Future<void> updateLoanBill({
+    required int loanAccountId,
+    required double paymentAmount,
+    required BillsFrequency frequency,
+    required DateTime firstPaymentDate,
+    required bool reminderEnabled,
+    int? reminderDaysBefore,
+  }) async {
+    final bill = await getLoanBillForAccount(loanAccountId);
+
+    if (bill == null) return;
+
+    await updateBill(
+      bill.id,
+      BillsTableCompanion(
+        expectedAmount: Value(paymentAmount),
+        frequency: Value(frequency.name),
+        dayOfMonth: Value(firstPaymentDate.day),
+        reminderEnabled: Value(reminderEnabled),
+        reminderDaysBefore: Value(reminderDaysBefore),
+        updatedAt: Value(DateTime.now()),
+      ),
     );
   }
 
@@ -219,6 +256,14 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
         );
       }).toList();
     });
+  }
+
+  Stream<bool> watchHasBills() {
+    final countExp = billsTable.id.count();
+
+    return (selectOnly(billsTable)..addColumns([countExp])).watchSingle().map(
+      (row) => (row.read(countExp) ?? 0) > 0,
+    );
   }
 
   Stream<List<BillWithCategory>> watchAllActiveBills() {

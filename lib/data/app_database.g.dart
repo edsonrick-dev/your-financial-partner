@@ -4963,7 +4963,7 @@ class $BillsTableTable extends BillsTable
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES accounts_table (id)',
+      'REFERENCES accounts_table (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _expectedAmountMeta = const VerificationMeta(
@@ -6300,6 +6300,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       result: [
         TableUpdate('cash_flow_plan_allocations', kind: UpdateKind.delete),
       ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('bills_table', kind: UpdateKind.delete)],
     ),
   ]);
 }

@@ -13,8 +13,6 @@ class TransactionSheets {
 
     if (item != null) {
       controller.loadEarnTransaction(item);
-    } else {
-      controller.resetForm();
     }
 
     await Get.bottomSheet(
@@ -22,7 +20,7 @@ class TransactionSheets {
 
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-    );
+    ).whenComplete(controller.resetForm);
   }
 
   Future<void> spend({TransactionWithDetails? item, int? categoryId}) async {
@@ -43,7 +41,7 @@ class TransactionSheets {
       const TransactionSheet(transactionType: TransactionType.spend),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-    );
+    ).whenComplete(controller.resetForm);
   }
 
   // Future<void> billPayment(BillWithNextOccurrence bill) async {
@@ -67,7 +65,7 @@ class TransactionSheets {
       TransactionSheet(transactionType: transactionType),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-    );
+    ).whenComplete(controller.resetForm);
   }
 
   Future<void> debtRepayment(TransactionWithDetails item) async {
@@ -79,7 +77,7 @@ class TransactionSheets {
       const TransactionSheet(transactionType: TransactionType.debtRepayment),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-    );
+    ).whenComplete(controller.resetForm);
   }
 
   Future<void> transfer([TransactionWithDetails? item]) async {
@@ -87,8 +85,6 @@ class TransactionSheets {
 
     if (item != null) {
       controller.loadTransferTransaction(item);
-    } else {
-      controller.resetForm();
     }
 
     await Get.bottomSheet(
@@ -96,15 +92,13 @@ class TransactionSheets {
       const TransactionSheet(transactionType: TransactionType.transfer),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-    );
+    ).whenComplete(controller.resetForm);
   }
 
   Future<void> receiveMoney([TransactionWithDetails? item]) async {
     final controller = Get.find<TransactionController>();
     if (item != null) {
       controller.loadReceiveMoneyTransaction(item);
-    } else {
-      controller.resetForm();
     }
 
     await Get.bottomSheet(
@@ -112,7 +106,7 @@ class TransactionSheets {
       const TransactionSheet(transactionType: TransactionType.receive),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-    );
+    ).whenComplete(controller.resetForm);
   }
 
   Future<void> giveMoney([TransactionWithDetails? item]) async {
@@ -120,14 +114,12 @@ class TransactionSheets {
 
     if (item != null) {
       controller.loadGiveMoneyTransaction(item);
-    } else {
-      controller.resetForm();
     }
     await Get.bottomSheet(
       // const GiveMoneyTransactionForm(),
       const TransactionSheet(transactionType: TransactionType.give),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-    );
+    ).whenComplete(controller.resetForm);
   }
 }

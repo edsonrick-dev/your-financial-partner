@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/app/routes/app_routes.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -14,50 +16,55 @@ class CashflowSummaryContainerSection extends GetView<CashflowController> {
     final colorScheme = context.colors;
 
     return AppSection(
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: AppGradient.gradientA(colorScheme),
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Annual Cashflow',
-              style: AppTextStyle.titleL.copyWith(
-                color: colorScheme.appInversedtextMuted,
+      child: AdaptivePressable(
+        onTap: () {
+          Get.toNamed(Routes.CASHFLOWDETAILS);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: AppGradient.gradientA(colorScheme),
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Annual Cashflow',
+                style: AppTextStyle.titleL.copyWith(
+                  color: colorScheme.appInversedtextMuted,
+                ),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            const AnnualCashflowChart(),
+              const AnnualCashflowChart(),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                _LegendItem(
-                  color: colorScheme.appInflowInverse,
-                  label: 'Income',
-                ),
-                const SizedBox(width: 16),
-                _LegendItem(
-                  color: colorScheme.appOutflowInversed,
-                  label: 'Budget',
-                ),
-                const SizedBox(width: 16),
-                _LegendItem(
-                  color: colorScheme.appInfo,
-                  label: 'Net Cashflow',
-                  isLine: true,
-                ),
-              ],
-            ),
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _LegendItem(
+                    color: colorScheme.appInflowInverse,
+                    label: 'Income',
+                  ),
+                  const SizedBox(width: 16),
+                  _LegendItem(
+                    color: colorScheme.appOutflowInversed,
+                    label: 'Budget',
+                  ),
+                  const SizedBox(width: 16),
+                  _LegendItem(
+                    color: colorScheme.appInfo,
+                    label: 'Net Cashflow',
+                    isLine: true,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

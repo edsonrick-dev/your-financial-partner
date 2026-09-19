@@ -4,7 +4,6 @@ import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
@@ -12,8 +11,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_progress_indicator.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class BudgetProgressSection extends GetView<CashflowController> {
@@ -22,80 +21,76 @@ class BudgetProgressSection extends GetView<CashflowController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+    // onTrailingPressed: () {
+    //   controller.seletectedDetailsTabIndex(1);
+    //   Get.toNamed(Routes.CASHFLOWDETAILS);
+    // },
 
-    return AppSection(
-      sectionTitle: 'Budget Progress',
-      trailingType: SectionTrailingType.textButton,
-      trailingText: 'See all budgets',
-      onTrailingPressed: () {
-        controller.seletectedDetailsTabIndex(1);
-        Get.toNamed(Routes.CASHFLOWDETAILS);
-      },
+    return Obx(() {
+      final items = controller.currentMonthBudgetItems;
 
-      child: Obx(() {
-        final items = controller.currentMonthBudgetItems;
+      final now = DateTime.now();
+      final currentMonthIndex = now.month - 1;
 
-        final now = DateTime.now();
-        final currentMonthIndex = now.month - 1;
+      final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
 
-        final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+      final daysLeft = daysInMonth - now.day;
 
-        final daysLeft = daysInMonth - now.day;
+      final budgetAmount = items.fold<double>(
+        0,
+        (sum, item) => sum + item.budget,
+      );
 
-        final budgetAmount = items.fold<double>(
-          0,
-          (sum, item) => sum + item.budget,
-        );
+      final spentAmount = items.fold<double>(
+        0,
+        (sum, item) => sum + item.spent,
+      );
 
-        final spentAmount = items.fold<double>(
-          0,
-          (sum, item) => sum + item.spent,
-        );
+      final progress = budgetAmount <= 0 ? 0.0 : spentAmount / budgetAmount;
 
-        final progress = budgetAmount <= 0 ? 0.0 : spentAmount / budgetAmount;
+      final expectedSpent = budgetAmount <= 0
+          ? 0.0
+          : budgetAmount * (now.day / daysInMonth);
 
-        final expectedSpent = budgetAmount <= 0
-            ? 0.0
-            : budgetAmount * (now.day / daysInMonth);
+      final isOverBudget = spentAmount > budgetAmount;
 
-        final isOverBudget = spentAmount > budgetAmount;
+      final isOnTrack = !isOverBudget && spentAmount <= expectedSpent;
 
-        final isOnTrack = !isOverBudget && spentAmount <= expectedSpent;
+      final statusText = isOverBudget
+          ? 'Over Budget'
+          : isOnTrack
+          ? 'On Track'
+          : 'Over Pace';
 
-        final statusText = isOverBudget
-            ? 'Over Budget'
-            : isOnTrack
-            ? 'On Track'
-            : 'Over Pace';
-
-        final statusColor = isOverBudget
-            ? colorScheme.appOutflow
-            : isOnTrack
-            ? colorScheme.appSuccess
-            : colorScheme.appAccent;
-
-        return Container(
-          constraints: const BoxConstraints(minHeight: 44),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: colorScheme.bgLight,
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: _FilledView(
-            progress: progress,
-            statusColor: statusColor,
-            currentMonthIndex: currentMonthIndex,
-            spentAmount: spentAmount,
-            budgetAmount: budgetAmount,
-            statusText: statusText,
-            daysLeft: daysLeft,
-            colorScheme: colorScheme,
-            items: items,
-            controller: controller,
-          ),
-        );
-      }),
-    );
+      final statusColor = isOverBudget
+          ? colorScheme.appOutflow
+          : isOnTrack
+          ? colorScheme.appSuccess
+          : colorScheme.appAccent;
+      final hasBudget = controller.hasExpensePlan;
+      return AppSectionBody(
+        // constraints: const BoxConstraints(minHeight: 44),
+        // width: double.infinity,
+        // decoration: BoxDecoration(
+        //   color: colorScheme.bgLight,
+        //   borderRadius: BorderRadius.circular(24),
+        // ),
+        child: hasBudget
+            ? _FilledView(
+                progress: progress,
+                statusColor: statusColor,
+                currentMonthIndex: currentMonthIndex,
+                spentAmount: spentAmount,
+                budgetAmount: budgetAmount,
+                statusText: statusText,
+                daysLeft: daysLeft,
+                colorScheme: colorScheme,
+                items: items,
+                controller: controller,
+              )
+            : _EmptyView(),
+      );
+    });
   }
 }
 
@@ -105,34 +100,54 @@ class _EmptyView extends GetView<CashflowController> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     return Padding(
       padding: EdgeInsets.all(16),
       child: Column(
         children: [
-          // Text(
-          //   'Set your budget with Casfhlow Planner',
-          //   style: AppTextStyle.titleM,
-          //   textAlign: TextAlign.center,
-          // ),
-          // SizedBox(height: 8),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          //   child: Text(
-          //     textAlign: TextAlign.center,
-          //     'You can see your budget per category here once your setup your cashflow plan',
-          //     style: AppTextStyle.bodyS.copyWith(color: colorScheme.appText),
-          //   ),
-          // ),
-          // SizedBox(height: 16),
-          AppButton(
-            leadingIcon: PhosphorIconsRegular.plus,
-            // type: ButtonType.outline,
-            text: 'Go to Cashflow Planner',
-            onTap: () {
-              controller.seletectedDetailsTabIndex(1);
-              Get.toNamed(Routes.CASHFLOWDETAILS, arguments: 1);
-            },
+          Icon(Icons.toc_rounded, size: 60, color: colorScheme.appAccent),
+          SizedBox(height: 8),
+          Text(
+            'You have no budget yet',
+            style: AppTextStyle.headlineM,
+            textAlign: TextAlign.center,
           ),
+
+          Text(
+            "Plan where your money goes",
+            style: AppTextStyle.headlineS,
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            "Create spending plans for categories like groceries, utilities, transportation, and dining so you know where your money should go each month.",
+            style: AppTextStyle.bodyM.copyWith(color: colorScheme.appTextMuted),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 12),
+          AppButton(
+            type: ButtonType.outline,
+            leadingIcon: PhosphorIconsRegular.plus,
+            text: 'Add expense budget',
+            onTap: () {
+              Get.bottomSheet(
+                CreateExpensePlanSheet(),
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+              ).whenComplete(() {
+                controller.resetBudgetPlan();
+              });
+            },
+            borderRadius: 12,
+          ),
+          // AppButton(
+          //   leadingIcon: PhosphorIconsRegular.plus,
+          //   // type: ButtonType.outline,
+          //   text: 'Go to Cashflow Planner',
+          //   onTap: () {
+          //     controller.seletectedDetailsTabIndex(1);
+          //     Get.toNamed(Routes.CASHFLOWDETAILS, arguments: 1);
+          //   },
+          // ),
         ],
       ),
     );
@@ -170,7 +185,7 @@ class _FilledView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
+          padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             spacing: 12,
@@ -332,7 +347,7 @@ class _FilledView extends StatelessWidget {
               ),
 
               // SEE MORE ↔ SEE LESS
-              if (hasMore)
+              if (hasMore) ...[
                 AnimatedSize(
                   duration: const Duration(milliseconds: 250),
                   curve: Curves.easeOutCubic,
@@ -342,6 +357,8 @@ class _FilledView extends StatelessWidget {
                     child: Text(isExpanded ? 'See less' : 'See more'),
                   ),
                 ),
+                SizedBox(height: 16),
+              ],
             ],
           );
         }),
