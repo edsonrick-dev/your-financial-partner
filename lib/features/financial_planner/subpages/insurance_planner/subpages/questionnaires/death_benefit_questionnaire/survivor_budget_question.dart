@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/controller/insurance_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/questionnaires/protection_horizon/options/death_benefit_horizon_options.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/questionnaires/protection_horizon/widgets/protection_horizon_picker.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/questionnaires/protection_horizon/widgets/sheets/survivor_budget_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/questionnaires/protection_horizon/widgets/survivor_budget_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 
 class SurvivorBudgetQuestion extends GetView<InsurancePlannerController> {
   const SurvivorBudgetQuestion({super.key});

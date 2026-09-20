@@ -27,9 +27,11 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
 
   @override
   Widget build(BuildContext context) {
-    final transactionController = Get.find<TransactionController>();
     final transactionType = TransactionType.earn;
     final colorScheme = context.colors;
+    final transactionController = Get.find<TransactionController>();
+
+    debugPrint('SHEET TC: ${transactionController.hashCode}');
     double spacingHeight = 20;
     return AppSheet(
       adaptiveHeight: false,
@@ -222,6 +224,10 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
 
                 onTap: isValid
                     ? () async {
+                        debugPrint(
+                          'SELECTED CATEGORY: ${transactionController.selectedCategory.value?.name} '
+                          'ID: ${transactionController.selectedCategory.value?.id}',
+                        );
                         await controller.saveCashflowPlan(
                           transactionType: transactionType,
                         );

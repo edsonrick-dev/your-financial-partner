@@ -52,9 +52,9 @@ class BudgetGridView extends StatelessWidget {
         AppSheets.transaction.spend(categoryId: categoryId);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         decoration: BoxDecoration(
-          color: colorScheme.bgLight,
+          // color: colorScheme.bgLight,
           borderRadius: BorderRadius.circular(24),
           // boxShadow: [
           //   BoxShadow(
@@ -76,17 +76,10 @@ class BudgetGridView extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(AppIcons.categories.resolve(iconKey), size: 16),
-                    const SizedBox(width: 4),
-                    Text(budgetName, style: AppTextStyle.bodyS, maxLines: 1),
+                    // Icon(AppIcons.categories.resolve(iconKey), size: 16),
+                    // const SizedBox(width: 4),
+                    Text(budgetName, style: AppTextStyle.bodyM, maxLines: 1),
                   ],
-                ),
-              ),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  '${remainingBalance.abs().toCurrency()} ${isOverBudget ? 'over' : 'left'}',
-                  style: AppTextStyle.amountXS.copyWith(color: progressColor),
                 ),
               ),
               SizedBox(width: 4),
@@ -95,34 +88,40 @@ class BudgetGridView extends StatelessWidget {
                 children: [
                   Text(
                     '${(consumptionPercentage * 100).round()}%',
-                    style: AppTextStyle.amountXS,
+                    style: AppTextStyle.amountS,
                   ),
                   CustomPaint(
                     size: const Size(60, 60),
                     painter: BudgetConsumptionGuagePainter(
+                      backgroundColor: colorScheme.bg,
                       progress: consumptionPercentage,
                     ),
                   ),
                 ],
               ),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '${remainingBalance.abs().toCurrency()} ${isOverBudget ? 'over' : 'left'}',
+                  style: AppTextStyle.amountXS.copyWith(color: progressColor),
+                ),
+              ),
+
               SizedBox(width: 8),
 
               FittedBox(
                 fit: BoxFit.scaleDown,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      consumption.toCurrency(),
-                      style: AppTextStyle.amountXS,
-                    ),
-                    Text(
-                      ' / ${budget.toCurrency()}',
-                      style: AppTextStyle.amountXS.copyWith(
-                        color: colorScheme.appTextMuted.withAlpha(160),
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  consumption.toCurrency(),
+                  style: AppTextStyle.amountS,
+                ),
+              ),
+              FittedBox(
+                child: Text(
+                  'out of ${budget.toCurrency()}',
+                  style: AppTextStyle.amountXS.copyWith(
+                    color: colorScheme.appTextMuted.withAlpha(160),
+                  ),
                 ),
               ),
             ],
@@ -160,7 +159,7 @@ class BudgetListView extends StatelessWidget {
         : (consumption / budget).clamp(0.0, 1.0);
 
     Color progressColor;
-    if (consumptionPercentage >= 1) {
+    if (consumptionPercentage > 1) {
       progressColor = colorScheme.appOutflow;
     } else if (consumptionPercentage >= 0.8) {
       progressColor = colorScheme.appAccent;
@@ -284,12 +283,15 @@ class BudgetListView extends StatelessWidget {
 
 class BudgetConsumptionGuagePainter extends CustomPainter {
   final double progress;
-
-  const BudgetConsumptionGuagePainter({required this.progress});
+  final Color backgroundColor;
+  const BudgetConsumptionGuagePainter({
+    required this.progress,
+    required this.backgroundColor,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    const strokeWidth = 8.0;
+    const strokeWidth = 4.0;
 
     final center = Offset(size.width / 2, size.height / 2);
 
@@ -336,7 +338,7 @@ class BudgetConsumptionGuagePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round
-      ..color = Colors.black.withValues(alpha: 0.06);
+      ..color = backgroundColor;
 
     canvas.drawArc(rect, startAngle, sweepAngle, false, backgroundPaint);
 

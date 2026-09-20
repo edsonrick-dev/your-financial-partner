@@ -447,7 +447,7 @@ class DeathBenefitQuestionnaire extends GetView<InsurancePlannerController> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
+    // final colorScheme = context.colors;
 
     return Scaffold(
       appBar: AppBar(

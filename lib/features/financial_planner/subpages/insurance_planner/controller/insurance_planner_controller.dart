@@ -4,7 +4,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/enums/protection_gap_severity_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/enums/protection_profile_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/questionnaires/death_benefit_questionnaire/financial_dependency_question.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/questionnaires/death_benefit_questionnaire/survivor_budget_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/subpages/questionnaires/protection_horizon/models/protection_horizon.dart';
 
 enum DeathBenefitPage {

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:drift/drift.dart' as d;
+import 'package:flutter/rendering.dart';
 import 'dart:math' as math;
 
 import 'package:get/get.dart';
@@ -17,11 +18,146 @@ import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
+import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 
+extension CashflowHomeViewExtention on CashflowController {
+  Future<void> previousMonth() async {
+    final current = selectedMonth.value;
+
+    selectedMonth.value = DateTime(current.year, current.month - 1);
+
+    await _refreshSelectedMonthBudgetItems(selectedMonth.value);
+  }
+
+  Future<void> nextMonth() async {
+    final current = selectedMonth.value;
+
+    selectedMonth.value = DateTime(current.year, current.month + 1);
+
+    await _refreshSelectedMonthBudgetItems(selectedMonth.value);
+  }
+
+  Future<void> goToCurrentMonth() async {
+    final now = DateTime.now();
+
+    selectedMonth.value = DateTime(now.year, now.month);
+
+    await _refreshSelectedMonthBudgetItems(selectedMonth.value);
+  }
+
+  void selectBudget(int index) {
+    selectedBudgetIndex.value = index;
+  }
+
+  Stream<MonthlyCashFlowSummary> get monthlySummaryStream =>
+      database.transactionsDao.watchMonthlySummary(month: selectedMonth.value);
+  Stream<List<MonthlyCashFlowTrend>> get monthlyTrendStream =>
+      database.transactionsDao.watchMonthlyTrend(endMonth: selectedMonth.value);
+
+  void setMonth(DateTime month) {
+    selectedMonth.value = DateTime(month.year, month.month);
+  }
+
+  bool get isCurrentMonth {
+    final now = DateTime.now();
+
+    return selectedMonth.value.year == now.year &&
+        selectedMonth.value.month == now.month;
+  }
+
+  void setBudgetMonth(DateTime month) {
+    selectedMonth.value = DateTime(month.year, month.month);
+    _refreshSelectedMonthBudgetItems(selectedMonth.value);
+  }
+
+  Future<void> _refreshSelectedMonthBudgetItems(DateTime selectedMonth) async {
+    final monthIndex = selectedMonth.month - 1;
+    final year = selectedMonth.year;
+
+    final spentByCategory = await database.transactionsDao
+        .watchCurrentMonthExpensesByCategory(month: selectedMonth)
+        .first;
+
+    final result = <BudgetItem>[];
+
+    for (final savedPlan in savedPlans) {
+      final plan = savedPlan.plan;
+
+      if (plan.planType != 'expense') {
+        continue;
+      }
+
+      final allocations = await database.cashflowPlanDao.getAllocationsForPlan(
+        plan.id,
+      );
+
+      final period = BudgetPeriod.values.firstWhere(
+        (period) => period.name == plan.period,
+      );
+
+      final isCustom =
+          plan.distributionType == CashFlowDistribution.custom.name;
+
+      final amount = calculateSavedPlanBaseAmount(
+        plan: plan,
+        allocations: allocations,
+      );
+
+      final customSummary = isCustom
+          ? buildSavedPlanCustomSummary(
+              period: period,
+              allocations: allocations,
+            )
+          : null;
+
+      final monthly = calculateSavedPlanRecurringMonthlyDistribution(
+        plan: plan,
+        allocations: allocations,
+        year: year,
+      );
+
+      final budget = monthly[monthIndex];
+
+      if (budget <= 0) {
+        continue;
+      }
+
+      result.add(
+        BudgetItem(
+          plan: SavedCashflowPlanData(
+            planId: plan.id,
+            categoryId: plan.categoryId!,
+            category: savedPlan.category.name,
+            amount: amount,
+            budgetPeriod: period,
+            iconKey: savedPlan.category.icon,
+            isCustom: isCustom,
+            customSummary: customSummary,
+            planType: plan.planType,
+          ),
+          categoryId: plan.categoryId!,
+          budget: budget,
+          spent: spentByCategory[plan.categoryId] ?? 0,
+        ),
+      );
+    }
+
+    selectedMonthBudgetItem.assignAll(result);
+  }
+}
+
 class CashflowController extends GetxController {
+  final Rx<DateTime> selectedMonth = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+  ).obs;
+
+  final selectedMonthBudgetItem = <BudgetItem>[].obs;
+  final selectedBudgetIndex = 0.obs;
+
   void setInitialDetailsTab() {
     if (hasIncomePlan && !hasBudgetPlan) {
       seletectedDetailsTabIndex.value = 1;
@@ -52,7 +188,8 @@ class CashflowController extends GetxController {
   // Dependencies
   // ===========================================================================
 
-  final transactionController = Get.find<TransactionController>();
+  TransactionController get transactionController =>
+      Get.find<TransactionController>();
 
   late final StreamSubscription<Map<int, double>> _budgetSubscription;
 
@@ -76,8 +213,10 @@ class CashflowController extends GetxController {
 
   final savedPlans = <CashflowPlanWithCategory>[].obs;
   final hasDebtRepaymentBills = false.obs;
-  bool get isEmpty => savedPlans.isEmpty && !hasDebtRepaymentBills.value;
-
+  bool get isEmpty =>
+      !hasExpensePlan && !hasIncomePlan && !hasDebtRepaymentBills.value;
+  bool get isCashflowPlanComplete =>
+      hasIncomePlan && (hasExpensePlan || hasDebtRepaymentBills.value);
   Set<int> get existingBudgetPlanCategoryIds {
     return savedPlans
         .where((plan) => plan.plan.planType == 'expense')
@@ -105,18 +244,16 @@ class CashflowController extends GetxController {
 
   bool get hasBudgetPlan =>
       hasExpensePlan || hasDebtRepaymentBills.value == true;
-
+  bool get hasBudgetForSelectedMonth => selectedMonthBudgetItem.isNotEmpty;
   // ===========================================================================
   // Budget State
   // ===========================================================================
-
-  final currentMonthBudgetItems = <CurrentMonthBudgetItem>[].obs;
 
   final Rx<DisplayMode> budgetDisplayMode = DisplayMode.list.obs;
 
   final RxBool isBudgetExpanded = false.obs;
 
-  bool get hasCurrentMonthBudget => currentMonthBudgetItems.isNotEmpty;
+  bool get hasCurrentMonthBudget => selectedMonthBudgetItem.isNotEmpty;
 
   void setBudgetDisplayMode(DisplayMode mode) {
     budgetDisplayMode.value = mode;
@@ -128,7 +265,7 @@ class CashflowController extends GetxController {
   }
 
   double getBudgetForCategory(int categoryId) {
-    final result = currentMonthBudgetItems
+    final result = selectedMonthBudgetItem
         .where((item) => item.categoryId == categoryId)
         .fold<double>(0.0, (total, item) => total + item.budget);
 
@@ -182,7 +319,7 @@ class CashflowController extends GetxController {
           // annualDebtRepayment.value = debtRepayment;
           // annualBudget.value = expense + debtRepayment;
 
-          await _refreshCurrentMonthBudgetItems();
+          await _refreshSelectedMonthBudgetItems(selectedMonth.value);
           await _refreshMonthlyCashflow();
         });
     _debtRepaymentBillsSubscription = watchDebtRepaymentBills().listen((
@@ -214,9 +351,9 @@ class CashflowController extends GetxController {
     //   await _refreshMonthlyCashflow();
     // });
     _budgetSubscription = database.transactionsDao
-        .watchCurrentMonthExpensesByCategory(month: DateTime.now())
+        .watchCurrentMonthExpensesByCategory(month: selectedMonth.value)
         .listen((spent) async {
-          await _refreshCurrentMonthBudgetItems();
+          await _refreshSelectedMonthBudgetItems(selectedMonth.value);
         });
   }
 
@@ -319,88 +456,8 @@ class CashflowController extends GetxController {
     });
   }
 
-  // ===========================================================================
-  // Current Month Budget
-  // ===========================================================================
-
-  Future<void> _refreshCurrentMonthBudgetItems() async {
-    final now = DateTime.now();
-    final monthIndex = now.month - 1;
-    final year = now.year;
-
-    final spentByCategory = await database.transactionsDao
-        .watchCurrentMonthExpensesByCategory(month: now)
-        .first;
-
-    final result = <CurrentMonthBudgetItem>[];
-
-    for (final savedPlan in savedPlans) {
-      final plan = savedPlan.plan;
-
-      if (plan.planType != 'expense') {
-        continue;
-      }
-
-      final allocations = await database.cashflowPlanDao.getAllocationsForPlan(
-        plan.id,
-      );
-
-      final period = BudgetPeriod.values.firstWhere(
-        (period) => period.name == plan.period,
-      );
-
-      final isCustom =
-          plan.distributionType == CashFlowDistribution.custom.name;
-
-      final amount = calculateSavedPlanBaseAmount(
-        plan: plan,
-        allocations: allocations,
-      );
-
-      final customSummary = isCustom
-          ? buildSavedPlanCustomSummary(
-              period: period,
-              allocations: allocations,
-            )
-          : null;
-
-      final monthly = calculateSavedPlanRecurringMonthlyDistribution(
-        plan: plan,
-        allocations: allocations,
-        year: year,
-      );
-
-      final budget = monthly[monthIndex];
-
-      if (budget <= 0) {
-        continue;
-      }
-
-      result.add(
-        CurrentMonthBudgetItem(
-          plan: SavedCashflowPlanData(
-            planId: plan.id,
-            categoryId: plan.categoryId!,
-            category: savedPlan.category.name,
-            amount: amount,
-            budgetPeriod: period,
-            iconKey: savedPlan.category.icon,
-            isCustom: isCustom,
-            customSummary: customSummary,
-            planType: plan.planType,
-          ),
-          categoryId: plan.categoryId!,
-          budget: budget,
-          spent: spentByCategory[plan.categoryId] ?? 0,
-        ),
-      );
-    }
-
-    currentMonthBudgetItems.assignAll(result);
-  }
-
-  Stream<List<CurrentMonthBudgetItem>> watchCurrentMonthBudgetItems() {
-    final now = DateTime.now();
+  Stream<List<BudgetItem>> watchselectedMonthBudgetItem() {
+    final now = selectedMonth.value;
     final monthIndex = now.month - 1;
     final year = now.year;
 
@@ -411,7 +468,7 @@ class CashflowController extends GetxController {
           .watchCurrentMonthExpensesByCategory(month: now)
           .first;
 
-      final result = <CurrentMonthBudgetItem>[];
+      final result = <BudgetItem>[];
 
       for (final savedPlan in savedPlans) {
         final plan = savedPlan.plan;
@@ -455,7 +512,7 @@ class CashflowController extends GetxController {
         }
 
         result.add(
-          CurrentMonthBudgetItem(
+          BudgetItem(
             plan: SavedCashflowPlanData(
               planId: plan.id,
               categoryId: plan.categoryId!,
@@ -478,15 +535,16 @@ class CashflowController extends GetxController {
     });
   }
 
-  Future<List<CurrentMonthBudgetItem>> getCurrentMonthBudgetItems() async {
+  Future<List<BudgetItem>> getselectedMonthBudgetItem() async {
     final plans = await database.cashflowPlanDao
         .watchAllPlansWithDetails()
         .first;
 
-    final currentMonthIndex = DateTime.now().month - 1;
-    final year = DateTime.now().year;
+    final selected = selectedMonth.value;
+    final monthIndex = selected.month - 1;
+    final year = selected.year;
 
-    final result = <CurrentMonthBudgetItem>[];
+    final result = <BudgetItem>[];
 
     for (final savedPlan in plans) {
       final plan = savedPlan.plan;
@@ -501,7 +559,7 @@ class CashflowController extends GetxController {
         year: year,
       );
 
-      final budget = monthly[currentMonthIndex];
+      final budget = monthly[monthIndex];
 
       if (budget <= 0) {
         continue;
@@ -509,7 +567,7 @@ class CashflowController extends GetxController {
 
       final spent = await database.transactionsDao.getMonthlyExpenseForCategory(
         categoryId: plan.categoryId!,
-        month: DateTime.now(),
+        month: selected,
       );
 
       final period = BudgetPeriod.values.firstWhere(
@@ -520,7 +578,7 @@ class CashflowController extends GetxController {
           plan.distributionType == CashFlowDistribution.custom.name;
 
       result.add(
-        CurrentMonthBudgetItem(
+        BudgetItem(
           plan: SavedCashflowPlanData(
             planId: plan.id,
             categoryId: plan.categoryId!,
@@ -558,7 +616,7 @@ class CashflowController extends GetxController {
     return plan.budgetPeriod.toMonthly(plan.amount);
   }
 
-  Stream<double> watchCurrentMonthBudget() {
+  Stream<double> watchSelectedMonthBudget() {
     return watchSavedBudgetPlans().map(
       (plans) => plans.fold<double>(
         0,
@@ -1020,7 +1078,13 @@ class CashflowController extends GetxController {
   }) async {
     final category = transactionController.selectedCategory.value;
     final period = selectedPeriod.value;
+    debugPrint('CASHFLOW TC: ${transactionController.hashCode}');
+    debugPrint(
+      'SAVE CATEGORY: ${transactionController.selectedCategory.value?.name} '
+      'ID: ${transactionController.selectedCategory.value?.id}',
+    );
 
+    debugPrint('CONTROLLER: ${transactionController.hashCode}');
     if (category == null || period == null) {
       return;
     }

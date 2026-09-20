@@ -1,82 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/widgets/cashflow_summary_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:intl/intl.dart';
-import 'package:month_picker_dialog/month_picker_dialog.dart';
 
-class CashflowHistorySection extends GetView<HomeController> {
+class CashflowHistorySection extends GetView<CashflowController> {
   const CashflowHistorySection({super.key});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     return AppSection(
-      sectionTitle: 'Cashflow History',
-      trailingType: SectionTrailingType.custom,
-      trailingWidget: Obx(() {
-        return Row(
-          children: [
-            if (!controller.isCurrentMonth)
-              AdaptivePressable(
-                child: GestureDetector(
-                  onTap: controller.goToCurrentMonth,
-                  child: Text(
-                    'Today',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      // fontSize: 15,
-                      // fontWeight: FontWeight.w500,
-                      // height: 20 / 15,
-                    ),
-                  ),
-                ),
-              ),
-            IconButton(
-              icon: const Icon(Icons.chevron_left),
-              onPressed: controller.previousMonth,
-            ),
+      // // sectionTitle: 'Cashflow History',
+      // trailingType: SectionTrailingType.custom,
+      // trailingWidget: Obx(() {
+      //   return Row(
+      //     children: [
+      //       if (!controller.isCurrentMonth)
+      //         AdaptivePressable(
+      //           child: GestureDetector(
+      //             onTap: controller.goToCurrentMonth,
+      //             child: Text(
+      //               'Today',
+      //               style: TextStyle(
+      //                 decoration: TextDecoration.underline,
+      //                 // fontSize: 15,
+      //                 // fontWeight: FontWeight.w500,
+      //                 // height: 20 / 15,
+      //               ),
+      //             ),
+      //           ),
+      //         ),
+      //       IconButton(
+      //         icon: const Icon(Icons.chevron_left),
+      //         onPressed: controller.previousMonth,
+      //       ),
 
-            AdaptivePressable(
-              child: GestureDetector(
-                onTap: () async {
-                  final month = await showMonthPicker(
-                    context: context,
-                    initialDate: controller.selectedMonth.value,
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime(
-                      DateTime.now().year,
-                      DateTime.now().month,
-                    ),
-                  );
+      //       AdaptivePressable(
+      //         child: GestureDetector(
+      //           onTap: () async {
+      //             final month = await showMonthPicker(
+      //               context: context,
+      //               initialDate: controller.selectedMonth.value,
+      //               firstDate: DateTime(2020),
+      //               lastDate: DateTime(
+      //                 DateTime.now().year,
+      //                 DateTime.now().month,
+      //               ),
+      //             );
 
-                  if (month != null) {
-                    controller.setMonth(month);
-                  }
-                },
-                child: Text(
-                  DateFormat("MMM ''yy").format(controller.selectedMonth.value),
-                  // style: TextStyle(
-                  //   fontSize: 15,
-                  //   fontWeight: FontWeight.w500,
-                  //   height: 20 / 15,
-                  // ),
-                ),
-              ),
-            ),
-            Obx(
-              () => IconButton(
-                icon: const Icon(Icons.chevron_right),
-                onPressed: controller.canGoNext ? controller.nextMonth : null,
-              ),
-            ),
-          ],
-        );
-      }),
+      //             if (month != null) {
+      //               controller.setMonth(month);
+      //             }
+      //           },
+      //           child: Text(
+      //             DateFormat("MMM ''yy").format(controller.selectedMonth.value),
+      //             // style: TextStyle(
+      //             //   fontSize: 15,
+      //             //   fontWeight: FontWeight.w500,
+      //             //   height: 20 / 15,
+      //             // ),
+      //           ),
+      //         ),
+      //       ),
+      //       Obx(
+      //         () => IconButton(
+      //           icon: const Icon(Icons.chevron_right),
+      //           onPressed: controller.canGoNext ? controller.nextMonth : null,
+      //         ),
+      //       ),
+      //     ],
+      //   );
+      // }),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(

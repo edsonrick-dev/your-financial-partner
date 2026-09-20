@@ -4,9 +4,7 @@ import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
-import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/financial_planner_empty_section.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/insurance_planner/insurance_planner_content_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/widgets/insurance_assessment_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -18,7 +16,7 @@ class InsurancePlannerEmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
+    // final colorScheme = context.colors;
     return SizedBox(
       width: double.infinity,
       child: Padding(

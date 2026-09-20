@@ -20,75 +20,16 @@ class BudgetProgressSection extends GetView<CashflowController> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    // onTrailingPressed: () {
-    //   controller.seletectedDetailsTabIndex(1);
-    //   Get.toNamed(Routes.CASHFLOWDETAILS);
-    // },
-
     return Obx(() {
-      final items = controller.currentMonthBudgetItems;
+      final hasAnyBudget = controller.hasExpensePlan;
+      final hasBudgetForSelectedMonth = controller.hasBudgetForSelectedMonth;
 
-      final now = DateTime.now();
-      final currentMonthIndex = now.month - 1;
-
-      final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
-
-      final daysLeft = daysInMonth - now.day;
-
-      final budgetAmount = items.fold<double>(
-        0,
-        (sum, item) => sum + item.budget,
-      );
-
-      final spentAmount = items.fold<double>(
-        0,
-        (sum, item) => sum + item.spent,
-      );
-
-      final progress = budgetAmount <= 0 ? 0.0 : spentAmount / budgetAmount;
-
-      final expectedSpent = budgetAmount <= 0
-          ? 0.0
-          : budgetAmount * (now.day / daysInMonth);
-
-      final isOverBudget = spentAmount > budgetAmount;
-
-      final isOnTrack = !isOverBudget && spentAmount <= expectedSpent;
-
-      final statusText = isOverBudget
-          ? 'Over Budget'
-          : isOnTrack
-          ? 'On Track'
-          : 'Over Pace';
-
-      final statusColor = isOverBudget
-          ? colorScheme.appOutflow
-          : isOnTrack
-          ? colorScheme.appSuccess
-          : colorScheme.appAccent;
-      final hasBudget = controller.hasExpensePlan;
       return AppSectionBody(
-        // constraints: const BoxConstraints(minHeight: 44),
-        // width: double.infinity,
-        // decoration: BoxDecoration(
-        //   color: colorScheme.bgLight,
-        //   borderRadius: BorderRadius.circular(24),
-        // ),
-        child: hasBudget
-            ? _FilledView(
-                progress: progress,
-                statusColor: statusColor,
-                currentMonthIndex: currentMonthIndex,
-                spentAmount: spentAmount,
-                budgetAmount: budgetAmount,
-                statusText: statusText,
-                daysLeft: daysLeft,
-                colorScheme: colorScheme,
-                items: items,
-                controller: controller,
-              )
-            : _EmptyView(),
+        child: !hasAnyBudget
+            ? _EmptyView()
+            : hasBudgetForSelectedMonth
+            ? FilledView()
+            : const Text('No Budget Set for this month'),
       );
     });
   }
@@ -106,7 +47,9 @@ class _EmptyView extends GetView<CashflowController> {
       child: Column(
         children: [
           Icon(Icons.toc_rounded, size: 60, color: colorScheme.appAccent),
+
           SizedBox(height: 8),
+
           Text(
             'You have no budget yet',
             style: AppTextStyle.headlineM,
@@ -118,68 +61,94 @@ class _EmptyView extends GetView<CashflowController> {
             style: AppTextStyle.headlineS,
             textAlign: TextAlign.center,
           ),
+
           Text(
-            "Create spending plans for categories like groceries, utilities, transportation, and dining so you know where your money should go each month.",
+            "Create spending plans for categories like groceries, utilities, "
+            "transportation, and dining so you know where your money "
+            "should go each month.",
             style: AppTextStyle.bodyM.copyWith(color: colorScheme.appTextMuted),
             textAlign: TextAlign.center,
           ),
+
           SizedBox(height: 12),
+
           AppButton(
             type: ButtonType.outline,
-            leadingIcon: PhosphorIconsRegular.plus,
-            text: 'Budget a category',
+            trailingIcon: PhosphorIconsRegular.arrowRight,
+            text: 'Set budget in cashflow planner',
             onTap: () {
-              Get.bottomSheet(
-                CreateExpensePlanSheet(),
-                backgroundColor: Colors.transparent,
-                isScrollControlled: true,
-              ).whenComplete(() {
-                controller.resetBudgetPlan();
-              });
+              Get.toNamed(Routes.CASHFLOWDETAILS);
+              // Get.bottomSheet(
+              //   CreateExpensePlanSheet(),
+              //   backgroundColor: Colors.transparent,
+              //   isScrollControlled: true,
+              // ).whenComplete(() {
+              //   controller.resetBudgetPlan();
+              // });
             },
           ),
-          // AppButton(
-          //   leadingIcon: PhosphorIconsRegular.plus,
-          //   // type: ButtonType.outline,
-          //   text: 'Go to Cashflow Planner',
-          //   onTap: () {
-          //     controller.seletectedDetailsTabIndex(1);
-          //     Get.toNamed(Routes.CASHFLOWDETAILS, arguments: 1);
-          //   },
-          // ),
         ],
       ),
     );
   }
 }
 
-class _FilledView extends StatelessWidget {
-  const _FilledView({
-    required this.progress,
-    required this.statusColor,
-    required this.currentMonthIndex,
-    required this.spentAmount,
-    required this.budgetAmount,
-    required this.statusText,
-    required this.daysLeft,
-    required this.colorScheme,
-    required this.items,
-    required this.controller,
-  });
-
-  final double progress;
-  final Color statusColor;
-  final int currentMonthIndex;
-  final double spentAmount;
-  final double budgetAmount;
-  final String statusText;
-  final int daysLeft;
-  final ColorScheme colorScheme;
-  final List<CurrentMonthBudgetItem> items;
-  final CashflowController controller;
+class FilledView extends GetView<CashflowController> {
+  const FilledView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+    final items = controller.selectedMonthBudgetItem;
+
+    final selectedMonth = controller.selectedMonth.value;
+
+    final selectedMonthIndex = selectedMonth.month - 1;
+
+    final daysInMonth = DateTime(
+      selectedMonth.year,
+      selectedMonth.month + 1,
+      0,
+    ).day;
+
+    final now = DateTime.now();
+
+    final isCurrentMonth =
+        selectedMonth.year == now.year && selectedMonth.month == now.month;
+
+    final daysLeft = isCurrentMonth
+        ? daysInMonth - now.day
+        : selectedMonth.isBefore(DateTime(now.year, now.month))
+        ? 0
+        : daysInMonth;
+    final budgetAmount = items.fold<double>(
+      0,
+      (sum, item) => sum + item.budget,
+    );
+
+    final spentAmount = items.fold<double>(0, (sum, item) => sum + item.spent);
+
+    final progress = budgetAmount <= 0 ? 0.0 : spentAmount / budgetAmount;
+
+    final isOverBudget = spentAmount > budgetAmount;
+
+    final expectedSpent = budgetAmount <= 0 || !isCurrentMonth
+        ? 0.0
+        : budgetAmount * (now.day / daysInMonth);
+
+    final isOnTrack =
+        isCurrentMonth && !isOverBudget && spentAmount <= expectedSpent;
+
+    final statusText = isOverBudget
+        ? 'Over Budget'
+        : isCurrentMonth
+        ? (isOnTrack ? 'On Track' : 'Over Pace')
+        : '';
+    final statusColor = isOverBudget
+        ? colorScheme.appOutflow
+        : isOnTrack
+        ? colorScheme.appSuccess
+        : colorScheme.appAccent;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -190,6 +159,7 @@ class _FilledView extends StatelessWidget {
             spacing: 12,
             children: [
               BudgetProgressIndicator(
+                size: 80,
                 progress: progress.clamp(0.0, 1.0),
                 progressColor: statusColor,
                 child: items.isNotEmpty
@@ -198,7 +168,7 @@ class _FilledView extends StatelessWidget {
                         children: [
                           Text(
                             '${(progress * 100).round()}%',
-                            style: AppTextStyle.amountL,
+                            style: AppTextStyle.amountM,
                           ),
                           Text('used', style: AppTextStyle.labelM),
                         ],
@@ -206,7 +176,7 @@ class _FilledView extends StatelessWidget {
                     : Text(
                         'No\nBudget',
                         textAlign: TextAlign.center,
-                        style: AppTextStyle.cardTitle,
+                        style: AppTextStyle.titleM,
                       ),
               ),
 
@@ -216,7 +186,7 @@ class _FilledView extends StatelessWidget {
                   children: [
                     FittedBox(
                       child: Text(
-                        '${AppMonth.values[currentMonthIndex].fullName} Progress',
+                        '${AppMonth.values[selectedMonthIndex].fullName} Progress',
                         style: AppTextStyle.headlineL,
                       ),
                     ),
@@ -246,6 +216,7 @@ class _FilledView extends StatelessWidget {
                     ),
 
                     SizedBox(height: 4),
+
                     if (items.isNotEmpty)
                       Row(
                         children: [
@@ -264,10 +235,11 @@ class _FilledView extends StatelessWidget {
                             ],
                           ),
                           const Spacer(),
-                          Text(
-                            '$daysLeft days left',
-                            style: AppTextStyle.labelM,
-                          ),
+                          if (isCurrentMonth)
+                            Text(
+                              '$daysLeft days left',
+                              style: AppTextStyle.labelM,
+                            ),
                         ],
                       ),
                     if (items.isEmpty)
@@ -385,13 +357,13 @@ class _FilledView extends StatelessWidget {
   }
 }
 
-class CurrentMonthBudgetItem {
+class BudgetItem {
   final SavedCashflowPlanData plan;
   final int categoryId;
   final double budget;
   final double spent;
 
-  const CurrentMonthBudgetItem({
+  const BudgetItem({
     required this.plan,
     required this.categoryId,
     required this.budget,
@@ -402,7 +374,7 @@ class CurrentMonthBudgetItem {
 class _BudgetGrid extends StatelessWidget {
   const _BudgetGrid({super.key, required this.items});
 
-  final List<CurrentMonthBudgetItem> items;
+  final List<BudgetItem> items;
 
   @override
   Widget build(BuildContext context) {
@@ -435,7 +407,7 @@ class _BudgetGrid extends StatelessWidget {
 class _BudgetList extends StatelessWidget {
   const _BudgetList({super.key, required this.items});
 
-  final List<CurrentMonthBudgetItem> items;
+  final List<BudgetItem> items;
 
   @override
   Widget build(BuildContext context) {

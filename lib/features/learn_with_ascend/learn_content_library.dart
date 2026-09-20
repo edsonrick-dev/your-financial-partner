@@ -1,7 +1,4 @@
-import 'package:getx_drift_app/features/financial_insights/cashflow/models/cashflow_status.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_content.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learn_content_type.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learn_context.dart';
 
 final learnContentLibrary = <LearnContent>[
   // LearnContent(

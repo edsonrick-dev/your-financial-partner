@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/core/constants/app_border_radius.dart';
 
 class AppDatePicker {
   static Future<void> show({
@@ -13,6 +15,7 @@ class AppDatePicker {
 
     CupertinoDatePickerMode mode = CupertinoDatePickerMode.date,
   }) async {
+    final colorScheme = context.colors;
     showCupertinoModalPopup(
       context: context,
 
@@ -20,7 +23,10 @@ class AppDatePicker {
         return Container(
           height: 240,
 
-          color: CupertinoColors.systemBackground,
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: AppBorderRadius.sheetTop,
+          ),
 
           child: CupertinoDatePicker(
             mode: mode,

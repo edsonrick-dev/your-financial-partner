@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/financial_planner_screen.dart';
 import 'package:getx_drift_app/features/home/views/home_view.dart';
 import 'package:getx_drift_app/features/profile/profile_page_view.dart';
@@ -47,6 +48,13 @@ class MainShellController extends GetxController {
     FinancialPlannerScreen(),
     ProfilePage(),
   ];
+  void goToFinancialPlanner({int pageIndex = 0}) {
+    selectedTabIndex.value = 2;
+
+    final plannerController = Get.find<FinancialPlannerController>();
+
+    plannerController.selectTab(pageIndex);
+  }
 
   // void openAddTransaction() {
   //   // Open transaction sheet

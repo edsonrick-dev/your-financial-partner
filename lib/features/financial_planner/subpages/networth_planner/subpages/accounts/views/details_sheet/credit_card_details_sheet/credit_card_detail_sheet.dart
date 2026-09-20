@@ -12,7 +12,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/shared/anchored_action_menu.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CreditCardDetailSheet extends StatelessWidget {
   final AccountsTableData account;

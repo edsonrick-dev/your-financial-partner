@@ -6,6 +6,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/controller/bill_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_category.dart';
+import 'package:getx_drift_app/features/main_shell/controller/main_shell_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/bills_card.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -17,6 +18,14 @@ class BillsPage extends GetView<BillController> {
     final controller = Get.find<BillController>();
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Get.find<MainShellController>().goToFinancialPlanner(pageIndex: 1);
+
+            Get.back();
+          },
+        ),
         centerTitle: true,
         title: Text('Bills', style: AppTextStyle.headlineL),
         actions: [

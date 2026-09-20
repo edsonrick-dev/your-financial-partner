@@ -20,7 +20,7 @@ class CashflowPlannerPage extends GetView<CashflowController> {
 
     const learnEngine = LearnEngine();
     return Obx(() {
-      if (controller.isEmpty) {
+      if (!controller.isCashflowPlanComplete) {
         return const CashflowPlannerEmptyView();
       }
 

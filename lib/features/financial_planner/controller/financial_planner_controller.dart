@@ -48,6 +48,22 @@ class FinancialPlannerController extends GetxController {
     );
   }
 
+  void goToInsurancePlanner() {
+    selectedTabIndex.value = 2;
+
+    final financialPlannerController = Get.find<FinancialPlannerController>();
+
+    financialPlannerController.selectTab(2);
+  }
+
+  void goToCasfhlow() {
+    selectedTabIndex.value = 1;
+
+    final financialPlannerController = Get.find<FinancialPlannerController>();
+
+    financialPlannerController.selectTab(1);
+  }
+
   final financialPlannerPages = <FinancialPlannerPage>[
     FinancialPlannerPage(title: 'Net Worth', page: NetworthPlannerScreen()),
     FinancialPlannerPage(title: 'Cashflow', page: CashflowPlannerPage()),

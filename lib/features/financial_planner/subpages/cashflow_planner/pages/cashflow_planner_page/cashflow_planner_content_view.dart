@@ -9,6 +9,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CashflowPlannerContentView extends GetView<CashflowController> {
   const CashflowPlannerContentView({super.key});
@@ -157,20 +158,26 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
           // SizedBox(height: 20),
           AppSection(
             sectionTitle: 'Cashflow Tools',
-            child: Column(
-              spacing: 16,
+            child: Row(
+              spacing: 8,
               children: [
-                OthersCard(
-                  title: 'Bill Manager',
-                  onTap: () {
-                    Get.toNamed(Routes.BILLS);
-                  },
+                Expanded(
+                  child: OthersCard(
+                    icon: PhosphorIconsRegular.receipt,
+                    title: 'Bill Manager',
+                    onTap: () {
+                      Get.toNamed(Routes.BILLS);
+                    },
+                  ),
                 ),
-                OthersCard(
-                  title: 'Categories',
-                  onTap: () {
-                    Get.toNamed(Routes.CATEGORIES);
-                  },
+                Expanded(
+                  child: OthersCard(
+                    title: 'Categories',
+                    icon: Icons.category_outlined,
+                    onTap: () {
+                      Get.toNamed(Routes.CATEGORIES);
+                    },
+                  ),
                 ),
                 // AppSectionBody(
                 //   child: Column(

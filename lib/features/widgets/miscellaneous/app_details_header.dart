@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
@@ -6,12 +7,14 @@ class AppDetailsHeader extends StatelessWidget {
   final String title;
   final Widget child;
   final List<Widget>? actions;
+  final VoidCallback? onBack;
 
   const AppDetailsHeader({
     super.key,
     required this.title,
     required this.child,
     this.actions,
+    this.onBack,
   });
 
   @override
@@ -37,6 +40,10 @@ class AppDetailsHeader extends StatelessWidget {
               ),
             ),
             actions: actions,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: onBack ?? () => Get.back(),
+            ),
             surfaceTintColor: Colors.transparent,
           ),
           Padding(

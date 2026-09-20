@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
-import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_state/financial_state.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
-import 'package:getx_drift_app/features/home/views/section_views/bills_reminder_section.dart';
-import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
+import 'package:getx_drift_app/features/home/views/section_views/finance_home_view/finance_home_view.dart';
+import 'package:getx_drift_app/features/home/views/section_views/cashflow_history_section.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_content_library.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_context.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_engine.dart';
@@ -71,37 +69,9 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
                 SizedBox(height: 20),
-                AppSection(
-                  sectionTitle: "This Month's Finances",
-                  child: Obx(() {
-                    final index = controller.selectedBudgetIndex.value;
-
-                    return Column(
-                      children: [
-                        _Selector(
-                          selectedIndex: index,
-                          onChanged: controller.selectBudget,
-                        ),
-
-                        const SizedBox(height: 12),
-
-                        AnimatedSize(
-                          duration: const Duration(milliseconds: 160),
-                          curve: Curves.easeInOut,
-                          alignment: Alignment.topCenter,
-                          child: index == 0
-                              ? const BudgetProgressSection(
-                                  key: ValueKey('budget'),
-                                )
-                              : const BillsReminderSection(
-                                  key: ValueKey('bills'),
-                                ),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
-
+                FinanceHomeView(),
+                SizedBox(height: 20),
+                CashflowHistorySection(),
                 Obx(() {
                   final recommendations = learnEngine.getRecommendedContent(
                     state: financialProfileController.financialState,
@@ -167,85 +137,6 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _Selector extends StatelessWidget {
-  const _Selector({required this.selectedIndex, required this.onChanged});
-
-  final int selectedIndex;
-  final ValueChanged<int> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: colorScheme.bgLight,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: colorScheme.appBorderMuted),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _SelectorItem(
-              title: 'My Budget',
-              selected: selectedIndex == 0,
-              onTap: () => onChanged(0),
-            ),
-          ),
-          Expanded(
-            child: _SelectorItem(
-              title: 'My Bills',
-              selected: selectedIndex == 1,
-              onTap: () => onChanged(1),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SelectorItem extends StatelessWidget {
-  const _SelectorItem({
-    required this.title,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String title;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-
-    return AdaptivePressable(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: selected
-              ? colorScheme.pageShifterFillSelected
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: AppTextStyle.titleM.copyWith(
-            color: selected
-                ? colorScheme.pageShifterTextSelected
-                : colorScheme.pageShifterTextUnselected,
-          ),
-        ),
       ),
     );
   }

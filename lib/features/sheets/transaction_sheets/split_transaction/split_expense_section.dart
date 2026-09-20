@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_transaction_form.dart';
+import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/add_participant_button.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/split_allocation_summary.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/split_mode_selector.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/split_participants_list.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_segmented_selector.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class SplitExpenseSection extends GetView<TransactionController> {
@@ -16,7 +18,7 @@ class SplitExpenseSection extends GetView<TransactionController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-
+    // final selectedIndex = SplitMode.values.indexOf(controller.splitMode.value);
     return Obx(() {
       final isPaidBySelf = controller.paidBy.value == PaidBy.self;
       return isPaidBySelf
@@ -118,9 +120,36 @@ class SplitExpenseSection extends GetView<TransactionController> {
 
                   if (controller.isSharedExpense.value) ...[
                     const SizedBox(height: 16),
+                    Obx(() {
+                      final selectedIndex = SplitMode.values.indexOf(
+                        controller.splitMode.value,
+                      );
 
-                    const SplitModeSelector(),
+                      return AppSegmentedSelector(
+                        items: SplitMode.values
+                            .map((mode) => mode.name.capitalize!)
+                            .toList(),
+                        selectedIndex: selectedIndex,
+                        onChanged: (index) {
+                          for (final participant in controller.participants) {
+                            participant.isActive.value = false;
+                            participant.focusNode.unfocus();
+                          }
 
+                          final mode = SplitMode.values[index];
+
+                          controller.splitMode.value = mode;
+
+                          controller.recalculateParticipants();
+
+                          for (final participant in controller.participants) {
+                            controller.syncTextController(participant);
+                          }
+                        },
+                      );
+                    }),
+
+                    // const SplitModeSelector(),
                     const SizedBox(height: 16),
 
                     const SplitAllocationSummary(),

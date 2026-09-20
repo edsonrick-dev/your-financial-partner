@@ -15,6 +15,7 @@ class CashflowPlannerEmptyView extends GetView<CashflowController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+
     return SizedBox(
       width: double.infinity,
       child: Padding(
@@ -59,12 +60,27 @@ class CashflowPlannerEmptyView extends GetView<CashflowController> {
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 20),
-                    AppButton(
-                      text: 'Build your cashflow plan',
-                      onTap: () {
-                        Get.toNamed(Routes.CASHFLOWDETAILS);
-                      },
-                    ),
+                    Obx(() {
+                      final emptyIncomePlan = !controller.hasIncomePlan;
+                      final emptyBudgetPlan =
+                          !controller.hasExpensePlan &&
+                          !controller.hasDebtRepaymentBills.value;
+                      final emptyCasfhlowPlan =
+                          emptyBudgetPlan && emptyIncomePlan;
+                      String ctaText = emptyCasfhlowPlan
+                          ? 'Build your cashflow plan'
+                          : emptyIncomePlan
+                          ? 'Add your income sources'
+                          : 'Set your budget';
+                      //  "Build your cashflow plan";
+                      return AppButton(
+                        text: ctaText,
+                        onTap: () {
+                          controller.setInitialDetailsTab();
+                          Get.toNamed(Routes.CASHFLOWDETAILS);
+                        },
+                      );
+                    }),
                   ],
                 ),
               ),

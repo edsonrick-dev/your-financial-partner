@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
-import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
-import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/categories/category_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_segmented_selector.dart';
 
 class CategoriesPage extends GetView<CategoryController> {
   const CategoriesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
+    // final colorScheme = context.colors;
     // bool showIncome = controller.selectedCategoryTypeIndex.value == 0;
     return Scaffold(
       appBar: AppBar(
@@ -25,106 +23,13 @@ class CategoriesPage extends GetView<CategoryController> {
       body: Column(
         children: [
           AppSection(
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: colorScheme.bgLight,
-                borderRadius: BorderRadius.circular(999),
-                border: Border.all(color: colorScheme.appBorderMuted),
-              ),
-              child: Obx(
-                () => Row(
-                  children: [
-                    Expanded(
-                      child: AdaptivePressable(
-                        onTap: () {
-                          controller.selectedCategoryTypeIndex.value = 0;
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 150),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color:
-                                controller.selectedCategoryTypeIndex.value == 0
-                                ? colorScheme.pageShifterFillSelected
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(999),
-                          ),
-                          child: Center(
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'Income',
-                                style:
-                                    controller
-                                            .selectedCategoryTypeIndex
-                                            .value ==
-                                        0
-                                    ? AppTextStyle.bodyM.copyWith(
-                                        color:
-                                            colorScheme.pageShifterTextSelected,
-                                        // fontWeight: FontWeight.w600,
-                                      )
-                                    : AppTextStyle.titleM.copyWith(
-                                        color: colorScheme
-                                            .pageShifterTextUnselected,
-                                        // fontWeight: FontWeight.w400,
-                                      ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: AdaptivePressable(
-                        onTap: () {
-                          controller.selectedCategoryTypeIndex.value = 1;
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 150),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color:
-                                controller.selectedCategoryTypeIndex.value == 1
-                                ? colorScheme.pageShifterFillSelected
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(999),
-                          ),
-                          child: Center(
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'Expense',
-                                style:
-                                    controller
-                                            .selectedCategoryTypeIndex
-                                            .value ==
-                                        1
-                                    ? AppTextStyle.bodyM.copyWith(
-                                        color:
-                                            colorScheme.pageShifterTextSelected,
-                                        // fontWeight: FontWeight.w600,
-                                      )
-                                    : AppTextStyle.titleM.copyWith(
-                                        color: colorScheme
-                                            .pageShifterTextUnselected,
-                                        // fontWeight: FontWeight.w400,
-                                      ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+            child: Obx(
+              () => AppSegmentedSelector(
+                items: const ['Income', 'Expense'],
+                selectedIndex: controller.selectedCategoryTypeIndex.value,
+                onChanged: (index) {
+                  controller.selectedCategoryTypeIndex.value = index;
+                },
               ),
             ),
           ),

@@ -44,6 +44,7 @@ class AppTextField extends StatelessWidget {
                 style: AppTextStyle.titleM,
               ),
               TextField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: controller,
                 focusNode: focusNode,
                 keyboardType:
