@@ -11,8 +11,13 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/add_account_sheet.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/balance_sheet_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/models/net_worth_item.dart';
+import 'dart:math' as math;
 
 class NetWorthController extends GetxController {
+  bool get hasNegativeAsset {
+    return assetAccounts.any((account) => account.currentValue < 0);
+  }
+
   Future<void> addAccount() async {
     final isAsset = seletectedDetailsTabIndex.value == 0;
 
@@ -129,20 +134,25 @@ class NetWorthController extends GetxController {
   }
 
   final seletectedDetailsTabIndex = 0.obs;
+
+  double get metricScale {
+    return math.max(totalAssets, totalLiabilities);
+  }
+
   double get assetRatio {
-    final total = totalAssets + totalLiabilities;
+    final scale = metricScale;
 
-    if (total == 0) return 0;
+    if (scale == 0) return 0;
 
-    return totalAssets / total;
+    return totalAssets / scale;
   }
 
   double get liabilityRatio {
-    final total = totalAssets + totalLiabilities;
+    final scale = metricScale;
 
-    if (total == 0) return 0;
+    if (scale == 0) return 0;
 
-    return totalLiabilities / total;
+    return totalLiabilities / scale;
   }
 
   double get netWorthRatio {

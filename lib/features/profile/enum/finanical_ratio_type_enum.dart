@@ -44,13 +44,17 @@ extension FinancialRatioTypeExtension on FinancialRatioType {
         return '${value.toStringAsFixed(0)}%';
 
       case FinancialRatioType.emergencyFund:
-        return '${value.round()} months';
+        return value.round() == 1
+            ? '${value.round()} month'
+            : '${value.round()} months';
 
       case FinancialRatioType.wealthBuilding:
         return '${value.toStringAsFixed(0)}%';
 
       case FinancialRatioType.lifestyleCoverage:
-        return '${value.toStringAsFixed(1)}×';
+        return value == 1
+            ? '${value.toStringAsFixed(1)} year'
+            : '${value.toStringAsFixed(1)} years';
     }
   }
 

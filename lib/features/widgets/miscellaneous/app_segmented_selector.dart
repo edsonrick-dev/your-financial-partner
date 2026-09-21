@@ -9,11 +9,13 @@ class AppSegmentedSelector extends StatelessWidget {
     required this.items,
     required this.selectedIndex,
     required this.onChanged,
+    this.style = AppTextStyle.titleL,
   });
 
   final List<String> items;
   final int selectedIndex;
   final ValueChanged<int> onChanged;
+  final TextStyle style;
 
   @override
   Widget build(BuildContext context) {
@@ -57,15 +59,21 @@ class AppSegmentedSelector extends StatelessWidget {
                   return Expanded(
                     child: AdaptivePressable(
                       onTap: () => onChanged(index),
-                      child: Center(
-                        child: AnimatedDefaultTextStyle(
-                          duration: const Duration(milliseconds: 180),
-                          style: AppTextStyle.titleL.copyWith(
-                            color: isSelected
-                                ? colorScheme.pageShifterTextSelected
-                                : colorScheme.pageShifterTextUnselected,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Center(
+                          child: AnimatedDefaultTextStyle(
+                            duration: const Duration(milliseconds: 180),
+                            style: style.copyWith(
+                              color: isSelected
+                                  ? colorScheme.pageShifterTextSelected
+                                  : colorScheme.pageShifterTextUnselected,
+                            ),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(items[index]),
+                            ),
                           ),
-                          child: Text(items[index]),
                         ),
                       ),
                     ),

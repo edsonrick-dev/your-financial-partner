@@ -491,6 +491,12 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     return into(financialObligationsTable).insert(entry);
   }
 
+  Future<int> deleteFinancialObligationsByTransaction(int transactionId) {
+    return (delete(
+      financialObligationsTable,
+    )..where((tbl) => tbl.transactionId.equals(transactionId))).go();
+  }
+
   /// =============================================================================
   /// TRANSACTION STREAMS
   /// =============================================================================

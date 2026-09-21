@@ -4,6 +4,7 @@ import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/tables/bills_table.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/data/tables/bill_occurrences_table.dart';
+import 'package:getx_drift_app/data/tables/transactions_table.dart';
 import 'package:getx_drift_app/data/tables/cashflow_categories_table.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_payment_history.dart';
@@ -18,6 +19,7 @@ part 'bills_dao.g.dart';
     BillOccurrencesTable,
     CashflowCategoriesTable,
     AccountsTable,
+    TransactionsTable,
   ],
 )
 class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
@@ -236,6 +238,12 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
               accountsTable,
               accountsTable.id.equalsExp(billsTable.loanAccountId),
             ),
+            leftOuterJoin(
+              transactionsTable,
+              transactionsTable.id.equalsExp(
+                billOccurrencesTable.transactionId,
+              ),
+            ),
           ])
           ..where(
             billOccurrencesTable.dueDate.isBiggerOrEqualValue(start) &
@@ -253,6 +261,7 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
           occurrence: row.readTable(billOccurrencesTable),
           category: row.readTableOrNull(cashflowCategoriesTable),
           loanAccount: row.readTableOrNull(accountsTable),
+          paymentTransaction: row.readTableOrNull(transactionsTable),
         );
       }).toList();
     });

@@ -159,12 +159,18 @@ class BillsReminderSection extends GetView<CashflowController> {
                         if (bills.isNotEmpty) ...[
                           Divider(color: colorScheme.appBorder),
                           const SizedBox(height: 8),
-
                           ...bills.map(
                             (bill) => _BillReminderItem(
-                              onTap: () {},
                               bill: bill,
-                              onPay: () => controller.makeBillPayment(bill),
+                              onTap: () async {
+                                if (bill.occurrence.isPaid) {
+                                  await controller.openBillPaymentTransaction(
+                                    bill,
+                                  );
+                                } else {
+                                  await controller.makeBillPayment(bill);
+                                }
+                              },
                             ),
                           ),
                         ],
@@ -198,10 +204,6 @@ class BillsReminderSection extends GetView<CashflowController> {
                               text: 'Add bills in cashflow planner',
                               onTap: () {
                                 Get.toNamed(Routes.BILLS);
-                                // Get.bottomSheet(
-                                //   BillForm(),
-                                //   isScrollControlled: true,
-                                // ).whenComplete(billController.resetForm);
                               },
                             ),
                           ],
@@ -223,117 +225,165 @@ class BillsReminderSection extends GetView<CashflowController> {
 class _BillReminderItem extends StatelessWidget {
   const _BillReminderItem({
     required this.bill,
-    required this.onPay,
+    // required this.onPay,
     this.onTap,
   });
 
   final BillWithNextOccurrence bill;
-  final VoidCallback onPay;
+  // final VoidCallback onPay;
   final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     // final color = colorScheme.appOutflow;
     final occurrence = bill.occurrence;
+    // final dateText = occurrence.isPaid && bill.paidDate != null
+    //     ? 'Paid on ${DateFormat('MMM d').format(bill.paidDate!)}'
+    //     : 'Due on ${DateFormat('MMM d').format(occurrence.dueDate)}';
+
+    String getBillDateText(BillWithNextOccurrence bill) {
+      if (bill.paidDate != null) {
+        return 'Paid on ${DateFormat('MMM d').format(bill.paidDate!)}';
+      }
+
+      final now = DateTime.now();
+
+      final today = DateTime(now.year, now.month, now.day);
+      final dueDate = DateTime(
+        bill.occurrence.dueDate.year,
+        bill.occurrence.dueDate.month,
+        bill.occurrence.dueDate.day,
+      );
+
+      final difference = dueDate.difference(today).inDays;
+
+      if (difference < 0) {
+        final daysOverdue = difference.abs();
+
+        if (daysOverdue == 1) {
+          return 'Overdue · 1 day';
+        }
+
+        return 'Overdue · $daysOverdue days';
+      }
+
+      if (difference == 0) {
+        return 'Due today';
+      }
+
+      if (difference == 1) {
+        return 'Due tomorrow';
+      }
+
+      if (difference <= 6) {
+        return 'Due in $difference days';
+      }
+
+      return 'Due ${DateFormat('MMM d').format(bill.occurrence.dueDate)}';
+    }
+
+    final dateText = getBillDateText(bill);
+    Color getBillDateColor(BuildContext context, BillWithNextOccurrence bill) {
+      final colorScheme = context.colors;
+
+      if (bill.paidDate != null) {
+        return colorScheme.appSuccess;
+      }
+
+      final now = DateTime.now();
+
+      final today = DateTime(now.year, now.month, now.day);
+      final dueDate = DateTime(
+        bill.occurrence.dueDate.year,
+        bill.occurrence.dueDate.month,
+        bill.occurrence.dueDate.day,
+      );
+
+      final difference = dueDate.difference(today).inDays;
+
+      if (difference <= 0) {
+        return colorScheme.appOutflow;
+      }
+
+      if (difference <= 2) {
+        return colorScheme.appAccent;
+      }
+
+      return colorScheme.appTextMuted;
+    }
 
     return AdaptivePressable(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // SizedBox(
-            //   width: 36,
-            //   height: 36,
-            //   child: Stack(
-            //     alignment: Alignment.center,
-            //     children: [
-            //       Opacity(
-            //         opacity: AppOpacity.transactionIcon,
-            //         child: Container(
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.circular(999),
-            //             color: color,
-            //           ),
-            //         ),
-            //       ),
-            //       Icon(
-            //         bill.isLoanPayment
-            //             ? AppIcons.categories.resolve(bill.loanAccount!.icon)
-            //             : AppIcons.categories.resolve(bill.category!.icon),
-            //         size: 20,
-            //         color: color,
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        AppIcons.categories.resolve(
-                          bill.isLoanPayment
-                              ? bill.loanAccount!.icon
-                              : bill.category!.icon,
-                        ),
-                        size: 20,
-                      ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Text(bill.bill.name, style: AppTextStyle.titleL),
-                      ),
-                      Text(
-                        occurrence.expectedAmount.toCurrency(),
-                        style: AppTextStyle.amountM,
-                      ),
-                    ],
+            Row(
+              children: [
+                Icon(
+                  AppIcons.categories.resolve(
+                    bill.isLoanPayment
+                        ? bill.loanAccount!.icon
+                        : bill.category!.icon,
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Due ${DateFormat('MMM d').format(occurrence.dueDate)}',
-                          style: AppTextStyle.labelM.copyWith(
-                            color: colorScheme.appTextMuted,
-                          ),
-                        ),
-                      ),
-                      if (occurrence.isPaid)
-                        Text(
-                          'Paid',
-                          style: AppTextStyle.labelM.copyWith(
-                            color: colorScheme.appSuccess,
-                          ),
-                        )
-                      else
-                        AdaptivePressable(
-                          onTap: onPay,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: colorScheme.appOutflow,
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                            child: Text(
-                              'Pay',
-                              style: AppTextStyle.labelM.copyWith(
-                                color: colorScheme.appInversedtext,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
+                  size: 20,
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(bill.bill.name, style: AppTextStyle.titleL),
+                ),
+                Text(
+                  occurrence.expectedAmount.toCurrency(),
+                  style: AppTextStyle.amountM,
+                ),
+              ],
+            ),
+            SizedBox(height: 4),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Expanded(
+                //   child: Text(
+                //     'Due ${DateFormat('MMM d').format(occurrence.dueDate)}',
+                //     style: AppTextStyle.labelM.copyWith(
+                //       color: colorScheme.appTextMuted,
+                //     ),
+                //   ),
+                // ),
+                Expanded(
+                  child: Text(
+                    dateText,
+                    style: AppTextStyle.titleM.copyWith(
+                      color: getBillDateColor(context, bill),
+                    ),
                   ),
-                ],
-              ),
+                ),
+                if (occurrence.isPaid)
+                  Text(
+                    'Paid',
+                    style: AppTextStyle.titleM.copyWith(
+                      color: colorScheme.appSuccess,
+                    ),
+                  )
+                else
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.appOutflow,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      'Pay',
+                      style: AppTextStyle.labelM.copyWith(
+                        color: colorScheme.appInversedtext,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ],
         ),

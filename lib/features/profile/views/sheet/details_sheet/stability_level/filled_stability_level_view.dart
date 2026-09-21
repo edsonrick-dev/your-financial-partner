@@ -35,6 +35,7 @@ class FilledStabilityLevelView extends GetView<FinancialProfileController> {
                 child: Column(
                   children: [
                     FinancialStabilityGauge(
+                      isInverse: true,
                       score: score,
                       colorScheme: colorScheme,
                     ),
@@ -52,7 +53,9 @@ class FilledStabilityLevelView extends GetView<FinancialProfileController> {
 
                     Text(
                       stability.shortDescription,
-                      style: AppTextStyle.bodyM,
+                      style: AppTextStyle.bodyM.copyWith(
+                        color: colorScheme.appInversedtext,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -61,10 +64,9 @@ class FilledStabilityLevelView extends GetView<FinancialProfileController> {
 
               const SizedBox(height: 16),
 
-              Text('$score / 80', style: AppTextStyle.amountXL),
+              // Text('$score / 80', style: AppTextStyle.amountXL),
 
-              const SizedBox(height: 4),
-
+              // const SizedBox(height: 4),
               Text(
                 'Financial Stability Score',
                 style: AppTextStyle.bodyS.copyWith(

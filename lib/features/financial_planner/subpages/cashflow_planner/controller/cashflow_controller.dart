@@ -207,6 +207,27 @@ class CashflowController extends GetxController {
     await AppSheets.transaction.spendBill(bill);
   }
 
+  Future<void> openBillPaymentTransaction(BillWithNextOccurrence bill) async {
+    final transactionId = bill.occurrence.transactionId;
+
+    if (transactionId == null) {
+      return;
+    }
+
+    final transaction = await database.transactionsDao
+        .getTransactionWithDetailsById(transactionId);
+
+    if (transaction == null) {
+      Get.snackbar(
+        'Transaction unavailable',
+        'The payment transaction could not be found.',
+      );
+      return;
+    }
+
+    await AppSheets.transaction.spend(item: transaction);
+  }
+
   // ===========================================================================
   // Saved Plan State
   // ===========================================================================

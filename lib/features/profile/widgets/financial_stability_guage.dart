@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'dart:math' as math;
 
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -10,11 +11,13 @@ class FinancialStabilityGauge extends StatelessWidget {
   final double guageSize;
   final bool showScore;
   final double scoreSize;
+  final bool isInverse;
   const FinancialStabilityGauge({
     super.key,
     required this.score,
     this.maxScore = 80,
     this.guageSize = 80,
+    this.isInverse = false,
     this.showScore = true,
     this.scoreSize = 20,
     required this.colorScheme,
@@ -46,12 +49,18 @@ class FinancialStabilityGauge extends StatelessWidget {
               children: [
                 Text(
                   normalizedScore.round().toString(),
-                  style: TextStyle(
+                  style: AppTextStyle.amountM.copyWith(
                     fontSize: scoreSize,
-                    fontWeight: FontWeight.w700,
-                    height: 1,
-                    fontFeatures: [FontFeature.tabularFigures()],
+                    color: isInverse
+                        ? colorScheme.appInversedtext
+                        : colorScheme.appText,
                   ),
+                  // TextStyle(
+                  //   fontSize: scoreSize,
+                  //   fontWeight: FontWeight.w700,
+                  //   height: 1,
+                  //   fontFeatures: [FontFeature.tabularFigures()],
+                  // ),
                 ),
                 const SizedBox(height: 2),
               ],

@@ -71,7 +71,7 @@ extension FinancialProfileLifestyleCoverageExtension
     return FinancialRatio(
       type: FinancialRatioType.lifestyleCoverage,
       value: value,
-      displayValue: lifestyleCoverageMonths,
+      displayValue: value,
       scoreBand: lifestyleCoverageBand(value),
     );
   }

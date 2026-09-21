@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
@@ -10,6 +11,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/sheets/create_sheets/create_payment_account/balance_sheet_type_enum.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class NetWorthPlannerContent extends GetView<NetWorthController> {
   const NetWorthPlannerContent({super.key});
@@ -28,6 +30,76 @@ class NetWorthPlannerContent extends GetView<NetWorthController> {
             onComparisonChanged: controller.setNetWorthComparison,
           ),
         ),
+        if (controller.hasNegativeAsset)
+          AppSection(
+            child: AdaptivePressable(
+              onTap: () {
+                Get.toNamed(Routes.NETWORTHDETAILS);
+              },
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colorScheme.appOutflow.withValues(alpha: 0.08),
+                  border: Border.all(color: colorScheme.appOutflow),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          PhosphorIconsRegular.warning,
+                          size: 20,
+                          color: colorScheme.appOutflow,
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Warning',
+                            style: AppTextStyle.headlineM.copyWith(
+                              color: colorScheme.appOutflow,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: colorScheme.appOutflow),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            'Update',
+                            style: AppTextStyle.labelM.copyWith(
+                              color: colorScheme.appOutflow,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'One of your asset accounts has a negative value, update assets now.',
+                            style: AppTextStyle.bodyM,
+                          ),
+                        ),
+                        SizedBox(width: 4),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
 
         AppSection(
           sectionTitle: 'Wealth Overview',

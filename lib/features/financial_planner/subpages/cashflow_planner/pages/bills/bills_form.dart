@@ -17,6 +17,7 @@ import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_segmented_selector.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
 class BillForm extends GetView<BillController> {
@@ -131,31 +132,53 @@ class BillForm extends GetView<BillController> {
                           children: [
                             Text('Billing Schedule', style: AppTextStyle.bodyM),
                             SizedBox(height: 8),
-                            Obx(
-                              () => Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: colorScheme.bgLight,
-                                  borderRadius: BorderRadius.circular(999),
-                                  border: Border.all(
-                                    color: colorScheme.appBorder,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: mvpBillFrequencies.map((frequency) {
-                                    return BillsFrequencySelector(
-                                      period: frequency,
-                                      isSelected:
-                                          controller.selectedPeriod.value ==
-                                          frequency,
-                                      onTap: () =>
-                                          controller.selectPeriod(frequency),
+                            Obx(() {
+                              final selectedFrequency =
+                                  controller.selectedPeriod.value;
+
+                              final selectedIndex = selectedFrequency == null
+                                  ? 0
+                                  : mvpBillFrequencies.indexOf(
+                                      selectedFrequency,
                                     );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
+
+                              return AppSegmentedSelector(
+                                items: mvpBillFrequencies
+                                    .map((frequency) => frequency.label)
+                                    .toList(),
+                                selectedIndex: selectedIndex,
+                                onChanged: (index) {
+                                  controller.selectPeriod(
+                                    mvpBillFrequencies[index],
+                                  );
+                                },
+                              );
+                            }),
+                            // Obx(
+                            //   () => Container(
+                            //     padding: const EdgeInsets.all(2),
+                            //     decoration: BoxDecoration(
+                            //       color: colorScheme.bgLight,
+                            //       borderRadius: BorderRadius.circular(999),
+                            //       border: Border.all(
+                            //         color: colorScheme.appBorder,
+                            //       ),
+                            //     ),
+                            //     child: Row(
+                            //       mainAxisSize: MainAxisSize.min,
+                            //       children: mvpBillFrequencies.map((frequency) {
+                            //         return BillsFrequencySelector(
+                            //           period: frequency,
+                            //           isSelected:
+                            //               controller.selectedPeriod.value ==
+                            //               frequency,
+                            //           onTap: () =>
+                            //               controller.selectPeriod(frequency),
+                            //         );
+                            //       }).toList(),
+                            //     ),
+                            //   ),
+                            // ),
                             Obx(() {
                               final nextPaymentDate =
                                   controller.nextPaymentDate.value;
