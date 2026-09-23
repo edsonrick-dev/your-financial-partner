@@ -41,6 +41,7 @@ class AppAmountField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppFieldContainer(
+      fixedHeight: false,
       state: amount > 0 ? FieldState.filled : FieldState.empty,
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -59,7 +60,7 @@ class AppAmountField extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 amount == 0 ? hintText : amount.toCurrency(symbol: ''),
-                style: AppTextStyle.amountM,
+                style: AppTextStyle.amountL,
               ),
             ],
           ),

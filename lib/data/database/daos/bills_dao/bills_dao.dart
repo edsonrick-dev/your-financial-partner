@@ -31,16 +31,49 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
     );
   }
 
+  Future<int> createCreditCardStatementBill({
+    required int statementId,
+    required int creditCardAccountId,
+    required double statementBalance,
+    required DateTime paymentDueDate,
+  }) async {
+    return attachedDatabase.transaction(() async {
+      final billId = await into(billsTable).insert(
+        BillsTableCompanion.insert(
+          name: 'Credit Card Payment',
+          categoryId: const Value(null),
+          accountId: Value(creditCardAccountId),
+          statementId: Value(statementId),
+          expectedAmount: Value(statementBalance),
+          frequency: BillsFrequency.monthly.name,
+          dayOfMonth: Value(paymentDueDate.day),
+          reminderEnabled: const Value(false),
+          reminderDaysBefore: const Value(null),
+        ),
+      );
+
+      await into(billOccurrencesTable).insert(
+        BillOccurrencesTableCompanion.insert(
+          billId: billId,
+          dueDate: paymentDueDate,
+          expectedAmount: Value(statementBalance),
+        ),
+      );
+
+      return billId;
+    });
+  }
+
   Future<BillsTableData?> getLoanBillForAccount(int loanAccountId) {
-    return (select(billsTable)
-          ..where((tbl) => tbl.loanAccountId.equals(loanAccountId)))
-        .getSingleOrNull();
+    return (select(
+      billsTable,
+    )..where((tbl) => tbl.accountId.equals(loanAccountId))).getSingleOrNull();
   }
 
   Future<void> deleteLoanBillsForAccount(int loanAccountId) {
     return (delete(
       billsTable,
-    )..where((tbl) => tbl.loanAccountId.equals(loanAccountId))).go();
+    )..where((tbl) => tbl.accountId.equals(loanAccountId))).go();
   }
 
   Future<BillWithNextOccurrence?> getBillWithOccurrenceByTransactionId(
@@ -57,7 +90,7 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
       ),
       leftOuterJoin(
         accountsTable,
-        accountsTable.id.equalsExp(billsTable.loanAccountId),
+        accountsTable.id.equalsExp(billsTable.accountId),
       ),
     ])..where(billOccurrencesTable.transactionId.equals(transactionId));
 
@@ -110,8 +143,8 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
     final bill = BillsTableCompanion.insert(
       name: name,
       categoryId: const Value(null),
-      loanAccountId: Value(loanAccountId),
-      expectedAmount: paymentAmount,
+      accountId: Value(loanAccountId),
+      expectedAmount: Value(paymentAmount),
       frequency: frequency.name,
       dayOfMonth: Value(firstPaymentDate.day),
       reminderEnabled: Value(reminderEnabled),
@@ -180,7 +213,7 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
       BillOccurrencesTableCompanion.insert(
         billId: billId,
         dueDate: nextDueDate,
-        expectedAmount: bill.expectedAmount,
+        expectedAmount: Value(bill.expectedAmount),
       ),
     );
   }
@@ -236,7 +269,7 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
             ),
             leftOuterJoin(
               accountsTable,
-              accountsTable.id.equalsExp(billsTable.loanAccountId),
+              accountsTable.id.equalsExp(billsTable.accountId),
             ),
             leftOuterJoin(
               transactionsTable,
@@ -284,7 +317,7 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
             ),
             leftOuterJoin(
               accountsTable,
-              accountsTable.id.equalsExp(billsTable.loanAccountId),
+              accountsTable.id.equalsExp(billsTable.accountId),
             ),
           ])
           ..where(billsTable.isActive.equals(true))
@@ -342,7 +375,7 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
             ),
             leftOuterJoin(
               accountsTable,
-              accountsTable.id.equalsExp(billsTable.loanAccountId),
+              accountsTable.id.equalsExp(billsTable.accountId),
             ),
           ])
           ..where(
@@ -460,7 +493,7 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
         BillOccurrencesTableCompanion.insert(
           billId: billId,
           dueDate: dueDate,
-          expectedAmount: expectedAmount,
+          expectedAmount: Value(expectedAmount),
         ),
       );
     });

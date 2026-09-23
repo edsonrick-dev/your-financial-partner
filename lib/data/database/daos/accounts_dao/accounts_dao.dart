@@ -6,6 +6,7 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
+import 'package:getx_drift_app/data/tables/credit_card_details_table.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/models/net_worth_item.dart';
 part 'accounts_dao.g.dart';
 
@@ -76,7 +77,9 @@ part 'accounts_dao.g.dart';
 /// • Liabilities
 ///
 /// ============================================================================
-@DriftAccessor(tables: [AccountsTable, TransactionsTable])
+@DriftAccessor(
+  tables: [AccountsTable, TransactionsTable, CreditCardDetailsTable],
+)
 class AccountsDao extends DatabaseAccessor<AppDatabase>
     with _$AccountsDaoMixin {
   AccountsDao(super.db);
@@ -115,6 +118,30 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
     return (select(
       accountsTable,
     )..where((tbl) => tbl.id.equals(accountId))).getSingleOrNull();
+  }
+
+  Future<int> createCreditCard({
+    required AccountsTableCompanion account,
+    required int statementDay,
+    required int paymentDueDay,
+    required DateTime nextStatementDate,
+    required DateTime nextPaymentDueDate,
+  }) async {
+    return transaction(() async {
+      final accountId = await into(accountsTable).insert(account);
+
+      await into(creditCardDetailsTable).insert(
+        CreditCardDetailsTableCompanion.insert(
+          accountId: Value(accountId),
+          statementDay: statementDay,
+          paymentDueDay: paymentDueDay,
+          nextStatementDate: nextStatementDate,
+          nextPaymentDueDate: nextPaymentDueDate,
+        ),
+      );
+
+      return accountId;
+    });
   }
 
   /// Returns a live stream of all accounts.
@@ -410,7 +437,7 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
           }
 
           if (tx.linkedAccountId == accountId) {
-            balance += tx.amount;
+            balance += isLiability ? -tx.amount : tx.amount;
           }
           break;
         case TransactionType.balanceUpdate:

@@ -152,111 +152,117 @@ class FilledView extends GetView<CashflowController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 12,
-            children: [
-              BudgetProgressIndicator(
-                size: 80,
-                progress: progress.clamp(0.0, 1.0),
-                progressColor: statusColor,
-                child: items.isNotEmpty
-                    ? Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '${(progress * 100).round()}%',
-                            style: AppTextStyle.amountM,
-                          ),
-                          Text('used', style: AppTextStyle.labelM),
-                        ],
-                      )
-                    : Text(
-                        'No\nBudget',
-                        textAlign: TextAlign.center,
-                        style: AppTextStyle.titleM,
-                      ),
-              ),
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FittedBox(
-                      child: Text(
-                        '${AppMonth.values[selectedMonthIndex].fullName} Progress',
-                        style: AppTextStyle.headlineL,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-
-                    FittedBox(
-                      child: RichText(
-                        text: TextSpan(
-                          style: TextStyle(color: colorScheme.appText),
+        AdaptivePressable(
+          onTap: () {
+            controller.seletectedDetailsTabIndex.value = 1;
+            Get.toNamed(Routes.CASHFLOWDETAILS);
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 12,
+              children: [
+                BudgetProgressIndicator(
+                  size: 80,
+                  progress: progress.clamp(0.0, 1.0),
+                  progressColor: statusColor,
+                  child: items.isNotEmpty
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            TextSpan(
-                              text: spentAmount.toCompactCurrency(
-                                kThreshold: 1000000,
-                              ),
+                            Text(
+                              '${(progress * 100).round()}%',
                               style: AppTextStyle.amountM,
                             ),
-                            const TextSpan(text: ' spent of '),
-                            TextSpan(
-                              text: budgetAmount.toCompactCurrency(
-                                kThreshold: 1000000,
+                            Text('used', style: AppTextStyle.labelM),
+                          ],
+                        )
+                      : Text(
+                          'No\nBudget',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyle.titleM,
+                        ),
+                ),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FittedBox(
+                        child: Text(
+                          '${AppMonth.values[selectedMonthIndex].fullName} Progress',
+                          style: AppTextStyle.headlineL,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+
+                      FittedBox(
+                        child: RichText(
+                          text: TextSpan(
+                            style: TextStyle(color: colorScheme.appText),
+                            children: [
+                              TextSpan(
+                                text: spentAmount.toCompactCurrency(
+                                  kThreshold: 1000000,
+                                ),
+                                style: AppTextStyle.amountM,
                               ),
-                              style: AppTextStyle.amountS,
+                              const TextSpan(text: ' spent of '),
+                              TextSpan(
+                                text: budgetAmount.toCompactCurrency(
+                                  kThreshold: 1000000,
+                                ),
+                                style: AppTextStyle.amountS,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 4),
+
+                      if (items.isNotEmpty)
+                        Row(
+                          children: [
+                            Row(
+                              spacing: 4,
+                              children: [
+                                Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: statusColor,
+                                  ),
+                                ),
+                                Text(statusText, style: AppTextStyle.labelM),
+                              ],
+                            ),
+                            const Spacer(),
+                            if (isCurrentMonth)
+                              Text(
+                                '$daysLeft days left',
+                                style: AppTextStyle.labelM,
+                              ),
+                          ],
+                        ),
+                      if (items.isEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Text('No budget yet', style: AppTextStyle.titleS),
+                            Text(
+                              'Plan your cash flow to start tracking spending.',
+                              style: AppTextStyle.bodyS,
                             ),
                           ],
                         ),
-                      ),
-                    ),
-
-                    SizedBox(height: 4),
-
-                    if (items.isNotEmpty)
-                      Row(
-                        children: [
-                          Row(
-                            spacing: 4,
-                            children: [
-                              Container(
-                                width: 6,
-                                height: 6,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: statusColor,
-                                ),
-                              ),
-                              Text(statusText, style: AppTextStyle.labelM),
-                            ],
-                          ),
-                          const Spacer(),
-                          if (isCurrentMonth)
-                            Text(
-                              '$daysLeft days left',
-                              style: AppTextStyle.labelM,
-                            ),
-                        ],
-                      ),
-                    if (items.isEmpty)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Text('No budget yet', style: AppTextStyle.titleS),
-                          Text(
-                            'Plan your cash flow to start tracking spending.',
-                            style: AppTextStyle.bodyS,
-                          ),
-                        ],
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
 

@@ -22,6 +22,7 @@ class NetWorthDetailsPage extends GetView<NetWorthController> {
     final LayerLink addButtonLink = LayerLink();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Column(

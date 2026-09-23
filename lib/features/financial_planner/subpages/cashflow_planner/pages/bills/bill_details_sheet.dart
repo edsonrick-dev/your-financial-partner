@@ -131,7 +131,7 @@ class BillDetailsSheet extends GetView<BillController> {
     BuildContext context, {
     required BillsTableData bill,
     required DateTime? nextDueDate,
-    required double nextAmount,
+    required double? nextAmount,
     required CashflowCategoriesTableData? category,
     required BillOccurrencesTableData? firstOccurrence,
   }) {
@@ -155,7 +155,9 @@ class BillDetailsSheet extends GetView<BillController> {
               spacing: 4,
               children: [
                 Text(
-                  nextAmount.toCurrency(),
+                  nextAmount == null
+                      ? 'Amount pending'
+                      : nextAmount.toCurrency(),
                   style: AppTextStyle.amountXL.copyWith(
                     color: colorScheme.appInversedtext,
                   ),
@@ -426,7 +428,7 @@ class _PaymentHistoryItem extends StatelessWidget {
                 const SizedBox(height: 2),
 
                 Text(
-                  'Expected ${occurrence.expectedAmount.toCurrency()}',
+                  'Expected ${occurrence.expectedAmount?.toCurrency() ?? '—'}',
                   style: AppTextStyle.labelS.copyWith(
                     color: colorScheme.appTextMuted,
                   ),

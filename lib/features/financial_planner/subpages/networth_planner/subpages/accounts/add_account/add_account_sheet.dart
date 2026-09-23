@@ -132,9 +132,18 @@ extension AccountValidationExtension on AccountController {
 
   bool get isCreditCardAccountValid {
     return hasValidAccountName &&
-        // hasSelectedFinancialInstitution &&
-        hasValidBalance &&
-        enteredCreditLimit.value > 0;
+        enteredBalance.value >= 0 &&
+        enteredCreditLimit.value > 0 &&
+        hasValidCreditCardBillingDates;
+  }
+
+  bool get hasValidCreditCardBillingDates {
+    final statement = selectedStatementDate.value;
+    final due = selectedPaymentDueDate.value;
+
+    if (statement == null || due == null) return false;
+
+    return !due.isBefore(statement);
   }
 
   bool get isRealPropertyAccountValid {

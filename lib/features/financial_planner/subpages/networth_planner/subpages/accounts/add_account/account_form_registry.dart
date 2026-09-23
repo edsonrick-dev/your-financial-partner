@@ -31,6 +31,7 @@ class AccountFormRegistry {
 
       case AccountType.creditInstallment:
         return const CreditCardInstallmentForm();
+
       case AccountType.loan:
         return const LoanAccountForm();
       // ignore: unreachable_switch_default

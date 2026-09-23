@@ -41,16 +41,13 @@ class CashAndBankDetailsSheet extends StatelessWidget {
         if (currentAccount == null) {
           return const Center(child: Text('Account no longer exists.'));
         }
-
-        return AppSheet(
-          height: AppSheetHeight.full,
-
-          // ✅ This now comes from the streamed account
-          title: currentAccount.name,
-
-          child: Stack(
-            children: [
-              Column(
+        return Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            AppSheet(
+              height: AppSheetHeight.full,
+              title: currentAccount.name,
+              child: Column(
                 children: [
                   CashAndBankSummarySection(account: currentAccount),
 
@@ -81,86 +78,211 @@ class CashAndBankDetailsSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              Obx(
-                () => AnchoredActionMenu(
-                  isOpen: isAddMenuOpen.value,
-                  link: addButtonLink,
-                  onDismiss: () {
-                    isAddMenuOpen.value = false;
-                  },
-                  child: selectedIndex.value == 0
-                      ? Column(
-                          spacing: 12,
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            NewTransactionButton(
-                              color: colorScheme.appInflow,
-                              icon: Icons.add,
-                              label: 'Earn Money',
-                              onTap: () {
-                                AppSheets.transaction.earn(
-                                  account: currentAccount,
-                                );
-                                isAddMenuOpen.toggle();
-                              },
-                            ),
-                            NewTransactionButton(
-                              color: colorScheme.appOutflow,
-                              icon: Icons.remove,
-                              label: 'Spend Money',
-                              onTap: () {
-                                AppSheets.transaction.spend(
-                                  account: currentAccount,
-                                );
-                                isAddMenuOpen.toggle();
-                              },
-                            ),
-                            NewTransactionButton(
-                              color: colorScheme.appAccent,
-                              icon: Icons.sync_alt_sharp,
-                              label: 'Transfer Money',
-                              onTap: () {
-                                AppSheets.transaction.transfer(
-                                  fromAccount: currentAccount,
-                                );
-                                isAddMenuOpen.toggle();
-                              },
-                            ),
-                            NewTransactionButton(
-                              color: colorScheme.appInflow,
-                              icon: PhosphorIconsRegular.handCoins,
-                              label: 'Receive Money',
-                              onTap: () {
-                                AppSheets.transaction.receiveMoney(
-                                  account: currentAccount,
-                                );
-                                isAddMenuOpen.toggle();
-                              },
-                            ),
-                            NewTransactionButton(
-                              color: colorScheme.appOutflow,
-                              icon: PhosphorIconsRegular.handDeposit,
-                              label: 'Give Money',
-                              onTap: () {
-                                AppSheets.transaction.giveMoney(
-                                  account: currentAccount,
-                                );
-                                isAddMenuOpen.toggle();
-                              },
-                            ),
-                          ],
-                        )
-                      : const Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [Text('Add Goal Reservation')],
-                        ),
-                ),
+            ),
+
+            Obx(
+              () => AnchoredActionMenu(
+                isOpen: isAddMenuOpen.value,
+                link: addButtonLink,
+                onDismiss: () {
+                  isAddMenuOpen.value = false;
+                },
+                child: selectedIndex.value == 0
+                    ? Column(
+                        spacing: 12,
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          NewTransactionButton(
+                            color: colorScheme.appInflow,
+                            icon: Icons.add,
+                            label: 'Earn',
+                            onTap: () {
+                              isAddMenuOpen.value = false;
+
+                              AppSheets.transaction.earn(
+                                account: currentAccount,
+                              );
+                            },
+                          ),
+                          NewTransactionButton(
+                            color: colorScheme.appOutflow,
+                            icon: Icons.remove,
+                            label: 'Spend',
+                            onTap: () {
+                              isAddMenuOpen.value = false;
+
+                              AppSheets.transaction.spend(
+                                account: currentAccount,
+                              );
+                            },
+                          ),
+                          NewTransactionButton(
+                            color: colorScheme.appAccent,
+                            icon: Icons.sync_alt_sharp,
+                            label: 'Transfer',
+                            onTap: () {
+                              isAddMenuOpen.value = false;
+
+                              AppSheets.transaction.transfer(
+                                fromAccount: currentAccount,
+                              );
+                            },
+                          ),
+                          NewTransactionButton(
+                            color: colorScheme.appInflow,
+                            icon: PhosphorIconsRegular.handCoins,
+                            label: 'Receive',
+                            onTap: () {
+                              isAddMenuOpen.value = false;
+
+                              AppSheets.transaction.receiveMoney(
+                                account: currentAccount,
+                              );
+                            },
+                          ),
+                          NewTransactionButton(
+                            color: colorScheme.appOutflow,
+                            icon: PhosphorIconsRegular.handDeposit,
+                            label: 'Give',
+                            onTap: () {
+                              isAddMenuOpen.value = false;
+
+                              AppSheets.transaction.giveMoney(
+                                account: currentAccount,
+                              );
+                            },
+                          ),
+                        ],
+                      )
+                    : const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [Text('Add Goal Reservation')],
+                      ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
+        // return AppSheet(
+        //   height: AppSheetHeight.full,
+
+        //   // ✅ This now comes from the streamed account
+        //   title: currentAccount.name,
+
+        //   child: Stack(
+        //     children: [
+        //       Column(
+        //         children: [
+        //           CashAndBankSummarySection(account: currentAccount),
+
+        //           AppDetailsPageActionSection(
+        //             selectedIndex: selectedIndex,
+        //             actions: const ['Transactions', 'Goal Reservation'],
+        //             addButtonLink: addButtonLink,
+        //             onAdd: () {
+        //               isAddMenuOpen.toggle();
+        //             },
+        //             isAddMenuOpen: isAddMenuOpen,
+        //           ),
+
+        //           Expanded(
+        //             child: Obx(
+        //               () => IndexedStack(
+        //                 index: selectedIndex.value,
+        //                 children: [
+        //                   CashAndBankTransactionsView(
+        //                     accountId: currentAccount.id,
+        //                   ),
+        //                   CashAndBankReservationView(
+        //                     accountId: currentAccount.id,
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //       Obx(
+        //         () => AnchoredActionMenu(
+        //           isOpen: isAddMenuOpen.value,
+        //           link: addButtonLink,
+        //           onDismiss: () {
+        //             isAddMenuOpen.value = false;
+        //           },
+        //           child: selectedIndex.value == 0
+        //               ? Column(
+        //                   spacing: 12,
+        //                   mainAxisSize: MainAxisSize.min,
+        //                   crossAxisAlignment: CrossAxisAlignment.end,
+        //                   children: [
+        //                     NewTransactionButton(
+        //                       color: colorScheme.appInflow,
+        //                       icon: Icons.add,
+        //                       label: 'Earn Money',
+        //                       onTap: () {
+        //                         AppSheets.transaction.earn(
+        //                           account: currentAccount,
+        //                         );
+        //                         isAddMenuOpen.toggle();
+        //                       },
+        //                     ),
+        //                     NewTransactionButton(
+        //                       color: colorScheme.appOutflow,
+        //                       icon: Icons.remove,
+        //                       label: 'Spend Money',
+        //                       onTap: () {
+        //                         AppSheets.transaction.spend(
+        //                           account: currentAccount,
+        //                         );
+        //                         isAddMenuOpen.toggle();
+        //                       },
+        //                     ),
+        //                     NewTransactionButton(
+        //                       color: colorScheme.appAccent,
+        //                       icon: Icons.sync_alt_sharp,
+        //                       label: 'Transfer Money',
+        //                       onTap: () {
+        //                         AppSheets.transaction.transfer(
+        //                           fromAccount: currentAccount,
+        //                         );
+        //                         isAddMenuOpen.toggle();
+        //                       },
+        //                     ),
+        //                     NewTransactionButton(
+        //                       color: colorScheme.appInflow,
+        //                       icon: PhosphorIconsRegular.handCoins,
+        //                       label: 'Receive Money',
+        //                       onTap: () {
+        //                         AppSheets.transaction.receiveMoney(
+        //                           account: currentAccount,
+        //                         );
+        //                         isAddMenuOpen.toggle();
+        //                       },
+        //                     ),
+        //                     NewTransactionButton(
+        //                       color: colorScheme.appOutflow,
+        //                       icon: PhosphorIconsRegular.handDeposit,
+        //                       label: 'Give Money',
+        //                       onTap: () {
+        //                         AppSheets.transaction.giveMoney(
+        //                           account: currentAccount,
+        //                         );
+        //                         isAddMenuOpen.toggle();
+        //                       },
+        //                     ),
+        //                   ],
+        //                 )
+        //               : const Column(
+        //                   mainAxisSize: MainAxisSize.min,
+        //                   crossAxisAlignment: CrossAxisAlignment.end,
+        //                   children: [Text('Add Goal Reservation')],
+        //                 ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // );
       },
     );
   }

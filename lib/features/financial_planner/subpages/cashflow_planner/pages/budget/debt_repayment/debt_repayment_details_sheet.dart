@@ -36,7 +36,9 @@ class DebtRepaymentDetailsSheet extends GetView<BillController> {
 
     final paymentAmount = bill.bill.expectedAmount;
 
-    final annualAmount = frequency.toAnnual(paymentAmount);
+    final annualAmount = paymentAmount == null
+        ? null
+        : frequency.toAnnual(paymentAmount);
 
     return AppSheet(
       height: AppSheetHeight.full,
@@ -174,8 +176,8 @@ class _DebtRepaymentSummarySection extends StatelessWidget {
   });
 
   final String? loanName;
-  final double paymentAmount;
-  final double annualAmount;
+  final double? paymentAmount;
+  final double? annualAmount;
   final BillsFrequency frequency;
   final DateTime nextPaymentDate;
 
@@ -217,13 +219,13 @@ class _DebtRepaymentSummarySection extends StatelessWidget {
                 Expanded(
                   child: _Metric(
                     label: 'Payment',
-                    value: paymentAmount.toCurrency(),
+                    value: paymentAmount!.toCurrency(),
                   ),
                 ),
                 Expanded(
                   child: _Metric(
                     label: 'Annual',
-                    value: annualAmount.toCurrency(),
+                    value: annualAmount!.toCurrency(),
                   ),
                 ),
               ],
@@ -261,7 +263,7 @@ class _Metric extends StatelessWidget {
   const _Metric({required this.label, required this.value});
 
   final String label;
-  final String value;
+  final String? value;
 
   @override
   Widget build(BuildContext context) {
@@ -278,7 +280,7 @@ class _Metric extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          value,
+          value ?? 'No Value',
           style: AppTextStyle.amountM.copyWith(
             color: colorScheme.appInversedtext,
           ),
@@ -358,7 +360,7 @@ class _PaymentHistoryItem extends StatelessWidget {
                 const SizedBox(height: 2),
 
                 Text(
-                  'Expected ${occurrence.expectedAmount.toCurrency()}',
+                  'Expected ${occurrence.expectedAmount?.toCurrency() ?? '—'}',
                   style: AppTextStyle.labelS.copyWith(
                     color: colorScheme.appTextMuted,
                   ),

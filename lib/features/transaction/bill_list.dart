@@ -130,7 +130,7 @@ class BillListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  bill.occurrence.expectedAmount.toCurrency(),
+                  bill.occurrence.expectedAmount?.toCurrency() ?? '—',
                   style: AppTextStyle.amountM,
                 ),
 

@@ -718,7 +718,7 @@ class CashflowController extends GetxController {
 
       for (final month in scheduledMonths) {
         if (month >= 1 && month <= 12) {
-          debt[month - 1] += bill.bill.expectedAmount;
+          debt[month - 1] += bill.bill.expectedAmount ?? 0;
         }
       }
     }
@@ -768,8 +768,13 @@ class CashflowController extends GetxController {
       if (frequency == null) {
         return total;
       }
+      final amount = bill.occurrence.expectedAmount;
 
-      return total + frequency.toAnnual(bill.occurrence.expectedAmount);
+      if (amount == null) {
+        return total;
+      }
+
+      return total + frequency.toAnnual(amount);
     });
   }
 

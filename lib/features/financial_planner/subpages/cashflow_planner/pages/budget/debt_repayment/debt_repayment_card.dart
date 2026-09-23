@@ -22,8 +22,8 @@ class DebtRepaymentCard extends StatelessWidget {
     final frequency = BillsFrequency.values.firstWhere(
       (frequency) => frequency.name == bill.frequency,
     );
-
-    final annualAmount = frequency.toAnnual(bill.expectedAmount);
+    final annualAmount = frequency.toAnnual(bill.expectedAmount ?? 0);
+    // final annualAmount = frequency.toAnnual(bill.expectedAmount);
     final amount = bill.expectedAmount;
     final periodLabel = '${item.bill.frequency.capitalize} Budget';
     return AdaptivePressable(
@@ -67,9 +67,7 @@ class DebtRepaymentCard extends StatelessWidget {
                       const SizedBox(width: 16),
                       Text(
                         annualAmount.toCurrency(),
-                        style: AppTextStyle.amountL.copyWith(
-                          color: colorScheme.appOutflow,
-                        ),
+                        style: AppTextStyle.amountS,
                       ),
                     ],
                   ),
@@ -93,7 +91,7 @@ class DebtRepaymentCard extends StatelessWidget {
                             ),
                             SizedBox(width: 12),
                             Text(
-                              amount.toCurrency(),
+                              amount != null ? amount.toCurrency() : 'No Value',
                               style: AppTextStyle.amountS,
                             ),
                           ],

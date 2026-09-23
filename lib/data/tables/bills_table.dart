@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:getx_drift_app/data/tables/credit_card_statements_table.dart';
 
 import 'accounts_table.dart';
 import 'cashflow_categories_table.dart';
@@ -8,23 +9,27 @@ class BillsTable extends Table {
 
   TextColumn get name => text()();
 
-  /// Category paid by this bill.
+  /// Expense category associated with this bill.
   ///
-  /// Null when this is a loan repayment.
+  /// Null when the bill is associated with a financial account
+  /// rather than an expense category.
   IntColumn get categoryId =>
       integer().nullable().references(CashflowCategoriesTable, #id)();
 
-  /// Loan account paid by this bill.
+  /// Financial account associated with this bill.
+  ///
+  /// Used for account-linked bills such as loan repayments
+  /// and credit-card statements.
   ///
   /// Null when this is a normal expense bill.
-  IntColumn get loanAccountId => integer().nullable().references(
+  IntColumn get accountId => integer().nullable().references(
     AccountsTable,
     #id,
     onDelete: KeyAction.cascade,
   )();
 
   /// The amount the user normally expects to pay.
-  RealColumn get expectedAmount => real()();
+  RealColumn get expectedAmount => real().nullable()();
 
   /// Recurrence frequency.
   TextColumn get frequency => text()();
@@ -45,4 +50,10 @@ class BillsTable extends Table {
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  IntColumn get statementId => integer().nullable().unique().references(
+    CreditCardStatementsTable,
+    #id,
+    onDelete: KeyAction.cascade,
+  )();
 }

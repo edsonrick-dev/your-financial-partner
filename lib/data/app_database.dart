@@ -17,6 +17,9 @@ import 'tables/cashflow_plan_allocation_table.dart';
 import 'tables/cashflow_plan_table.dart';
 import 'tables/bills_table.dart';
 import 'tables/bill_occurrences_table.dart';
+import 'tables/credit_card_billings_table.dart';
+import 'tables/credit_card_details_table.dart';
+import 'tables/credit_card_statements_table.dart';
 
 import 'tables/loan_table.dart';
 // import 'tables/cashflow_plans_table.dart';
@@ -28,7 +31,7 @@ import 'package:getx_drift_app/data/database/daos/entities_dao/entities_dao.dart
 import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
 import 'package:getx_drift_app/data/database/daos/bills_dao/bills_dao.dart';
 import 'package:getx_drift_app/data/database/daos/category_dao/category_dao.dart';
-
+import 'package:getx_drift_app/data/database/daos/credit_card_dao/credit_card_dao.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
@@ -44,6 +47,9 @@ part 'app_database.g.dart';
     CashFlowPlans,
     BillsTable,
     BillOccurrencesTable,
+    CreditCardDetailsTable,
+    CreditCardBillingPeriodsTable,
+    CreditCardStatementsTable,
   ],
   daos: [
     TransactionsDao,
@@ -53,6 +59,7 @@ part 'app_database.g.dart';
     CashflowPlanDao,
     BillsDao,
     CategoryDao,
+    CreditCardDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -101,10 +108,19 @@ class AppDatabase extends _$AppDatabase {
       if (from < 14) {
         await m.alterTable(TableMigration(billsTable));
       }
+
+      if (from < 15) {
+        await m.createTable(creditCardDetailsTable);
+        await m.createTable(creditCardBillingPeriodsTable);
+        await m.createTable(creditCardStatementsTable);
+      }
+    },
+    beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
     },
   );
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();

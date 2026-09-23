@@ -63,6 +63,7 @@ part 'transactions_dao.g.dart';
 class TransactionsDao extends DatabaseAccessor<AppDatabase>
     with _$TransactionsDaoMixin {
   TransactionsDao(super.db);
+
   Stream<List<TransactionWithDetails>> watchDebtRepaymentsForAccount(
     int accountId,
   ) {
@@ -976,6 +977,80 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
 
         grouped.putIfAbsent(normalizedDate, () => []);
 
+        grouped[normalizedDate]!.add(item);
+      }
+
+      final sortedEntries = grouped.entries.toList()
+        ..sort((a, b) => b.key.compareTo(a.key));
+
+      final result = <String, List<TransactionWithDetails>>{};
+
+      for (final entry in sortedEntries) {
+        result[groupLabel(entry.key)] = entry.value;
+      }
+
+      return result;
+    });
+  }
+
+  Stream<Map<String, List<TransactionWithDetails>>>
+  watchGroupedCreditCardTransactions(int accountId) {
+    return watchTransactions().map((transactions) {
+      final accountTransactions = transactions
+          .where(
+            (item) =>
+                // Transactions charged to the credit card
+                item.transaction.accountId == accountId &&
+                // Exclude payments made TO the credit card
+                !(item.transaction.transactionType ==
+                        TransactionType.transfer.name &&
+                    item.transaction.linkedAccountId == accountId),
+          )
+          .toList();
+
+      final grouped = <DateTime, List<TransactionWithDetails>>{};
+
+      for (final item in accountTransactions) {
+        final date = item.transaction.date;
+
+        final normalizedDate = DateTime(date.year, date.month, date.day);
+
+        grouped.putIfAbsent(normalizedDate, () => []);
+
+        grouped[normalizedDate]!.add(item);
+      }
+
+      final sortedEntries = grouped.entries.toList()
+        ..sort((a, b) => b.key.compareTo(a.key));
+
+      final result = <String, List<TransactionWithDetails>>{};
+
+      for (final entry in sortedEntries) {
+        result[groupLabel(entry.key)] = entry.value;
+      }
+
+      return result;
+    });
+  }
+
+  Stream<Map<String, List<TransactionWithDetails>>>
+  watchGroupedCreditCardPayments(int accountId) {
+    return watchTransactions().map((transactions) {
+      final payments = transactions.where((item) {
+        final transaction = item.transaction;
+
+        return transaction.transactionType == TransactionType.transfer.name &&
+            transaction.linkedAccountId == accountId;
+      }).toList();
+
+      final grouped = <DateTime, List<TransactionWithDetails>>{};
+
+      for (final item in payments) {
+        final date = item.transaction.date;
+
+        final normalizedDate = DateTime(date.year, date.month, date.day);
+
+        grouped.putIfAbsent(normalizedDate, () => []);
         grouped[normalizedDate]!.add(item);
       }
 

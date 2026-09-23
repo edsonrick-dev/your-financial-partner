@@ -6,9 +6,11 @@ import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/add_transaction_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_bills_payment_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_summary_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_transactions_view.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/shared/anchored_action_menu.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
@@ -51,7 +53,55 @@ class CreditCardDetailSheet extends StatelessWidget {
                   CreditCardSummarySection(account: currentAccount),
 
                   const SizedBox(height: 16),
+                  FutureBuilder(
+                    future: Future.wait([
+                      database.creditCardDao.getLatestUnpaidStatement(
+                        currentAccount.id,
+                      ),
+                      database.creditCardDao.getAmountDue(currentAccount.id),
+                    ]),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
+                      if (snapshot.hasError || snapshot.data == null) {
+                        return const Text('Unable to load payment details.');
+                      }
+
+                      final statement =
+                          snapshot.data![0] as CreditCardStatementsTableData?;
+
+                      final amountDue = snapshot.data![1] as double;
+
+                      // No released unpaid statement = nothing to show.
+                      if (statement == null) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return Column(
+                        children: [
+                          Text('Next Due Date: ${statement.paymentDueDate}'),
+                          Text('Amount Due: ₱${amountDue.toStringAsFixed(2)}'),
+                        ],
+                      );
+                    },
+                  ),
+
+                  AppSection(
+                    child: AppButton(
+                      type: ButtonType.outline,
+                      text: 'Pay Balance',
+                      onTap: () {
+                        AppSheets.transaction.payCreditCard(
+                          creditCard: currentAccount,
+                        );
+                      },
+                    ),
+                  ),
                   AppDetailsPageActionSection(
                     selectedIndex: selectedIndex,
                     actions: const ['Transactions', 'Payment History'],

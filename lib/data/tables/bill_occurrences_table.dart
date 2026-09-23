@@ -10,8 +10,11 @@ class BillOccurrencesTable extends Table {
 
   DateTimeColumn get dueDate => dateTime()();
 
-  /// Snapshot of the expected amount when this occurrence was created.
-  RealColumn get expectedAmount => real()();
+  /// Snapshot of the amount expected to be paid for this occurrence.
+  ///
+  /// Null when the amount is not yet known at occurrence creation time,
+  /// such as a credit-card statement that has not yet been generated.
+  RealColumn get expectedAmount => real().nullable()();
 
   /// Actual amount paid.
   ///

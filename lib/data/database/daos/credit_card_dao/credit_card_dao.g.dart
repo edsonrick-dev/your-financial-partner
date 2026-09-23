@@ -1,34 +1,33 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bills_dao.dart';
+part of 'credit_card_dao.dart';
 
 // ignore_for_file: type=lint
-mixin _$BillsDaoMixin on DatabaseAccessor<AppDatabase> {
-  $CashflowCategoriesTableTable get cashflowCategoriesTable =>
-      attachedDatabase.cashflowCategoriesTable;
+mixin _$CreditCardDaoMixin on DatabaseAccessor<AppDatabase> {
   $AccountsTableTable get accountsTable => attachedDatabase.accountsTable;
+  $CreditCardDetailsTableTable get creditCardDetailsTable =>
+      attachedDatabase.creditCardDetailsTable;
   $CreditCardBillingPeriodsTableTable get creditCardBillingPeriodsTable =>
       attachedDatabase.creditCardBillingPeriodsTable;
   $CreditCardStatementsTableTable get creditCardStatementsTable =>
       attachedDatabase.creditCardStatementsTable;
-  $BillsTableTable get billsTable => attachedDatabase.billsTable;
+  $CashflowCategoriesTableTable get cashflowCategoriesTable =>
+      attachedDatabase.cashflowCategoriesTable;
   $TransactionsTableTable get transactionsTable =>
       attachedDatabase.transactionsTable;
-  $BillOccurrencesTableTable get billOccurrencesTable =>
-      attachedDatabase.billOccurrencesTable;
-  BillsDaoManager get managers => BillsDaoManager(this);
+  CreditCardDaoManager get managers => CreditCardDaoManager(this);
 }
 
-class BillsDaoManager {
-  final _$BillsDaoMixin _db;
-  BillsDaoManager(this._db);
-  $$CashflowCategoriesTableTableTableManager get cashflowCategoriesTable =>
-      $$CashflowCategoriesTableTableTableManager(
-        _db.attachedDatabase,
-        _db.cashflowCategoriesTable,
-      );
+class CreditCardDaoManager {
+  final _$CreditCardDaoMixin _db;
+  CreditCardDaoManager(this._db);
   $$AccountsTableTableTableManager get accountsTable =>
       $$AccountsTableTableTableManager(_db.attachedDatabase, _db.accountsTable);
+  $$CreditCardDetailsTableTableTableManager get creditCardDetailsTable =>
+      $$CreditCardDetailsTableTableTableManager(
+        _db.attachedDatabase,
+        _db.creditCardDetailsTable,
+      );
   $$CreditCardBillingPeriodsTableTableTableManager
   get creditCardBillingPeriodsTable =>
       $$CreditCardBillingPeriodsTableTableTableManager(
@@ -40,16 +39,14 @@ class BillsDaoManager {
         _db.attachedDatabase,
         _db.creditCardStatementsTable,
       );
-  $$BillsTableTableTableManager get billsTable =>
-      $$BillsTableTableTableManager(_db.attachedDatabase, _db.billsTable);
+  $$CashflowCategoriesTableTableTableManager get cashflowCategoriesTable =>
+      $$CashflowCategoriesTableTableTableManager(
+        _db.attachedDatabase,
+        _db.cashflowCategoriesTable,
+      );
   $$TransactionsTableTableTableManager get transactionsTable =>
       $$TransactionsTableTableTableManager(
         _db.attachedDatabase,
         _db.transactionsTable,
-      );
-  $$BillOccurrencesTableTableTableManager get billOccurrencesTable =>
-      $$BillOccurrencesTableTableTableManager(
-        _db.attachedDatabase,
-        _db.billOccurrencesTable,
       );
 }

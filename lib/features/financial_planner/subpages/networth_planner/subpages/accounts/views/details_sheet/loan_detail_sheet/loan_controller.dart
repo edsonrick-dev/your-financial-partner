@@ -42,10 +42,9 @@ class LoanController extends GetxController {
     }
 
     final firstOccurrence = occurrences.first;
-
     paymentScheduleEnabled.value = true;
 
-    paymentAmount.value = bill.expectedAmount;
+    paymentAmount.value = bill.expectedAmount ?? 0;
 
     paymentFrequency.value = BillsFrequency.values.firstWhere(
       (frequency) => frequency.name == bill.frequency,
@@ -54,7 +53,6 @@ class LoanController extends GetxController {
     firstPaymentDate.value = firstOccurrence.dueDate;
 
     reminderEnabled.value = bill.reminderEnabled;
-
     reminderDaysBefore.value = bill.reminderDaysBefore;
   }
 

@@ -3,13 +3,47 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/add_account_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/loan_detail_sheet/loan_controller.dart';
+import 'package:intl/intl.dart';
+import 'package:getx_drift_app/domain/credit_card/credit_card_dates.dart';
 
 class AccountController extends GetxController {
+  ///
+  ///Credit Card
+
+  final selectedStatementDate = Rxn<DateTime>();
+  final selectedPaymentDueDate = Rxn<DateTime>();
+  void setStatementDate(DateTime date) {
+    selectedStatementDate.value = date;
+  }
+
+  void setPaymentDueDate(DateTime date) {
+    selectedPaymentDueDate.value = date;
+  }
+
+  String? get formattedStatementDate {
+    final value = selectedStatementDate.value;
+
+    if (value == null) return null;
+
+    return DateFormat('MMMM d, yyyy').format(value);
+  }
+
+  String? get formattedPaymentDueDate {
+    final value = selectedPaymentDueDate.value;
+
+    if (value == null) return null;
+
+    return DateFormat('MMMM d, yyyy').format(value);
+  }
+
+  ///
+  ///
   final LoanController loanController = Get.find<LoanController>();
   Future<void> openAddAccount(AccountType accountType) async {
     selectAccountType(accountType);
@@ -291,12 +325,31 @@ class AccountController extends GetxController {
       Get.snackbar('Invalid Balance', 'Initial balance cannot be negative.');
       return null;
     }
-
     if (type == AccountType.creditCard && creditLimit <= 0) {
       Get.snackbar('Invalid Credit Limit', 'Enter a valid credit limit.');
+
       return null;
     }
+    if (type == AccountType.creditCard) {
+      final statement = selectedStatementDate.value;
+      final due = selectedPaymentDueDate.value;
 
+      if (statement == null || due == null) {
+        Get.snackbar(
+          'Missing Billing Dates',
+          'Select a statement date and payment due date.',
+        );
+        return null;
+      }
+
+      if (!due.isAfter(statement)) {
+        Get.snackbar(
+          'Invalid Billing Dates',
+          'The payment due date must be after the statement date.',
+        );
+        return null;
+      }
+    }
     return await database.transaction(() async {
       // 1. Create account
       final insertedId = await database.accountsDao.insertAccount(
@@ -309,9 +362,85 @@ class AccountController extends GetxController {
               : const drift.Value<double?>(null),
         ),
       );
+      // 2. Create credit card billing configuration
+      if (type == AccountType.creditCard) {
+        final selectedStatement = selectedStatementDate.value;
+        final selectedDue = selectedPaymentDueDate.value;
 
-      // 2. Create initial balance transaction
-      if (initialBalance > 0) {
+        if (selectedStatement == null || selectedDue == null) {
+          throw StateError(
+            'Credit card statement and payment due dates are required.',
+          );
+        }
+
+        final nextStatementDate = CreditCardDates.nextStatementDate(
+          fromDate: DateTime.now(),
+          statementDay: selectedStatement.day,
+        );
+
+        final nextPaymentDueDate = CreditCardDates.paymentDueDate(
+          statementDate: nextStatementDate,
+          paymentDueDay: selectedDue.day,
+        );
+        await database.creditCardDao.insert(
+          CreditCardDetailsTableCompanion.insert(
+            accountId: drift.Value(insertedId),
+            statementDay: selectedStatement.day,
+            paymentDueDay: selectedDue.day,
+            nextStatementDate: nextStatementDate,
+            nextPaymentDueDate: nextPaymentDueDate,
+          ),
+        );
+        // await database
+        //     .into(database.creditCardDetailsTable)
+        //     .insert(
+        //       CreditCardDetailsTableCompanion.insert(
+        //         accountId: drift.Value(insertedId),
+
+        //         statementDay: selectedStatement.day,
+        //         paymentDueDay: selectedDue.day,
+
+        //         nextStatementDate: nextStatementDate,
+        //         nextPaymentDueDate: nextPaymentDueDate,
+        //       ),
+        //     );
+
+        // Initialize exactly one open billing period
+        final previousStatementDate = CreditCardDates.previousStatementDate(
+          statementDate: nextStatementDate,
+          statementDay: selectedStatement.day,
+        );
+
+        final billingPeriodStartDate = previousStatementDate.add(
+          const Duration(days: 1),
+        );
+
+        final billingPeriodId = await database.creditCardDao
+            .createInitialBillingPeriod(
+              accountId: insertedId,
+              startDate: billingPeriodStartDate,
+              endDate: nextStatementDate,
+            );
+
+        debugPrint('=== CREDIT CARD CREATION ===');
+        debugPrint('accountId: $insertedId');
+        debugPrint('nextStatementDate: $nextStatementDate');
+        debugPrint('previousStatementDate: $previousStatementDate');
+        debugPrint('billingPeriodStartDate: $billingPeriodStartDate');
+        debugPrint('billingPeriodId: $billingPeriodId');
+        // final billId = await database.billsDao.insertBill(
+        //   BillsTableCompanion.insert(
+        //     name: '$name Statement',
+        //     categoryId: const drift.Value(null),
+        //     accountId: drift.Value(insertedId),
+        //     expectedAmount: const drift.Value(null),
+        //     frequency: BillsFrequency.monthly.name,
+        //     dayOfMonth: drift.Value(nextPaymentDueDate.day),
+        //   ),
+        // );
+      }
+      // 3. Create initial balance transaction
+      if (initialBalance >= 0) {
         await database.transactionsDao.insertTransaction(
           TransactionsTableCompanion.insert(
             amount: initialBalance,
@@ -326,10 +455,10 @@ class AccountController extends GetxController {
         );
       }
 
-      // 3. Rebuild calculated balance
+      // 4. Rebuild calculated balance
       await database.accountsDao.rebuildAccountBalance(insertedId);
 
-      // 4. Return created account
+      // 5. Return created account
       final createdAccount = await (database.select(
         database.accountsTable,
       )..where((tbl) => tbl.id.equals(insertedId))).getSingleOrNull();
@@ -352,6 +481,8 @@ class AccountController extends GetxController {
   // RESET
   // ============================================================
   void resetForm() {
+    selectedStatementDate.value = null;
+    selectedPaymentDueDate.value = null;
     nameController.clear();
     accountName.value = '';
 

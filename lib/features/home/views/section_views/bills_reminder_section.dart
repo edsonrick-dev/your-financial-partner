@@ -68,12 +68,12 @@ class BillsReminderSection extends GetView<CashflowController> {
 
                   final paidAmount = paidBills.fold<double>(
                     0,
-                    (sum, bill) => sum + bill.occurrence.expectedAmount,
+                    (sum, bill) => sum + (bill.occurrence.expectedAmount ?? 0),
                   );
 
                   final unpaidAmount = unpaidBills.fold<double>(
                     0,
-                    (sum, bill) => sum + bill.occurrence.expectedAmount,
+                    (sum, bill) => sum + (bill.occurrence.expectedAmount ?? 0),
                   );
                   final totalBills = bills.length;
                   final paidBillCount = paidBills.length;
@@ -91,70 +91,85 @@ class BillsReminderSection extends GetView<CashflowController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (hasBills) ...[
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                textAlign: hasBills
-                                    ? TextAlign.start
-                                    : TextAlign.center,
-                                title,
-                                style: AppTextStyle.titleM.copyWith(
-                                  // color: colorScheme.appTextMuted,
-                                ),
-                              ),
-                            ),
-                            if (bills.isNotEmpty)
-                              RichText(
-                                text: TextSpan(
-                                  style: AppTextStyle.labelM.copyWith(
-                                    color: colorScheme.appText,
+                        AdaptivePressable(
+                          onTap: () {
+                            Get.toNamed(Routes.BILLS);
+                          },
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      textAlign: hasBills
+                                          ? TextAlign.start
+                                          : TextAlign.center,
+                                      title,
+                                      style: AppTextStyle.titleM.copyWith(
+                                        // color: colorScheme.appTextMuted,
+                                      ),
+                                    ),
                                   ),
-                                  children: [
-                                    if (paidBillCount < totalBills) ...[
-                                      TextSpan(text: paidBillCount.toString()),
-                                      const TextSpan(text: '/'),
-                                      TextSpan(text: totalBills.toString()),
-                                      const TextSpan(text: ' bills paid'),
-                                    ],
-                                    if (paidBillCount == totalBills)
-                                      const TextSpan(text: 'All bills paid'),
-                                  ],
-                                ),
+                                  if (bills.isNotEmpty)
+                                    RichText(
+                                      text: TextSpan(
+                                        style: AppTextStyle.labelM.copyWith(
+                                          color: colorScheme.appText,
+                                        ),
+                                        children: [
+                                          if (paidBillCount < totalBills) ...[
+                                            TextSpan(
+                                              text: paidBillCount.toString(),
+                                            ),
+                                            const TextSpan(text: '/'),
+                                            TextSpan(
+                                              text: totalBills.toString(),
+                                            ),
+                                            const TextSpan(text: ' bills paid'),
+                                          ],
+                                          if (paidBillCount == totalBills)
+                                            const TextSpan(
+                                              text: 'All bills paid',
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
                               ),
-                          ],
-                        ),
-                        Row(
-                          spacing: 16,
-                          children: [
-                            Expanded(
-                              child: _BillSummaryColumn(
-                                label: 'Remaining',
-                                amount: unpaidAmount,
-                                count: unpaidBillCount,
-                                color: colorScheme.appOutflow,
-                              ),
-                            ),
-                            // SizedBox(width: 16),
-                            // const Divider(),
-                            Container(
-                              height: 32,
+                              Row(
+                                spacing: 16,
+                                children: [
+                                  Expanded(
+                                    child: _BillSummaryColumn(
+                                      label: 'Remaining',
+                                      amount: unpaidAmount,
+                                      count: unpaidBillCount,
+                                      color: colorScheme.appOutflow,
+                                    ),
+                                  ),
+                                  // SizedBox(width: 16),
+                                  // const Divider(),
+                                  Container(
+                                    height: 32,
 
-                              width: 1,
-                              decoration: BoxDecoration(
-                                color: colorScheme.appBorder,
-                                borderRadius: BorderRadius.circular(9),
+                                    width: 1,
+                                    decoration: BoxDecoration(
+                                      color: colorScheme.appBorder,
+                                      borderRadius: BorderRadius.circular(9),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: _BillSummaryColumn(
+                                      label: 'Paid',
+                                      amount: paidAmount,
+                                      count: paidBillCount,
+                                      color: colorScheme.appSuccess,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Expanded(
-                              child: _BillSummaryColumn(
-                                label: 'Paid',
-                                amount: paidAmount,
-                                count: paidBillCount,
-                                color: colorScheme.appSuccess,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         if (bills.isNotEmpty) ...[
                           Divider(color: colorScheme.appBorder),
@@ -174,8 +189,7 @@ class BillsReminderSection extends GetView<CashflowController> {
                             ),
                           ),
                         ],
-                      ],
-                      if (!hasBills)
+                      ] else if (!hasBills)
                         Column(
                           children: [
                             Icon(
@@ -334,7 +348,7 @@ class _BillReminderItem extends StatelessWidget {
                   child: Text(bill.bill.name, style: AppTextStyle.titleL),
                 ),
                 Text(
-                  occurrence.expectedAmount.toCurrency(),
+                  occurrence.expectedAmount?.toCurrency() ?? '—',
                   style: AppTextStyle.amountM,
                 ),
               ],

@@ -4,6 +4,7 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
@@ -150,7 +151,7 @@ class TransactionView extends GetView<TransactionController> {
                   }
 
                   return ListView(
-                    padding: const EdgeInsets.only(bottom: 24),
+                    padding: EdgeInsets.only(bottom: context.bottomPadding),
                     children: groupedTransactions.entries.map((entry) {
                       final sectionTitle = entry.key;
                       final transactions = entry.value;

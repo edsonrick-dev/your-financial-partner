@@ -22,7 +22,7 @@ class DebtRepaymentList extends StatelessWidget {
         (frequency) => frequency.name == item.bill.frequency,
       );
 
-      return total + frequency.toAnnual(item.bill.expectedAmount);
+      return total + frequency.toAnnual(item.bill.expectedAmount ?? 0);
     });
     return AppSection(
       sectionTitle: 'Debt Repayment',

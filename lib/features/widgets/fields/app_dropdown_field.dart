@@ -53,6 +53,7 @@ class AppDropdownField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppFieldContainer(
+          fixedHeight: false,
           trailingPadding: 16,
           state: effectiveState,
           onTap: () {
@@ -73,11 +74,14 @@ class AppDropdownField extends StatelessWidget {
 
                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          label,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            label,
 
-                          style: AppTextStyle.titleM.copyWith(
-                            color: FieldColors.label(effectiveState, context),
+                            style: AppTextStyle.titleM.copyWith(
+                              color: FieldColors.label(effectiveState, context),
+                            ),
                           ),
                         ),
 

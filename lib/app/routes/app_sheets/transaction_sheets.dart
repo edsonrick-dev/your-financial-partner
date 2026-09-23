@@ -119,6 +119,21 @@ class TransactionSheets {
     ).whenComplete(controller.resetForm);
   }
 
+  Future<void> payCreditCard({required AccountsTableData creditCard}) async {
+    final controller = Get.find<TransactionController>();
+
+    controller.resetForm();
+
+    // Credit card is the destination.
+    controller.selectedLinkedAccount.value = creditCard;
+
+    await Get.bottomSheet(
+      const TransactionSheet(transactionType: TransactionType.transfer),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    ).whenComplete(controller.resetForm);
+  }
+
   Future<void> receiveMoney({
     TransactionWithDetails? item,
     AccountsTableData? account,

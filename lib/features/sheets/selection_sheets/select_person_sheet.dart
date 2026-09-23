@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/widgets/cards/person_card.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
@@ -52,7 +54,9 @@ class SelectPersonSheet extends GetView<CreateEntityController> {
               if (index == persons.length) {
                 return Padding(
                   padding: EdgeInsets.only(bottom: 36),
-                  child: AddPersonButton(),
+                  child: AddPersonButton(
+                    onExpand: controller.scrollToAddPerson,
+                  ),
                 );
               }
 
@@ -78,27 +82,42 @@ class SelectPersonSheet extends GetView<CreateEntityController> {
 }
 
 class AddPersonButton extends GetView<CreateEntityController> {
-  const AddPersonButton({super.key});
+  final VoidCallback? onExpand;
+  const AddPersonButton({super.key, this.onExpand});
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     return Obx(() {
       final state = controller.buttonState.value;
       final isExpanded = state != AddButtonState.collapsed;
-      return Container(
-        padding: isExpanded
-            ? const EdgeInsets.all(12)
-            : const EdgeInsets.all(0),
-        decoration: BoxDecoration(
-          color: isExpanded ? colorScheme.bgLight : Colors.transparent,
-          borderRadius: BorderRadius.circular(isExpanded ? 20 : 12),
-          border: Border.all(color: colorScheme.appBorder),
-        ),
+      return isExpanded
+          ? AnimatedContainer(
+              duration: Duration(milliseconds: 180),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: colorScheme.appBorder),
+              ),
 
-        child: isExpanded
-            ? _BuildExpanded(controller: controller)
-            : _BuildCollapsed(controller: controller),
-      );
+              child: _BuildExpanded(controller: controller),
+            )
+          : _BuildCollapsed(controller: controller, onExpand: onExpand);
+      // return isExpanded
+      //     ? Container(
+      //         padding: isExpanded
+      //             ? const EdgeInsets.all(12)
+      //             : const EdgeInsets.all(0),
+      //         decoration: BoxDecoration(
+      //           color: isExpanded ? colorScheme.bgLight : Colors.transparent,
+      //           borderRadius: BorderRadius.circular(isExpanded ? 20 : 12),
+      //           border: Border.all(color: colorScheme.appBorder),
+      //         ),
+
+      //         child: isExpanded
+      //             ? _BuildExpanded(controller: controller)
+      //             : _BuildCollapsed(controller: controller),
+      //       )
+      //     : _BuildCollapsed(controller: controller);
     });
   }
 }
@@ -107,6 +126,23 @@ class CreateEntityController extends GetxController {
   final Rx<AddButtonState> buttonState = AddButtonState.collapsed.obs;
   final TextEditingController nameController = TextEditingController();
   final FocusNode nameFocusNode = FocusNode();
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void scrollToAddPerson() {
+    if (!_scrollController.hasClients) return;
+
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
   void expandButton() {
     buttonState.value = AddButtonState.expanded;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -177,78 +213,33 @@ class _BuildExpanded extends StatelessWidget {
           controller: controller.nameController,
           focusNode: controller.nameFocusNode,
         ),
-        // Row(
-        //   children: [
-        //     Expanded(
-        //       child: Container(
-        //         height: 60,
-        //         padding: const EdgeInsets.symmetric(
-        //           horizontal: 12,
-        //           vertical: 8,
-        //         ),
-        //         decoration: BoxDecoration(
-        //           color: Colors.white,
-        //           border: Border.all(color: colorScheme.border),
-        //           borderRadius: BorderRadius.circular(8),
-        //         ),
-        //         child: Column(
-        //           crossAxisAlignment: CrossAxisAlignment.start,
-        //           children: [
-        //             Text(
-        //               'Name',
-        //               style: TextStyle(
-        //                 fontSize: 15,
-        //                 height: 20 / 15,
-        //                 color: Colors.black54,
-        //               ),
-        //             ),
 
-        //             TextField(
-        //               controller: controller.nameController,
-        //               maxLines: 1,
-        //               textAlignVertical: TextAlignVertical.center,
-        //               style: const TextStyle(fontSize: 17, height: 20 / 17),
-        //               decoration: const InputDecoration(
-        //                 hintText: '''Person's Name''',
-        //                 border: InputBorder.none,
-
-        //                 isDense: true,
-
-        //                 contentPadding: EdgeInsets.zero,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
         Row(
           spacing: 8,
           children: [
             ///CANCEL BUTTON
-            GestureDetector(
+            AdaptivePressable(
               onTap: controller.collapseButton,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  // color: colorScheme.text,
-                  border: Border.all(color: context.colors.primary),
+                  border: Border.all(color: context.colors.appText),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                height: 44,
+                height: ButtonSize.medium.height,
                 child: Row(
                   spacing: 8,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text('Cancel', style: TextStyle())],
+                  children: [
+                    Text('Cancel', style: ButtonSize.medium.textStyle),
+                  ],
                 ),
               ),
             ),
 
             ///SAVE BUTTON
             Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
+              child: AdaptivePressable(
                 onTap: () async {
                   final createPerson = await controller.savePerson();
 
@@ -259,10 +250,10 @@ class _BuildExpanded extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 24),
                   decoration: BoxDecoration(
-                    color: context.colors.primary,
+                    color: context.colors.buttonBackground,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  height: 44,
+                  height: ButtonSize.medium.height,
                   child: Row(
                     spacing: 8,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -275,7 +266,9 @@ class _BuildExpanded extends StatelessWidget {
                             )
                           : Text(
                               'Save Person',
-                              style: TextStyle(color: context.colors.surface),
+                              style: ButtonSize.medium.textStyle.copyWith(
+                                color: context.colors.surface,
+                              ),
                             ),
                     ],
                   ),
@@ -291,25 +284,23 @@ class _BuildExpanded extends StatelessWidget {
 
 class _BuildCollapsed extends StatelessWidget {
   final CreateEntityController controller;
-  const _BuildCollapsed({required this.controller});
+  final VoidCallback? onExpand;
+  const _BuildCollapsed({required this.controller, this.onExpand});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: controller.expandButton,
-      child: SizedBox(
-        height: 52,
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.add),
-            SizedBox(width: 8),
-            Text('Add New Person'),
-          ],
-        ),
-      ),
+    return AppButton(
+      size: ButtonSize.xLarge,
+      type: ButtonType.outline,
+      leadingIcon: Icons.add,
+      text: 'Add new person',
+      onTap: () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          onExpand?.call();
+        });
+        debugPrint('Add New Person Clicked');
+        controller.expandButton();
+      },
     );
   }
 }

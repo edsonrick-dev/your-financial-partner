@@ -127,7 +127,9 @@ class NewTransactionButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            alignment: Alignment.centerRight,
+            // constraints: BoxConstraints(minWidth: 60),
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             decoration: BoxDecoration(
               border: Border.all(color: colorScheme.transactionButtonBorder),
               color: colorScheme.bg,

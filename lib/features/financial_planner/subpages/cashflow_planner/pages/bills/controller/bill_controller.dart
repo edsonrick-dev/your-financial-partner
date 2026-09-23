@@ -61,7 +61,13 @@ class BillController extends GetxController {
         (value) => value.name == bill.frequency,
       );
 
-      return total + frequency.toAnnual(bill.expectedAmount);
+      final amount = bill.expectedAmount;
+
+      if (amount == null) {
+        return total;
+      }
+
+      return total + frequency.toAnnual(amount);
     });
   }
 
@@ -569,8 +575,8 @@ class BillController extends GetxController {
         bill: BillsTableCompanion.insert(
           name: name,
           categoryId: drift.Value(category.id),
-          loanAccountId: const drift.Value(null),
-          expectedAmount: amount,
+          accountId: const drift.Value(null),
+          expectedAmount: drift.Value(amount),
           frequency: frequency.name,
           dayOfMonth: drift.Value(dueDate.day),
           // monthMask: const drift.Value(null),

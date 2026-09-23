@@ -66,7 +66,9 @@ class _PersonCardState extends State<PersonCard> {
                 ),
                 child: Text(
                   widget.person.name.trim()[0].toUpperCase(),
-                  style: AppTextStyle.titleL,
+                  style: AppTextStyle.titleL.copyWith(
+                    color: colorScheme.appInversedtext,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),

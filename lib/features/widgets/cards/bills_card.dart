@@ -114,7 +114,7 @@ class BillsCard extends StatelessWidget {
                       ),
                       SizedBox(width: 16),
                       Text(
-                        amountDue.toCurrency(),
+                        (amountDue ?? 0).toCurrency(),
                         style: AppTextStyle.amountM.copyWith(
                           color: colorScheme.appText,
                         ),

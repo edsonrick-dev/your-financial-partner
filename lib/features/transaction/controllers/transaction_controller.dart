@@ -49,8 +49,16 @@ class TransactionController extends GetxController {
     editingTransaction.value = null;
 
     selectedBill.value = bill;
+    final expectedAmount = bill.occurrence.expectedAmount;
 
-    amount.value = bill.occurrence.expectedAmount;
+    if (expectedAmount == null) {
+      // Amount is not known yet.
+      // Don't allow this occurrence to enter the normal bill-payment flow.
+      return;
+    }
+
+    amount.value = expectedAmount;
+
     selectedDate.value = bill.occurrence.dueDate;
 
     selectedCategory.value = bill.category;
@@ -91,7 +99,14 @@ class TransactionController extends GetxController {
       case BillSelection(:final bill):
         selectedBill.value = bill;
         selectedCategory.value = bill.category;
-        amount.value = bill.occurrence.expectedAmount;
+
+        final expectedAmount = bill.occurrence.expectedAmount;
+
+        if (expectedAmount == null) {
+          return;
+        }
+
+        amount.value = expectedAmount;
 
         if (bill.isLoanPayment) {
           selectedLinkedAccount.value = bill.loanAccount;
@@ -123,11 +138,14 @@ class TransactionController extends GetxController {
         selectedBill.value = bill;
         selectedCategory.value = bill.category;
 
-        // Use the bill's expected amount as the initial
-        // transaction amount.
-        amount.value = bill.occurrence.expectedAmount;
+        final expectedAmount = bill.occurrence.expectedAmount;
 
-        // Determine the transaction type from the bill.
+        if (expectedAmount == null) {
+          return null;
+        }
+
+        amount.value = expectedAmount;
+
         return bill.isLoanPayment
             ? TransactionType.debtRepayment
             : TransactionType.spend;

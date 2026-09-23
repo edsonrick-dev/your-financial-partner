@@ -15,7 +15,7 @@ class CreditCardTransactionsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Map<String, List<TransactionWithDetails>>>(
-      stream: database.transactionsDao.watchGroupedTransactionsForAccount(
+      stream: database.transactionsDao.watchGroupedCreditCardTransactions(
         accountId,
       ),
 
