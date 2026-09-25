@@ -5,7 +5,7 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/models/person_debt_activity.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/save_functions.dart';
+import 'package:getx_drift_app/domain/enums/debt_management_type.dart';
 import 'package:intl/intl.dart';
 
 class PersonDebtActivityCard extends StatelessWidget {

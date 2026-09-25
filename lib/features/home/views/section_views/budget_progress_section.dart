@@ -74,7 +74,7 @@ class _EmptyView extends GetView<CashflowController> {
 
           AppButton(
             type: ButtonType.outline,
-            trailingIcon: PhosphorIconsRegular.arrowRight,
+            // trailingIcon: PhosphorIconsRegular.caretRight,
             text: 'Set budget in cashflow planner',
             onTap: () {
               Get.toNamed(Routes.CASHFLOWDETAILS);

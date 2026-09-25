@@ -14,7 +14,7 @@ import 'package:getx_drift_app/features/financial_setup/financial_setup_controll
 import 'package:getx_drift_app/features/main_shell/controller/main_shell_controller.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/settings/pages/notifications_page.dart';
-import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 
 import '../controllers/home_controller.dart';
 

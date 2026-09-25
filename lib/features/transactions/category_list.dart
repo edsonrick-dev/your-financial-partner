@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/features/sheets/create_sheets/create_category_sheet/create_category_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/category_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/add_category_button.dart';

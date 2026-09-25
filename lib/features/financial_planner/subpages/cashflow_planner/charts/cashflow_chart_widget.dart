@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 
 class CashflowPlanMonthlyDistribution extends StatelessWidget {

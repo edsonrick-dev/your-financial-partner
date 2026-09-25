@@ -13,67 +13,6 @@ class CashflowHistorySection extends GetView<CashflowController> {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     return AppSection(
-      // // sectionTitle: 'Cashflow History',
-      // trailingType: SectionTrailingType.custom,
-      // trailingWidget: Obx(() {
-      //   return Row(
-      //     children: [
-      //       if (!controller.isCurrentMonth)
-      //         AdaptivePressable(
-      //           child: GestureDetector(
-      //             onTap: controller.goToCurrentMonth,
-      //             child: Text(
-      //               'Today',
-      //               style: TextStyle(
-      //                 decoration: TextDecoration.underline,
-      //                 // fontSize: 15,
-      //                 // fontWeight: FontWeight.w500,
-      //                 // height: 20 / 15,
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //       IconButton(
-      //         icon: const Icon(Icons.chevron_left),
-      //         onPressed: controller.previousMonth,
-      //       ),
-
-      //       AdaptivePressable(
-      //         child: GestureDetector(
-      //           onTap: () async {
-      //             final month = await showMonthPicker(
-      //               context: context,
-      //               initialDate: controller.selectedMonth.value,
-      //               firstDate: DateTime(2020),
-      //               lastDate: DateTime(
-      //                 DateTime.now().year,
-      //                 DateTime.now().month,
-      //               ),
-      //             );
-
-      //             if (month != null) {
-      //               controller.setMonth(month);
-      //             }
-      //           },
-      //           child: Text(
-      //             DateFormat("MMM ''yy").format(controller.selectedMonth.value),
-      //             // style: TextStyle(
-      //             //   fontSize: 15,
-      //             //   fontWeight: FontWeight.w500,
-      //             //   height: 20 / 15,
-      //             // ),
-      //           ),
-      //         ),
-      //       ),
-      //       Obx(
-      //         () => IconButton(
-      //           icon: const Icon(Icons.chevron_right),
-      //           onPressed: controller.canGoNext ? controller.nextMonth : null,
-      //         ),
-      //       ),
-      //     ],
-      //   );
-      // }),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(

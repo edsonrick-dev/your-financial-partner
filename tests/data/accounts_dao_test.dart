@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/database/daos/accounts_dao/accounts_dao.dart';
-import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:drift/drift.dart' as d;
 import 'package:drift/native.dart';
@@ -317,7 +316,7 @@ void main() {
 
       // Add transactions here once the TransactionsDao transaction
       // creation API is finalized.
-      //
+
       // The expected balance should be verified against
       // dao.calculateAccountBalance(accountId).
     });

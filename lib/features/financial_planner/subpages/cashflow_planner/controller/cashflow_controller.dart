@@ -10,7 +10,8 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/spend_transaction/spend_transaction_sheet.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/app_day.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
@@ -21,7 +22,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
-import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 
 extension CashflowHomeViewExtention on CashflowController {
   Future<void> previousMonth() async {

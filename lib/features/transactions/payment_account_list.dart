@@ -6,7 +6,7 @@ import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_group_enum.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/add_payment_account_button.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/account_selection_card.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 

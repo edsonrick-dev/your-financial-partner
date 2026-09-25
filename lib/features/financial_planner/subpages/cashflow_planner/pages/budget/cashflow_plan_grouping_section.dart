@@ -1,4 +1,4 @@
-import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 

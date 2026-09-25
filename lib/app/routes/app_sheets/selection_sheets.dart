@@ -17,9 +17,9 @@ import 'package:getx_drift_app/features/sheets/selection_sheets/select_payment_a
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_person_sheet.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_payment_account_type_sheet.dart';
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/features/sheets/selection_sheets/select_reminder_sheet.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
+import 'package:getx_drift_app/features/transactions/controllers/extensions/dropdown_selectors.dart';
 
 class SelectionSheets {
   Future<CategoryOrBillSelection?> selectCategoryOrBill(

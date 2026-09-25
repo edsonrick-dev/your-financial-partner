@@ -3,14 +3,15 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
-import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/spend_transaction/spend_transaction_sheet.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/budget_bills_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_summary_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_transactions_view.dart';
-import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 

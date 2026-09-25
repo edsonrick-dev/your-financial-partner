@@ -3,7 +3,7 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_grouping_section.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/transaction_card_shell.dart';

@@ -1,5 +1,5 @@
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/data/models/split_expense_summary.dart';
 import 'package:getx_drift_app/data/models/transaction_participant_with_entity.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';

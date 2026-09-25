@@ -1,0 +1,1 @@
+enum PaidBy { self, others }

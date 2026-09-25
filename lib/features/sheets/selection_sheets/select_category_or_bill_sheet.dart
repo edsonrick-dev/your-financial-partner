@@ -4,11 +4,11 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
-import 'package:getx_drift_app/features/transaction/bill_list.dart';
-import 'package:getx_drift_app/features/transaction/category_list.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
+import 'package:getx_drift_app/features/transactions/bill_list.dart';
+import 'package:getx_drift_app/features/transactions/category_list.dart';
+import 'package:getx_drift_app/features/transactions/controllers/extensions/dropdown_selectors.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
 class SelectCategoryOrBillSheet extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 
 class DefaultCategory {
   final String name;

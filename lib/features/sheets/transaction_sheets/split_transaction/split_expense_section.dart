@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_transaction_form.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
-import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/domain/enums/paid_by.dart';
+import 'package:getx_drift_app/features/transactions/controllers/extensions/split_transaction_ext.dart';
+import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/add_participant_button.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/split_allocation_summary.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/split_participants_list.dart';

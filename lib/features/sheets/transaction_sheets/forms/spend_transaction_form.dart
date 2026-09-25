@@ -4,20 +4,20 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/domain/enums/paid_by.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/app_date_picker.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/transaction_validation_extension.dart';
-import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/features/transactions/controllers/extensions/dropdown_selectors.dart';
+import 'package:getx_drift_app/features/transactions/controllers/extensions/transaction_validation_extension.dart';
+import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/split_expense_section.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/spend_transaction/validate_spend_transaction.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/organize_THIS/app_mode_item.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-
-enum PaidBy { self, others }
 
 class SpendTransactionForm extends GetView<TransactionController> {
   const SpendTransactionForm({super.key, required this.transactionType});

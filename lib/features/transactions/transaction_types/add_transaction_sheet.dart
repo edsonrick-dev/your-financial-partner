@@ -6,6 +6,11 @@ import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/selection_sheets.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/transaction_sheets.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/earn_transaction/earn_transaction_sheet.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/give_money_transaction/give_money_transaction_sheet.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/receive_money_transaction/receive_money_transaction_sheet.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/spend_transaction/spend_transaction_sheet.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transfer_transaction/transfer_transaction_sheet.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class AddTransactionSheet extends StatelessWidget {

@@ -9,7 +9,7 @@ import 'package:getx_drift_app/features/widgets/fields/icon_picker_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 
 class AddCategoryButton extends GetView<CreateCategoryController> {
   final TransactionType transactionType;

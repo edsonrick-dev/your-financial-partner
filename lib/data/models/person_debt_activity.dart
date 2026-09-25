@@ -1,6 +1,6 @@
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
-import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 
 class PersonDebtActivity {
   final FinancialObligationsTableData obligation;

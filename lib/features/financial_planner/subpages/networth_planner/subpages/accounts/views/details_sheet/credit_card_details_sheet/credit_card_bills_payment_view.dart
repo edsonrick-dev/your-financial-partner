@@ -3,7 +3,7 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
-import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class CreditCardBillsPaymentView extends StatelessWidget {

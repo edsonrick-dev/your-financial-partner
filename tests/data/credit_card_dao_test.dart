@@ -2,7 +2,7 @@ import 'package:drift/drift.dart' as d;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/credit_card_billings_table.dart';
 import 'package:getx_drift_app/data/tables/credit_card_statements_table.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';

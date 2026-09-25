@@ -19,6 +19,7 @@ class AppSpacing {
 
   static double listSpacing = AppScale.x2;
   static double cardSpacing = AppScale.x3;
+  static double sectionSpacing = AppScale.x5;
 }
 
 class AppPadding {

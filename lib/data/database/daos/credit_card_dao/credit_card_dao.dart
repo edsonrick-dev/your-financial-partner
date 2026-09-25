@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/rendering.dart';
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/credit_card_details_table.dart';
 import 'package:getx_drift_app/data/tables/credit_card_billings_table.dart';
 import 'package:getx_drift_app/data/tables/credit_card_statements_table.dart';

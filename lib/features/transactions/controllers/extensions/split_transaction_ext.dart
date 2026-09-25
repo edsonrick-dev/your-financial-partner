@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
-import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/data/models/participant_model.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 

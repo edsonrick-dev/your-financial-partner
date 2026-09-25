@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/constants/app_border_radius.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
@@ -46,31 +47,12 @@ class HomeView extends GetView<HomeController> {
               children: [
                 // HEADER
                 _greetingSection(colorScheme),
-                // AppSection(
-                //   child: Column(
-                //     spacing: 8,
-                //     children: AppIcons.categories.availableIcons.map((item) {
-                //       return Row(
-                //         children: [
-                //           Icon(item.icon),
-                //           const SizedBox(width: 8),
-                //           Expanded(child: Text(item.key)),
-                //           const SizedBox(width: 8),
-                //           Text(item.group.name),
-                //         ],
-                //       );
-                //     }).toList(),
-                //   ),
-                // ),
-                Padding(
-                  padding: EdgeInsets.only(top: spacingL),
-                  child: AppSection(
-                    child: Column(children: [FundSummaryCard()]),
-                  ),
-                ),
-                SizedBox(height: 20),
+
+                SizedBox(height: AppSpacing.sectionSpacing),
+                AppSection(child: Column(children: [FundSummaryCard()])),
+                SizedBox(height: AppSpacing.sectionSpacing),
                 FinanceHomeView(),
-                SizedBox(height: 20),
+                SizedBox(height: AppSpacing.sectionSpacing),
                 CashflowHistorySection(),
                 Obx(() {
                   final recommendations = learnEngine.getRecommendedContent(

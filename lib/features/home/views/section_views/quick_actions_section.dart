@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/home_initial/widget/transaction_button.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/earn_transaction/earn_transaction_sheet.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/spend_transaction/spend_transaction_sheet.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transfer_transaction/transfer_transaction_sheet.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 
 class QuickActionSection extends StatelessWidget {

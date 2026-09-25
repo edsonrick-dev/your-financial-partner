@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/app_date_picker.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/track_as_debt_section.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
-import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/features/transactions/controllers/extensions/dropdown_selectors.dart';
+import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 
 class GiveMoneyTransactionForm extends GetView<TransactionController> {
   const GiveMoneyTransactionForm({super.key});

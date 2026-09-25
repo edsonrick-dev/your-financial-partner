@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/delete_functions.dart';
-import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/features/transactions/controllers/extensions/delete_functions.dart';
+import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/earn_transaction/earn_transaction_sheet.dart';
 import 'package:getx_drift_app/features/widgets/container/category_icon_container.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 
 class EarnTransactionCard extends GetView<TransactionController> {
   final TransactionWithDetails item;

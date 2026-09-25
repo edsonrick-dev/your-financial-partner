@@ -9,7 +9,7 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/domain/enums/app_month.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
+import 'package:getx_drift_app/features/transactions/controllers/extensions/dropdown_selectors.dart';
 
 class BillList extends StatelessWidget {
   const BillList({super.key});

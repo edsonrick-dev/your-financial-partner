@@ -6,16 +6,16 @@ import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
+import 'package:getx_drift_app/domain/enums/paid_by.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/data/models/participant_model.dart';
 import 'package:getx_drift_app/data/models/person_balance_summary_model.dart';
-import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
-import 'package:getx_drift_app/features/sheets/transaction_sheets/forms/spend_transaction_form.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/dropdown_selectors.dart';
-import 'package:getx_drift_app/features/transaction/views/transaction_view.dart';
+import 'package:getx_drift_app/features/transactions/controllers/extensions/dropdown_selectors.dart';
+import 'package:getx_drift_app/features/transactions/views/transaction_view.dart';
 import 'package:intl/intl.dart';
-import 'package:getx_drift_app/features/transaction/controllers/extensions/split_transaction_ext.dart';
+import 'package:getx_drift_app/features/transactions/controllers/extensions/split_transaction_ext.dart';
 
 class TransactionController extends GetxController {
   final selectedTransactionFilter = Rx<TransactionFilter>(

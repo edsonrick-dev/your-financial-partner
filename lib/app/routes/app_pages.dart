@@ -39,8 +39,8 @@ import 'package:getx_drift_app/features/settings/pages/preferences_page.dart';
 import '../../features/home/bindings/home_binding.dart';
 import '../../features/root/bindings/root_binding.dart';
 import '../../features/root/views/root_view.dart';
-import '../../features/transaction/bindings/transaction_binding.dart';
-import '../../features/transaction/views/transaction_view.dart';
+import '../../features/transactions/bindings/transaction_binding.dart';
+import '../../features/transactions/views/transaction_view.dart';
 import 'app_routes.dart';
 
 class AppPages {

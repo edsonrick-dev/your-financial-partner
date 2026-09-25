@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
-import 'package:getx_drift_app/features/widgets/cards/transaction_cards/earn_transaction_card.dart';
-import 'package:getx_drift_app/features/widgets/cards/transaction_cards/give_money_transaction_card.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/earn_transaction/earn_transaction_card.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/give_money_transaction/give_money_transaction_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/receive_money_transaction_card.dart';
-import 'package:getx_drift_app/features/widgets/cards/transaction_cards/spend_transaction_card.dart';
-import 'package:getx_drift_app/features/widgets/cards/transaction_cards/transfer_transaction_card.dart';
-import 'package:getx_drift_app/data/enums/transaction_type.dart';
-import 'package:getx_drift_app/data/models/transaction_with_details.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/spend_transaction/spend_transaction_card.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transfer_transaction/transfer_transaction_card.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 
 class RecentTransactionsSection extends StatelessWidget {
   const RecentTransactionsSection({super.key});

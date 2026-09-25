@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/add_transaction_sheet.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/add_transaction_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 
 class AccountTypeActionMenu extends StatelessWidget {
