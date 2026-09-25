@@ -45,6 +45,9 @@ extension SaveTransactionFunctions on TransactionController {
         if (!isGiveMoneyTransactionValid) return;
         await saveGiveMoneyTransaction();
 
+      case TransactionType.cardPayment:
+        await saveCardPaymentTransaction();
+
       case TransactionType.debtRepayment:
         debugPrint('>>> debtRepayment CASE');
 
@@ -627,114 +630,7 @@ extension SaveTransactionFunctions on TransactionController {
       type: AppSnackType.success,
     );
   }
-  // Future<void> saveReceiveMoneyTransaction() async {
-  //   final isEditing = editingTransaction.value != null;
-  //   final existing = editingTransaction.value;
 
-  //   final oldTransaction = existing?.transaction;
-  //   final oldTransactionId = oldTransaction?.id;
-
-  //   final person = selectedPerson.value;
-  //   final account = selectedAccount.value;
-  //   final amountValue = amount.value;
-
-  //   if (person == null) {
-  //     Get.snackbar('Missing Person', 'Select a person.');
-  //     return;
-  //   }
-
-  //   if (account == null) {
-  //     Get.snackbar('Missing Account', 'Select an account.');
-  //     return;
-  //   }
-
-  //   if (amountValue <= 0) {
-  //     Get.snackbar('Invalid Amount', 'Enter an amount.');
-  //     return;
-  //   }
-  //   await database.transaction(() async {
-  //     int? transactionId = editingTransaction.value?.transaction.id;
-  //     if (oldTransaction != null) {
-  //       await database.accountsDao.adjustAccountBalance(
-  //         oldTransaction.accountId!,
-  //         -oldTransaction.amount,
-  //       );
-  //     }
-  //     if (transactionId != null) {
-  //       await database.transactionsDao.updateTransaction(
-  //         transactionId,
-  //         TransactionsTableCompanion(
-  //           amount: d.Value(amountValue),
-  //           date: d.Value(selectedDate.value),
-  //           accountId: d.Value(account.id),
-  //           updatedAt: d.Value(DateTime.now()),
-  //           note: d.Value(noteController.text.trim()),
-  //         ),
-  //       );
-  //     } else {
-  //       transactionId = await database.transactionsDao.insertTransaction(
-  //         TransactionsTableCompanion.insert(
-  //           amount: amountValue,
-  //           date: selectedDate.value,
-  //           transactionType: TransactionType.receive.name,
-  //           accountId: d.Value(account.id),
-  //           createdAt: d.Value(DateTime.now()),
-  //           updatedAt: d.Value(DateTime.now()),
-  //           note: d.Value(noteController.text.trim()),
-  //         ),
-  //       );
-  //     }
-
-  //     await database.accountsDao.adjustAccountBalance(account.id, amountValue);
-
-  //     await database.transactionsDao.insertTransactionParticipant(
-  //       TransactionParticipantsTableCompanion.insert(
-  //         transactionId: transactionId,
-  //         entityId: person.id,
-  //         displayNameSnapshot: d.Value(person.name),
-  //         allocatedAmount: amountValue,
-  //       ),
-  //     );
-
-  //     if (isDebt.value) {
-  //       final me = await database.entitiesDao.getCurrentUserEntity();
-
-  //       if (me == null) {
-  //         throw Exception('Current user not found');
-  //       }
-
-  //       await database.transactionsDao.insertFinancialObligation(
-  //         FinancialObligationsTableCompanion.insert(
-  //           transactionId: transactionId,
-
-  //           /// I received money from this person
-  //           /// therefore I owe them
-  //           debtorEntityId: me.id,
-
-  //           creditorEntityId: person.id,
-
-  //           amount: amountValue,
-
-  //           type: DebtManagementType.receiveMoney.name,
-  //         ),
-  //       );
-  //     }
-  //   });
-
-  //   // });
-
-  //   resetForm();
-
-  //   Get.back();
-
-  //   AppSnackbar.show(
-  //     title: isEditing ? 'Transaction Updated' : 'Transaction Saved',
-  //     message: isEditing
-  //         ? '${amountValue.toCurrency()} transaction updated'
-  //         : '${amountValue.toCurrency()} added to ${account.name}',
-  //     type: AppSnackType.success,
-  //   );
-  // }
   Future<void> saveGiveMoneyTransaction() async {
     final existing = editingTransaction.value;
     final isEditing = existing != null;
@@ -873,99 +769,123 @@ extension SaveTransactionFunctions on TransactionController {
       type: AppSnackType.success,
     );
   }
-  // Future<void> saveGiveMoneyTransaction() async {
-  //   final isEditing = editingTransaction.value != null;
-  //   final person = selectedPerson.value;
-  //   final account = selectedAccount.value;
-  //   final amountValue = amount.value;
 
-  //   if (person == null) {
-  //     Get.snackbar('Missing Person', 'Select a person.');
-  //     return;
-  //   }
+  Future<void> saveCardPaymentTransaction() async {
+    final isEditing = editingTransaction.value != null;
 
-  //   if (account == null) {
-  //     Get.snackbar('Missing Account', 'Select an account.');
-  //     return;
-  //   }
+    final paymentAccount = selectedAccount.value;
+    final creditCardAccount = selectedLinkedAccount.value;
+    final amountValue = amount.value;
 
-  //   if (amountValue <= 0) {
-  //     Get.snackbar('Invalid Amount', 'Enter an amount.');
-  //     return;
-  //   }
+    // ============================================================
+    // VALIDATION
+    // ============================================================
 
-  //   await database.transaction(() async {
-  //     int? transactionId = editingTransaction.value?.transaction.id;
+    if (paymentAccount == null) {
+      Get.snackbar(
+        'Missing Account',
+        'Select the account you are paying from.',
+      );
+      return;
+    }
 
-  //     if (transactionId != null) {
-  //       await database.transactionsDao.updateTransaction(
-  //         transactionId,
-  //         TransactionsTableCompanion(
-  //           amount: d.Value(amountValue),
-  //           date: d.Value(selectedDate.value),
-  //           accountId: d.Value(account.id),
-  //           updatedAt: d.Value(DateTime.now()),
-  //           note: d.Value(noteController.text.trim()),
-  //         ),
-  //       );
-  //     } else {
-  //       transactionId = await database.transactionsDao.insertTransaction(
-  //         TransactionsTableCompanion.insert(
-  //           amount: amountValue,
-  //           date: selectedDate.value,
-  //           transactionType: TransactionType.give.name,
-  //           accountId: d.Value(account.id),
-  //           createdAt: d.Value(DateTime.now()),
-  //           updatedAt: d.Value(DateTime.now()),
-  //           note: d.Value(noteController.text.trim()),
-  //         ),
-  //       );
-  //     }
+    if (creditCardAccount == null) {
+      Get.snackbar(
+        'Missing Credit Card',
+        'Select the credit card you are paying.',
+      );
+      return;
+    }
 
-  //     await database.accountsDao.adjustAccountBalance(account.id, -amountValue);
+    if (paymentAccount.id == creditCardAccount.id) {
+      Get.snackbar(
+        'Invalid Payment',
+        'The payment account and credit card must be different.',
+      );
+      return;
+    }
 
-  //     await database.transactionsDao.insertTransactionParticipant(
-  //       TransactionParticipantsTableCompanion.insert(
-  //         transactionId: transactionId,
-  //         entityId: person.id,
-  //         displayNameSnapshot: d.Value(person.name),
-  //         allocatedAmount: amountValue,
-  //       ),
-  //     );
-  //     if (isDebt.value) {
-  //       final me = await database.entitiesDao.getCurrentUserEntity();
+    if (amountValue <= 0) {
+      Get.snackbar('Invalid Amount', 'Enter a payment amount.');
+      return;
+    }
 
-  //       if (me == null) {
-  //         throw Exception('Current user not found');
-  //       }
+    await database.transaction(() async {
+      final oldTransaction = editingTransaction.value?.transaction;
 
-  //       await database.transactionsDao.insertFinancialObligation(
-  //         FinancialObligationsTableCompanion.insert(
-  //           transactionId: transactionId,
+      int? transactionId = oldTransaction?.id;
 
-  //           /// I received money from this person
-  //           /// therefore I owe them
-  //           debtorEntityId: person.id,
+      // ============================================================
+      // AFFECTED ACCOUNTS
+      // ============================================================
 
-  //           creditorEntityId: me.id,
+      final affectedAccountIds = <int>{paymentAccount.id, creditCardAccount.id};
 
-  //           amount: amountValue,
+      if (oldTransaction != null) {
+        if (oldTransaction.accountId != null) {
+          affectedAccountIds.add(oldTransaction.accountId!);
+        }
 
-  //           type: DebtManagementType.giveMoney.name,
-  //         ),
-  //       );
-  //     }
-  //   });
+        if (oldTransaction.linkedAccountId != null) {
+          affectedAccountIds.add(oldTransaction.linkedAccountId!);
+        }
+      }
 
-  //   resetForm();
+      // ============================================================
+      // CREATE / UPDATE TRANSACTION
+      // ============================================================
 
-  //   Get.back();
-  //   AppSnackbar.show(
-  //     title: isEditing ? 'Transaction Updated' : 'Transaction Saved',
-  //     message: isEditing
-  //         ? '${amountValue.toCurrency()} transaction updated'
-  //         : '${amountValue.toCurrency()} deducted from ${account.name}',
-  //     type: AppSnackType.success,
-  //   );
-  // }
+      if (transactionId != null) {
+        await database.transactionsDao.updateTransaction(
+          transactionId,
+          TransactionsTableCompanion(
+            amount: d.Value(amountValue),
+            date: d.Value(selectedDate.value),
+            accountId: d.Value(paymentAccount.id),
+            linkedAccountId: d.Value(creditCardAccount.id),
+            transactionType: d.Value(TransactionType.cardPayment.name),
+            updatedAt: d.Value(DateTime.now()),
+            note: d.Value(noteController.text.trim()),
+          ),
+        );
+      } else {
+        transactionId = await database.transactionsDao.insertTransaction(
+          TransactionsTableCompanion.insert(
+            amount: amountValue,
+            date: selectedDate.value,
+            transactionType: TransactionType.cardPayment.name,
+            accountId: d.Value(paymentAccount.id),
+            linkedAccountId: d.Value(creditCardAccount.id),
+            createdAt: d.Value(DateTime.now()),
+            updatedAt: d.Value(DateTime.now()),
+            note: d.Value(noteController.text.trim()),
+          ),
+        );
+      }
+
+      // ============================================================
+      // REBUILD BALANCES
+      // ============================================================
+
+      for (final accountId in affectedAccountIds) {
+        await database.accountsDao.rebuildAccountBalance(accountId);
+      }
+    });
+
+    // ============================================================
+    // CLOSE SHEET
+    // ============================================================
+
+    resetForm();
+
+    Get.back();
+
+    AppSnackbar.show(
+      title: isEditing ? 'Card Payment Updated' : 'Card Payment Saved',
+      message: isEditing
+          ? '${amountValue.toCurrency()} card payment updated'
+          : '${amountValue.toCurrency()} paid to ${creditCardAccount.name}',
+      type: AppSnackType.success,
+    );
+  }
 }

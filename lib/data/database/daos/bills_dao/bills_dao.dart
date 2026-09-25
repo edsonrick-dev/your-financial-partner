@@ -31,6 +31,22 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
     );
   }
 
+  Stream<BillsTableData?> watchLoanBillForAccount(int loanAccountId) {
+    return (select(billsTable)
+          ..where((tbl) => tbl.accountId.equals(loanAccountId))
+          ..limit(1))
+        .watchSingleOrNull();
+  }
+
+  Future<BillsTableData?> getActiveBillForLoan(int loanId) {
+    return (select(billsTable)
+          ..where(
+            (tbl) => tbl.accountId.equals(loanId) & tbl.isActive.equals(true),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+  }
+
   Future<int> createCreditCardStatementBill({
     required int statementId,
     required int creditCardAccountId,

@@ -128,7 +128,7 @@ class TransactionSheets {
     controller.selectedLinkedAccount.value = creditCard;
 
     await Get.bottomSheet(
-      const TransactionSheet(transactionType: TransactionType.transfer),
+      const TransactionSheet(transactionType: TransactionType.cardPayment),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     ).whenComplete(controller.resetForm);

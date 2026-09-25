@@ -23,12 +23,13 @@ class AddPaymentAccountButton extends GetView<AccountController> {
   });
   List<AccountType> get availableAccountTypes {
     switch (transactionType) {
-      case TransactionType.earn:
-        return AccountType.values.where((account) => account.isAsset).toList();
+      // return AccountType.values.where((account) => account.isAsset).toList();
 
       case TransactionType.spend:
         return AccountType.values;
 
+      case TransactionType.cardPayment:
+      case TransactionType.earn:
       case TransactionType.transfer:
       case TransactionType.give:
       case TransactionType.receive:

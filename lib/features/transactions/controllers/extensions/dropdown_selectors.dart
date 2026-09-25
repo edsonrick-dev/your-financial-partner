@@ -1,5 +1,6 @@
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_group_enum.dart';
 import 'package:getx_drift_app/features/transaction/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
@@ -51,17 +52,32 @@ extension DropdownSelectors on TransactionController {
     }
   }
 
-  Future<void> selectLinkedAccount(TransactionType transactionType) async {
+  Future<void> selectLinkedAccount(
+    TransactionType transactionType, {
+    AccountGroup? accountGroup,
+  }) async {
     final result = await AppSheets.selection.selectAccount(
       transactionType,
-
       excludedAccountId: selectedAccount.value?.id,
+      accountGroup: accountGroup,
     );
 
     if (result == null) return;
 
     selectedLinkedAccount.value = result;
   }
+
+  // Future<void> selectLinkedAccount(TransactionType transactionType) async {
+  //   final result = await AppSheets.selection.selectAccount(
+  //     transactionType,
+
+  //     excludedAccountId: selectedAccount.value?.id,
+  //   );
+
+  //   if (result == null) return;
+
+  //   selectedLinkedAccount.value = result;
+  // }
 
   // Future<void> selectCashflowPlanType() async {
   //   final result = await AppSheets.selectCashflowPlanType();

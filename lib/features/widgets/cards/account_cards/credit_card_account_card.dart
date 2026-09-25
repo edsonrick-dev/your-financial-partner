@@ -23,7 +23,8 @@ class CreditCardAccountCard extends StatelessWidget {
     final utilization = creditLimit != null && creditLimit > 0
         ? account.currentValue / creditLimit
         : null;
-
+    final currentValue = account.currentValue;
+    final validValue = currentValue > 0 ? true : false;
     return AppCard(
       onTap: onTap,
       child: Column(
@@ -46,9 +47,11 @@ class CreditCardAccountCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    account.currentValue.toCurrency(),
+                    currentValue.toCurrency(),
                     style: AppTextStyle.amountL.copyWith(
-                      color: colorScheme.appOutflow,
+                      color: validValue
+                          ? colorScheme.appOutflow
+                          : colorScheme.appText,
                     ),
                   ),
                 ],

@@ -23,72 +23,66 @@ class TransactionSheet extends GetView<TransactionController> {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: AppSheet(
-        adaptiveHeight: false,
-        showHeader: false,
-        height: AppSheetHeight.full,
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(38),
-                    bottom: Radius.circular(20),
+    return AppSheet(
+      adaptiveHeight: false,
+      showHeader: false,
+      height: AppSheetHeight.full,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(38),
+                  bottom: Radius.circular(20),
+                ),
+                color: colorScheme.bgInversed,
+              ),
+              child: Column(
+                children: [
+                  ///Grabber
+                  AppGrabber(isDark: true),
+
+                  ///Toolbar
+                  AppToolbar(
+                    title: transactionType.headerTitle,
+                    isDark: true,
+                    showLeading: false,
                   ),
-                  color: colorScheme.bgInversed,
-                ),
-                child: Column(
-                  children: [
-                    ///Grabber
-                    AppGrabber(isDark: true),
 
-                    ///Toolbar
-                    AppToolbar(
-                      title: transactionType.headerTitle,
-                      isDark: true,
-                      showLeading: false,
-                    ),
-
-                    TransactionAmountHolder(),
-                  ],
-                ),
+                  TransactionAmountHolder(),
+                ],
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: TransactionForm(transactionType: transactionType),
-                ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: TransactionForm(transactionType: transactionType),
               ),
+            ),
 
-              // const SizedBox(height: 8),
-              AppSection(
-                child: Obx(() {
-                  final effectiveType = transactionType == TransactionType.spend
-                      ? controller.effectiveTransactionType
-                      : transactionType;
+            // const SizedBox(height: 8),
+            AppSection(
+              child: Obx(() {
+                final effectiveType = transactionType == TransactionType.spend
+                    ? controller.effectiveTransactionType
+                    : transactionType;
 
-                  return AppButton(
-                    text: 'Record ${effectiveType.actionText.toLowerCase()}',
-                    onTap: controller.isTransactionValid(effectiveType)
-                        ? () => controller.saveTransaction(effectiveType)
-                        : null,
-                  );
-                }),
-              ),
+                return AppButton(
+                  text: 'Record ${effectiveType.actionText.toLowerCase()}',
+                  onTap: controller.isTransactionValid(effectiveType)
+                      ? () => controller.saveTransaction(effectiveType)
+                      : null,
+                );
+              }),
+            ),
 
-              SizedBox(height: bottomPadding),
-            ],
-          ),
+            SizedBox(height: bottomPadding),
+          ],
         ),
       ),
     );

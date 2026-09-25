@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/domain/scheduling/month_pattern.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_group_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/credit_card_installment_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/select_institution_sheet.dart';
@@ -80,17 +81,17 @@ class SelectionSheets {
   Future<AccountsTableData?> selectAccount(
     TransactionType transactionType, {
     int? excludedAccountId,
+    AccountGroup? accountGroup,
   }) {
     return Get.bottomSheet(
       SelectPaymentAccountSheet(
         transactionType: transactionType,
-
         excludedAccountId: excludedAccountId,
+        accountGroup: accountGroup,
       ),
       isScrollControlled: true,
     );
   }
-
   // Future<AppDay?> selectDay() {
   //   return Get.bottomSheet<AppDay>(SelectDaySheet(), isScrollControlled: true);
   // }

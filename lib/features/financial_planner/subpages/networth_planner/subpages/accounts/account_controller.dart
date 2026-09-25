@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
-import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/enums/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:drift/drift.dart' as drift;

@@ -1,12 +1,94 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/controller/bill_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_category.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 
 class LoanController extends GetxController {
+  Future<void> makeLoanPayment(AccountsTableData loan) async {
+    final bill = await database.billsDao.getLoanBillForAccount(loan.id);
+
+    if (bill == null) {
+      return;
+    }
+
+    final occurrences = await database.billsDao.getOccurrencesForBill(bill.id);
+
+    final nextOccurrence = occurrences
+        .where((occurrence) => !occurrence.isPaid)
+        .firstOrNull;
+
+    if (nextOccurrence == null) {
+      return;
+    }
+
+    // ============================================================
+    // CHECK IF PAYMENT IS MORE THAN 30 DAYS AWAY
+    // ============================================================
+
+    final today = DateTime.now();
+
+    final thirtyDaysFromToday = DateTime(
+      today.year,
+      today.month,
+      today.day + 30,
+    );
+
+    final isMoreThan30DaysAway = nextOccurrence.dueDate.isAfter(
+      thirtyDaysFromToday,
+    );
+
+    if (isMoreThan30DaysAway) {
+      final confirmed = await Get.dialog<bool>(
+        AlertDialog(
+          title: const Text('Pay this loan early?'),
+          content: Text(
+            'Your next payment is due on '
+            '${DateFormat('MMM d, yyyy').format(nextOccurrence.dueDate)}.\n\n'
+            'That is more than 30 days from today. '
+            'Are you sure you want to record this payment now?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(result: false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Get.back(result: true),
+              child: const Text('Continue'),
+            ),
+          ],
+        ),
+      );
+
+      if (confirmed != true) {
+        return;
+      }
+    }
+
+    // ============================================================
+    // CREATE PAYMENT
+    // ============================================================
+
+    final billWithNextOccurrence = BillWithNextOccurrence(
+      bill: bill,
+      occurrence: nextOccurrence,
+      category: null,
+      loanAccount: loan,
+    );
+
+    Get.back();
+
+    await AppSheets.transaction.spendBill(billWithNextOccurrence);
+  }
+
   Future<void> updatePaymentSchedule({required int loanAccountId}) async {
     if (!paymentScheduleEnabled.value) return;
 

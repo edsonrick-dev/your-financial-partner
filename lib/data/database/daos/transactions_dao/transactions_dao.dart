@@ -207,6 +207,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
             trend.outflow += tx.amount;
             break;
 
+          case TransactionType.cardPayment:
           case TransactionType.transfer:
           case TransactionType.balanceUpdate:
             break;
@@ -364,6 +365,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
             totalOut += tx.amount;
             break;
 
+          case TransactionType.cardPayment:
           case TransactionType.transfer:
           case TransactionType.balanceUpdate:
             // Internal movement only

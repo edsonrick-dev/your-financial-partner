@@ -13,11 +13,15 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 class PaymentAccountList extends StatefulWidget {
   final TransactionType transactionType;
   final int? excludedAccountId;
+  final bool isLinkedAccount;
+  final AccountGroup? accountGroup;
 
   const PaymentAccountList({
     super.key,
     required this.transactionType,
     this.excludedAccountId,
+    this.isLinkedAccount = false,
+    this.accountGroup,
   });
 
   @override
@@ -63,19 +67,20 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
               account.id == widget.excludedAccountId) {
             return false;
           }
-
+          if (widget.accountGroup != null) {
+            return account.group == widget.accountGroup;
+          }
           switch (widget.transactionType) {
             case TransactionType.spend:
               return account.group == AccountGroup.cashAndBank ||
                   account.group == AccountGroup.creditCards;
 
             case TransactionType.debtRepayment:
-              return account.group == AccountGroup.cashAndBank;
-
             case TransactionType.earn:
             case TransactionType.transfer:
             case TransactionType.give:
             case TransactionType.receive:
+            case TransactionType.cardPayment:
             case TransactionType.balanceUpdate:
               return account.group == AccountGroup.cashAndBank;
           }

@@ -9,6 +9,8 @@ import 'package:getx_drift_app/data/tables/transactions_table.dart';
 import 'package:getx_drift_app/domain/credit_card/credit_card_dates.dart';
 import 'dart:math' as math;
 
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_detail_sheet.dart';
+
 part 'credit_card_dao.g.dart';
 
 @DriftAccessor(
@@ -22,6 +24,48 @@ part 'credit_card_dao.g.dart';
 class CreditCardDao extends DatabaseAccessor<AppDatabase>
     with _$CreditCardDaoMixin {
   CreditCardDao(super.db);
+
+  Future<CreditCardStatementsTableData?> getLatestPayableStatement(
+    int accountId,
+  ) {
+    return (select(creditCardStatementsTable).join([
+            innerJoin(
+              creditCardBillingPeriodsTable,
+              creditCardBillingPeriodsTable.id.equalsExp(
+                creditCardStatementsTable.billingPeriodId,
+              ),
+            ),
+          ])
+          ..where(
+            creditCardBillingPeriodsTable.accountId.equals(accountId) &
+                creditCardStatementsTable.status.isIn([
+                  CreditCardStatementStatus.unpaid.name,
+                  CreditCardStatementStatus.partiallyPaid.name,
+                ]),
+          )
+          ..orderBy([OrderingTerm.desc(creditCardBillingPeriodsTable.endDate)])
+          ..limit(1))
+        .map((row) => row.readTable(creditCardStatementsTable))
+        .getSingleOrNull();
+  }
+
+  Future<CreditCardPaymentInfo?> getPaymentInfo(int accountId) async {
+    final statement = await getLatestPayableStatement(accountId);
+
+    if (statement == null) {
+      return null;
+    }
+
+    final amountDue = await calculateStatementRemainingBalance(
+      statementId: statement.id,
+    );
+
+    return CreditCardPaymentInfo(
+      amountDue: amountDue,
+      paymentDueDate: statement.paymentDueDate,
+    );
+  }
+
   Future<double> getAmountDue(int accountId) async {
     final statement = await getLatestUnpaidStatement(accountId);
 

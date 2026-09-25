@@ -5,7 +5,8 @@ enum TransactionType {
   give,
   receive,
   debtRepayment,
-  balanceUpdate;
+  balanceUpdate,
+  cardPayment;
 
   static TransactionType fromName(String value) {
     return TransactionType.values.firstWhere((e) => e.name == value);
@@ -16,10 +17,12 @@ enum TransactionType {
       TransactionType.earn => 'Earn',
       TransactionType.spend => 'Spend',
       TransactionType.debtRepayment => 'Spend',
+      TransactionType.cardPayment => 'Card Payment',
       TransactionType.transfer => 'Transfer',
       TransactionType.give => 'Give',
       TransactionType.receive => 'Receive',
-      _ => '',
+
+      TransactionType.balanceUpdate => '',
     };
   }
 
@@ -27,22 +30,13 @@ enum TransactionType {
     return switch (this) {
       TransactionType.earn => 'earning',
       TransactionType.spend => 'expense',
-      // TransactionType.debtRepayment => '',
       TransactionType.transfer => 'money transfer',
       TransactionType.give => 'amount given',
       TransactionType.receive => 'amount received',
       TransactionType.debtRepayment => 'debt payment',
-      _ => '',
+      TransactionType.cardPayment => 'card payment',
+
+      TransactionType.balanceUpdate => '',
     };
   }
 }
-
-// enum TransactionType {
-//   earn,
-//   spend,
-//   transfer,
-//   give,
-//   receive,
-//   debtRepayment,
-//   balanceUpdate;
-// }

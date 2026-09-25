@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/add_transaction_sheet.dart';
@@ -15,6 +16,16 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/shared/anchored_action_menu.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
+class CreditCardPaymentInfo {
+  final double amountDue;
+  final DateTime paymentDueDate;
+
+  const CreditCardPaymentInfo({
+    required this.amountDue,
+    required this.paymentDueDate,
+  });
+}
+
 class CreditCardDetailSheet extends StatelessWidget {
   final AccountsTableData account;
 
@@ -26,158 +37,210 @@ class CreditCardDetailSheet extends StatelessWidget {
     final colorScheme = context.colors;
     final LayerLink addButtonLink = LayerLink();
     final RxBool isAddMenuOpen = false.obs;
-    return AppSheet(
-      height: AppSheetHeight.full,
-      title: account.name,
-      child: StreamBuilder<AccountsTableData?>(
-        stream: database.accountsDao.watchAccount(account.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return StreamBuilder<AccountsTableData?>(
+      stream: database.accountsDao.watchAccount(account.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          if (snapshot.hasError) {
-            return const Center(child: Text('Unable to load account.'));
-          }
+        if (snapshot.hasError) {
+          return const Center(child: Text('Unable to load account.'));
+        }
 
-          final currentAccount = snapshot.data;
+        final currentAccount = snapshot.data;
 
-          if (currentAccount == null) {
-            return const Center(child: Text('Account no longer exists.'));
-          }
-
-          return Stack(
-            children: [
-              Column(
+        if (currentAccount == null) {
+          return const Center(child: Text('Account no longer exists.'));
+        }
+        return Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            AppSheet(
+              height: AppSheetHeight.full,
+              title: account.name,
+              child: Stack(
                 children: [
-                  CreditCardSummarySection(account: currentAccount),
+                  Column(
+                    children: [
+                      CreditCardSummarySection(account: currentAccount),
 
-                  const SizedBox(height: 16),
-                  FutureBuilder(
-                    future: Future.wait([
-                      database.creditCardDao.getLatestUnpaidStatement(
-                        currentAccount.id,
+                      const SizedBox(height: 16),
+                      FutureBuilder<CreditCardPaymentInfo?>(
+                        future: database.creditCardDao.getPaymentInfo(
+                          currentAccount.id,
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8),
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (snapshot.hasError) {
+                            return const Text(
+                              'Unable to load payment details.',
+                            );
+                          }
+
+                          final paymentInfo = snapshot.data;
+                          // debugPrint('${snapshot.hasError}');
+                          debugPrint('$paymentInfo');
+
+                          if (paymentInfo == null) {
+                            return const SizedBox.shrink();
+                          }
+
+                          return Column(
+                            children: [
+                              Text(
+                                'Next Due Date: ${paymentInfo.paymentDueDate}',
+                              ),
+                              Text(
+                                'Amount Due: ${paymentInfo.amountDue.toCurrency()}',
+                              ),
+                            ],
+                          );
+                        },
                       ),
-                      database.creditCardDao.getAmountDue(currentAccount.id),
-                    ]),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: CircularProgressIndicator(),
-                        );
-                      }
 
-                      if (snapshot.hasError || snapshot.data == null) {
-                        return const Text('Unable to load payment details.');
-                      }
+                      // FutureBuilder(
+                      //   future: Future.wait([
+                      //     database.creditCardDao.getLatestUnpaidStatement(
+                      //       currentAccount.id,
+                      //     ),
+                      //     database.creditCardDao.getAmountDue(
+                      //       currentAccount.id,
+                      //     ),
+                      //   ]),
+                      //   builder: (context, snapshot) {
+                      //     if (snapshot.connectionState ==
+                      //         ConnectionState.waiting) {
+                      //       return const Padding(
+                      //         padding: EdgeInsets.symmetric(vertical: 8),
+                      //         child: CircularProgressIndicator(),
+                      //       );
+                      //     }
 
-                      final statement =
-                          snapshot.data![0] as CreditCardStatementsTableData?;
+                      //     if (snapshot.hasError || snapshot.data == null) {
+                      //       return const Text(
+                      //         'Unable to load payment details.',
+                      //       );
+                      //     }
 
-                      final amountDue = snapshot.data![1] as double;
+                      //     final statement =
+                      //         snapshot.data![0]
+                      //             as CreditCardStatementsTableData?;
 
-                      // No released unpaid statement = nothing to show.
-                      if (statement == null) {
-                        return const SizedBox.shrink();
-                      }
+                      //     final amountDue = snapshot.data![1] as double;
 
-                      return Column(
-                        children: [
-                          Text('Next Due Date: ${statement.paymentDueDate}'),
-                          Text('Amount Due: ₱${amountDue.toStringAsFixed(2)}'),
-                        ],
-                      );
-                    },
-                  ),
+                      //     // No released unpaid statement = nothing to show.
+                      //     if (statement == null) {
+                      //       return const SizedBox.shrink();
+                      //     }
 
-                  AppSection(
-                    child: AppButton(
-                      type: ButtonType.outline,
-                      text: 'Pay Balance',
-                      onTap: () {
-                        AppSheets.transaction.payCreditCard(
-                          creditCard: currentAccount,
-                        );
-                      },
-                    ),
-                  ),
-                  AppDetailsPageActionSection(
-                    selectedIndex: selectedIndex,
-                    actions: const ['Transactions', 'Payment History'],
-                    addButtonLink: addButtonLink,
-                    onAdd: () {
-                      isAddMenuOpen.toggle();
-                    },
-                    isAddMenuOpen: isAddMenuOpen,
-                  ),
-
-                  Expanded(
-                    child: Obx(
-                      () => IndexedStack(
-                        index: selectedIndex.value,
-                        children: [
-                          CreditCardTransactionsView(
-                            accountId: currentAccount.id,
-                          ),
-                          CreditCardBillsPaymentView(
-                            accountId: currentAccount.id,
-                          ),
-                        ],
+                      //     return Column(
+                      //       children: [
+                      //         Text(
+                      //           'Next Due Date: ${statement.paymentDueDate}',
+                      //         ),
+                      //         Text(
+                      //           'Amount Due: ₱${amountDue.toStringAsFixed(2)}',
+                      //         ),
+                      //       ],
+                      //     );
+                      //   },
+                      // ),
+                      AppSection(
+                        child: AppButton(
+                          // type: ButtonType.outline,
+                          text: 'Pay Balance',
+                          onTap: () {
+                            AppSheets.transaction.payCreditCard(
+                              creditCard: currentAccount,
+                            );
+                          },
+                        ),
                       ),
-                    ),
+                      AppDetailsPageActionSection(
+                        selectedIndex: selectedIndex,
+                        actions: const ['Transactions', 'Payment History'],
+                        addButtonLink: addButtonLink,
+                        onAdd: () {
+                          isAddMenuOpen.toggle();
+                        },
+                        isAddMenuOpen: isAddMenuOpen,
+                      ),
+
+                      Expanded(
+                        child: Obx(
+                          () => IndexedStack(
+                            index: selectedIndex.value,
+                            children: [
+                              CreditCardTransactionsView(
+                                accountId: currentAccount.id,
+                              ),
+                              CreditCardBillsPaymentView(
+                                accountId: currentAccount.id,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              Obx(
-                () => AnchoredActionMenu(
-                  isOpen: isAddMenuOpen.value,
-                  link: addButtonLink,
-                  onDismiss: () {
-                    isAddMenuOpen.value = false;
-                  },
-                  child: selectedIndex.value == 0
-                      ? Column(
-                          spacing: 12,
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            NewTransactionButton(
-                              color: colorScheme.appOutflow,
-                              icon: Icons.remove,
-                              label: 'Spend Money',
-                              onTap: () {
-                                AppSheets.transaction.spend(
-                                  account: currentAccount,
-                                );
-                                isAddMenuOpen.toggle();
-                              },
-                            ),
-                          ],
-                        )
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            NewTransactionButton(
-                              color: colorScheme.appAccent,
-                              icon: Icons.sync_alt_sharp,
-                              label: 'Pay Credit Balance',
-                              onTap: () {
-                                // AppSheets.transaction.transfer(
-                                //   fromAccount: currentAccount,
-                                // );
-                                isAddMenuOpen.toggle();
-                              },
-                            ),
-                          ],
-                        ),
-                ),
+            ),
+            Obx(
+              () => AnchoredActionMenu(
+                isOpen: isAddMenuOpen.value,
+                link: addButtonLink,
+                onDismiss: () {
+                  isAddMenuOpen.value = false;
+                },
+                child: selectedIndex.value == 0
+                    ? Column(
+                        spacing: 12,
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          NewTransactionButton(
+                            color: colorScheme.appOutflow,
+                            icon: Icons.remove,
+                            label: 'Spend Money',
+                            onTap: () {
+                              AppSheets.transaction.spend(
+                                account: currentAccount,
+                              );
+                              isAddMenuOpen.toggle();
+                            },
+                          ),
+                        ],
+                      )
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          NewTransactionButton(
+                            color: colorScheme.appAccent,
+                            icon: Icons.sync_alt_sharp,
+                            label: 'Pay Credit Balance',
+                            onTap: () {
+                              // AppSheets.transaction.transfer(
+                              //   fromAccount: currentAccount,
+                              // );
+                              isAddMenuOpen.toggle();
+                            },
+                          ),
+                        ],
+                      ),
               ),
-            ],
-          );
-        },
-      ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

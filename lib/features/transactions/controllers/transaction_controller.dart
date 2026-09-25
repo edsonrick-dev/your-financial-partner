@@ -21,6 +21,11 @@ class TransactionController extends GetxController {
   final selectedTransactionFilter = Rx<TransactionFilter>(
     const AllTransactionFilter(),
   );
+  Future<CreditCardStatementsTableData?> getCreditCardStatement(
+    AccountsTableData account,
+  ) {
+    return database.creditCardDao.getLatestUnpaidStatement(account.id);
+  }
 
   void selectTransactionFilter(TransactionFilter filter) {
     selectedTransactionFilter.value = filter;

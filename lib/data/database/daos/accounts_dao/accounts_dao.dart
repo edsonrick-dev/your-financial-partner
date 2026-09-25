@@ -431,6 +431,7 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
           }
           break;
 
+        case TransactionType.cardPayment:
         case TransactionType.transfer:
           if (tx.accountId == accountId) {
             balance -= tx.amount;

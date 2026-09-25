@@ -93,6 +93,7 @@ extension DeleteFunctions on TransactionController {
           break;
 
         case TransactionType.balanceUpdate:
+        case TransactionType.cardPayment:
           break;
       }
 
