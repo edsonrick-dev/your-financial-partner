@@ -3,6 +3,18 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
+class SegmentItem {
+  const SegmentItem({this.selectedIcon, this.title, this.unselectedIcon})
+    : assert(
+        (selectedIcon == null) == (unselectedIcon == null),
+        'selectedIcon and unselectedIcon must either both be provided or both be null.',
+      );
+
+  final IconData? selectedIcon;
+  final IconData? unselectedIcon;
+  final String? title;
+}
+
 class AppSegmentedSelector extends StatelessWidget {
   const AppSegmentedSelector({
     super.key,
@@ -22,7 +34,7 @@ class AppSegmentedSelector extends StatelessWidget {
     final colorScheme = context.colors;
 
     return Container(
-      height: 52,
+      height: 44,
       decoration: BoxDecoration(
         color: colorScheme.pageShifterFillUnselected,
         borderRadius: BorderRadius.circular(999),

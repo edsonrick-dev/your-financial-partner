@@ -7,19 +7,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/sheets/create_sheets/create_category_sheet/create_category_controller.dart';
 
 class CategoryController extends GetxController {
-  void openEditCategory(CashflowCategoriesTableData category) {
-    final transactionType = category.type == 'earn'
-        ? TransactionType.earn
-        : TransactionType.spend;
-
-    Get.put(CreateCategoryController(transactionType));
-
-    Get.bottomSheet(
-      CategoryFormSheet(category: category),
-      isScrollControlled: true,
-    );
-  }
-
   final selectedCategoryTypeIndex = 0.obs;
   // final CategoryDao categoryDao;
   @override
@@ -35,11 +22,15 @@ class CategoryController extends GetxController {
   final isLoading = false.obs;
 
   List<CashflowCategoriesTableData> get incomeCategories {
-    return categories.where((category) => category.type == 'earn').toList();
+    return categories
+        .where((category) => category.type == TransactionType.earn.name)
+        .toList();
   }
 
   List<CashflowCategoriesTableData> get expenseCategories {
-    return categories.where((category) => category.type == 'spend').toList();
+    return categories
+        .where((category) => category.type == TransactionType.spend.name)
+        .toList();
   }
 
   Future<void> loadCategories() async {
@@ -63,35 +54,6 @@ class CategoryController extends GetxController {
     );
 
     Get.bottomSheet(const CategoryFormSheet(), isScrollControlled: true);
-  }
-
-  Future<void> createCategory({
-    required String name,
-    required String icon,
-    required String type,
-  }) async {
-    await database.categoryDao.createCategory(
-      CashflowCategoriesTableCompanion.insert(
-        name: name,
-        icon: icon,
-        type: type,
-      ),
-    );
-
-    // await loadCategories();
-  }
-
-  Future<void> updateCategory({
-    required CashflowCategoriesTableData category,
-    required String name,
-    required String icon,
-    required String type,
-  }) async {
-    await database.categoryDao.updateCategory(
-      category.copyWith(name: name, icon: icon, type: type),
-    );
-
-    await loadCategories();
   }
 
   void confirmDeleteCategory(CashflowCategoriesTableData category) {

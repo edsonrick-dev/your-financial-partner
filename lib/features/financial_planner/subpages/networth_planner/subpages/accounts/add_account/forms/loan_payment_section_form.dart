@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/design_system/shifters/segment_shifter/app_segmented_selector.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
@@ -94,28 +96,26 @@ class LoanPaymentScheduleSection extends GetView<LoanController> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: colorScheme.bgLight,
-                          borderRadius: BorderRadius.circular(999),
-                          border: Border.all(color: colorScheme.appBorder),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: mvpFrequencies.map((frequency) {
-                            return BillsFrequencySelector(
-                              period: frequency,
-                              isSelected:
-                                  controller.paymentFrequency.value ==
-                                  frequency,
-                              onTap: () {
-                                controller.setPaymentFrequency(frequency);
-                              },
+                      Obx(() {
+                        final selectedFrequency =
+                            controller.paymentFrequency.value;
+
+                        return AppSegmentedSelector(
+                          items: mvpFrequencies
+                              .map((frequency) => frequency.label)
+                              .toList(),
+                          selectedIndex: selectedFrequency == null
+                              ? 0
+                              : mvpFrequencies.indexOf(selectedFrequency),
+                          onChanged: (index) {
+                            controller.setPaymentFrequency(
+                              mvpFrequencies[index],
                             );
-                          }).toList(),
-                        ),
-                      ),
+                          },
+                          style: AppTextStyle.titleS,
+                        );
+                      }),
+
                       const SizedBox(height: 8),
                       Obx(
                         () => Text(

@@ -11,13 +11,19 @@ class CreateCategoryController extends GetxController {
   final CashflowCategoriesTableData? category;
   CreateCategoryController(TransactionType transactionType, {this.category})
     : _categoryType = transactionType.obs;
-
+  final Rx<TransactionType> _categoryType;
+  Rx<TransactionType> get categoryType => _categoryType;
+  final TextEditingController nameController = TextEditingController();
+  final FocusNode nameFocusNode = FocusNode();
+  final RxString selectedIconKey = 'fallback'.obs;
+  final ScrollController scrollController = ScrollController();
   @override
   void onInit() {
     super.onInit();
 
     if (category != null) {
       nameController.text = category!.name;
+      selectedIconKey.value = category!.icon;
     }
   }
 
@@ -29,23 +35,6 @@ class CreateCategoryController extends GetxController {
     super.onClose();
   }
 
-  final Rx<TransactionType> _categoryType;
-
-  Rx<TransactionType> get categoryType => _categoryType;
-
-  static const icons = [
-    'food',
-    'transport',
-    'shopping',
-    'home',
-    'health',
-    'education',
-    'entertainment',
-    'salary',
-    'business',
-    'other',
-  ];
-  final ScrollController scrollController = ScrollController();
   void scrollToAddCategory() {
     if (!scrollController.hasClients) return;
 
@@ -72,10 +61,6 @@ class CreateCategoryController extends GetxController {
   // CreateCategoryController(TransactionType transactionType)
   //   : _categoryType = transactionType.obs;
   // final Rx<TransactionType> _categoryType;
-  final TextEditingController nameController = TextEditingController();
-  final FocusNode nameFocusNode = FocusNode();
-
-  final RxString selectedIconKey = 'fallback'.obs;
 
   final RxBool isSaving = false.obs;
 
@@ -88,26 +73,43 @@ class CreateCategoryController extends GetxController {
   }
 
   Future<CashflowCategoriesTableData?> saveCategory() async {
+    debugPrint('SAVE CATEGORY');
+    debugPrint('name: ${nameController.text}');
+    debugPrint('type: ${_categoryType.value}');
+    debugPrint('icon: ${selectedIconKey.value}');
     final name = nameController.text.trim();
 
-    if (name.isEmpty) return null;
+    if (name.isEmpty) {
+      return null;
+    }
+    setLoading();
 
-    final insertedId = await database.categoryDao.createCategory(
-      CashflowCategoriesTableCompanion.insert(
+    try {
+      if (category == null) {
+        // CREATE
+        final insertedId = await database.categoryDao.createCategory(
+          CashflowCategoriesTableCompanion.insert(
+            name: name,
+            icon: selectedIconKey.value,
+            type: _categoryType.value.name,
+          ),
+        );
+
+        return await database.categoryDao.getCategoryById(insertedId);
+      }
+
+      // UPDATE
+      final updatedCategory = category!.copyWith(
         name: name,
         icon: selectedIconKey.value,
         type: _categoryType.value.name,
-      ),
-    );
+      );
 
-    final createdCategory = await database.categoryDao.getCategoryById(
-      insertedId,
-    );
+      await database.categoryDao.updateCategory(updatedCategory);
 
-    // resetForm();
-
-    collapseButton();
-
-    return createdCategory;
+      return await database.categoryDao.getCategoryById(category!.id);
+    } finally {
+      collapseButton();
+    }
   }
 }

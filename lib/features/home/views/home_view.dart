@@ -25,7 +25,6 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final spacingM = AppScale.x5;
-    final spacingL = AppScale.x6;
     final colorScheme = context.colors;
 
     final financialProfileController = Get.find<FinancialProfileController>();

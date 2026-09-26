@@ -7,7 +7,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/home/views/section_views/bills_reminder_section.dart';
 import 'package:getx_drift_app/features/home/views/section_views/budget_progress_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_segmented_selector.dart';
+import 'package:getx_drift_app/core/design_system/shifters/segment_shifter/app_segmented_selector.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -29,41 +29,9 @@ class FinanceHomeView extends GetView<CashflowController> {
             ? "This Month's Finances"
             : "${DateFormat("MMMM").format(selectedMonth)} '${DateFormat("yy").format(selectedMonth)} Finances",
         trailingType: SectionTrailingType.custom,
-        trailingWidget: Row(
-          children: [
-            if (!isCurrentMonth)
-              AdaptivePressable(
-                onTap: controller.goToCurrentMonth,
-                child: SizedBox(
-                  height: 44,
-                  child: Center(
-                    child: Text(
-                      'Today',
-                      style: AppTextStyle.titleM.copyWith(
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            AdaptivePressable(
-              onTap: controller.previousMonth,
-              child: SizedBox(
-                height: 44,
-                width: 44,
-                child: Icon(PhosphorIconsRegular.caretLeft, size: 20),
-              ),
-            ),
-
-            AdaptivePressable(
-              onTap: controller.nextMonth,
-              child: SizedBox(
-                height: 44,
-                width: 44,
-                child: Icon(PhosphorIconsRegular.caretRight, size: 20),
-              ),
-            ),
-          ],
+        trailingWidget: _MonthShifter(
+          isCurrentMonth: isCurrentMonth,
+          controller: controller,
         ),
         child: Column(
           children: [
@@ -87,5 +55,52 @@ class FinanceHomeView extends GetView<CashflowController> {
         ),
       );
     });
+  }
+}
+
+class _MonthShifter extends StatelessWidget {
+  const _MonthShifter({required this.isCurrentMonth, required this.controller});
+
+  final bool isCurrentMonth;
+  final CashflowController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        if (!isCurrentMonth)
+          AdaptivePressable(
+            onTap: controller.goToCurrentMonth,
+            child: SizedBox(
+              height: 44,
+              child: Center(
+                child: Text(
+                  'Today',
+                  style: AppTextStyle.titleM.copyWith(
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        AdaptivePressable(
+          onTap: controller.previousMonth,
+          child: SizedBox(
+            height: 44,
+            width: 44,
+            child: Icon(PhosphorIconsRegular.caretLeft, size: 20),
+          ),
+        ),
+
+        AdaptivePressable(
+          onTap: controller.nextMonth,
+          child: SizedBox(
+            height: 44,
+            width: 44,
+            child: Icon(PhosphorIconsRegular.caretRight, size: 20),
+          ),
+        ),
+      ],
+    );
   }
 }

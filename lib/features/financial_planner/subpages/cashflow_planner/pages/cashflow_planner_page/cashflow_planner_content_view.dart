@@ -158,26 +158,22 @@ class CashflowPlannerContentView extends GetView<CashflowController> {
           // SizedBox(height: 20),
           AppSection(
             sectionTitle: 'Cashflow Tools',
-            child: Row(
-              spacing: 8,
+            child: Column(
+              spacing: 12,
               children: [
-                Expanded(
-                  child: OthersCard(
-                    icon: PhosphorIconsRegular.receipt,
-                    title: 'Bill Manager',
-                    onTap: () {
-                      Get.toNamed(Routes.BILLS);
-                    },
-                  ),
+                OthersCard(
+                  icon: PhosphorIconsRegular.receipt,
+                  title: 'Bill Manager',
+                  onTap: () {
+                    Get.toNamed(Routes.BILLS);
+                  },
                 ),
-                Expanded(
-                  child: OthersCard(
-                    title: 'Categories',
-                    icon: Icons.category_outlined,
-                    onTap: () {
-                      Get.toNamed(Routes.CATEGORIES);
-                    },
-                  ),
+                OthersCard(
+                  title: 'All Categories',
+                  icon: Icons.category_outlined,
+                  onTap: () {
+                    Get.toNamed(Routes.CATEGORIES);
+                  },
                 ),
                 // AppSectionBody(
                 //   child: Column(

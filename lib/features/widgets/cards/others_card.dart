@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -38,7 +39,12 @@ class OthersCard extends StatelessWidget {
             Icon(icon, size: 20),
             SizedBox(width: 12),
             Expanded(
-              child: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
+              child: Text(
+                title,
+                style: AppTextStyle.titleM,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(width: 8),
             Icon(PhosphorIconsRegular.caretRight, size: 16),

@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:flutter/rendering.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/tables/bills_table.dart';

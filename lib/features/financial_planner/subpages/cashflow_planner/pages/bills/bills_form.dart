@@ -16,7 +16,7 @@ import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_segmented_selector.dart';
+import 'package:getx_drift_app/core/design_system/shifters/segment_shifter/app_segmented_selector.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
 class BillForm extends GetView<BillController> {
@@ -142,6 +142,7 @@ class BillForm extends GetView<BillController> {
                                     );
 
                               return AppSegmentedSelector(
+                                style: AppTextStyle.titleS,
                                 items: mvpBillFrequencies
                                     .map((frequency) => frequency.label)
                                     .toList(),
@@ -153,7 +154,7 @@ class BillForm extends GetView<BillController> {
                                 },
                               );
                             }),
-
+                            SizedBox(height: 8),
                             Obx(() {
                               final nextPaymentDate =
                                   controller.nextPaymentDate.value;
@@ -261,7 +262,9 @@ class BillScheduleMonths extends StatelessWidget {
                 width: 36,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isImpacted ? colorScheme.appText : colorScheme.bgLight,
+                  color: isImpacted
+                      ? colorScheme.pageShifterFillSelected
+                      : colorScheme.pageShifterFillUnselected,
                   border: Border.all(color: colorScheme.appBorder),
                 ),
                 child: Center(
@@ -269,8 +272,8 @@ class BillScheduleMonths extends StatelessWidget {
                     month.shortName.substring(0, 1),
                     style: AppTextStyle.labelS.copyWith(
                       color: isImpacted
-                          ? colorScheme.bgLight
-                          : colorScheme.appText,
+                          ? colorScheme.pageShifterTextSelected
+                          : colorScheme.pageShifterTextUnselected,
                     ),
                   ),
                 ),
@@ -280,7 +283,7 @@ class BillScheduleMonths extends StatelessWidget {
         ),
         Text(
           _scheduleDescription,
-          style: AppTextStyle.bodyS.copyWith(color: colorScheme.appTextMuted),
+          style: AppTextStyle.bodyM.copyWith(color: colorScheme.appTextMuted),
         ),
       ],
     );

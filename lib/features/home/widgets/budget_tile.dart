@@ -387,8 +387,9 @@ class DisplayModeToggle extends StatelessWidget {
     final colorScheme = context.colors;
 
     return Padding(
-      padding: EdgeInsetsGeometry.only(right: 16),
+      padding: EdgeInsetsGeometry.symmetric(horizontal: 8),
       child: Container(
+        width: double.infinity,
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           color: colorScheme.bgLight,
@@ -398,19 +399,23 @@ class DisplayModeToggle extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _ModeButton(
-              regularIcon: PhosphorIconsRegular.list,
-              fillIcon: PhosphorIconsFill.list,
-              selected: value == DisplayMode.list,
-              onTap: () => onChanged(DisplayMode.list),
-              name: 'List',
+            Expanded(
+              child: _ModeButton(
+                regularIcon: PhosphorIconsRegular.list,
+                fillIcon: PhosphorIconsFill.list,
+                selected: value == DisplayMode.list,
+                onTap: () => onChanged(DisplayMode.list),
+                name: 'List',
+              ),
             ),
-            _ModeButton(
-              regularIcon: PhosphorIconsRegular.squaresFour,
-              fillIcon: PhosphorIconsFill.squaresFour,
-              selected: value == DisplayMode.grid,
-              onTap: () => onChanged(DisplayMode.grid),
-              name: 'Grid',
+            Expanded(
+              child: _ModeButton(
+                regularIcon: PhosphorIconsRegular.squaresFour,
+                fillIcon: PhosphorIconsFill.squaresFour,
+                selected: value == DisplayMode.grid,
+                onTap: () => onChanged(DisplayMode.grid),
+                name: 'Grid',
+              ),
             ),
           ],
         ),
@@ -444,39 +449,36 @@ class _ModeButton extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         curve: Curves.easeOut,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         decoration: BoxDecoration(
           color: selected
               ? colorScheme.pageShifterFillSelected
-              : Colors.transparent,
+              : colorScheme.pageShifterFillUnselected,
           borderRadius: BorderRadius.circular(9),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 6,
-            children: [
-              Icon(
-                selected ? fillIcon : regularIcon,
-                size: 18,
-                color: selected
-                    ? colorScheme.pageShifterTextSelected
-                    : colorScheme.appTextMuted,
-              ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          // mainAxisSize: MainAxisSize.min,
+          spacing: 6,
+          children: [
+            Icon(
+              selected ? fillIcon : regularIcon,
+              size: 20,
+              color: selected
+                  ? colorScheme.pageShifterTextSelected
+                  : colorScheme.pageShifterTextUnselected,
+            ),
 
-              if (name != null)
-                Text(
-                  name!,
-                  style: AppTextStyle.labelS.copyWith(
-                    color: selected
-                        ? colorScheme.pageShifterTextSelected
-                        : colorScheme.appText,
-                  ),
+            if (name != null)
+              Text(
+                name!,
+                style: AppTextStyle.titleM.copyWith(
+                  color: selected
+                      ? colorScheme.pageShifterTextSelected
+                      : colorScheme.pageShifterTextUnselected,
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

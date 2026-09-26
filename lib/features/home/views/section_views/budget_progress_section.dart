@@ -272,12 +272,16 @@ class FilledView extends GetView<CashflowController> {
           Divider(indent: 16, endIndent: 16, color: colorScheme.appBorderMuted),
         // _EmptyView(),
         if (items.length >= 3)
-          Obx(
-            () => DisplayModeToggle(
-              value: controller.budgetDisplayMode.value,
-              onChanged: controller.setBudgetDisplayMode,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0),
+            child: Obx(
+              () => DisplayModeToggle(
+                value: controller.budgetDisplayMode.value,
+                onChanged: controller.setBudgetDisplayMode,
+              ),
             ),
           ),
+
         Obx(() {
           // final mode = controller.budgetDisplayMode.value;
           final mode = items.length < 3
@@ -285,7 +289,7 @@ class FilledView extends GetView<CashflowController> {
               : controller.budgetDisplayMode.value;
           final isExpanded = controller.isBudgetExpanded.value;
 
-          final previewLimit = mode == DisplayMode.grid ? 6 : 4;
+          final previewLimit = mode == DisplayMode.grid ? 6 : 3;
 
           final visibleItems = isExpanded
               ? items

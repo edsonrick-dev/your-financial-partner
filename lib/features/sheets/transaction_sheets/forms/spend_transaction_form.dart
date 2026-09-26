@@ -16,7 +16,7 @@ import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
-import 'package:getx_drift_app/organize_THIS/app_mode_item.dart';
+import 'package:getx_drift_app/core/design_system/shifters/mode_shifter/app_mode_item.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class SpendTransactionForm extends GetView<TransactionController> {

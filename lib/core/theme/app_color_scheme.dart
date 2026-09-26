@@ -45,8 +45,10 @@ extension AppColorScheme on ColorScheme {
 
   /// SEMANTICS
   Color get appSuccess => Colors.green;
-  Color get appError => Color(0xFFFF383C);
-  Color get appErrorSoft => Color(0xFFF9D3D6);
+  Color get appError =>
+      isDark ? Color.fromARGB(255, 232, 145, 146) : Color(0xFFFF383C);
+  Color get appErrorSoft =>
+      isDark ? Color.fromARGB(255, 99, 52, 56) : Color(0xFFF9D3D6);
 
   Color get appWarning => const Color(0xFFF59E0B);
   Color get appInfo => const Color(0xFF3B82F6);

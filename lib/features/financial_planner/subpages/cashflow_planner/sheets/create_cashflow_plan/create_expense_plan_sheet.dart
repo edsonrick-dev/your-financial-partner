@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/design_system/shifters/segment_shifter/app_segmented_selector.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
@@ -19,8 +20,8 @@ import 'package:getx_drift_app/features/widgets/fields/app_amount_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
-import 'package:getx_drift_app/organize_THIS/app_mode_item.dart';
-import 'package:getx_drift_app/organize_THIS/app_mode_shifter.dart';
+import 'package:getx_drift_app/core/design_system/shifters/mode_shifter/app_mode_item.dart';
+import 'package:getx_drift_app/core/design_system/shifters/mode_shifter/app_mode_shifter_button.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CreateExpensePlanSheet extends GetView<CashflowController> {
@@ -45,26 +46,22 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
                 children: [
                   Text('Plan Period:', style: AppTextStyle.titleM),
                   SizedBox(height: 8),
-                  Obx(
-                    () => Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: colorScheme.bgLight,
-                        borderRadius: BorderRadius.circular(999),
-                        border: Border.all(color: colorScheme.appBorderMuted),
-                      ),
-                      child: Row(
-                        children: BudgetPeriod.values.map((period) {
-                          return PeriodButton(
-                            period: period,
-                            isSelected:
-                                controller.selectedPeriod.value == period,
-                            onTap: () => controller.selectPeriod(period),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
+                  Obx(() {
+                    final selectedPeriod = controller.selectedPeriod.value;
+
+                    return AppSegmentedSelector(
+                      style: AppTextStyle.titleS,
+                      items: BudgetPeriod.values
+                          .map((period) => period.label)
+                          .toList(),
+                      selectedIndex: selectedPeriod == null
+                          ? 0
+                          : BudgetPeriod.values.indexOf(selectedPeriod),
+                      onChanged: (index) {
+                        controller.selectPeriod(BudgetPeriod.values[index]);
+                      },
+                    );
+                  }),
                 ],
               ),
               SizedBox(height: spacingHeight),
@@ -130,7 +127,7 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: ModeShifter(
+                            child: AppModeShifterButton(
                               item: const ModeItem(
                                 selectedIcon: PhosphorIconsFill.coin,
                                 unselectedIcon: PhosphorIconsRegular.coin,
@@ -147,7 +144,7 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
                             ),
                           ),
                           Expanded(
-                            child: ModeShifter(
+                            child: AppModeShifterButton(
                               item: const ModeItem(
                                 selectedIcon: PhosphorIconsFill.coins,
                                 unselectedIcon: PhosphorIconsRegular.coins,

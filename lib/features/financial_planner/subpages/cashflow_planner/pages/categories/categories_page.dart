@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
+import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/categories/category_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/categories/create_category_sheet.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_segmented_selector.dart';
+import 'package:getx_drift_app/core/design_system/shifters/segment_shifter/app_segmented_selector.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CategoriesPage extends GetView<CategoryController> {
   const CategoriesPage({super.key});
@@ -19,6 +23,25 @@ class CategoriesPage extends GetView<CategoryController> {
       appBar: AppBar(
         title: const Text('Categories'),
         surfaceTintColor: Colors.transparent,
+        actions: [
+          AdaptivePressable(
+            onTap: () {
+              Get.bottomSheet(
+                CreateCategorySheet(
+                  type: controller.selectedCategoryTypeIndex.value == 0
+                      ? TransactionType.earn
+                      : TransactionType.spend,
+                ),
+                isScrollControlled: true,
+              );
+            },
+            child: SizedBox(
+              height: 44,
+              width: 44,
+              child: Icon(PhosphorIconsRegular.plus),
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -56,7 +79,16 @@ class CategoriesPage extends GetView<CategoryController> {
                 children: [
                   _CategorySection(
                     categories: categories,
-                    onEdit: controller.openEditCategory,
+                    onEdit: (category) {
+                      final type = category.type == 'earn'
+                          ? TransactionType.earn
+                          : TransactionType.spend;
+
+                      Get.bottomSheet(
+                        CreateCategorySheet(type: type, category: category),
+                        isScrollControlled: true,
+                      );
+                    },
                     onDelete: controller.confirmDeleteCategory,
                   ),
                 ],
@@ -90,13 +122,16 @@ class _CategorySection extends StatelessWidget {
         // const SizedBox(height: 8),
         ...categories.map((category) {
           return AppCard(
+            onLongPressed: () {
+              onDelete(category);
+            },
             onTap: () {
               onEdit(category);
             },
             child: Row(
               children: [
                 Icon(AppIcons.categories.resolve(category.icon)),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Text(category.name),
               ],
             ),

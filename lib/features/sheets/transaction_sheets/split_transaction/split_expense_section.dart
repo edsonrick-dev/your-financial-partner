@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 import 'package:getx_drift_app/domain/enums/paid_by.dart';
 import 'package:getx_drift_app/features/transactions/controllers/extensions/split_transaction_ext.dart';
@@ -8,7 +9,7 @@ import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transact
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/split_allocation_summary.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/split_transaction/views/split_participants_list.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_segmented_selector.dart';
+import 'package:getx_drift_app/core/design_system/shifters/segment_shifter/app_segmented_selector.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class SplitExpenseSection extends GetView<TransactionController> {
@@ -126,6 +127,7 @@ class SplitExpenseSection extends GetView<TransactionController> {
                       );
 
                       return AppSegmentedSelector(
+                        // style: AppTextStyle.titleL,
                         items: SplitMode.values
                             .map((mode) => mode.name.capitalize!)
                             .toList(),
