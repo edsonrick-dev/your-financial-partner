@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:flutter/rendering.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/tables/bills_table.dart';
@@ -401,47 +402,29 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
           ..orderBy([OrderingTerm.asc(billOccurrencesTable.dueDate)]);
 
     return query.watch().map((rows) {
-      return rows.map((row) {
-        return BillWithNextOccurrence(
-          bill: row.readTable(billsTable),
-          occurrence: row.readTable(billOccurrencesTable),
-          category: row.readTableOrNull(cashflowCategoriesTable),
-          loanAccount: row.readTableOrNull(accountsTable),
+      final seenBillIds = <int>{};
+      final result = <BillWithNextOccurrence>[];
+
+      for (final row in rows) {
+        final bill = row.readTable(billsTable);
+        final occurrence = row.readTable(billOccurrencesTable);
+
+        seenBillIds.add(bill.id);
+
+        result.add(
+          BillWithNextOccurrence(
+            bill: bill,
+            occurrence: occurrence,
+            category: row.readTableOrNull(cashflowCategoriesTable),
+            loanAccount: row.readTableOrNull(accountsTable),
+          ),
         );
-      }).toList();
+      }
+
+      return result;
     });
   }
-  // Future<void> debugPrintBills() async {
-  //   final bills = await select(billsTable).get();
 
-  //   for (final bill in bills) {
-  //     print('========== BILL ==========');
-  //     print('id: ${bill.id}');
-  //     print('name: ${bill.name}');
-  //     print('categoryId: ${bill.categoryId}');
-  //     print('expectedAmount: ${bill.expectedAmount}');
-  //     print('frequency: ${bill.frequency}');
-  //     print('dayOfMonth: ${bill.dayOfMonth}');
-  //     print('monthMask: ${bill.monthMask}');
-  //     print('reminderEnabled: ${bill.reminderEnabled}');
-  //     print('reminderDaysBefore: ${bill.reminderDaysBefore}');
-  //   }
-  // }
-
-  // Future<void> debugPrintOccurrences() async {
-  //   final occurrences = await select(billOccurrencesTable).get();
-
-  //   for (final occurrence in occurrences) {
-  //     print('========== OCCURRENCE ==========');
-  //     print('id: ${occurrence.id}');
-  //     print('billId: ${occurrence.billId}');
-  //     print('dueDate: ${occurrence.dueDate}');
-  //     print('expectedAmount: ${occurrence.expectedAmount}');
-  //     print('actualAmount: ${occurrence.actualAmount}');
-  //     print('isPaid: ${occurrence.isPaid}');
-  //     print('transactionId: ${occurrence.transactionId}');
-  //   }
-  // }
   // -----------------------------
   // Bills
   // -----------------------------
@@ -485,6 +468,7 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
   // -----------------------------
   // Occurrences
   // -----------------------------
+
   Future<BillOccurrencesTableData?> getOccurrenceByTransactionId(
     int transactionId,
   ) {

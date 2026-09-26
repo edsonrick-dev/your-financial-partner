@@ -13,6 +13,7 @@ import 'package:getx_drift_app/features/transactions/transaction_with_details.da
 extension EarnTransactionSheet on TransactionSheets {
   Future<void> earn({
     TransactionWithDetails? item,
+    int? categoryId,
     AccountsTableData? account,
   }) async {
     final controller = Get.find<TransactionController>();
@@ -24,6 +25,9 @@ extension EarnTransactionSheet on TransactionSheets {
 
       if (account != null) {
         controller.setSelectedAccount(account);
+      }
+      if (categoryId != null) {
+        await controller.selectCategoryById(categoryId);
       }
     }
 

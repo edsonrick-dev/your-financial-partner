@@ -80,12 +80,6 @@ class TransactionView extends GetView<TransactionController> {
                 ),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    debugPrint(snapshot.error.toString());
-
-                    if (snapshot.stackTrace != null) {
-                      debugPrint(snapshot.stackTrace.toString());
-                    }
-
                     return Center(child: Text('Error: ${snapshot.error}'));
                   }
 

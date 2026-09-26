@@ -27,9 +27,6 @@ class FinancialStabilitySheetShell extends GetView<FinancialProfileController> {
 
               final index = controller.selectedDetailsIndex.value;
 
-              debugPrint('INDEX = $index');
-              debugPrint('PAGES = ${pages.length}');
-
               return IndexedStack(index: index, children: pages);
             }),
           ),

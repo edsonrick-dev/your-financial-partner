@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_form.dart';
+import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/earn_transaction/earn_transaction_sheet.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_summary_section.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_transactions_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/budget_plan/budget/cashflow_plan_summary_section.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/budget_plan/budget/cashflow_plan_transactions_view.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
@@ -19,6 +23,33 @@ class IncomePlanDetailsSheet extends StatelessWidget {
 
   final SavedCashflowPlanData plan;
   final RxInt selectedIndex;
+  void _onAdd(BuildContext context) {
+    if (selectedIndex.value == 0) {
+      _addTransaction();
+    } else {
+      _addBill();
+    }
+  }
+
+  void _selectPlanCategory() {
+    final transactionController = Get.find<TransactionController>();
+
+    transactionController.selectCategoryById(plan.categoryId);
+  }
+
+  void _addTransaction() {
+    AppSheets.transaction.earn(categoryId: plan.categoryId);
+  }
+
+  void _addBill() {
+    _selectPlanCategory();
+
+    Get.bottomSheet(
+      const BillForm(),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +99,9 @@ class IncomePlanDetailsSheet extends StatelessWidget {
               AppDetailsPageActionSection(
                 selectedIndex: selectedIndex,
                 actions: ['Transactions'],
-                onAdd: () {},
+                onAdd: () {
+                  _onAdd(context);
+                },
               ),
               Expanded(
                 child: Obx(

@@ -298,7 +298,7 @@ class _BuildCollapsed extends StatelessWidget {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           onExpand?.call();
         });
-        debugPrint('Add New Person Clicked');
+
         controller.expandButton();
       },
     );

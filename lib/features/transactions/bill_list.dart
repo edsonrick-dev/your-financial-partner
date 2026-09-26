@@ -12,7 +12,9 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/transactions/controllers/extensions/dropdown_selectors.dart';
 
 class BillList extends StatelessWidget {
-  const BillList({super.key});
+  const BillList({super.key, this.selectedBill});
+
+  final BillWithNextOccurrence? selectedBill;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,29 @@ class BillList extends StatelessWidget {
           );
         }
 
-        final bills = snapshot.data ?? [];
+        final bills = [...?snapshot.data];
+
+        // ----------------------------------------------------------
+        // EDITING AN EXISTING BILL PAYMENT
+        // ----------------------------------------------------------
+
+        if (selectedBill != null) {
+          final selectedBillId = selectedBill!.bill.id;
+
+          final index = bills.indexWhere(
+            (bill) => bill.bill.id == selectedBillId,
+          );
+
+          if (index >= 0) {
+            // Replace the streamed occurrence with the occurrence
+            // belonging to the transaction currently being edited.
+            bills[index] = selectedBill!;
+          } else {
+            // The selected occurrence may be paid, so it won't normally
+            // appear in the "next unpaid occurrence" stream.
+            bills.insert(0, selectedBill!);
+          }
+        }
 
         if (bills.isEmpty) {
           return Center(
@@ -50,7 +74,15 @@ class BillList extends StatelessWidget {
             return BillListItem(
               bill: bill,
               onTap: () {
-                Get.back<CategoryOrBillSelection>(result: BillSelection(bill));
+                final isSameBill =
+                    selectedBill != null &&
+                    selectedBill!.bill.id == bill.bill.id;
+
+                final effectiveBill = isSameBill ? selectedBill! : bill;
+
+                Get.back<CategoryOrBillSelection>(
+                  result: BillSelection(effectiveBill),
+                );
               },
             );
           },

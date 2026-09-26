@@ -47,50 +47,11 @@ class CategoryController extends GetxController {
 
     try {
       final result = await database.categoryDao.getAllCategories();
-
-      debugPrint('==============================');
-      debugPrint('CATEGORY COUNT: ${result.length}');
-
-      for (final category in result) {
-        debugPrint(
-          'ID: ${category.id} | '
-          'NAME: ${category.name} | '
-          'TYPE: "${category.type}"',
-        );
-      }
-
-      debugPrint(
-        'INCOME COUNT: ${result.where((c) => c.type == 'earn').length}',
-      );
-
-      debugPrint(
-        'EXPENSE COUNT: ${result.where((c) => c.type == 'spend').length}',
-      );
-
-      debugPrint('==============================');
-
       categories.assignAll(result);
     } finally {
       isLoading.value = false;
     }
   }
-  // Future<void> loadCategories() async {
-  //   isLoading.value = true;
-
-  //   try {
-  //     final result = await database.categoryDao.getAllCategories();
-
-  //     debugPrint('CATEGORY COUNT: ${result.length}');
-
-  //     for (final category in result) {
-  //       debugPrint('CATEGORY: ${category.name} | TYPE: ${category.type}');
-  //     }
-
-  //     categories.assignAll(result);
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
 
   void openCreateCategory() {
     Get.put(

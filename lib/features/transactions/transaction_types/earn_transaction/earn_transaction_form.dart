@@ -31,7 +31,7 @@ class EarnTransactionForm extends GetView<TransactionController> {
                 hint: 'Select date',
 
                 onTap: () {
-                  FocusManager.instance.primaryFocus?.unfocus();
+                  // FocusManager.instance.primaryFocus?.unfocus();
                   AppDatePicker.show(
                     context: context,
 
@@ -51,7 +51,6 @@ class EarnTransactionForm extends GetView<TransactionController> {
                 value: controller.selectedCategory.value?.name,
                 hint: 'Select category',
                 onTap: () {
-                  FocusManager.instance.primaryFocus?.unfocus();
                   controller.selectCategory(transactionType);
                 },
               ),
@@ -65,7 +64,6 @@ class EarnTransactionForm extends GetView<TransactionController> {
                 value: controller.selectedAccount.value?.name,
                 hint: 'Select account',
                 onTap: () {
-                  FocusManager.instance.primaryFocus?.unfocus();
                   controller.selectAccount(transactionType);
                 },
               ),

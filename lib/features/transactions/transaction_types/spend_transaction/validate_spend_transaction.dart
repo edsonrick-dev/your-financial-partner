@@ -3,7 +3,11 @@ import 'package:getx_drift_app/features/transactions/controllers/transaction_con
 
 extension TransactionValidationExtension on TransactionController {
   bool get isSpendTransactionValid {
-    if (selectedCategory.value == null || amount.value <= 0) {
+    final hasCategory = selectedCategory.value != null;
+    final hasBill = selectedBill.value != null;
+
+    // Must have either a category OR a bill.
+    if ((!hasCategory && !hasBill) || amount.value <= 0) {
       return false;
     }
 
@@ -13,7 +17,6 @@ extension TransactionValidationExtension on TransactionController {
         return false;
       }
 
-      // Shared expenses are only possible when I paid.
       if (isSharedExpense.value) {
         return participants.length > 1 && isFullyAllocated;
       }

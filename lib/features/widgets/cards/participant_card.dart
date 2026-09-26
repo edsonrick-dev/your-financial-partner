@@ -93,7 +93,9 @@ class ParticipantCard extends GetView<TransactionController> {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     final isMe = participant.entityId == controller.currentUserEntityId.value;
-
+    final amountCalculatorText = isMe
+        ? 'My Share'
+        : "${participant.name}'s Share";
     return Obx(() {
       final isActive = participant.isActive.value;
 
@@ -101,8 +103,8 @@ class ParticipantCard extends GetView<TransactionController> {
         onTap: () => _openCalculator(
           context,
           controller.splitMode.value == SplitMode.percentage
-              ? 'Percentage'
-              : 'Amount',
+              ? '$amountCalculatorText(%)'
+              : amountCalculatorText,
         ),
         onLongPress: isMe
             ? null
@@ -159,7 +161,9 @@ class ParticipantCard extends GetView<TransactionController> {
                   ),
                   Text(
                     participant.name.trim().substring(0, 2).toUpperCase(),
-                    style: AppTextStyle.titleM,
+                    style: AppTextStyle.titleM.copyWith(
+                      color: colorScheme.appInversedtext,
+                    ),
                   ),
                 ],
               ),

@@ -43,7 +43,7 @@ class SelectOtherTransactionSheet extends StatelessWidget {
                           behavior: HitTestBehavior.opaque,
                           onTap: () async {
                             Get.back();
-                            debugPrint('Receive Money Clicked');
+
                             await AppSheets.transaction.receiveMoney();
                           },
                           child: Container(
@@ -116,7 +116,7 @@ class SelectOtherTransactionSheet extends StatelessWidget {
                           behavior: HitTestBehavior.opaque,
                           onTap: () async {
                             Get.back();
-                            debugPrint('Receive Money Clicked');
+
                             await AppSheets.transaction.giveMoney();
                           },
                           child: Container(

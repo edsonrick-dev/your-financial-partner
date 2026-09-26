@@ -16,6 +16,14 @@ class AppDatePicker {
     CupertinoDatePickerMode mode = CupertinoDatePickerMode.date,
   }) async {
     final colorScheme = context.colors;
+
+    final selectedDate = initialDate ?? DateTime.now();
+
+    // If no date exists yet, initialize it to today.
+    if (initialDate == null) {
+      onChanged(selectedDate);
+    }
+
     showCupertinoModalPopup(
       context: context,
 

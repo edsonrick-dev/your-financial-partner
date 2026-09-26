@@ -26,6 +26,20 @@ enum TransactionType {
     };
   }
 
+  String get actionTitle {
+    return switch (this) {
+      TransactionType.earn => 'earning',
+      TransactionType.spend => 'expense',
+      TransactionType.transfer => 'money transfer',
+      TransactionType.give => 'amount given',
+      TransactionType.receive => 'amount received',
+      TransactionType.debtRepayment => 'debt payment',
+      TransactionType.cardPayment => 'card payment',
+
+      TransactionType.balanceUpdate => '',
+    };
+  }
+
   String get actionText {
     return switch (this) {
       TransactionType.earn => 'earning',

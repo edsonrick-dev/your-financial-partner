@@ -18,8 +18,6 @@ import 'package:getx_drift_app/features/transactions/transaction_types/transacti
 
 extension SaveSpendTransaction on TransactionController {
   Future<void> saveSpendTransaction(TransactionType type) async {
-    debugPrint('========== VERSION TEST 123 ==========');
-    debugPrint('>>> saveSpendTransaction START: ${type.name}');
     final isEditing = editingTransaction.value != null;
 
     final category = selectedCategory.value;
@@ -29,22 +27,12 @@ extension SaveSpendTransaction on TransactionController {
     final bill = selectedBill.value;
     final isPaidByOthers = paidBy.value == PaidBy.others;
 
-    debugPrint('>>> amount: $amountValue');
-    debugPrint('>>> categoryId: ${category?.id}');
-    debugPrint('>>> accountId: ${account?.id}');
-    debugPrint('>>> linkedAccountId: ${selectedLinkedAccount.value?.id}');
-    debugPrint('>>> billId: ${bill?.bill.id}');
-    debugPrint('>>> billOccurrenceId: ${bill?.occurrence.id}');
-    debugPrint('>>> isPaidByOthers: $isPaidByOthers');
-
     if (type == TransactionType.debtRepayment) {
       if (!isDebtRepaymentTransactionValid) {
-        debugPrint('>>> DEBT REPAYMENT VALIDATION FAILED');
         return;
       }
     } else {
       if (!isSpendTransactionValid) {
-        debugPrint('>>> SPEND VALIDATION FAILED');
         return;
       }
     }
@@ -56,23 +44,12 @@ extension SaveSpendTransaction on TransactionController {
     // The account associated with this spend, if any.
     final newAccountId = isPaidByOthers ? null : account!.id;
     final linkedAccount = selectedLinkedAccount.value;
-    debugPrint('>>> BEFORE DATABASE TRANSACTION');
-    debugPrint(
-      '>>> editingTransaction NOW: '
-      '${editingTransaction.value?.transaction.id}',
-    );
 
     try {
       await database.transaction(() async {
-        debugPrint('>>> DATABASE TRANSACTION STARTED');
-
         int? transactionId = editingTransaction.value?.transaction.id;
 
-        debugPrint('>>> transactionId NOW: $transactionId');
-
         if (transactionId != null) {
-          debugPrint('>>> ENTERED UPDATE BRANCH');
-
           await database.deleteParticipantsByTransaction(transactionId);
           await database.deleteFinancialObligationsByTransaction(transactionId);
 
@@ -94,8 +71,6 @@ extension SaveSpendTransaction on TransactionController {
             ),
           );
         } else {
-          debugPrint('>>> ENTERED INSERT BRANCH');
-
           transactionId = await database.transactionsDao.insertTransaction(
             TransactionsTableCompanion.insert(
               transactionType: type.name,
@@ -113,10 +88,7 @@ extension SaveSpendTransaction on TransactionController {
               note: d.Value(noteController.text.trim()),
             ),
           );
-          debugPrint('>>> INSERT SUCCESS');
-          debugPrint('>>> NEW TRANSACTION ID: $transactionId');
         }
-        debugPrint('>>> AFTER TRANSACTION INSERT/UPDATE');
 
         // ----------------------------------------------------------
         // PAID BY SOMEONE ELSE
@@ -230,14 +202,10 @@ extension SaveSpendTransaction on TransactionController {
           await database.accountsDao.rebuildAccountBalance(accountId);
         }
       });
-      debugPrint('>>> DATABASE TRANSACTION COMPLETED');
     } catch (e, stackTrace) {
-      debugPrint('!!! SAVE TRANSACTION ERROR !!!');
-      debugPrint('!!! $e');
-      debugPrint('$stackTrace');
       rethrow;
     }
-    debugPrint('>>> DATABASE SAVE SUCCESSFUL');
+
     resetForm();
 
     Get.back();

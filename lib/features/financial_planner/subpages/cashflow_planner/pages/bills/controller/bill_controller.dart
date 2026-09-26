@@ -218,8 +218,6 @@ class BillController extends GetxController {
       loanAccount: item.loanAccount,
     );
 
-    Get.back();
-
     await AppSheets.transaction.spendBill(bill);
   }
 
@@ -243,13 +241,6 @@ class BillController extends GetxController {
         updatedAt: now,
       ),
     );
-
-    debugPrint(
-      'BILL BUDGET CREATED: '
-      'planId=$planId '
-      'categoryId=$categoryId '
-      'amount=$amount/month',
-    );
   }
 
   Future<void> createMinimumBudget() async {
@@ -259,32 +250,20 @@ class BillController extends GetxController {
     final amount = billAmount.value;
 
     if (category == null) {
-      debugPrint('CREATE MINIMUM BUDGET FAILED: category is null');
       return;
     }
 
     if (frequency == null) {
-      debugPrint('CREATE MINIMUM BUDGET FAILED: frequency is null');
       return;
     }
 
     if (dueDate == null) {
-      debugPrint('CREATE MINIMUM BUDGET FAILED: due date is null');
       return;
     }
 
     if (amount <= 0) {
-      debugPrint('CREATE MINIMUM BUDGET FAILED: amount <= 0');
       return;
     }
-
-    debugPrint('========== CREATE MINIMUM BUDGET ==========');
-    debugPrint('category: ${category.name}');
-    debugPrint('categoryId: ${category.id}');
-    debugPrint('frequency: ${frequency.name}');
-    debugPrint('amount: $amount');
-    debugPrint('annualBill: $annualBill');
-    debugPrint('first due date: $dueDate');
 
     try {
       // ============================================================
@@ -295,11 +274,6 @@ class BillController extends GetxController {
         await _createMonthlyExpenseBudget(
           categoryId: category.id,
           amount: amount,
-        );
-
-        debugPrint(
-          'MONTHLY BUDGET CREATED: '
-          '$amount/month',
         );
 
         await saveBill();
@@ -324,10 +298,6 @@ class BillController extends GetxController {
         for (final month in impactedMonths) {
           monthlyAllocations[month - 1] = amount;
         }
-
-        debugPrint('Impacted months: ${impactedMonths.join(' | ')}');
-
-        debugPrint('Monthly allocations: $monthlyAllocations');
 
         final now = DateTime.now();
 
@@ -357,24 +327,10 @@ class BillController extends GetxController {
           ),
         );
 
-        debugPrint(
-          'YEARLY CUSTOM BUDGET CREATED: '
-          'planId=$planId '
-          'annualBill=$annualBill',
-        );
-
         await saveBill();
         return;
       }
-
-      debugPrint(
-        'CREATE MINIMUM BUDGET FAILED: '
-        'unsupported frequency ${frequency.name}',
-      );
-    } catch (e, stackTrace) {
-      debugPrint('CREATE MINIMUM BUDGET FAILED: $e');
-      debugPrint('$stackTrace');
-    }
+    } catch (e, stackTrace) {}
   }
 
   Future<void> increaseBudgetToFitBill() async {
@@ -393,25 +349,6 @@ class BillController extends GetxController {
 
       final existingPlans = await database.cashflowPlanDao
           .getExpensePlansForCategory(category.id);
-
-      debugPrint('========== EXISTING PLANS ==========');
-      debugPrint('Selected category: ${category.name}');
-      debugPrint('Selected category ID: ${category.id}');
-      debugPrint('Found plans: ${existingPlans.length}');
-
-      for (final plan in existingPlans) {
-        debugPrint(
-          'PLAN ID: ${plan.plan.id} | '
-          'categoryId: ${plan.plan.categoryId} | '
-          'category: ${plan.category.name} | '
-          'type: ${plan.plan.planType} | '
-          'amount: ${plan.plan.amount} | '
-          'period: ${plan.plan.period} | '
-          'distribution: ${plan.plan.distributionType}',
-        );
-      }
-
-      debugPrint('====================================');
 
       // ============================================================
       // NO EXISTING BUDGET
@@ -439,12 +376,6 @@ class BillController extends GetxController {
 
         final currentBudget = existingPlan.plan.amount;
 
-        debugPrint('========== MONTHLY BUDGET UPDATE ==========');
-        debugPrint('Existing bills monthly: $existingBillsMonthlyAmount');
-        debugPrint('New bill monthly: ${billAmount.value}');
-        debugPrint('Required monthly budget: $requiredMonthlyBudget');
-        debugPrint('Current budget: $currentBudget');
-
         if (requiredMonthlyBudget <= currentBudget) {
           await saveBill();
           return;
@@ -454,8 +385,6 @@ class BillController extends GetxController {
           planId: existingPlan.plan.id,
           amount: requiredMonthlyBudget,
         );
-
-        debugPrint('MONTHLY BUDGET UPDATED: $requiredMonthlyBudget/month');
 
         await saveBill();
         return;
@@ -484,92 +413,43 @@ class BillController extends GetxController {
           updatedDistribution[month - 1] += billAmount.value;
         }
 
-        debugPrint(
-          '========== ${billFrequency.name.toUpperCase()} '
-          'BUDGET UPDATE ==========',
-        );
-
-        debugPrint('Existing distribution: $existingDistribution');
-
-        debugPrint('Bill amount: ${billAmount.value}');
-
-        debugPrint('Impacted months: ${impactedMonths.join(' | ')}');
-
-        debugPrint('Updated distribution: $updatedDistribution');
-
         await database.cashflowPlanDao.convertPlanToYearlyCustom(
           planId: existingPlan.plan.id,
           monthlyAllocations: updatedDistribution,
         );
 
-        final allocations = await database.cashflowPlanDao
-            .getAllocationsForPlan(existingPlan.plan.id);
-
-        for (final allocation in allocations) {
-          debugPrint(
-            'ALLOCATION ${allocation.allocationIndex}: '
-            '${allocation.amount}',
-          );
-        }
-
         await saveBill();
         return;
       }
-
-      debugPrint(
-        'INCREASE BUDGET FAILED: '
-        'unsupported frequency ${billFrequency.name}',
-      );
-    } catch (e, stackTrace) {
-      debugPrint('INCREASE BUDGET FAILED: $e');
-      debugPrint('$stackTrace');
-    }
+    } catch (e, stackTrace) {}
   }
 
   Future<void> saveBill() async {
-    debugPrint('========== SAVE BILL ==========');
-
     final name = billNameController.text.trim();
     final amount = billAmount.value;
     final frequency = selectedPeriod.value;
     final category = transactionController.selectedCategory.value;
     final dueDate = nextPaymentDate.value;
 
-    debugPrint('name: $name');
-    debugPrint('amount: $amount');
-    debugPrint('frequency: ${frequency?.name}');
-    debugPrint('categoryId: ${category?.id}');
-    debugPrint('categoryName: ${category?.name}');
-    debugPrint('dueDate: $dueDate');
-    // debugPrint('reminderEnabled: ${reminderEnabled.value}');
-    // debugPrint('reminderDaysBefore: ${reminderDaysBefore.value}');
-
     if (name.isEmpty) {
-      debugPrint('SAVE FAILED: name is empty');
       return;
     }
 
     if (amount <= 0) {
-      debugPrint('SAVE FAILED: amount <= 0');
       return;
     }
 
     if (frequency == null) {
-      debugPrint('SAVE FAILED: frequency is null');
       return;
     }
 
     if (category == null) {
-      debugPrint('SAVE FAILED: category is null');
       return;
     }
 
     if (dueDate == null) {
-      debugPrint('SAVE FAILED: nextPaymentDate is null');
       return;
     }
-
-    debugPrint('Validation passed.');
 
     try {
       await database.billsDao.insertBillWithFirstOccurrence(
@@ -588,17 +468,8 @@ class BillController extends GetxController {
         expectedAmount: amount,
       );
 
-      debugPrint('BILL SAVED SUCCESSFULLY');
-
       Get.back();
-
-      debugPrint('BOTTOM SHEET CLOSED');
-      debugPrint('================================');
     } catch (e, stackTrace) {
-      debugPrint('SAVE BILL FAILED: $e');
-      debugPrint('$stackTrace');
-      debugPrint('================================');
-
       rethrow;
     }
   }
@@ -704,15 +575,6 @@ class BillController extends GetxController {
     final existing = existingBillsPeriodAmount;
     final newBill = billAmount.value;
     final total = existing + newBill;
-
-    debugPrint('========== BILL BUDGET STATUS ==========');
-    debugPrint('Frequency: ${selectedPeriod.value?.label}');
-    debugPrint('Budget: $budget');
-    debugPrint('Existing bills: $existing');
-    debugPrint('New bill: $newBill');
-    debugPrint('Total bills: $total');
-    debugPrint('Fits: ${budget >= total}');
-    debugPrint('========================================');
 
     return budget >= total ? BillBudgetStatus.fits : BillBudgetStatus.exceeds;
   }

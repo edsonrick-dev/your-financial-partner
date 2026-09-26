@@ -21,6 +21,7 @@ class TransactionController extends GetxController {
   final selectedTransactionFilter = Rx<TransactionFilter>(
     const AllTransactionFilter(),
   );
+
   Future<CreditCardStatementsTableData?> getCreditCardStatement(
     AccountsTableData account,
   ) {
@@ -47,10 +48,6 @@ class TransactionController extends GetxController {
   }
 
   void prepareBillPayment(BillWithNextOccurrence bill) {
-    debugPrint(
-      '>>> prepareBillPayment: existing editingTransaction = '
-      '${editingTransaction.value?.transaction.id}',
-    );
     editingTransaction.value = null;
 
     selectedBill.value = bill;
@@ -73,18 +70,7 @@ class TransactionController extends GetxController {
     } else {
       selectedLinkedAccount.value = null;
     }
-    debugPrint(
-      '>>> prepareBillPayment: existing editingTransaction = '
-      '${editingTransaction.value?.transaction.id}',
-    );
   }
-  // Future<void> startBillPayment(BillWithNextOccurrence bill) async {
-  //   // resetForm();
-
-  //   selectedBill.value = bill;
-  //   selectedCategory.value = bill.category;
-  //   amount.value = bill.occurrence.expectedAmount;
-  // }
 
   final selectedBill = Rxn<BillWithNextOccurrence>();
   Future<void> selectCategoryOrBill(TransactionType transactionType) async {
@@ -94,7 +80,17 @@ class TransactionController extends GetxController {
       selectedBill: selectedBill.value,
     );
 
-    if (result == null) return;
+    if (result == null) {
+      return;
+    }
+
+    // ==========================================================
+    // THIS IS THE 4TH DEBUG BLOCK
+    // ==========================================================
+
+    // ==========================================================
+    // YOUR EXISTING LOGIC
+    // ==========================================================
 
     switch (result) {
       case CategorySelection(:final category):
@@ -269,10 +265,6 @@ class TransactionController extends GetxController {
 
     selectedPersonBalance.value = await database.peopleBalanceDao
         .getPersonBalance(person.id);
-    debugPrint(
-      'Selected Person Balance: '
-      '${selectedPersonBalance.value?.netBalance}',
-    );
   }
 
   double projectedBalance(TransactionType transactionType) {

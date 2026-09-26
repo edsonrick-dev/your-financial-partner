@@ -414,29 +414,11 @@ class AccountController extends GetxController {
           const Duration(days: 1),
         );
 
-        final billingPeriodId = await database.creditCardDao
-            .createInitialBillingPeriod(
-              accountId: insertedId,
-              startDate: billingPeriodStartDate,
-              endDate: nextStatementDate,
-            );
-
-        debugPrint('=== CREDIT CARD CREATION ===');
-        debugPrint('accountId: $insertedId');
-        debugPrint('nextStatementDate: $nextStatementDate');
-        debugPrint('previousStatementDate: $previousStatementDate');
-        debugPrint('billingPeriodStartDate: $billingPeriodStartDate');
-        debugPrint('billingPeriodId: $billingPeriodId');
-        // final billId = await database.billsDao.insertBill(
-        //   BillsTableCompanion.insert(
-        //     name: '$name Statement',
-        //     categoryId: const drift.Value(null),
-        //     accountId: drift.Value(insertedId),
-        //     expectedAmount: const drift.Value(null),
-        //     frequency: BillsFrequency.monthly.name,
-        //     dayOfMonth: drift.Value(nextPaymentDueDate.day),
-        //   ),
-        // );
+        await database.creditCardDao.createInitialBillingPeriod(
+          accountId: insertedId,
+          startDate: billingPeriodStartDate,
+          endDate: nextStatementDate,
+        );
       }
       // 3. Create initial balance transaction
       if (initialBalance >= 0) {

@@ -120,7 +120,7 @@ class BillForm extends GetView<BillController> {
                             label: 'Next Payment',
                             iconKey: 'calendar',
                             value: controller.formattedNextPaymentDate,
-                            hint: 'Select Date',
+                            hint: 'Select date',
                             onTap: () {
                               controller.selectNextPaymentDate(context);
                             },
@@ -153,31 +153,7 @@ class BillForm extends GetView<BillController> {
                                 },
                               );
                             }),
-                            // Obx(
-                            //   () => Container(
-                            //     padding: const EdgeInsets.all(2),
-                            //     decoration: BoxDecoration(
-                            //       color: colorScheme.bgLight,
-                            //       borderRadius: BorderRadius.circular(999),
-                            //       border: Border.all(
-                            //         color: colorScheme.appBorder,
-                            //       ),
-                            //     ),
-                            //     child: Row(
-                            //       mainAxisSize: MainAxisSize.min,
-                            //       children: mvpBillFrequencies.map((frequency) {
-                            //         return BillsFrequencySelector(
-                            //           period: frequency,
-                            //           isSelected:
-                            //               controller.selectedPeriod.value ==
-                            //               frequency,
-                            //           onTap: () =>
-                            //               controller.selectPeriod(frequency),
-                            //         );
-                            //       }).toList(),
-                            //     ),
-                            //   ),
-                            // ),
+
                             Obx(() {
                               final nextPaymentDate =
                                   controller.nextPaymentDate.value;
@@ -226,7 +202,7 @@ extension BillControllerScheduleExtension on BillController {
 
     AppDatePicker.show(
       context: context,
-      initialDate: nextPaymentDate.value ?? today,
+      initialDate: nextPaymentDate.value,
       minimumDate: today,
       onChanged: (date) {
         nextPaymentDate.value = date;

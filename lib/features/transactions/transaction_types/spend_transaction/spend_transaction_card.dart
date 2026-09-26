@@ -10,6 +10,7 @@ import 'package:getx_drift_app/features/transactions/transaction_types/spend_tra
 import 'package:getx_drift_app/features/widgets/container/category_icon_container.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
+import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class SpendTransactionCard extends GetView<TransactionController> {
@@ -89,7 +90,9 @@ class SpendTransactionCard extends GetView<TransactionController> {
                     children: [
                       Expanded(
                         child: Text(
-                          item.category?.name ?? 'Unknown',
+                          item.isBillPayment
+                              ? item.bill!.name
+                              : item.category?.name ?? 'Unknown',
                           style: AppTextStyle.titleL,
                         ),
                       ),
@@ -129,6 +132,16 @@ class SpendTransactionCard extends GetView<TransactionController> {
                             ),
                           ],
                         ),
+                      if (item.isBillPayment &&
+                          item.billOccurrence != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          '${DateFormat('MMM d').format(item.billOccurrence!.dueDate)} bill',
+                          style: AppTextStyle.bodyS.copyWith(
+                            color: colorScheme.appTextMuted,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ],

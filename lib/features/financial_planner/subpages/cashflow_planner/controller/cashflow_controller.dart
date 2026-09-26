@@ -216,7 +216,10 @@ class CashflowController extends GetxController {
     }
 
     final transaction = await database.transactionsDao
-        .getTransactionWithDetailsById(transactionId);
+        .getTransactionWithDetailsById(
+          transactionId,
+          billOccurrenceId: bill.occurrence.id,
+        );
 
     if (transaction == null) {
       Get.snackbar(
@@ -1105,13 +1108,7 @@ class CashflowController extends GetxController {
   }) async {
     final category = transactionController.selectedCategory.value;
     final period = selectedPeriod.value;
-    debugPrint('CASHFLOW TC: ${transactionController.hashCode}');
-    debugPrint(
-      'SAVE CATEGORY: ${transactionController.selectedCategory.value?.name} '
-      'ID: ${transactionController.selectedCategory.value?.id}',
-    );
 
-    debugPrint('CONTROLLER: ${transactionController.hashCode}');
     if (category == null || period == null) {
       return;
     }

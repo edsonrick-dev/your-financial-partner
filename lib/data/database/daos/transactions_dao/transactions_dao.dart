@@ -4,7 +4,10 @@ import 'package:getx_drift_app/data/models/split_expense_summary.dart';
 import 'package:getx_drift_app/data/models/transaction_participant_with_entity.dart';
 import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
+import 'package:getx_drift_app/data/tables/credit_card_billings_table.dart';
 import 'package:getx_drift_app/data/tables/transaction_participants_table.dart';
+import 'package:getx_drift_app/data/tables/bill_occurrences_table.dart';
+import 'package:getx_drift_app/data/tables/bills_table.dart';
 import 'package:getx_drift_app/data/tables/financial_obligations_table.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
@@ -58,6 +61,9 @@ part 'transactions_dao.g.dart';
     TransactionsTable,
     TransactionParticipantsTable,
     FinancialObligationsTable,
+    CreditCardBillingPeriodsTable,
+    BillOccurrencesTable,
+    BillsTable,
   ],
 )
 class TransactionsDao extends DatabaseAccessor<AppDatabase>
@@ -76,24 +82,44 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<TransactionWithDetails?> getTransactionWithDetailsById(
-    int transactionId,
-  ) async {
+    int transactionId, {
+    int? billOccurrenceId,
+  }) async {
     final linkedAccounts = alias(accountsTable, 'linked_accounts');
 
-    final query = select(transactionsTable).join([
-      leftOuterJoin(
-        cashflowCategoriesTable,
-        cashflowCategoriesTable.id.equalsExp(transactionsTable.categoryId),
-      ),
-      leftOuterJoin(
-        accountsTable,
-        accountsTable.id.equalsExp(transactionsTable.accountId),
-      ),
-      leftOuterJoin(
-        linkedAccounts,
-        linkedAccounts.id.equalsExp(transactionsTable.linkedAccountId),
-      ),
-    ])..where(transactionsTable.id.equals(transactionId));
+    final query =
+        select(transactionsTable).join([
+          leftOuterJoin(
+            cashflowCategoriesTable,
+            cashflowCategoriesTable.id.equalsExp(transactionsTable.categoryId),
+          ),
+
+          leftOuterJoin(
+            accountsTable,
+            accountsTable.id.equalsExp(transactionsTable.accountId),
+          ),
+
+          leftOuterJoin(
+            linkedAccounts,
+            linkedAccounts.id.equalsExp(transactionsTable.linkedAccountId),
+          ),
+
+          // IMPORTANT: occurrence must be joined first
+          leftOuterJoin(
+            billOccurrencesTable,
+            billOccurrencesTable.transactionId.equalsExp(transactionsTable.id),
+          ),
+
+          leftOuterJoin(
+            billsTable,
+            billsTable.id.equalsExp(billOccurrencesTable.billId),
+          ),
+        ])..where(
+          transactionsTable.id.equals(transactionId) &
+              (billOccurrenceId != null
+                  ? billOccurrencesTable.id.equals(billOccurrenceId)
+                  : const Constant(true)),
+        );
 
     final row = await query.getSingleOrNull();
 
@@ -108,6 +134,10 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     final account = row.readTableOrNull(accountsTable);
 
     final linkedAccount = row.readTableOrNull(linkedAccounts);
+
+    final billOccurrence = row.readTableOrNull(billOccurrencesTable);
+
+    final bill = row.readTableOrNull(billsTable);
 
     // ---------------------------------------------------------------------------
     // PARTICIPANTS
@@ -153,9 +183,16 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
       category: category,
       account: account,
       linkedAccount: linkedAccount,
+
+      // This is what we need for the bill edit form
+      bill: bill,
+      billOccurrence: billOccurrence,
+
       participants: participants,
       obligations: obligations,
+
       obligationType: obligations.isNotEmpty ? obligations.first.type : null,
+
       splitSummary: SplitExpenseSummary(
         totalPaid: transaction.amount,
         myShare: myShare,
@@ -520,7 +557,6 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
   /// Primary data source for transaction screens.
   Stream<List<TransactionWithDetails>> watchTransactions() {
     final linkedAccounts = alias(accountsTable, 'linked_accounts');
-
     final query =
         select(transactionsTable).join([
           leftOuterJoin(
@@ -537,10 +573,40 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
             linkedAccounts,
             linkedAccounts.id.equalsExp(transactionsTable.linkedAccountId),
           ),
+
+          leftOuterJoin(
+            billOccurrencesTable,
+            billOccurrencesTable.transactionId.equalsExp(transactionsTable.id),
+          ),
+
+          leftOuterJoin(
+            billsTable,
+            billsTable.id.equalsExp(billOccurrencesTable.billId),
+          ),
         ])..orderBy([
           OrderingTerm.desc(transactionsTable.date),
           OrderingTerm.desc(transactionsTable.createdAt),
         ]);
+    // final query =
+    //     select(transactionsTable).join([
+    //       leftOuterJoin(
+    //         cashflowCategoriesTable,
+    //         cashflowCategoriesTable.id.equalsExp(transactionsTable.categoryId),
+    //       ),
+
+    //       leftOuterJoin(
+    //         accountsTable,
+    //         accountsTable.id.equalsExp(transactionsTable.accountId),
+    //       ),
+
+    //       leftOuterJoin(
+    //         linkedAccounts,
+    //         linkedAccounts.id.equalsExp(transactionsTable.linkedAccountId),
+    //       ),
+    //     ])..orderBy([
+    //       OrderingTerm.desc(transactionsTable.date),
+    //       OrderingTerm.desc(transactionsTable.createdAt),
+    //     ]);
     return query.watch().asyncMap((rows) async {
       return Future.wait(
         rows.map((row) async {
@@ -576,34 +642,30 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
           final obligations = await (select(
             financialObligationsTable,
           )..where((tbl) => tbl.transactionId.equals(transaction.id))).get();
+          final billOccurrence = row.readTableOrNull(billOccurrencesTable);
 
-          // final obligation =
-          //     await (select(
-          //           financialObligationsTable,
-          //         )..where((tbl) => tbl.transactionId.equals(transaction.id)))
-          //         .getSingleOrNull();
+          final bill = row.readTableOrNull(billsTable);
+
           return TransactionWithDetails(
             transaction: transaction,
-
             category: category,
-
             account: account,
-
             linkedAccount: row.readTableOrNull(linkedAccounts),
 
+            bill: bill,
+            billOccurrence: billOccurrence,
+
             participants: participants,
-            // obligationType: obligation?.type,
             obligations: obligations,
+
             obligationType: obligations.isNotEmpty
                 ? obligations.first.type
                 : null,
+
             splitSummary: SplitExpenseSummary(
               totalPaid: transaction.amount,
-
               myShare: myShare,
-
               receivableAmount: receivableAmount,
-
               isSharedExpense: participants.length > 1,
             ),
           );
@@ -717,73 +779,6 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
 
   Future<void> clearCategories() async {
     await delete(cashflowCategoriesTable).go();
-  }
-
-  Future<void> debugUsedCategories() async {
-    final categories = await select(cashflowCategoriesTable).get();
-    final transactions = await select(transactionsTable).get();
-
-    for (final category in categories) {
-      final count = transactions
-          .where((tx) => tx.categoryId == category.id)
-          .length;
-
-      if (count > 0) {
-        debugPrint(
-          'USED CATEGORY: '
-          'id=${category.id} '
-          'name="${category.name}" '
-          'transactions=$count',
-        );
-      }
-    }
-  }
-
-  Future<void> debugCategoryUsage() async {
-    final categories = await select(cashflowCategoriesTable).get();
-    final transactions = await select(transactionsTable).get();
-
-    final grouped = <String, List<CashflowCategoriesTableData>>{};
-
-    for (final category in categories) {
-      grouped.putIfAbsent(category.name, () => []).add(category);
-    }
-
-    for (final entry in grouped.entries) {
-      if (entry.value.length <= 1) {
-        continue;
-      }
-
-      debugPrint('────────────────────────────');
-      debugPrint('DUPLICATE CATEGORY: ${entry.key}');
-
-      for (final category in entry.value) {
-        final count = transactions
-            .where((tx) => tx.categoryId == category.id)
-            .length;
-
-        debugPrint('  id=${category.id} → $count transactions');
-      }
-    }
-  }
-
-  Future<void> debugDuplicateCategories() async {
-    final categories = await select(cashflowCategoriesTable).get();
-
-    final grouped = <String, List<CashflowCategoriesTableData>>{};
-
-    for (final category in categories) {
-      grouped.putIfAbsent(category.name, () => []).add(category);
-    }
-
-    for (final entry in grouped.entries) {
-      if (entry.value.length > 1) {
-        debugPrint(
-          'DUPLICATE CATEGORY: ${entry.key} '
-          '${entry.value.map((e) => 'id=${e.id}').join(', ')}',
-        );
-      }
-    }
   }
 
   Stream<List<CashflowCategoriesTableData>> watchCategoriesWithTransactions() {
@@ -943,8 +938,6 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
       )..where((tbl) => tbl.id.equals(participant.entityId))).getSingleOrNull();
 
       if (entity == null) {
-        debugPrint('Missing entity for participantId: ${participant.entityId}');
-
         continue;
       }
 
@@ -996,19 +989,32 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Stream<Map<String, List<TransactionWithDetails>>>
-  watchGroupedCreditCardTransactions(int accountId) {
+  watchGroupedCreditCardTransactions({
+    required int accountId,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
     return watchTransactions().map((transactions) {
-      final accountTransactions = transactions
-          .where(
-            (item) =>
-                // Transactions charged to the credit card
-                item.transaction.accountId == accountId &&
-                // Exclude payments made TO the credit card
-                !(item.transaction.transactionType ==
-                        TransactionType.transfer.name &&
-                    item.transaction.linkedAccountId == accountId),
-          )
-          .toList();
+      final exclusiveEndDate = endDate.add(const Duration(days: 1));
+
+      final accountTransactions = transactions.where((item) {
+        final transaction = item.transaction;
+
+        final correctAccount = transaction.accountId == accountId;
+
+        final correctStart = !transaction.date.isBefore(startDate);
+
+        final correctEnd = transaction.date.isBefore(exclusiveEndDate);
+
+        final isPayment =
+            transaction.transactionType == TransactionType.transfer.name &&
+            transaction.linkedAccountId == accountId;
+
+        final included =
+            correctAccount && correctStart && correctEnd && !isPayment;
+
+        return included;
+      }).toList();
 
       final grouped = <DateTime, List<TransactionWithDetails>>{};
 
@@ -1018,7 +1024,6 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
         final normalizedDate = DateTime(date.year, date.month, date.day);
 
         grouped.putIfAbsent(normalizedDate, () => []);
-
         grouped[normalizedDate]!.add(item);
       }
 
@@ -1041,7 +1046,8 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
       final payments = transactions.where((item) {
         final transaction = item.transaction;
 
-        return transaction.transactionType == TransactionType.transfer.name &&
+        return transaction.transactionType ==
+                TransactionType.cardPayment.name &&
             transaction.linkedAccountId == accountId;
       }).toList();
 

@@ -22,7 +22,14 @@ class TransactionSheet extends GetView<TransactionController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+    final isEditing = controller.editingTransaction.value != null;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+    final headerTitle =
+        '${isEditing ? 'Edit' : 'New'} ${transactionType.actionTitle.capitalize}';
+
+    final actionText =
+        '${isEditing ? 'Update' : 'Record'} ${transactionType.actionTitle.toLowerCase()}';
     return AppSheet(
       adaptiveHeight: false,
       showHeader: false,
@@ -45,7 +52,7 @@ class TransactionSheet extends GetView<TransactionController> {
 
                 ///Toolbar
                 AppToolbar(
-                  title: transactionType.headerTitle,
+                  title: headerTitle,
                   isDark: true,
                   showLeading: false,
                 ),
@@ -68,7 +75,7 @@ class TransactionSheet extends GetView<TransactionController> {
                   : transactionType;
 
               return AppButton(
-                text: 'Record ${effectiveType.actionText.toLowerCase()}',
+                text: actionText,
                 onTap: controller.isTransactionValid(effectiveType)
                     ? () => controller.saveTransaction(effectiveType)
                     : null,

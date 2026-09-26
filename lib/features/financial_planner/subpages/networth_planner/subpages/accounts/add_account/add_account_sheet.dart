@@ -38,9 +38,7 @@ class AddAccountSheet extends GetView<AccountController> {
                         final createdAccount = await controller.saveAccount();
 
                         if (createdAccount != null) {
-                          debugPrint('Account not Null');
                           if (accountType == AccountType.loan) {
-                            debugPrint('Account Paymebnt Created');
                             await controller.loanController.savePaymentSchedule(
                               loanAccountId: createdAccount.id,
                             );

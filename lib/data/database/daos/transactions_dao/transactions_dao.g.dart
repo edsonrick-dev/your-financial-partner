@@ -14,6 +14,13 @@ mixin _$TransactionsDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.transactionParticipantsTable;
   $FinancialObligationsTableTable get financialObligationsTable =>
       attachedDatabase.financialObligationsTable;
+  $CreditCardBillingPeriodsTableTable get creditCardBillingPeriodsTable =>
+      attachedDatabase.creditCardBillingPeriodsTable;
+  $CreditCardStatementsTableTable get creditCardStatementsTable =>
+      attachedDatabase.creditCardStatementsTable;
+  $BillsTableTable get billsTable => attachedDatabase.billsTable;
+  $BillOccurrencesTableTable get billOccurrencesTable =>
+      attachedDatabase.billOccurrencesTable;
   TransactionsDaoManager get managers => TransactionsDaoManager(this);
 }
 
@@ -44,5 +51,23 @@ class TransactionsDaoManager {
       $$FinancialObligationsTableTableTableManager(
         _db.attachedDatabase,
         _db.financialObligationsTable,
+      );
+  $$CreditCardBillingPeriodsTableTableTableManager
+  get creditCardBillingPeriodsTable =>
+      $$CreditCardBillingPeriodsTableTableTableManager(
+        _db.attachedDatabase,
+        _db.creditCardBillingPeriodsTable,
+      );
+  $$CreditCardStatementsTableTableTableManager get creditCardStatementsTable =>
+      $$CreditCardStatementsTableTableTableManager(
+        _db.attachedDatabase,
+        _db.creditCardStatementsTable,
+      );
+  $$BillsTableTableTableManager get billsTable =>
+      $$BillsTableTableTableManager(_db.attachedDatabase, _db.billsTable);
+  $$BillOccurrencesTableTableTableManager get billOccurrencesTable =>
+      $$BillOccurrencesTableTableTableManager(
+        _db.attachedDatabase,
+        _db.billOccurrencesTable,
       );
 }

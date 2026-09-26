@@ -85,6 +85,14 @@ class CreditCardDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
+  Future<CreditCardBillingPeriodsTableData?> getBillingPeriod(
+    int billingPeriodId,
+  ) {
+    return (select(
+      creditCardBillingPeriodsTable,
+    )..where((tbl) => tbl.id.equals(billingPeriodId))).getSingleOrNull();
+  }
+
   Future<double> calculateStatementBalance({
     required int accountId,
     required int billingPeriodId,
@@ -152,16 +160,6 @@ class CreditCardDao extends DatabaseAccessor<AppDatabase>
     double currentPayments = 0;
 
     for (final transaction in transactions) {
-      debugPrint(
-        'Transaction: '
-        'id=${transaction.id}, '
-        'type=${transaction.type}, '
-        'amount=${transaction.amount}, '
-        'date=${transaction.date}, '
-        'accountId=${transaction.accountId}, '
-        'linkedAccountId=${transaction.linkedAccountId}',
-      );
-
       switch (transaction.type) {
         case TransactionType.spend:
           if (transaction.accountId == accountId) {
@@ -188,16 +186,7 @@ class CreditCardDao extends DatabaseAccessor<AppDatabase>
     // ------------------------------------------------------------
 
     final totalBeforePayments = previousOutstandingBalance + currentPurchases;
-    debugPrint('=== CALCULATE STATEMENT BALANCE ===');
-    debugPrint('accountId: $accountId');
-    debugPrint('billingPeriodId: ${period.id}');
-    debugPrint('period: ${period.startDate} → ${period.endDate}');
-    debugPrint('previousOutstandingBalance: $previousOutstandingBalance');
-    debugPrint('currentPurchases: $currentPurchases');
-    debugPrint('currentPayments: $currentPayments');
-    debugPrint(
-      'result: ${math.max(0, previousOutstandingBalance + currentPurchases - currentPayments)}',
-    );
+
     return math.max(0, totalBeforePayments - currentPayments);
   }
 

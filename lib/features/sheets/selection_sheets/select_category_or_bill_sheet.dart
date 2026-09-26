@@ -75,7 +75,7 @@ class _SelectCategoryOrBillSheetState extends State<SelectCategoryOrBillSheet> {
                   },
                 ),
 
-                const BillList(),
+                BillList(selectedBill: widget.selectedBill),
               ],
             ),
           ),

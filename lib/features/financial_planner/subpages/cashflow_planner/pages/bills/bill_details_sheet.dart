@@ -14,7 +14,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/controller/bill_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_payment_history.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_category.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/spend_transaction/spend_transaction_sheet.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
@@ -83,25 +82,25 @@ class BillDetailsSheet extends GetView<BillController> {
                         nextAmount: nextAmount,
                         category: item.category,
                       ),
-                      AppButton(
-                        text: 'Make Payment',
-                        onTap: () {
-                          controller.makePayment(item);
-                        },
-                        // nextOccurrence == null
-                        //     ? null
-                        //     : () async {
-                        //         final bill = BillWithNextOccurrence(
-                        //           bill: item.bill,
-                        //           occurrence: nextOccurrence,
-                        //           category: item.category,
-                        //         );
+                      // AppButton(
+                      //   text: 'Make Payment',
+                      //   onTap: () {
+                      //     controller.makePayment(item);
+                      //   },
+                      //   // nextOccurrence == null
+                      //   //     ? null
+                      //   //     : () async {
+                      //   //         final bill = BillWithNextOccurrence(
+                      //   //           bill: item.bill,
+                      //   //           occurrence: nextOccurrence,
+                      //   //           category: item.category,
+                      //   //         );
 
-                        //         Get.back();
+                      //   //         Get.back();
 
-                        //         await AppSheets.transaction.spendBill(bill);
-                        // },
-                      ),
+                      //   //         await AppSheets.transaction.spendBill(bill);
+                      //   // },
+                      // ),
                     ],
                   ),
                 ),
@@ -109,6 +108,9 @@ class BillDetailsSheet extends GetView<BillController> {
                 AppDetailsPageActionSection(
                   selectedIndex: selectedIndex,
                   actions: const ['Payment History'],
+                  onAdd: () {
+                    controller.makePayment(item);
+                  },
                 ),
 
                 Obx(

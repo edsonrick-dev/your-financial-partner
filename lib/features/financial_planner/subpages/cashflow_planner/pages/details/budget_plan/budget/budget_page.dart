@@ -9,8 +9,8 @@ import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/expense/expense_details_sheet.dart.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/debt_repayment/debt_repayment_list.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/budget_plan/loan_payment/debt_repayment_list.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/budget_plan/expense/expense_details_sheet.dart.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/widgets/cashflow_plan_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -147,15 +147,15 @@ class BudgetPage extends GetView<CashflowController> {
 
                 return StreamBuilder<List<BillWithNextOccurrence>>(
                   stream: controller.watchDebtRepaymentBills(),
-                  builder: (context, debtSnapshot) {
-                    if (debtSnapshot.connectionState ==
+                  builder: (context, loanSnapshot) {
+                    if (loanSnapshot.connectionState ==
                         ConnectionState.waiting) {
                       return const SizedBox.shrink();
                     }
 
-                    final debtRepaymentBills = debtSnapshot.data ?? [];
+                    final loanPaymentBills = loanSnapshot.data ?? [];
 
-                    if (expensePlans.isEmpty && debtRepaymentBills.isEmpty) {
+                    if (expensePlans.isEmpty && loanPaymentBills.isEmpty) {
                       return Padding(
                         padding: const EdgeInsets.all(32),
                         child: Column(
@@ -219,8 +219,8 @@ class BudgetPage extends GetView<CashflowController> {
                             planType: 'expense',
                             plans: expensePlans,
                           ),
-                        if (debtRepaymentBills.isNotEmpty)
-                          DebtRepaymentList(bills: debtRepaymentBills),
+                        if (loanPaymentBills.isNotEmpty)
+                          DebtRepaymentList(bills: loanPaymentBills),
                         SizedBox(height: context.bottomPaddingSub),
                       ],
                     );

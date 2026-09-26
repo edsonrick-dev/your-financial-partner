@@ -53,27 +53,19 @@ class DebtRepaymentDetailsSheet extends GetView<BillController> {
             frequency: frequency,
             nextPaymentDate: bill.occurrence.dueDate,
           ),
-          SizedBox(height: 20),
-          AppSection(
-            child: AppButton(
-              type: ButtonType.outline,
-              text: 'Make Payment',
-              onTap: () {
-                controller.makePayment(
-                  BillWithCategory(
-                    bill: bill.bill,
-                    category: bill.category,
-                    loanAccount: bill.loanAccount,
-                  ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 12),
 
           AppDetailsPageActionSection(
             selectedIndex: selectedIndex,
             actions: const ['Payment History'],
+            onAdd: () {
+              controller.makePayment(
+                BillWithCategory(
+                  bill: bill.bill,
+                  category: bill.category,
+                  loanAccount: bill.loanAccount,
+                ),
+              );
+            },
           ),
 
           Expanded(
@@ -149,8 +141,6 @@ class _PaymentHistory extends StatelessWidget {
                     if (transaction == null) {
                       return;
                     }
-
-                    Get.back();
 
                     await AppSheets.transaction.spend(item: transaction);
                   },
@@ -290,17 +280,6 @@ class _Metric extends StatelessWidget {
     );
   }
 }
-
-// class _PaymentHistoryPlaceholder extends StatelessWidget {
-//   const _PaymentHistoryPlaceholder({required this.loanAccountId});
-
-//   final int? loanAccountId;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Center(child: Text('Payment history'));
-//   }
-// }
 
 class _PaymentHistoryItem extends StatelessWidget {
   const _PaymentHistoryItem({

@@ -74,43 +74,10 @@ class SpendTransactionForm extends GetView<TransactionController> {
                   FocusManager.instance.primaryFocus?.unfocus();
 
                   await controller.selectCategoryOrBill(transactionType);
-                  debugPrint(
-                    '>>> EFFECTIVE TYPE: ${controller.effectiveTransactionType.name}',
-                  );
-                  debugPrint(
-                    '>>> SELECTED BILL: ${controller.selectedBill.value?.bill.name}',
-                  );
-                  debugPrint(
-                    '>>> IS LOAN: ${controller.selectedBill.value?.isLoanPayment}',
-                  );
-                  debugPrint(
-                    '>>> LINKED ACCOUNT: ${controller.selectedLinkedAccount.value?.id}',
-                  );
-                  debugPrint(
-                    '>>> IS TRANSACTION VALIE: ${controller.effectiveTransactionType.name == 'spend' ? controller.isSpendTransactionValid : controller.isDebtRepaymentTransactionValid}',
-                  );
                 },
-                // onTap: () async {
-                //   FocusManager.instance.primaryFocus?.unfocus();
-
-                //   final selectedTransactionType =
-                //       await controller.selectCategoryOrBill(transactionType);
-
-                //   if (selectedTransactionType == null) return;
-
-                //   transactionType = selectedTransactionType;
-                // },
               ),
             ),
-            // Obx(
-            //   () => AppDropdownField(
-            //     label: 'Category',
-            //     iconKey: controller.selectedCategory.value?.icon ?? 'category',
-            //     value: controller.selectedCategory.value?.name,
-            //     hint: 'Select category',
-            //     onTap: () => controller.selectCategory(transactionType),
-            //   ),
-            // ),
+
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

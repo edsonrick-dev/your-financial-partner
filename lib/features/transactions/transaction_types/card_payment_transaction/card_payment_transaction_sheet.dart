@@ -5,16 +5,29 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/sheets/transaction_sheets/transaction_sheet.dart';
 import 'package:getx_drift_app/features/transactions/controllers/extensions/transaction_hydration_ext.dart';
 import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/card_payment_transaction/load_card_payment_transaction.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
+import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 
 extension CardPaymentTransactionSheet on TransactionSheets {
-  Future<void> payCreditCard({required AccountsTableData creditCard}) async {
+  Future<void> payCreditCard({
+    AccountsTableData? creditCard,
+    TransactionWithDetails? transaction,
+  }) async {
     final controller = Get.find<TransactionController>();
 
-    controller.resetForm();
+    if (transaction != null) {
+      // EDIT
+      controller.loadCardPaymentTransaction(transaction);
+    } else {
+      // CREATE
+      controller.resetForm();
 
-    // Credit card is the destination.
-    controller.selectedLinkedAccount.value = creditCard;
+      if (creditCard != null) {
+        // Credit card is the destination.
+        controller.selectedLinkedAccount.value = creditCard;
+      }
+    }
 
     await Get.bottomSheet(
       const TransactionSheet(transactionType: TransactionType.cardPayment),

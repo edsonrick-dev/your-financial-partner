@@ -5,7 +5,7 @@ import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_grouping_section.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/budget_plan/budget/cashflow_plan_grouping_section.dart';
 import 'package:getx_drift_app/features/widgets/cards/transaction_cards/transaction_card_shell.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -25,11 +25,6 @@ class CashflowPlanTransactionsView extends StatelessWidget {
         }
 
         if (snapshot.hasError) {
-          debugPrint(
-            'Cashflow plan transactions error: '
-            '${snapshot.error}',
-          );
-
           return const Center(child: Text('Unable to load transactions.'));
         }
 

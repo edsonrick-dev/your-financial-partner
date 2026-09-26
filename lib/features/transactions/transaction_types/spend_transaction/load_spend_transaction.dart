@@ -1,19 +1,38 @@
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/models/participant_model.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/domain/enums/paid_by.dart';
 import 'package:getx_drift_app/features/transactions/controllers/extensions/transaction_hydration_ext.dart';
 import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 
 extension LoadSpendTransaction on TransactionController {
-  void loadSpendTransaction(TransactionWithDetails item) {
+  void loadSpendTransaction(TransactionWithDetails item) async {
     editingTransaction.value = item;
 
     // BASIC
     selectedDate.value = item.transaction.date;
-    selectedCategory.value = item.category;
     amount.value = item.transaction.amount;
     amountController.text = item.transaction.amount.toCurrency();
+    // ----------------------------------------------------------
+    // BILL / CATEGORY
+    // ----------------------------------------------------------
+
+    if (item.isBillPayment &&
+        item.bill != null &&
+        item.billOccurrence != null) {
+      selectedBill.value = BillWithNextOccurrence(
+        bill: item.bill!,
+        occurrence: item.billOccurrence!,
+        category: item.category,
+        loanAccount: item.linkedAccount,
+      );
+
+      selectedCategory.value = null;
+    } else {
+      selectedBill.value = null;
+      selectedCategory.value = item.category;
+    }
 
     // ----------------------------------------------------------
     // PAID BY

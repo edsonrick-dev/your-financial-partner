@@ -8,9 +8,9 @@ import 'package:getx_drift_app/features/transactions/transaction_types/transacti
 import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_form.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/budget_bills_page.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_summary_section.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/budget/cashflow_plan_transactions_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/budget_plan/budget/budget_bills_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/budget_plan/budget/cashflow_plan_summary_section.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/budget_plan/budget/cashflow_plan_transactions_view.dart';
 import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
@@ -59,7 +59,7 @@ class ExpenseDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppSheet(
       height: AppSheetHeight.full,
-      title: '${plan.category} Budget',
+      title: '${plan.category.capitalize} Budget',
       child: StreamBuilder<List<TransactionWithDetails>>(
         stream: database.transactionsDao.watchTransactionsForCashflowPlan(plan),
         builder: (context, snapshot) {
@@ -98,8 +98,7 @@ class ExpenseDetailsSheet extends StatelessWidget {
                 planned: plan.amount,
               ),
 
-              const SizedBox(height: 12),
-
+              // const SizedBox(height: 12),
               AppDetailsPageActionSection(
                 selectedIndex: selectedIndex,
                 actions: ['Transactions', 'Bills'],
@@ -115,7 +114,6 @@ class ExpenseDetailsSheet extends StatelessWidget {
                     children: [
                       CashflowPlanTransactionsView(plan: plan),
 
-                      // Bills — implement later
                       BillsByCategoryView(plan: plan),
                     ],
                   ),

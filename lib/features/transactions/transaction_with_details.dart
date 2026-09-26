@@ -10,7 +10,11 @@ class TransactionWithDetails {
   final CashflowCategoriesTableData? category;
 
   final AccountsTableData? account;
+
   final AccountsTableData? linkedAccount;
+
+  final BillsTableData? bill;
+  final BillOccurrencesTableData? billOccurrence;
 
   final List<TransactionParticipantWithEntity> participants;
 
@@ -28,6 +32,8 @@ class TransactionWithDetails {
     this.participants = const [],
     this.splitSummary,
     this.linkedAccount,
+    this.bill,
+    this.billOccurrence,
     this.obligationType,
   });
 
@@ -41,6 +47,10 @@ class TransactionWithDetails {
 
   bool get isDebtRepayment {
     return transaction.type == TransactionType.debtRepayment;
+  }
+
+  bool get isBillPayment {
+    return billOccurrence != null;
   }
 
   bool get requiresAccount {

@@ -28,7 +28,7 @@ class CreditCardPaymentInfo {
   });
 }
 
-class CreditCardDetailSheet extends StatelessWidget {
+class CreditCardDetailSheet extends GetView<CreditCardController> {
   final AccountsTableData account;
 
   const CreditCardDetailSheet({super.key, required this.account});
@@ -55,6 +55,7 @@ class CreditCardDetailSheet extends StatelessWidget {
         if (currentAccount == null) {
           return const Center(child: Text('Account no longer exists.'));
         }
+
         return Stack(
           alignment: Alignment.bottomCenter,
           children: [
@@ -87,8 +88,6 @@ class CreditCardDetailSheet extends StatelessWidget {
                           }
 
                           final paymentInfo = snapshot.data;
-                          // debugPrint('${snapshot.hasError}');
-                          debugPrint('$paymentInfo');
 
                           if (paymentInfo == null) {
                             return const SizedBox.shrink();
@@ -154,17 +153,17 @@ class CreditCardDetailSheet extends StatelessWidget {
                       //     );
                       //   },
                       // ),
-                      AppSection(
-                        child: AppButton(
-                          // type: ButtonType.outline,
-                          text: 'Pay Balance',
-                          onTap: () {
-                            AppSheets.transaction.payCreditCard(
-                              creditCard: currentAccount,
-                            );
-                          },
-                        ),
-                      ),
+                      // AppSection(
+                      //   child: AppButton(
+                      //     // type: ButtonType.outline,
+                      //     text: 'Pay Balance',
+                      //     onTap: () {
+                      //       AppSheets.transaction.payCreditCard(
+                      //         creditCard: currentAccount,
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
                       AppDetailsPageActionSection(
                         selectedIndex: selectedIndex,
                         actions: const ['Transactions', 'Payment History'],
@@ -176,8 +175,16 @@ class CreditCardDetailSheet extends StatelessWidget {
                       ),
 
                       Expanded(
-                        child: Obx(
-                          () => IndexedStack(
+                        child: Obx(() {
+                          final currentAccount = snapshot.data;
+
+                          if (currentAccount == null) {
+                            return const Center(
+                              child: Text('Account no longer exists.'),
+                            );
+                          }
+
+                          return IndexedStack(
                             index: selectedIndex.value,
                             children: [
                               CreditCardTransactionsView(
@@ -187,8 +194,8 @@ class CreditCardDetailSheet extends StatelessWidget {
                                 accountId: currentAccount.id,
                               ),
                             ],
-                          ),
-                        ),
+                          );
+                        }),
                       ),
                     ],
                   ),
@@ -230,9 +237,9 @@ class CreditCardDetailSheet extends StatelessWidget {
                             icon: Icons.sync_alt_sharp,
                             label: 'Pay Credit Balance',
                             onTap: () {
-                              // AppSheets.transaction.transfer(
-                              //   fromAccount: currentAccount,
-                              // );
+                              AppSheets.transaction.payCreditCard(
+                                creditCard: currentAccount,
+                              );
                               isAddMenuOpen.toggle();
                             },
                           ),

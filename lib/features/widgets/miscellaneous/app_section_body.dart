@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
 class AppSectionBody extends StatelessWidget {
-  const AppSectionBody({super.key, required this.child});
+  const AppSectionBody({super.key, required this.child, this.padding = 8});
   final Widget child;
+  final double padding;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class AppSectionBody extends StatelessWidget {
         color: colorScheme.bgLight,
         borderRadius: BorderRadius.circular(24),
       ),
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(padding),
       child: child,
     );
   }

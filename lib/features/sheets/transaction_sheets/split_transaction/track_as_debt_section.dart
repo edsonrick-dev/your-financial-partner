@@ -87,11 +87,6 @@ class TrackAsDebtSection extends GetView<TransactionController> {
               ],
             ),
             Obx(() {
-              // debugPrint(
-              //   'Widget balance: '
-              //   '${controller.selectedPersonBalance.value?.netBalance}',
-              // );
-
               if (controller.isDebt.value == true) {
                 return Row(
                   spacing: 8,

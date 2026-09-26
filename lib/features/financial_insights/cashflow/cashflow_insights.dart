@@ -19,7 +19,8 @@ final cashflowInsights = <CashflowInsightType, CashflowInsight>{
 
   CashflowInsightType.onlyIncome: CashflowInsight(
     type: CashflowInsightType.onlyIncome,
-    title: 'Your income is set',
+    title:
+        'Incomeplete cashflow plan:\n Your income is set, but no budget planned.',
     interpretation: (controller) {
       return 'You have an income plan, but without a budget Ascend cannot determine how much of your income is being allocated to your lifestyle.';
     },
@@ -30,7 +31,7 @@ final cashflowInsights = <CashflowInsightType, CashflowInsight>{
 
   CashflowInsightType.onlyBudget: CashflowInsight(
     type: CashflowInsightType.onlyBudget,
-    title: 'Your budget is set',
+    title: 'Incomplete cashflow plan:\nBudget is set, but no income planned.',
     interpretation: (controller) {
       return 'You have a budget, but without an income plan Ascend cannot determine whether your budget is sustainable.';
     },

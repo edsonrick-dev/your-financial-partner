@@ -82,7 +82,7 @@ class LoanController extends GetxController {
       loanAccount: loan,
     );
 
-    Get.back();
+    // Get.back();
 
     await AppSheets.transaction.spendBill(billWithNextOccurrence);
   }
@@ -191,12 +191,10 @@ class LoanController extends GetxController {
   Future<void> savePaymentSchedule({required int loanAccountId}) async {
     if (!paymentScheduleEnabled.value) return;
 
-    debugPrint('${paymentAmount.value}');
-    debugPrint('${paymentFrequency.value}');
     if (paymentAmount.value <= 0 || paymentFrequency.value == null) {
       return;
     }
-    debugPrint('Form Created');
+
     final loan = await database.accountsDao.getAccountById(loanAccountId);
 
     if (loan == null) return;

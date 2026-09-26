@@ -26,65 +26,6 @@ class CardPaymentForm extends GetView<TransactionController> {
         child: Column(
           spacing: 16,
           children: [
-            Text('${controller.selectedLinkedAccount.value}'),
-            Obx(() {
-              final card = controller.selectedLinkedAccount.value;
-
-              if (card == null) {
-                return const SizedBox.shrink();
-              }
-
-              return FutureBuilder<CreditCardStatementsTableData?>(
-                future: controller.getCreditCardStatement(card),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  final statement = snapshot.data;
-                  debugPrint('$statement');
-                  if (statement == null) {
-                    return const SizedBox.shrink();
-                  }
-
-                  return Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: context.colors.bgLight,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: context.colors.appBorder),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Payment due',
-                          style: AppTextStyle.bodyM.copyWith(
-                            color: context.colors.appText,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          statement.statementBalance.toCurrency(),
-                          style: AppTextStyle.amountL,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Due ${DateFormat('MMMM d, yyyy').format(statement.paymentDueDate)}',
-                          style: AppTextStyle.bodyM.copyWith(
-                            color: context.colors.appTextMuted,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            }),
             Obx(
               () => AppDropdownField(
                 label: 'Date',

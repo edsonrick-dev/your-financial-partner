@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
+import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/transactions/transaction_types/card_payment_transaction/card_payment_transaction_sheet.dart';
 import 'package:getx_drift_app/features/transactions/transaction_with_details.dart';
 import 'package:getx_drift_app/features/transactions/controllers/extensions/delete_functions.dart';
 import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
@@ -20,6 +22,7 @@ class CardPaymentCard extends GetView<TransactionController> {
 
     return AdaptivePressable(
       onTap: () {
+        AppSheets.transaction.payCreditCard(transaction: item);
         // AppSheets.transaction.payCreditCard(creditCard: item.linkedAccount);
       },
       onLongPress: () async {
