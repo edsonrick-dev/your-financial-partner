@@ -15,6 +15,8 @@ import 'package:getx_drift_app/features/balances/views/people_balances_view.dart
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/charts/views/networth_charts_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/checks/views/checks_management_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/exports/views/file_export_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/binding/risk_tolerance_binding.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/risk_tolerance_assessment_page.dart';
 import 'package:getx_drift_app/features/home/views/home_view.dart';
 import 'package:getx_drift_app/features/main_shell/views/main_shell_view.dart';
 import 'package:getx_drift_app/features/onboarding/assessment_summary_view.dart';
@@ -271,6 +273,13 @@ class AppPages {
     GetPage(
       name: Routes.DEATHEBENFITQUESTIONNAIRE,
       page: () => const DeathBenefitQuestionnaire(),
+    ),
+
+    ///SAVINGS & INVESTMENT
+    GetPage(
+      name: Routes.RISKTOLERANCEASSESSMENT,
+      page: () => const RiskToleranceAssessmentPage(),
+      binding: RiskToleranceBinding(),
     ),
   ];
 }

@@ -60,4 +60,9 @@ abstract class Routes {
   static const NETWORTHCHARTS = '/financial-planner/networth/charts';
   static const CHECKMANAGEMENTS =
       '/financial-planner/networth/checks-management';
+
+  //SAVINGS & INVESTMENTS
+  static const SAVINGSPLANNER = '/financial-planner/savings-and-investment';
+  static const RISKTOLERANCEASSESSMENT =
+      '/financial-planner/savings-and-investment/risk-tolerance-assessment';
 }

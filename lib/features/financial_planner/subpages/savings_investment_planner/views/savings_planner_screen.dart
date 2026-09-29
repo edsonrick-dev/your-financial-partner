@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_planner/views/savings_planner_content_view.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_planner/views/savings_planner_empty_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/savings_planner_content_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/savings_planner_empty_view.dart';
 import 'package:getx_drift_app/features/financial_state/financial_state.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_content_library.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_context.dart';

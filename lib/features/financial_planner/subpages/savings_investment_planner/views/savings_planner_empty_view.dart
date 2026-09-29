@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -57,29 +59,10 @@ class SavingsPlannerEmptyView extends StatelessWidget {
                     SizedBox(height: 20),
                     AppButton(
                       text: "Take Ascend's Risk Tolerance Assessment",
-                      onTap: () {},
+                      onTap: () {
+                        Get.toNamed(Routes.RISKTOLERANCEASSESSMENT);
+                      },
                     ),
-                    // Obx(() {
-                    //   final emptyIncomePlan = !controller.hasIncomePlan;
-                    //   final emptyBudgetPlan =
-                    //       !controller.hasExpensePlan &&
-                    //       !controller.hasDebtRepaymentBills.value;
-                    //   final emptyCasfhlowPlan =
-                    //       emptyBudgetPlan && emptyIncomePlan;
-                    //   String ctaText = emptyCasfhlowPlan
-                    //       ? 'Build your cashflow plan'
-                    //       : emptyIncomePlan
-                    //       ? 'Add your income sources'
-                    //       : 'Set your budget';
-                    //   //  "Build your cashflow plan";
-                    //   return AppButton(
-                    //     text: ctaText,
-                    //     onTap: () {
-                    //       controller.setInitialDetailsTab();
-                    //       Get.toNamed(Routes.CASHFLOWDETAILS);
-                    //     },
-                    //   );
-                    // }),
                   ],
                 ),
               ),
