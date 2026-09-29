@@ -1,4 +1,3 @@
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/controller/risk_profile_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/risk_tolerance_controller.dart';
 
 class InvestmentExperienceQuestion {

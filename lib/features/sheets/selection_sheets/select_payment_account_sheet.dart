@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_group_enum.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:getx_drift_app/features/transactions/payment_account_list.dart';
-import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 
 class SelectPaymentAccountSheet extends StatelessWidget {
@@ -19,7 +16,6 @@ class SelectPaymentAccountSheet extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
     return AppSheet(
       adaptiveHeight: true,
       title: accountGroup == AccountGroup.creditCards

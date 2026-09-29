@@ -8,8 +8,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class SavingsPlannerEmptyView extends StatelessWidget {
-  const SavingsPlannerEmptyView({super.key});
+class RiskToleranceAssessmentPromptView extends StatelessWidget {
+  const RiskToleranceAssessmentPromptView({super.key});
 
   @override
   Widget build(BuildContext context) {

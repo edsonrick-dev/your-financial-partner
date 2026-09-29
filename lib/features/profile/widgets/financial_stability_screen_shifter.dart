@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_details_screen_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';

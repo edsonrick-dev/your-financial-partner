@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+
 enum AssetClass { cash, localBonds, globalBonds, localEquities, globalEquities }
 
 extension AssetClassX on AssetClass {
@@ -17,6 +20,25 @@ extension AssetClassX on AssetClass {
 
       case AssetClass.globalEquities:
         return 'Global Equities';
+    }
+  }
+
+  Color color(BuildContext context) {
+    switch (this) {
+      case AssetClass.cash:
+        return context.colors.portfolioCash;
+
+      case AssetClass.localBonds:
+        return context.colors.portfolioLocalBonds;
+
+      case AssetClass.globalBonds:
+        return context.colors.portfolioGlobalBonds;
+
+      case AssetClass.localEquities:
+        return context.colors.portfolioLocalEquities;
+
+      case AssetClass.globalEquities:
+        return context.colors.portfolioGlobalEquities;
     }
   }
 }

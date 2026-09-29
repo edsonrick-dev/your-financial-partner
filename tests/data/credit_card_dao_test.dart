@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:drift/drift.dart' as d;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';

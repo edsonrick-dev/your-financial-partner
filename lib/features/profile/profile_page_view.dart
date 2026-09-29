@@ -12,7 +12,6 @@ import 'package:getx_drift_app/features/profile/controller/extensions/financial_
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/profile/financial_stability_profile/financial_stability_profile_empty_view.dart';
 import 'package:getx_drift_app/features/profile/profile_assessment_sheet.dart';
-import 'package:getx_drift_app/features/profile/user_profile/user_profile_card.dart';
 import 'package:getx_drift_app/features/profile/widgets/financial_ratio_card.dart';
 import 'package:getx_drift_app/features/profile/widgets/financial_stability_profile_card.dart';
 import 'package:getx_drift_app/features/settings/settings_page_view.dart';

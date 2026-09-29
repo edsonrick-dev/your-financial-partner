@@ -1,4 +1,3 @@
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:drift/drift.dart' as d;
 import 'package:getx_drift_app/app/globals/app_globals.dart';
@@ -45,166 +44,158 @@ extension SaveSpendTransaction on TransactionController {
     final newAccountId = isPaidByOthers ? null : account!.id;
     final linkedAccount = selectedLinkedAccount.value;
 
-    try {
-      await database.transaction(() async {
-        int? transactionId = editingTransaction.value?.transaction.id;
+    await database.transaction(() async {
+      int? transactionId = editingTransaction.value?.transaction.id;
 
-        if (transactionId != null) {
-          await database.deleteParticipantsByTransaction(transactionId);
-          await database.deleteFinancialObligationsByTransaction(transactionId);
+      if (transactionId != null) {
+        await database.deleteParticipantsByTransaction(transactionId);
+        await database.deleteFinancialObligationsByTransaction(transactionId);
 
-          await database.transactionsDao.updateTransaction(
-            transactionId,
-            TransactionsTableCompanion(
-              amount: d.Value(amountValue),
-              date: d.Value(selectedDate.value),
-              categoryId: d.Value<int?>(category?.id),
-              accountId: d.Value<int?>(newAccountId),
-              linkedAccountId: d.Value<int?>(
-                type == TransactionType.debtRepayment
-                    ? selectedLinkedAccount.value?.id
-                    : null,
-              ),
-              transactionType: d.Value(type.name),
-              updatedAt: d.Value(DateTime.now()),
-              note: d.Value(noteController.text.trim()),
+        await database.transactionsDao.updateTransaction(
+          transactionId,
+          TransactionsTableCompanion(
+            amount: d.Value(amountValue),
+            date: d.Value(selectedDate.value),
+            categoryId: d.Value<int?>(category?.id),
+            accountId: d.Value<int?>(newAccountId),
+            linkedAccountId: d.Value<int?>(
+              type == TransactionType.debtRepayment
+                  ? selectedLinkedAccount.value?.id
+                  : null,
             ),
-          );
-        } else {
-          transactionId = await database.transactionsDao.insertTransaction(
-            TransactionsTableCompanion.insert(
-              transactionType: type.name,
-              amount: amountValue,
-              date: selectedDate.value,
-              categoryId: d.Value<int?>(category?.id),
-              accountId: d.Value<int?>(newAccountId),
-              linkedAccountId: d.Value<int?>(
-                type == TransactionType.debtRepayment
-                    ? linkedAccount?.id
-                    : null,
-              ),
-              createdAt: d.Value(DateTime.now()),
-              updatedAt: d.Value(DateTime.now()),
-              note: d.Value(noteController.text.trim()),
+            transactionType: d.Value(type.name),
+            updatedAt: d.Value(DateTime.now()),
+            note: d.Value(noteController.text.trim()),
+          ),
+        );
+      } else {
+        transactionId = await database.transactionsDao.insertTransaction(
+          TransactionsTableCompanion.insert(
+            transactionType: type.name,
+            amount: amountValue,
+            date: selectedDate.value,
+            categoryId: d.Value<int?>(category?.id),
+            accountId: d.Value<int?>(newAccountId),
+            linkedAccountId: d.Value<int?>(
+              type == TransactionType.debtRepayment ? linkedAccount?.id : null,
+            ),
+            createdAt: d.Value(DateTime.now()),
+            updatedAt: d.Value(DateTime.now()),
+            note: d.Value(noteController.text.trim()),
+          ),
+        );
+      }
+
+      // ----------------------------------------------------------
+      // PAID BY SOMEONE ELSE
+      // ----------------------------------------------------------
+
+      if (isPaidByOthers) {
+        final me = await database.entitiesDao.getCurrentUserEntity();
+
+        if (me == null || payer == null) {
+          throw Exception('Missing current user or payer.');
+        }
+
+        await database.transactionsDao.insertTransactionParticipant(
+          TransactionParticipantsTableCompanion.insert(
+            transactionId: transactionId,
+            entityId: payer.id,
+            allocatedAmount: amountValue,
+            allocationPercentage: d.Value(1.0),
+            isPayer: const d.Value(true),
+            displayNameSnapshot: d.Value(payer.name),
+          ),
+        );
+
+        await database.transactionsDao.insertFinancialObligation(
+          FinancialObligationsTableCompanion.insert(
+            transactionId: transactionId,
+            debtorEntityId: me.id,
+            creditorEntityId: payer.id,
+            amount: amountValue,
+            type: DebtManagementType.expensePaidByOthers.name,
+          ),
+        );
+      }
+      // ----------------------------------------------------------
+      // PAID BY ME + SHARED EXPENSE
+      // ----------------------------------------------------------
+      else if (isSharedExpense.value) {
+        if (!participants.any((p) => p.entityId == currentUserEntityId.value)) {
+          participants.insert(
+            0,
+            ParticipantModel(
+              entityId: currentUserEntityId.value!,
+              name: 'Me',
+              amount: 0,
+              percentage: 0,
             ),
           );
         }
 
-        // ----------------------------------------------------------
-        // PAID BY SOMEONE ELSE
-        // ----------------------------------------------------------
+        if (splitMode.value == SplitMode.equal) {
+          recalculateEqualSplit();
+        }
 
-        if (isPaidByOthers) {
-          final me = await database.entitiesDao.getCurrentUserEntity();
-
-          if (me == null || payer == null) {
-            throw Exception('Missing current user or payer.');
-          }
-
+        for (final participant in participants) {
           await database.transactionsDao.insertTransactionParticipant(
             TransactionParticipantsTableCompanion.insert(
               transactionId: transactionId,
-              entityId: payer.id,
-              allocatedAmount: amountValue,
-              allocationPercentage: d.Value(1.0),
-              isPayer: const d.Value(true),
-              displayNameSnapshot: d.Value(payer.name),
-            ),
-          );
-
-          await database.transactionsDao.insertFinancialObligation(
-            FinancialObligationsTableCompanion.insert(
-              transactionId: transactionId,
-              debtorEntityId: me.id,
-              creditorEntityId: payer.id,
-              amount: amountValue,
-              type: DebtManagementType.expensePaidByOthers.name,
-            ),
-          );
-        }
-        // ----------------------------------------------------------
-        // PAID BY ME + SHARED EXPENSE
-        // ----------------------------------------------------------
-        else if (isSharedExpense.value) {
-          if (!participants.any(
-            (p) => p.entityId == currentUserEntityId.value,
-          )) {
-            participants.insert(
-              0,
-              ParticipantModel(
-                entityId: currentUserEntityId.value!,
-                name: 'Me',
-                amount: 0,
-                percentage: 0,
+              entityId: participant.entityId,
+              allocatedAmount: participant.amount.value,
+              allocationPercentage: d.Value(participant.percentage.value),
+              isPayer: d.Value(
+                participant.entityId == currentUserEntityId.value,
               ),
-            );
-          }
+              displayNameSnapshot: d.Value(participant.name),
+            ),
+          );
 
-          if (splitMode.value == SplitMode.equal) {
-            recalculateEqualSplit();
-          }
-
-          for (final participant in participants) {
-            await database.transactionsDao.insertTransactionParticipant(
-              TransactionParticipantsTableCompanion.insert(
+          if (participant.entityId != currentUserEntityId.value) {
+            await database.transactionsDao.insertFinancialObligation(
+              FinancialObligationsTableCompanion.insert(
                 transactionId: transactionId,
-                entityId: participant.entityId,
-                allocatedAmount: participant.amount.value,
-                allocationPercentage: d.Value(participant.percentage.value),
-                isPayer: d.Value(
-                  participant.entityId == currentUserEntityId.value,
-                ),
-                displayNameSnapshot: d.Value(participant.name),
+                debtorEntityId: participant.entityId,
+                creditorEntityId: currentUserEntityId.value!,
+                amount: participant.amount.value,
+                type: DebtManagementType.splitExpense.name,
               ),
             );
-
-            if (participant.entityId != currentUserEntityId.value) {
-              await database.transactionsDao.insertFinancialObligation(
-                FinancialObligationsTableCompanion.insert(
-                  transactionId: transactionId,
-                  debtorEntityId: participant.entityId,
-                  creditorEntityId: currentUserEntityId.value!,
-                  amount: participant.amount.value,
-                  type: DebtManagementType.splitExpense.name,
-                ),
-              );
-            }
           }
         }
-        // ----------------------------------------------------------
-        // LINK BILL OCCURRENCE
-        // ----------------------------------------------------------
+      }
+      // ----------------------------------------------------------
+      // LINK BILL OCCURRENCE
+      // ----------------------------------------------------------
 
-        if (bill != null) {
-          await database.billsDao.markOccurrenceAsPaid(
-            occurrenceId: bill.occurrence.id,
-            transactionId: transactionId,
-            actualAmount: amountValue,
-          );
+      if (bill != null) {
+        await database.billsDao.markOccurrenceAsPaid(
+          occurrenceId: bill.occurrence.id,
+          transactionId: transactionId,
+          actualAmount: amountValue,
+        );
 
-          await database.billsDao.ensureFutureOccurrence(bill.bill.id);
-        }
-        // ----------------------------------------------------------
-        // REBUILD AFFECTED ACCOUNTS
-        // ----------------------------------------------------------
+        await database.billsDao.ensureFutureOccurrence(bill.bill.id);
+      }
+      // ----------------------------------------------------------
+      // REBUILD AFFECTED ACCOUNTS
+      // ----------------------------------------------------------
 
-        final newLinkedAccountId = type == TransactionType.debtRepayment
-            ? selectedLinkedAccount.value?.id
-            : null;
+      final newLinkedAccountId = type == TransactionType.debtRepayment
+          ? selectedLinkedAccount.value?.id
+          : null;
 
-        final affectedAccountIds = <int>{
-          ?oldAccountId,
-          ?newAccountId,
-          ?oldLinkedAccountId,
-          ?newLinkedAccountId,
-        };
-        for (final accountId in affectedAccountIds) {
-          await database.accountsDao.rebuildAccountBalance(accountId);
-        }
-      });
-    } catch (e, stackTrace) {
-      rethrow;
-    }
+      final affectedAccountIds = <int>{
+        ?oldAccountId,
+        ?newAccountId,
+        ?oldLinkedAccountId,
+        ?newLinkedAccountId,
+      };
+      for (final accountId in affectedAccountIds) {
+        await database.accountsDao.rebuildAccountBalance(accountId);
+      }
+    });
 
     resetForm();
 

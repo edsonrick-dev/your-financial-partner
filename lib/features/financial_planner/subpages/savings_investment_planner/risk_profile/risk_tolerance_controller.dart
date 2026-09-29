@@ -1,4 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investor_profile_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investory_profile_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/risk_tolerance_pages.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/rta_assessment_questions/investment_experience/investment_experience_model.dart';
@@ -8,8 +10,11 @@ import 'package:getx_drift_app/features/financial_planner/subpages/savings_inves
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/rta_assessment_questions/risk_return_preference/risk_return_preference_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/rta_assessment_questions/risk_willingness/risk_willingness_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/rta_assessment_questions/withdrawal_horizon/withdrawal_horizon_model.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/savings_planner_screen.dart';
 
 class RiskToleranceController extends GetxController {
+  final savingsPlannerController = Get.find<SavingsPlannerController>();
+
   // ----------------------------------------------------------
   // NAVIGATION
   // ----------------------------------------------------------
@@ -29,6 +34,10 @@ class RiskToleranceController extends GetxController {
   }
 
   void nextPage() {
+    if (!canContinue) {
+      return;
+    }
+
     final currentPage = riskTolerancePage.value;
 
     late RiskTolerancePage nextPage;
@@ -60,11 +69,47 @@ class RiskToleranceController extends GetxController {
 
       case RiskTolerancePage.riskReturnPreference:
         calculateInvestorProfile();
+
+        final profile = investorProfile.value;
+
+        if (profile == null) {
+          return;
+        }
+
+        savingsPlannerController.completeRiskToleranceAssessment(profile);
+
+        Get.back();
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Get.bottomSheet(
+            InvestorProfileSheet(profile: profile),
+            isScrollControlled: true,
+          );
+        });
+
         return;
     }
 
     pageHistory.add(currentPage);
     riskTolerancePage.value = nextPage;
+  }
+
+  bool get canContinue {
+    return switch (riskTolerancePage.value) {
+      RiskTolerancePage.investmentHorizon => isInvestmentHorizonAnswered,
+
+      RiskTolerancePage.withdrawalHorizon => isWithdrawalHorizonAnswered,
+
+      RiskTolerancePage.investmentKnowledge => isInvestmentKnowledgeAnswered,
+
+      RiskTolerancePage.riskWillingness => isRiskWillingnessAnswered,
+
+      RiskTolerancePage.investmentExperience => isInvestmentExperienceAnswered,
+
+      RiskTolerancePage.marketLossReaction => isMarketLossReactionAnswered,
+
+      RiskTolerancePage.riskReturnPreference => isRiskReturnPreferenceAnswered,
+    };
   }
 
   // ----------------------------------------------------------
@@ -203,7 +248,7 @@ class RiskToleranceController extends GetxController {
       _ => InvestorProfile.aggressiveVisionary,
     };
 
-    print('Total score: $score');
-    print('Investor profile: ${investorProfile.value}');
+    debugPrint('Total score: $score');
+    debugPrint('Investor profile: ${investorProfile.value}');
   }
 }

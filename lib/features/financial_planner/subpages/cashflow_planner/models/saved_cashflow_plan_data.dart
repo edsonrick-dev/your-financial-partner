@@ -1,5 +1,4 @@
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
-import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/cashflow_distribution.dart';
 
 class SavedCashflowPlanData {
   final int planId;

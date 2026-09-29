@@ -225,22 +225,22 @@ class BillController extends GetxController {
     required int categoryId,
     required double amount,
   }) async {
-    final now = DateTime.now();
+    // final now = DateTime.now();
 
-    final planId = await database.cashflowPlanDao.insertPlan(
-      CashFlowPlansCompanion.insert(
-        categoryId: drift.Value<int?>(categoryId),
-        loanId: const drift.Value<int?>(null),
-        planType: 'expense',
-        amount: amount,
-        period: BudgetPeriod.monthly.name,
-        distributionType: CashFlowDistribution.defaultDistribution.name,
-        startDate: now,
-        endDate: const drift.Value<DateTime?>(null),
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
+    // final planId = await database.cashflowPlanDao.insertPlan(
+    //   CashFlowPlansCompanion.insert(
+    //     categoryId: drift.Value<int?>(categoryId),
+    //     loanId: const drift.Value<int?>(null),
+    //     planType: 'expense',
+    //     amount: amount,
+    //     period: BudgetPeriod.monthly.name,
+    //     distributionType: CashFlowDistribution.defaultDistribution.name,
+    //     startDate: now,
+    //     endDate: const drift.Value<DateTime?>(null),
+    //     createdAt: now,
+    //     updatedAt: now,
+    //   ),
+    // );
   }
 
   Future<void> createMinimumBudget() async {
@@ -264,73 +264,70 @@ class BillController extends GetxController {
     if (amount <= 0) {
       return;
     }
+    // ============================================================
+    // MONTHLY
+    // ============================================================
 
-    try {
-      // ============================================================
-      // MONTHLY
-      // ============================================================
+    if (frequency == BillsFrequency.monthly) {
+      await _createMonthlyExpenseBudget(
+        categoryId: category.id,
+        amount: amount,
+      );
 
-      if (frequency == BillsFrequency.monthly) {
-        await _createMonthlyExpenseBudget(
-          categoryId: category.id,
-          amount: amount,
-        );
+      await saveBill();
+      return;
+    }
 
-        await saveBill();
-        return;
+    // ============================================================
+    // YEARLY CUSTOM
+    // ============================================================
+
+    if (frequency == BillsFrequency.quarterly ||
+        frequency == BillsFrequency.semiAnnual ||
+        frequency == BillsFrequency.annual) {
+      final impactedMonths = const BillScheduleCalculator().getImpactedMonths(
+        startDate: dueDate,
+        frequency: frequency,
+        anchorDay: dueDate.day,
+      );
+
+      final monthlyAllocations = List<double>.filled(12, 0);
+
+      for (final month in impactedMonths) {
+        monthlyAllocations[month - 1] = amount;
       }
 
-      // ============================================================
-      // YEARLY CUSTOM
-      // ============================================================
+      final now = DateTime.now();
 
-      if (frequency == BillsFrequency.quarterly ||
-          frequency == BillsFrequency.semiAnnual ||
-          frequency == BillsFrequency.annual) {
-        final impactedMonths = const BillScheduleCalculator().getImpactedMonths(
-          startDate: dueDate,
-          frequency: frequency,
-          anchorDay: dueDate.day,
-        );
+      final planId = await database.cashflowPlanDao.insertPlan(
+        CashFlowPlansCompanion.insert(
+          categoryId: drift.Value<int?>(category.id),
+          loanId: const drift.Value<int?>(null),
+          planType: 'expense',
+          amount: 0.0,
+          period: BudgetPeriod.yearly.name,
+          distributionType: CashFlowDistribution.custom.name,
+          startDate: now,
+          endDate: const drift.Value<DateTime?>(null),
+          createdAt: now,
+          updatedAt: now,
+        ),
+      );
 
-        final monthlyAllocations = List<double>.filled(12, 0);
-
-        for (final month in impactedMonths) {
-          monthlyAllocations[month - 1] = amount;
-        }
-
-        final now = DateTime.now();
-
-        final planId = await database.cashflowPlanDao.insertPlan(
-          CashFlowPlansCompanion.insert(
-            categoryId: drift.Value<int?>(category.id),
-            loanId: const drift.Value<int?>(null),
-            planType: 'expense',
-            amount: 0.0,
-            period: BudgetPeriod.yearly.name,
-            distributionType: CashFlowDistribution.custom.name,
-            startDate: now,
-            endDate: const drift.Value<DateTime?>(null),
-            createdAt: now,
-            updatedAt: now,
+      await database.cashflowPlanDao.insertAllocations(
+        List.generate(
+          12,
+          (index) => CashFlowPlanAllocationsCompanion.insert(
+            planId: planId,
+            allocationIndex: index,
+            amount: monthlyAllocations[index],
           ),
-        );
+        ),
+      );
 
-        await database.cashflowPlanDao.insertAllocations(
-          List.generate(
-            12,
-            (index) => CashFlowPlanAllocationsCompanion.insert(
-              planId: planId,
-              allocationIndex: index,
-              amount: monthlyAllocations[index],
-            ),
-          ),
-        );
-
-        await saveBill();
-        return;
-      }
-    } catch (e, stackTrace) {}
+      await saveBill();
+      return;
+    }
   }
 
   Future<void> increaseBudgetToFitBill() async {
@@ -342,86 +339,84 @@ class BillController extends GetxController {
       return;
     }
 
-    try {
-      // ============================================================
-      // GET EXISTING PLANS
-      // ============================================================
+    // ============================================================
+    // GET EXISTING PLANS
+    // ============================================================
 
-      final existingPlans = await database.cashflowPlanDao
-          .getExpensePlansForCategory(category.id);
+    final existingPlans = await database.cashflowPlanDao
+        .getExpensePlansForCategory(category.id);
 
-      // ============================================================
-      // NO EXISTING BUDGET
-      // ============================================================
+    // ============================================================
+    // NO EXISTING BUDGET
+    // ============================================================
 
-      if (existingPlans.isEmpty) {
-        await createMinimumBudget();
-        return;
-      }
+    if (existingPlans.isEmpty) {
+      await createMinimumBudget();
+      return;
+    }
 
-      final existingPlan = existingPlans.first;
+    final existingPlan = existingPlans.first;
 
-      // ============================================================
-      // MONTHLY
-      // ============================================================
+    // ============================================================
+    // MONTHLY
+    // ============================================================
 
-      if (billFrequency == BillsFrequency.monthly &&
-          existingPlan.plan.period == BudgetPeriod.monthly.name &&
-          existingPlan.plan.distributionType ==
-              CashFlowDistribution.defaultDistribution.name) {
-        final existingBillsMonthlyAmount = existingBillsAnnualAmount / 12;
+    if (billFrequency == BillsFrequency.monthly &&
+        existingPlan.plan.period == BudgetPeriod.monthly.name &&
+        existingPlan.plan.distributionType ==
+            CashFlowDistribution.defaultDistribution.name) {
+      final existingBillsMonthlyAmount = existingBillsAnnualAmount / 12;
 
-        final requiredMonthlyBudget =
-            existingBillsMonthlyAmount + billAmount.value;
+      final requiredMonthlyBudget =
+          existingBillsMonthlyAmount + billAmount.value;
 
-        final currentBudget = existingPlan.plan.amount;
+      final currentBudget = existingPlan.plan.amount;
 
-        if (requiredMonthlyBudget <= currentBudget) {
-          await saveBill();
-          return;
-        }
-
-        await database.cashflowPlanDao.updatePlanAmount(
-          planId: existingPlan.plan.id,
-          amount: requiredMonthlyBudget,
-        );
-
+      if (requiredMonthlyBudget <= currentBudget) {
         await saveBill();
         return;
       }
 
-      // ============================================================
-      // QUARTERLY / SEMI-ANNUAL / ANNUAL
-      // ============================================================
+      await database.cashflowPlanDao.updatePlanAmount(
+        planId: existingPlan.plan.id,
+        amount: requiredMonthlyBudget,
+      );
 
-      if (billFrequency == BillsFrequency.quarterly ||
-          billFrequency == BillsFrequency.semiAnnual ||
-          billFrequency == BillsFrequency.annual) {
-        final existingDistribution = _getExistingPlanMonthlyDistribution(
-          existingPlan,
-        );
+      await saveBill();
+      return;
+    }
 
-        final impactedMonths = const BillScheduleCalculator().getImpactedMonths(
-          startDate: dueDate,
-          frequency: billFrequency,
-          anchorDay: dueDate.day,
-        );
+    // ============================================================
+    // QUARTERLY / SEMI-ANNUAL / ANNUAL
+    // ============================================================
 
-        final updatedDistribution = List<double>.from(existingDistribution);
+    if (billFrequency == BillsFrequency.quarterly ||
+        billFrequency == BillsFrequency.semiAnnual ||
+        billFrequency == BillsFrequency.annual) {
+      final existingDistribution = _getExistingPlanMonthlyDistribution(
+        existingPlan,
+      );
 
-        for (final month in impactedMonths) {
-          updatedDistribution[month - 1] += billAmount.value;
-        }
+      final impactedMonths = const BillScheduleCalculator().getImpactedMonths(
+        startDate: dueDate,
+        frequency: billFrequency,
+        anchorDay: dueDate.day,
+      );
 
-        await database.cashflowPlanDao.convertPlanToYearlyCustom(
-          planId: existingPlan.plan.id,
-          monthlyAllocations: updatedDistribution,
-        );
+      final updatedDistribution = List<double>.from(existingDistribution);
 
-        await saveBill();
-        return;
+      for (final month in impactedMonths) {
+        updatedDistribution[month - 1] += billAmount.value;
       }
-    } catch (e, stackTrace) {}
+
+      await database.cashflowPlanDao.convertPlanToYearlyCustom(
+        planId: existingPlan.plan.id,
+        monthlyAllocations: updatedDistribution,
+      );
+
+      await saveBill();
+      return;
+    }
   }
 
   Future<void> saveBill() async {
@@ -451,27 +446,23 @@ class BillController extends GetxController {
       return;
     }
 
-    try {
-      await database.billsDao.insertBillWithFirstOccurrence(
-        bill: BillsTableCompanion.insert(
-          name: name,
-          categoryId: drift.Value(category.id),
-          accountId: const drift.Value(null),
-          expectedAmount: drift.Value(amount),
-          frequency: frequency.name,
-          dayOfMonth: drift.Value(dueDate.day),
-          // monthMask: const drift.Value(null),
-          // reminderEnabled: drift.Value(reminderEnabled.value),
-          // reminderDaysBefore: drift.Value(reminderDaysBefore.value),
-        ),
-        dueDate: dueDate,
-        expectedAmount: amount,
-      );
+    await database.billsDao.insertBillWithFirstOccurrence(
+      bill: BillsTableCompanion.insert(
+        name: name,
+        categoryId: drift.Value(category.id),
+        accountId: const drift.Value(null),
+        expectedAmount: drift.Value(amount),
+        frequency: frequency.name,
+        dayOfMonth: drift.Value(dueDate.day),
+        // monthMask: const drift.Value(null),
+        // reminderEnabled: drift.Value(reminderEnabled.value),
+        // reminderDaysBefore: drift.Value(reminderDaysBefore.value),
+      ),
+      dueDate: dueDate,
+      expectedAmount: amount,
+    );
 
-      Get.back();
-    } catch (e, stackTrace) {
-      rethrow;
-    }
+    Get.back();
   }
 
   void resetForm() {

@@ -122,3 +122,20 @@ class AppPalette {
   static const warning = Color(0xFFF59E0B);
   static const info = Color(0xFF3B82F6);
 }
+
+extension PortfolioColors on ColorScheme {
+  Color get portfolioCash =>
+      isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B);
+
+  Color get portfolioLocalBonds =>
+      isDark ? const Color(0xFF60A5FA) : const Color(0xFF2563EB);
+
+  Color get portfolioGlobalBonds =>
+      isDark ? const Color(0xFF22D3EE) : const Color(0xFF0891B2);
+
+  Color get portfolioLocalEquities =>
+      isDark ? const Color(0xFFA78BFA) : const Color(0xFF7C3AED);
+
+  Color get portfolioGlobalEquities =>
+      isDark ? const Color(0xFF818CF8) : const Color(0xFF4F46E5);
+}

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 import 'package:getx_drift_app/domain/enums/paid_by.dart';
 import 'package:getx_drift_app/features/transactions/controllers/extensions/split_transaction_ext.dart';

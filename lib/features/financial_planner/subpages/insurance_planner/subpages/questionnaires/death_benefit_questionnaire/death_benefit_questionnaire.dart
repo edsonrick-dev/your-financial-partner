@@ -33,7 +33,7 @@ class FinancialExpensesQuestion extends StatelessWidget {
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: colorScheme.appText,
+              color: colorScheme.bgInversed,
             ),
             child: Text(
               "Life's uncertainties shouldn't derail your dependents’ future. Let's define how long your income should be protected if the unexpected happens.",
