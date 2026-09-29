@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/financial_planner/widgets/financial_planner_page_shifter.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_details_screen_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/core/design_system/shifters/page_shifter/app_page_shifter_button.dart';
@@ -23,39 +21,13 @@ class FinancialStabilityScreenShifter
     final colorScheme = context.colors;
     return Obx(() {
       final isSelected = controller.selectedDetailsIndex.value == index;
-      return AdaptivePressable(
+      return AppPageShifterButton(
         onTap: () {
           controller.selectTab(index);
         },
-        child: AppPageShifterButton(
-          isSelected: isSelected,
-          colorScheme: colorScheme,
-          title: title,
-        ),
-        // AnimatedContainer(
-        //   duration: const Duration(milliseconds: 220),
-        //   curve: Curves.ease,
-        //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        //   decoration: BoxDecoration(
-        //     color: isSelected
-        //         ? colorScheme.pageShifterFillSelected
-        //         : colorScheme.pageShifterFillUnselected,
-        //     borderRadius: BorderRadius.circular(999),
-        //     boxShadow: AppShadows.pill(colorScheme.text),
-        //   ),
-        //   child: AnimatedDefaultTextStyle(
-        //     duration: const Duration(milliseconds: 180),
-        //     curve: Curves.easeOut,
-        //     style: TextStyle(
-        //       color: isSelected
-        //           ? colorScheme.pageShifterTextSelected
-        //           : colorScheme.pageShifterTextUnselected,
-
-        //       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-        //     ),
-        //     child: Text(title),
-        //   ),
-        // ),
+        isSelected: isSelected,
+        colorScheme: colorScheme,
+        title: title,
       );
     });
   }

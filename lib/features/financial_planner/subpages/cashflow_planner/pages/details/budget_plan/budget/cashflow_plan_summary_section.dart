@@ -159,16 +159,16 @@ class CashflowPlanSummarySection extends StatelessWidget {
     // once the plan grouping logic exposes them.
     switch (plan.budgetPeriod) {
       case BudgetPeriod.weekly:
-        return 'Weekly budget';
+        return 'Weekly ${transactionType == TransactionType.earn ? 'Plan' : 'Budget'}';
 
       case BudgetPeriod.fortnightly:
-        return 'Fortnightly budget';
+        return 'Fortnightly ${transactionType == TransactionType.earn ? 'Plan' : 'Budget'}';
 
       case BudgetPeriod.monthly:
-        return 'Monthly budget';
+        return 'Monthly ${transactionType == TransactionType.earn ? 'Plan' : 'Budget'}';
 
       case BudgetPeriod.yearly:
-        return 'Annual budget';
+        return 'Annual ${transactionType == TransactionType.earn ? 'Plan' : 'Budget'}';
     }
   }
 }

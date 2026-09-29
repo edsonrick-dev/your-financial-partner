@@ -14,18 +14,6 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class CreditCardBillingPeriod {
-  final int id;
-  final DateTime startDate;
-  final DateTime endDate;
-
-  const CreditCardBillingPeriod({
-    required this.id,
-    required this.startDate,
-    required this.endDate,
-  });
-}
-
 class CreditCardTransactionsView extends GetView<CreditCardController> {
   final int accountId;
 

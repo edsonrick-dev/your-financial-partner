@@ -30,14 +30,6 @@ class EditCreditCardDetails extends GetView<AccountController> {
 
             const SizedBox(height: 20),
 
-            AppTextField(
-              label: 'Bank Name',
-              // Create a separate controller/focus node for this.
-              // Don't reuse nameController.
-              controller: controller.bankNameController,
-              focusNode: controller.bankNameFocusNode,
-            ),
-
             const SizedBox(height: 20),
 
             Obx(

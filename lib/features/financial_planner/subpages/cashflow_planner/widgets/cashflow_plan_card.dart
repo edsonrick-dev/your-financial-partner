@@ -60,27 +60,6 @@ class CashflowPlanCard extends GetView<CashflowController> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Stack(
-            //   alignment: Alignment.center,
-            //   children: [
-            //     Icon(
-            //       AppIcons.categories.resolve(iconKey),
-            //       color: color ?? colorScheme.appText,
-            //     ),
-            //     Opacity(
-            //       opacity: 0.2,
-            //       child: Container(
-            //         height: 48,
-            //         width: 48,
-            //         decoration: BoxDecoration(
-            //           shape: BoxShape.circle,
-            //           color: color ?? colorScheme.appText,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // SizedBox(width: 12),
             Expanded(
               child: Column(
                 children: [
@@ -90,7 +69,7 @@ class CashflowPlanCard extends GetView<CashflowController> {
                       Icon(
                         AppIcons.categories.resolve(iconKey),
                         color: color ?? colorScheme.appText,
-                        size: 20,
+                        size: 24,
                       ),
                       SizedBox(width: 8),
                       Text(category, style: AppTextStyle.cardTitle),
@@ -112,7 +91,7 @@ class CashflowPlanCard extends GetView<CashflowController> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -154,44 +133,6 @@ class CashflowPlanCard extends GetView<CashflowController> {
                       ],
                     ),
                   ),
-                  // Row(
-                  //   spacing: 3,
-                  //   children: [
-                  //     if (budgetPeriod != BudgetPeriod.monthly)
-                  //       Text.rich(
-                  //         TextSpan(
-                  //           children: [
-                  //             const TextSpan(text: '~ '),
-                  //             TextSpan(
-                  //               text: monthlyAmount.toCurrency(),
-                  //               style: AppTextStyle.amountS,
-                  //             ),
-                  //             const TextSpan(text: ' / month'),
-                  //           ],
-                  //         ),
-                  //         style: AppTextStyle.labelS,
-                  //       ),
-
-                  //     if (budgetPeriod != BudgetPeriod.monthly &&
-                  //         budgetPeriod != BudgetPeriod.yearly)
-                  //       Text('|', style: AppTextStyle.labelM),
-
-                  //     if (budgetPeriod != BudgetPeriod.yearly)
-                  //       Text.rich(
-                  //         TextSpan(
-                  //           children: [
-                  //             const TextSpan(text: '~ '),
-                  //             TextSpan(
-                  //               text: annualAmount.toCurrency(),
-                  //               style: AppTextStyle.amountS,
-                  //             ),
-                  //             const TextSpan(text: ' / year'),
-                  //           ],
-                  //         ),
-                  //         style: AppTextStyle.labelS,
-                  //       ),
-                  //   ],
-                  // ),
                 ],
               ),
             ),

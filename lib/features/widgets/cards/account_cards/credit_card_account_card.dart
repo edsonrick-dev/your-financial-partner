@@ -37,7 +37,7 @@ class CreditCardAccountCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(PhosphorIconsRegular.creditCard, size: 24),
+                  Icon(PhosphorIconsRegular.creditCard, size: 20),
                   const SizedBox(width: 8),
                   Text(account.name, style: AppTextStyle.titleM),
                 ],

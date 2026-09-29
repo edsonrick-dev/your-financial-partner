@@ -36,7 +36,9 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
     return AppSheet(
       adaptiveHeight: false,
       height: AppSheetHeight.full,
-      title: 'Create Income Plan',
+      title: controller.editingPlanId == null
+          ? 'Create Income Plan'
+          : 'Edit Income Plan',
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -232,11 +234,22 @@ class CreateIncomePlanSheet extends GetView<CashflowController> {
             const SizedBox(height: 20),
 
             Obx(() {
+              final isCustom =
+                  controller.selectedDistribution.value ==
+                  CashFlowDistribution.custom;
+
               final isValid =
                   transactionController.selectedCategory.value != null &&
-                  controller.amount.value > 0;
+                      isCustom
+                  ? controller.distributionAmounts.isNotEmpty
+                  : controller.amount.value > 0;
+              debugPrint('${controller.distributionAmounts}');
+              debugPrint('${transactionController.selectedCategory.value}');
+              debugPrint('${controller.amount.value}');
               return AppButton(
-                text: 'Save Income Plan',
+                text: controller.editingPlanId == null
+                    ? 'Save Income Plan'
+                    : 'Update Income Plan',
 
                 onTap: isValid
                     ? () async {

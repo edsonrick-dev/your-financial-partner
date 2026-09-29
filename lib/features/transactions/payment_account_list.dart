@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_group_enum.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/add_payment_account_button.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/account_selection_card.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class PaymentAccountList extends StatefulWidget {
   final TransactionType transactionType;
@@ -37,18 +39,35 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
     super.dispose();
   }
 
+  bool _isAddAccountExpanded = false;
   void _scrollToAddAccount() {
-    if (!_scrollController.hasClients) return;
+    setState(() {
+      _isAddAccountExpanded = true;
+    });
 
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeOutCubic,
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeOutCubic,
+      );
+    });
   }
+  // void _scrollToAddAccount() {
+  //   if (!_scrollController.hasClients) return;
+
+  //   _scrollController.animateTo(
+  //     _scrollController.position.maxScrollExtent,
+  //     duration: const Duration(milliseconds: 350),
+  //     curve: Curves.easeOutCubic,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     return StreamBuilder(
       stream: database.accountsDao.watchAccounts(),
       builder: (context, snapshot) {
@@ -86,26 +105,43 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
           }
         }).toList();
         if (filteredAccounts.isEmpty) {
+          if (_isAddAccountExpanded) {
+            return AddPaymentAccountButton(
+              transactionType: widget.transactionType,
+              onExpand: _scrollToAddAccount,
+            );
+          }
+
           return AppSection(
             child: Column(
               children: [
                 Column(
                   children: [
-                    // SizedBox(height: 20),
+                    Icon(
+                      PhosphorIconsRegular.cardholder,
+                      size: 60,
+                      color: colorScheme.appAccent,
+                    ),
                     Text(
                       'No Payment Accounts Yet',
-                      style: AppTextStyle.headlineS,
+                      style: AppTextStyle.headlineL,
                     ),
-                    // SizedBox(height: 20),
                     Text(
-                      'Add your firs account first.',
-                      style: AppTextStyle.bodyM,
+                      'Add your first account',
+                      style: AppTextStyle.headlineS,
+                      textAlign: TextAlign.center,
                     ),
-                    // SizedBox(height: 20),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Tap the button below to add your first account.',
+                      style: AppTextStyle.bodyM.copyWith(
+                        color: colorScheme.appTextMuted,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
-
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 AddPaymentAccountButton(
                   transactionType: widget.transactionType,
                   onExpand: _scrollToAddAccount,
@@ -122,6 +158,7 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
             if (index == filteredAccounts.length) {
               return Column(
                 children: [
+                  const SizedBox(height: 12),
                   AddPaymentAccountButton(
                     transactionType: widget.transactionType,
                     onExpand: _scrollToAddAccount,
@@ -133,14 +170,18 @@ class _PaymentAccountListState extends State<PaymentAccountList> {
 
             final account = filteredAccounts[index];
 
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12), //Spacing
-              child: AccountSelectionCard(
-                account: account,
-                onTap: () {
-                  Get.back(result: account);
-                },
-              ),
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12), //Spacing
+                  child: AccountSelectionCard(
+                    account: account,
+                    onTap: () {
+                      Get.back(result: account);
+                    },
+                  ),
+                ),
+              ],
             );
           },
         );

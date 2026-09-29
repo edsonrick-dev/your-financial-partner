@@ -59,19 +59,27 @@ class FilledEmergencyFundView extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Column(
                   children: [
-                    RatioScale(maxValue: 100, value: ratio, bands: fundBands),
+                    RatioScale(
+                      maxValue: 100,
+                      value: ratio,
+                      bands: fundBands,
+                      labelBuilder: (value) {
+                        final months = value / 100 * 12;
+                        return months.toStringAsFixed(0);
+                      },
+                    ),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Shorter Protection',
+                          'Less months',
                           style: AppTextStyle.bodyS.copyWith(
                             color: colorScheme.appTextMuted,
                           ),
                         ),
                         Text(
-                          'Longer Protection',
+                          'More months',
                           style: AppTextStyle.bodyS.copyWith(
                             color: colorScheme.appTextMuted,
                           ),

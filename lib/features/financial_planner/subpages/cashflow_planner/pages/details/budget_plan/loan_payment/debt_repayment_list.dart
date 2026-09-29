@@ -12,8 +12,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
-class DebtRepaymentList extends StatelessWidget {
-  const DebtRepaymentList({super.key, required this.bills});
+class LoanPaymentList extends StatelessWidget {
+  const LoanPaymentList({super.key, required this.bills});
   final List<BillWithNextOccurrence> bills;
 
   Future<void> _openLoan(

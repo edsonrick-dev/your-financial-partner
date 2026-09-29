@@ -59,8 +59,8 @@ class ProfilePage extends GetView<FinancialProfileController> {
                 return SingleChildScrollView(
                   child: Column(
                     children: [
-                      UserProfileCard(),
-                      SizedBox(height: 20),
+                      // UserProfileCard(),
+                      // SizedBox(height: 20),
                       AppSection(
                         sectionTitle: 'Financial Stability Profile',
                         child: FinancialStabilityProfileCard(),

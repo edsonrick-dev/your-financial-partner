@@ -26,6 +26,38 @@ class CashflowPlanWithCategory {
 class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
     with _$CashflowPlanDaoMixin {
   CashflowPlanDao(super.db);
+  Future<bool> updatePlan({
+    required int planId,
+    required int categoryId,
+    required String planType,
+    required double amount,
+    required String period,
+    required String distributionType,
+    required DateTime updatedAt,
+  }) async {
+    final updated =
+        await (update(
+          cashFlowPlans,
+        )..where((tbl) => tbl.id.equals(planId))).write(
+          CashFlowPlansCompanion(
+            categoryId: Value(categoryId),
+            planType: Value(planType),
+            amount: Value(amount),
+            period: Value(period),
+            distributionType: Value(distributionType),
+            updatedAt: Value(updatedAt),
+          ),
+        );
+
+    return updated > 0;
+  }
+
+  Future<void> deleteAllocationsForPlan(int planId) async {
+    await (delete(
+      cashFlowPlanAllocations,
+    )..where((tbl) => tbl.planId.equals(planId))).go();
+  }
+
   Future<void> convertPlanToYearlyCustom({
     required int planId,
     required List<double> monthlyAllocations,

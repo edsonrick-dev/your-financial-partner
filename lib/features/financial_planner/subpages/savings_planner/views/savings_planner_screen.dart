@@ -13,6 +13,7 @@ import 'package:getx_drift_app/features/profile/controller/financial_profile_con
 
 class SavingsPlannerController extends GetxController {
   RxBool isUnderConstruction = true.obs;
+  RxBool isRiskToleranceAssessmentFinished = false.obs;
 }
 
 class SavingsPlannerScreen extends GetView<SavingsPlannerController> {
@@ -23,80 +24,80 @@ class SavingsPlannerScreen extends GetView<SavingsPlannerController> {
     final financialProfileController = Get.find<FinancialProfileController>();
 
     const learnEngine = LearnEngine();
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: context.topPadding,
-          bottom: context.bottomPadding,
+    return Obx(() {
+      if (controller.isUnderConstruction.value) {
+        return SavingsPlannerEmptyView();
+      }
+      return SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: context.topPadding,
+            bottom: context.bottomPadding,
+          ),
+          child: Column(
+            spacing: 20,
+            children: [
+              SavingsPlannerContentView(),
+              Obx(() {
+                final recommendations = learnEngine.getRecommendedContent(
+                  state: financialProfileController.financialState,
+                  context: LearnContext.savingsInvestment,
+                  contents: learnContentLibrary,
+                );
+
+                if (recommendations.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
+                return LearningSection(
+                  subtitle: 'Build a good understanding of your net worth',
+                  state: LearningSectionState.available,
+                  contents: recommendations
+                      .map(
+                        (content) => LearnThumbnail(
+                          title: content.title,
+                          description: content.description,
+                          type: content.type,
+                          onTap: () {
+                            // Open lesson
+                          },
+                        ),
+                      )
+                      .toList(),
+                );
+              }),
+              Obx(() {
+                final recommendations = learnEngine.getRecommendedContent(
+                  state: financialProfileController.financialState,
+                  context: LearnContext.savingsInvestment,
+                  contents: learnContentLibrary,
+                );
+
+                if (recommendations.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
+                return LearningSection(
+                  subtitle: 'Build a good understanding of your net worth.',
+                  state: LearningSectionState.available,
+                  contents: recommendations
+                      .map(
+                        (content) => LearnThumbnail(
+                          title: content.title,
+                          description: content.description,
+                          type: content.type,
+                          onTap: () {
+                            // Open lesson
+                          },
+                        ),
+                      )
+                      .toList(),
+                );
+              }),
+            ],
+          ),
         ),
-        child: Column(
-          spacing: 20,
-          children: [
-            Obx(() {
-              if (controller.isUnderConstruction.value) {
-                return SavingsPlannerEmptyView();
-              }
-              return SavingsPlannerContentView();
-            }),
-            Obx(() {
-              final recommendations = learnEngine.getRecommendedContent(
-                state: financialProfileController.financialState,
-                context: LearnContext.savingsInvestment,
-                contents: learnContentLibrary,
-              );
-
-              if (recommendations.isEmpty) {
-                return const SizedBox.shrink();
-              }
-
-              return LearningSection(
-                subtitle: 'Build a good understanding of your net worth',
-                state: LearningSectionState.available,
-                contents: recommendations
-                    .map(
-                      (content) => LearnThumbnail(
-                        title: content.title,
-                        description: content.description,
-                        type: content.type,
-                        onTap: () {
-                          // Open lesson
-                        },
-                      ),
-                    )
-                    .toList(),
-              );
-            }),
-            Obx(() {
-              final recommendations = learnEngine.getRecommendedContent(
-                state: financialProfileController.financialState,
-                context: LearnContext.savingsInvestment,
-                contents: learnContentLibrary,
-              );
-
-              if (recommendations.isEmpty) {
-                return const SizedBox.shrink();
-              }
-
-              return LearningSection(
-                subtitle: 'Build a good understanding of your net worth.',
-                state: LearningSectionState.available,
-                contents: recommendations
-                    .map(
-                      (content) => LearnThumbnail(
-                        title: content.title,
-                        description: content.description,
-                        type: content.type,
-                        onTap: () {
-                          // Open lesson
-                        },
-                      ),
-                    )
-                    .toList(),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
+      );
+    });
   }
 }

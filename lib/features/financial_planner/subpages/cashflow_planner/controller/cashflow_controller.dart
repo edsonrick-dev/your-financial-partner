@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:drift/drift.dart' as d;
-import 'package:flutter/rendering.dart';
 import 'dart:math' as math;
 
 import 'package:get/get.dart';
@@ -151,6 +150,70 @@ extension CashflowHomeViewExtention on CashflowController {
 }
 
 class CashflowController extends GetxController {
+  int? editingPlanId;
+  Future<void> loadCashflowPlanForEdit(
+    CashflowPlanWithCategory savedPlan,
+  ) async {
+    final plan = savedPlan.plan;
+
+    editingPlanId = plan.id;
+
+    final transactionController = Get.find<TransactionController>();
+
+    // Restore category.
+    await transactionController.selectCategoryById(plan.categoryId!);
+
+    // Restore period.
+    final period = BudgetPeriod.values.firstWhere(
+      (item) => item.name == plan.period,
+    );
+
+    selectPeriod(period);
+
+    // Restore distribution.
+    final distribution = CashFlowDistribution.values.firstWhere(
+      (item) => item.name == plan.distributionType,
+    );
+
+    // IMPORTANT:
+    // Create the allocation RxList before restoring
+    // the saved allocation values.
+    if (distribution == CashFlowDistribution.custom) {
+      initializeDistributionFields();
+
+      for (final allocation in savedPlan.allocations) {
+        final index = allocation.allocationIndex;
+
+        if (index >= 0 && index < distributionAmounts.length) {
+          distributionAmounts[index].value = allocation.amount;
+        }
+      }
+
+      amount.value = 0;
+    } else {
+      disposeDistributionFields();
+
+      amount.value = plan.amount;
+    }
+
+    selectedDistribution.value = distribution;
+  }
+
+  void disposeDistributionFields() {
+    /// Removes all custom allocation state.
+
+    distributionAmounts.clear();
+  }
+
+  void startCreatingIncomePlan() {
+    editingPlanId = null;
+    // resetForm();
+  }
+
+  void clearEditingPlan() {
+    editingPlanId = null;
+  }
+
   final Rx<DateTime> selectedMonth = DateTime(
     DateTime.now().year,
     DateTime.now().month,
@@ -1124,39 +1187,123 @@ class CashflowController extends GetxController {
     }
 
     final now = DateTime.now();
-
     final planType = planTypeFromTransactionType(transactionType);
 
-    final planId = await database.cashflowPlanDao.insertPlan(
-      CashFlowPlansCompanion.insert(
-        categoryId: d.Value<int?>(category.id),
-        loanId: const d.Value<int?>(null),
-        planType: planType,
-        amount: isCustom ? 0 : amount.value,
-        period: period.name,
-        distributionType: selectedDistribution.value.name,
-        startDate: occurrenceDate.value,
-        endDate: const d.Value<DateTime?>(null),
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
+    await database.transaction(() async {
+      final planId = editingPlanId;
 
-    if (isCustom) {
-      final allocations = List.generate(
-        distributionAmounts.length,
-        (index) => CashFlowPlanAllocationsCompanion.insert(
+      if (planId == null) {
+        // CREATE
+        final newPlanId = await database.cashflowPlanDao.insertPlan(
+          CashFlowPlansCompanion.insert(
+            categoryId: d.Value<int?>(category.id),
+            loanId: const d.Value<int?>(null),
+            planType: planType,
+            amount: isCustom ? 0 : amount.value,
+            period: period.name,
+            distributionType: selectedDistribution.value.name,
+            startDate: occurrenceDate.value,
+            endDate: const d.Value<DateTime?>(null),
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
+
+        if (isCustom) {
+          await _saveAllocations(newPlanId);
+        }
+      } else {
+        // UPDATE
+        await database.cashflowPlanDao.updatePlan(
           planId: planId,
-          allocationIndex: index,
-          amount: distributionAmounts[index].value,
-        ),
-      );
+          categoryId: category.id,
+          planType: planType,
+          amount: isCustom ? 0 : amount.value,
+          period: period.name,
+          distributionType: selectedDistribution.value.name,
+          updatedAt: now,
+        );
 
-      await database.cashflowPlanDao.insertAllocations(allocations);
-    }
+        // Replace existing allocations.
+        await database.cashflowPlanDao.deleteAllocationsForPlan(planId);
+
+        if (isCustom) {
+          await _saveAllocations(planId);
+        }
+      }
+    });
+
+    editingPlanId = null;
 
     Get.back();
   }
+
+  Future<void> _saveAllocations(int planId) async {
+    final allocations = List.generate(
+      distributionAmounts.length,
+      (index) => CashFlowPlanAllocationsCompanion.insert(
+        planId: planId,
+        allocationIndex: index,
+        amount: distributionAmounts[index].value,
+      ),
+    );
+
+    await database.cashflowPlanDao.insertAllocations(allocations);
+  }
+  // Future<void> saveCashflowPlan({
+  //   required TransactionType transactionType,
+  // }) async {
+  //   final category = transactionController.selectedCategory.value;
+  //   final period = selectedPeriod.value;
+
+  //   if (category == null || period == null) {
+  //     return;
+  //   }
+
+  //   final isCustom = selectedDistribution.value == CashFlowDistribution.custom;
+
+  //   if (!isCustom && amount.value <= 0) {
+  //     return;
+  //   }
+
+  //   if (isCustom && distributionTotal <= 0) {
+  //     return;
+  //   }
+
+  //   final now = DateTime.now();
+
+  //   final planType = planTypeFromTransactionType(transactionType);
+
+  //   final planId = await database.cashflowPlanDao.insertPlan(
+  //     CashFlowPlansCompanion.insert(
+  //       categoryId: d.Value<int?>(category.id),
+  //       loanId: const d.Value<int?>(null),
+  //       planType: planType,
+  //       amount: isCustom ? 0 : amount.value,
+  //       period: period.name,
+  //       distributionType: selectedDistribution.value.name,
+  //       startDate: occurrenceDate.value,
+  //       endDate: const d.Value<DateTime?>(null),
+  //       createdAt: now,
+  //       updatedAt: now,
+  //     ),
+  //   );
+
+  //   if (isCustom) {
+  //     final allocations = List.generate(
+  //       distributionAmounts.length,
+  //       (index) => CashFlowPlanAllocationsCompanion.insert(
+  //         planId: planId,
+  //         allocationIndex: index,
+  //         amount: distributionAmounts[index].value,
+  //       ),
+  //     );
+
+  //     await database.cashflowPlanDao.insertAllocations(allocations);
+  //   }
+
+  //   Get.back();
+  // }
 
   // ===========================================================================
   // Current Plan Builder
@@ -1368,12 +1515,6 @@ class CashflowController extends GetxController {
     for (final amount in distributionAmounts) {
       amount.value = 0.0;
     }
-  }
-
-  void disposeDistributionFields() {
-    /// Removes all custom allocation state.
-
-    distributionAmounts.clear();
   }
 
   void distributeAmountEvenly(double total) {

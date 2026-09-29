@@ -5,8 +5,6 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 
-// enum CategoryType { income, expense }
-
 class CreateCategoryController extends GetxController {
   final CashflowCategoriesTableData? category;
   CreateCategoryController(TransactionType transactionType, {this.category})
@@ -57,10 +55,6 @@ class CreateCategoryController extends GetxController {
   void setLoading() {
     buttonState.value = AddButtonState.loading;
   }
-
-  // CreateCategoryController(TransactionType transactionType)
-  //   : _categoryType = transactionType.obs;
-  // final Rx<TransactionType> _categoryType;
 
   final RxBool isSaving = false.obs;
 

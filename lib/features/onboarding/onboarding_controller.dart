@@ -32,7 +32,7 @@ class OnboardingController extends GetxController {
     final storage = GetStorage();
 
     await storage.write(_userNameKey, name.value);
-    Get.offAllNamed(Routes.MAINVIEW, arguments: {'initialTab': 3});
+    Get.toNamed(Routes.MAINVIEW, arguments: {'initialTab': 3});
   }
 
   bool get canContinue {

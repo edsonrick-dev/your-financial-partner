@@ -20,7 +20,7 @@ class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
     final financialProfileController = Get.find<FinancialProfileController>();
     const learnEngine = LearnEngine();
     return Obx(() {
-      if (controller.isUnderConstruction.value) {
+      if (controller.justStarted.value) {
         return InsurancePlannerEmptyView();
       }
       return SingleChildScrollView(

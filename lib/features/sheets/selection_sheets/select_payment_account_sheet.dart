@@ -27,30 +27,6 @@ class SelectPaymentAccountSheet extends StatelessWidget {
           : 'Select Payment Account',
       child: Column(
         children: [
-          AppSection(
-            child: Row(
-              children: [
-                const SizedBox(width: 16),
-                Text(
-                  'Account',
-                  style: AppTextStyle.bodyM.copyWith(
-                    color: colorScheme.appTextMuted,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  'Available Balance',
-                  style: AppTextStyle.bodyM.copyWith(
-                    color: colorScheme.appTextMuted,
-                  ),
-                ),
-                const SizedBox(width: 8),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
           Flexible(
             child: PaymentAccountList(
               transactionType: transactionType,

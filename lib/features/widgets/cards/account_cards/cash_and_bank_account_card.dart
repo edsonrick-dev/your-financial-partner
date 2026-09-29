@@ -38,7 +38,7 @@ class CashAndBankAccountCard extends GetView<AccountController> {
                   opacity: 0.6,
                   child: Row(
                     children: [
-                      Icon(accountIcon, size: 20),
+                      Icon(accountIcon, size: 16),
                       SizedBox(width: 4),
                       Expanded(
                         child: Text(

@@ -36,7 +36,9 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
     return AppSheet(
       adaptiveHeight: false,
       height: AppSheetHeight.full,
-      title: 'Create Expense Plan',
+      title: controller.editingPlanId == null
+          ? 'Create Expense Plan'
+          : 'Edit Expense Plan',
       child: SingleChildScrollView(
         child: AppSection(
           child: Column(
@@ -250,7 +252,9 @@ class CreateExpensePlanSheet extends GetView<CashflowController> {
                     hasValidAmount;
 
                 return AppButton(
-                  text: 'Save Expense Plan',
+                  text: controller.editingPlanId == null
+                      ? 'Save Expense Plan'
+                      : 'Update Expense Plan',
                   onTap: isValid
                       ? () async {
                           await controller.saveCashflowPlan(

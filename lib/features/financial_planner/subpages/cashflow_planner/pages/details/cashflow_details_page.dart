@@ -5,6 +5,7 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/cashflow_insight_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/budget_plan/budget/budget_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/create_expense_plan_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/sheets/create_cashflow_plan/create_income_plan_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/income_plan/income_plan_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/views/select_budget_type_sheet.dart';
@@ -156,13 +157,20 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                 });
               } else {
                 Get.bottomSheet(
-                  SelectBudgetTypeSheet(),
+                  CreateExpensePlanSheet(),
                   backgroundColor: Colors.transparent,
                   isScrollControlled: true,
                 ).whenComplete(() {
                   controller.resetBudgetPlan();
-                  controller.resetIncomePlan();
                 });
+                // Get.bottomSheet(
+                //   SelectBudgetTypeSheet(),
+                //   backgroundColor: Colors.transparent,
+                //   isScrollControlled: true,
+                // ).whenComplete(() {
+                //   controller.resetBudgetPlan();
+                //   controller.resetIncomePlan();
+                // });
               }
             },
           ),

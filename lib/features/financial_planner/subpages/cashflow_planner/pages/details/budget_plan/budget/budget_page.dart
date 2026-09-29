@@ -100,6 +100,7 @@ class BudgetPage extends GetView<CashflowController> {
           for (final plan in plans)
             CashflowPlanCard(
               onTap: () {
+                selectedIndex.value = 0;
                 Get.bottomSheet(
                   ExpenseDetailsSheet(plan: plan, selectedIndex: selectedIndex),
                   backgroundColor: Colors.transparent,
@@ -220,7 +221,7 @@ class BudgetPage extends GetView<CashflowController> {
                             plans: expensePlans,
                           ),
                         if (loanPaymentBills.isNotEmpty)
-                          DebtRepaymentList(bills: loanPaymentBills),
+                          LoanPaymentList(bills: loanPaymentBills),
                         SizedBox(height: context.bottomPaddingSub),
                       ],
                     );

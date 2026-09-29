@@ -52,6 +52,7 @@ extension FinancialProfileDetailsScreenExtension on FinancialProfileController {
   }
 
   void selectTab(int index) {
+    debugPrint('${selectedDetailsIndex.value}');
     selectedDetailsIndex.value = index;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

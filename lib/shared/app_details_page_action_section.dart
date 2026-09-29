@@ -10,6 +10,7 @@ class AppDetailsPageActionSection extends StatelessWidget {
   final LayerLink? addButtonLink;
   final VoidCallback? onAdd;
   final RxBool? isAddMenuOpen;
+  final IconData icon;
 
   const AppDetailsPageActionSection({
     super.key,
@@ -18,6 +19,7 @@ class AppDetailsPageActionSection extends StatelessWidget {
     this.isAddMenuOpen,
     this.addButtonLink,
     this.onAdd,
+    this.icon = PhosphorIconsRegular.plus,
   });
 
   @override
@@ -52,7 +54,7 @@ class AppDetailsPageActionSection extends StatelessWidget {
                       child: IconButton(
                         onPressed: onAdd,
                         icon: isAddMenuOpen == null
-                            ? const Icon(PhosphorIconsRegular.plus)
+                            ? Icon(PhosphorIconsRegular.plus)
                             : Obx(
                                 () => AnimatedRotation(
                                   turns: isAddMenuOpen!.value ? 0.125 : 0,
@@ -63,10 +65,7 @@ class AppDetailsPageActionSection extends StatelessWidget {
                               ),
                       ),
                     )
-                  : IconButton(
-                      onPressed: onAdd,
-                      icon: const Icon(PhosphorIconsRegular.plus),
-                    ),
+                  : IconButton(onPressed: onAdd, icon: Icon(icon)),
           ],
         ),
       ),
