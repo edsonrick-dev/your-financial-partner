@@ -20,6 +20,36 @@ extension FinancialProfileEmergencyFundExtension on FinancialProfileController {
   // ---------------------------------------------------------------------------
   // EMERGENCY FUND (CURRENT)
   // ---------------------------------------------------------------------------
+  double get emergencyFundNetCashFlowAllocation {
+    final ratio = currentFundRatio;
+
+    if (ratio == null) {
+      return 0;
+    }
+
+    if (ratio < 25) {
+      return 1.0;
+    }
+
+    if (ratio < 50) {
+      return 0.50;
+    }
+
+    if (ratio < 100) {
+      return 0.25;
+    }
+
+    return 0.0;
+  }
+
+  double? get currentFundRatio {
+    if (emergencyFundAvailable == null || averageMonthlyBudget <= 0) {
+      return null;
+    }
+
+    return emergencyFundAvailable! / (averageMonthlyBudget * 12) * 100;
+  }
+
   double? get currentEmergencyFundRatio {
     if (!canAssessEmergencyFund) {
       return null;

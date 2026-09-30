@@ -5,13 +5,13 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/design_system/shifters/segment_shifter/app_segmented_selector.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/controller/savings_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investory_profile_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/asset_class/asset_class_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_horizon_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_recommendation/portfolio_recommendation.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_recommendation/portfolio_recommendation_engine.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/risk_return/risk_return_range_model.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/savings_planner_screen.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
@@ -269,7 +269,7 @@ class _ReturnScenarioSection extends StatelessWidget {
               Expanded(
                 child: _ScenarioMetric(
                   label: 'Average',
-                  value: _formatPercentage(average),
+                  value: _formatSignedPercentage(average),
                 ),
               ),
               Expanded(
@@ -283,10 +283,6 @@ class _ReturnScenarioSection extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _formatPercentage(double value) {
-    return '${value.toStringAsFixed(1)}%';
   }
 
   String _formatSignedPercentage(double value) {
@@ -307,8 +303,13 @@ class _ScenarioMetric extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 4,
       children: [
-        Text(label, style: AppTextStyle.bodyS),
-        Text(value, style: AppTextStyle.headlineM),
+        Text(
+          label,
+          style: AppTextStyle.bodyS.copyWith(
+            color: context.colors.appTextMuted,
+          ),
+        ),
+        Text(value, style: AppTextStyle.amountL),
       ],
     );
   }
@@ -381,8 +382,13 @@ class _Metric extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 4,
       children: [
-        Text(label, style: AppTextStyle.bodyS),
-        Text(value, style: AppTextStyle.headlineM),
+        Text(
+          label,
+          style: AppTextStyle.bodyS.copyWith(
+            color: context.colors.appTextMuted,
+          ),
+        ),
+        Text(value, style: AppTextStyle.amountL),
       ],
     );
   }

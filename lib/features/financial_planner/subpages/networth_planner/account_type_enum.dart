@@ -81,6 +81,8 @@ enum AccountType {
   static AccountType fromName(String value) {
     return AccountType.values.firstWhere((e) => e.name == value);
   }
+
+  bool get isEmergencyFundEligible => group == AccountGroup.cashAndBank;
 }
 
 enum LoanType { personal, installment, mortgage, auto, other }

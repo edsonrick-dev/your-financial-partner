@@ -20,6 +20,7 @@ import 'tables/bill_occurrences_table.dart';
 import 'tables/credit_card_billings_table.dart';
 import 'tables/credit_card_details_table.dart';
 import 'tables/credit_card_statements_table.dart';
+import 'tables/investor_profile_table.dart';
 
 import 'tables/loan_table.dart';
 // import 'tables/cashflow_plans_table.dart';
@@ -32,6 +33,7 @@ import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_pla
 import 'package:getx_drift_app/data/database/daos/bills_dao/bills_dao.dart';
 import 'package:getx_drift_app/data/database/daos/category_dao/category_dao.dart';
 import 'package:getx_drift_app/data/database/daos/credit_card_dao/credit_card_dao.dart';
+import 'package:getx_drift_app/data/database/daos/investor_profile/investor_profile_dao.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
@@ -50,6 +52,7 @@ part 'app_database.g.dart';
     CreditCardDetailsTable,
     CreditCardBillingPeriodsTable,
     CreditCardStatementsTable,
+    InvestorProfilesTable,
   ],
   daos: [
     TransactionsDao,
@@ -60,6 +63,7 @@ part 'app_database.g.dart';
     BillsDao,
     CategoryDao,
     CreditCardDao,
+    InvestorProfileDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -114,13 +118,16 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(creditCardBillingPeriodsTable);
         await m.createTable(creditCardStatementsTable);
       }
+      if (from < 16) {
+        await m.createTable(investorProfilesTable);
+      }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
   );
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();

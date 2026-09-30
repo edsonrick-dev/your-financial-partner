@@ -1,45 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investory_profile_model.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/controller/savings_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/savings_planner_content_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/savings_planner_empty_view.dart';
-import 'package:getx_drift_app/features/financial_state/financial_state.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learn_content_library.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learn_context.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learn_engine.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learn_thumbnail.dart';
-import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
-import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
-
-class SavingsPlannerController extends GetxController {
-  final selectedHorizonTabIndex = 0.obs;
-  RxBool isUnderConstruction = true.obs;
-  RxBool isRiskToleranceAssessmentFinished = false.obs;
-  void selectHorizonTab(int index) {
-    selectedHorizonTabIndex.value = index;
-  }
-
-  InvestorProfile? investorProfile;
-
-  void completeRiskToleranceAssessment(InvestorProfile profile) {
-    investorProfile = profile;
-    isRiskToleranceAssessmentFinished.value = true;
-  }
-}
 
 class SavingsPlannerScreen extends GetView<SavingsPlannerController> {
   const SavingsPlannerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final financialProfileController = Get.find<FinancialProfileController>();
-
-    const learnEngine = LearnEngine();
     return Obx(() {
       // if (controller.isUnderConstruction.value) {
       //   return const SavingsPlannerEmptyView();
       // }
+      if (controller.isLoading.value) {
+        return const SizedBox.shrink();
+      }
 
       if (!controller.isRiskToleranceAssessmentFinished.value) {
         return const RiskToleranceAssessmentPromptView();
@@ -53,65 +30,7 @@ class SavingsPlannerScreen extends GetView<SavingsPlannerController> {
           ),
           child: Column(
             spacing: 20,
-            children: [
-              SavingsPlannerContentView(),
-              Obx(() {
-                final recommendations = learnEngine.getRecommendedContent(
-                  state: financialProfileController.financialState,
-                  context: LearnContext.savingsInvestment,
-                  contents: learnContentLibrary,
-                );
-
-                if (recommendations.isEmpty) {
-                  return const SizedBox.shrink();
-                }
-
-                return LearningSection(
-                  subtitle: 'Build a good understanding of your net worth',
-                  state: LearningSectionState.available,
-                  contents: recommendations
-                      .map(
-                        (content) => LearnThumbnail(
-                          title: content.title,
-                          description: content.description,
-                          type: content.type,
-                          onTap: () {
-                            // Open lesson
-                          },
-                        ),
-                      )
-                      .toList(),
-                );
-              }),
-              Obx(() {
-                final recommendations = learnEngine.getRecommendedContent(
-                  state: financialProfileController.financialState,
-                  context: LearnContext.savingsInvestment,
-                  contents: learnContentLibrary,
-                );
-
-                if (recommendations.isEmpty) {
-                  return const SizedBox.shrink();
-                }
-
-                return LearningSection(
-                  subtitle: 'Build a good understanding of your net worth.',
-                  state: LearningSectionState.available,
-                  contents: recommendations
-                      .map(
-                        (content) => LearnThumbnail(
-                          title: content.title,
-                          description: content.description,
-                          type: content.type,
-                          onTap: () {
-                            // Open lesson
-                          },
-                        ),
-                      )
-                      .toList(),
-                );
-              }),
-            ],
+            children: [const SavingsPlannerContentView()],
           ),
         ),
       );

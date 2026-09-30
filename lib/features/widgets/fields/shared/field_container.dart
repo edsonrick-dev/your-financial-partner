@@ -64,7 +64,7 @@ class AppFieldContainer extends StatelessWidget {
                   right: trailingPadding,
                 ),
                 width: fixedWidth ? width : double.infinity,
-                height: fixedHeight ? 60 : null,
+                height: fixedHeight ? 62 : null,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: borderColor, width: 1),

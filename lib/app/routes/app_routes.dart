@@ -65,4 +65,6 @@ abstract class Routes {
   static const SAVINGSPLANNER = '/financial-planner/savings-and-investment';
   static const RISKTOLERANCEASSESSMENT =
       '/financial-planner/savings-and-investment/risk-tolerance-assessment';
+  // EMERGENCY FUND
+  static const EMERGENCYFUNDPAGE = '/financial-planner/goals/emergency-fund';
 }

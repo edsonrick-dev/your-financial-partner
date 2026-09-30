@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/controller/savings_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investor_profile_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investory_profile_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/risk_tolerance_pages.dart';
@@ -10,11 +12,116 @@ import 'package:getx_drift_app/features/financial_planner/subpages/savings_inves
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/rta_assessment_questions/risk_return_preference/risk_return_preference_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/rta_assessment_questions/risk_willingness/risk_willingness_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/rta_assessment_questions/withdrawal_horizon/withdrawal_horizon_model.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/savings_planner_screen.dart';
+import 'dart:convert';
 
 class RiskToleranceController extends GetxController {
   final savingsPlannerController = Get.find<SavingsPlannerController>();
 
+  Future<void> saveAssessment() async {
+    await database.investorProfileDao.saveProfile(
+      investmentHorizon: investmentHorizon.value?.name,
+      withdrawalHorizon: withdrawalHorizon.value?.name,
+      investmentKnowledge: investmentKnowledge.value?.name,
+      riskWillingness: riskWillingness.value?.name,
+      investmentExperience: investmentExperienceJson,
+      marketLossReaction: marketLossReaction.value?.name,
+      riskReturnPreference: riskReturnPreference.value?.name,
+      totalScore: totalScore,
+      investorProfile: investorProfile.value?.name,
+      assessedAt: DateTime.now(),
+    );
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadAssessment();
+  }
+
+  T? _enumFromName<T extends Enum>(Iterable<T> values, String? name) {
+    if (name == null) {
+      return null;
+    }
+
+    for (final value in values) {
+      if (value.name == name) {
+        return value;
+      }
+    }
+
+    return null;
+  }
+
+  Future<void> _loadAssessment() async {
+    final data = await database.investorProfileDao.getProfile();
+
+    if (data == null) {
+      return;
+    }
+
+    investmentHorizon.value = _enumFromName(
+      InvestmentHorizon.values,
+      data.investmentHorizon,
+    );
+
+    withdrawalHorizon.value = _enumFromName(
+      WithdrawalHorizon.values,
+      data.withdrawalHorizon,
+    );
+
+    investmentKnowledge.value = _enumFromName(
+      InvestmentKnowledge.values,
+      data.investmentKnowledge,
+    );
+
+    riskWillingness.value = _enumFromName(
+      RiskWillingness.values,
+      data.riskWillingness,
+    );
+
+    investmentExperience.assignAll(
+      _investmentExperienceFromJson(data.investmentExperience),
+    );
+
+    marketLossReaction.value = _enumFromName(
+      MarketLossReaction.values,
+      data.marketLossReaction,
+    );
+
+    riskReturnPreference.value = _enumFromName(
+      RiskReturnPreference.values,
+      data.riskReturnPreference,
+    );
+
+    investorProfile.value = _enumFromName(
+      InvestorProfile.values,
+      data.investorProfile,
+    );
+  }
+
+  Set<InvestmentExperience> _investmentExperienceFromJson(String? value) {
+    if (value == null || value.isEmpty) {
+      return {};
+    }
+
+    final decoded = jsonDecode(value);
+
+    if (decoded is! List) {
+      return {};
+    }
+
+    return decoded
+        .whereType<String>()
+        .map((name) => _enumFromName(InvestmentExperience.values, name))
+        .whereType<InvestmentExperience>()
+        .toSet();
+  }
+
+  String get investmentExperienceJson {
+    return jsonEncode(
+      investmentExperience.map((experience) => experience.name).toList(),
+    );
+  }
   // ----------------------------------------------------------
   // NAVIGATION
   // ----------------------------------------------------------
@@ -33,7 +140,7 @@ class RiskToleranceController extends GetxController {
     riskTolerancePage.value = pageHistory.removeLast();
   }
 
-  void nextPage() {
+  Future<void> nextPage() async {
     if (!canContinue) {
       return;
     }
@@ -75,6 +182,8 @@ class RiskToleranceController extends GetxController {
         if (profile == null) {
           return;
         }
+
+        await saveAssessment();
 
         savingsPlannerController.completeRiskToleranceAssessment(profile);
 

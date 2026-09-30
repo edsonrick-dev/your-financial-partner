@@ -7471,6 +7471,752 @@ class CreditCardDetailsTableCompanion
   }
 }
 
+class $InvestorProfilesTableTable extends InvestorProfilesTable
+    with TableInfo<$InvestorProfilesTableTable, InvestorProfilesTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InvestorProfilesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _investmentHorizonMeta = const VerificationMeta(
+    'investmentHorizon',
+  );
+  @override
+  late final GeneratedColumn<String> investmentHorizon =
+      GeneratedColumn<String>(
+        'investment_horizon',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _withdrawalHorizonMeta = const VerificationMeta(
+    'withdrawalHorizon',
+  );
+  @override
+  late final GeneratedColumn<String> withdrawalHorizon =
+      GeneratedColumn<String>(
+        'withdrawal_horizon',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _investmentKnowledgeMeta =
+      const VerificationMeta('investmentKnowledge');
+  @override
+  late final GeneratedColumn<String> investmentKnowledge =
+      GeneratedColumn<String>(
+        'investment_knowledge',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _riskWillingnessMeta = const VerificationMeta(
+    'riskWillingness',
+  );
+  @override
+  late final GeneratedColumn<String> riskWillingness = GeneratedColumn<String>(
+    'risk_willingness',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _investmentExperienceMeta =
+      const VerificationMeta('investmentExperience');
+  @override
+  late final GeneratedColumn<String> investmentExperience =
+      GeneratedColumn<String>(
+        'investment_experience',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _marketLossReactionMeta =
+      const VerificationMeta('marketLossReaction');
+  @override
+  late final GeneratedColumn<String> marketLossReaction =
+      GeneratedColumn<String>(
+        'market_loss_reaction',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _riskReturnPreferenceMeta =
+      const VerificationMeta('riskReturnPreference');
+  @override
+  late final GeneratedColumn<String> riskReturnPreference =
+      GeneratedColumn<String>(
+        'risk_return_preference',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _totalScoreMeta = const VerificationMeta(
+    'totalScore',
+  );
+  @override
+  late final GeneratedColumn<int> totalScore = GeneratedColumn<int>(
+    'total_score',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _investorProfileMeta = const VerificationMeta(
+    'investorProfile',
+  );
+  @override
+  late final GeneratedColumn<String> investorProfile = GeneratedColumn<String>(
+    'investor_profile',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _assessedAtMeta = const VerificationMeta(
+    'assessedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> assessedAt = GeneratedColumn<DateTime>(
+    'assessed_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    investmentHorizon,
+    withdrawalHorizon,
+    investmentKnowledge,
+    riskWillingness,
+    investmentExperience,
+    marketLossReaction,
+    riskReturnPreference,
+    totalScore,
+    investorProfile,
+    assessedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'investor_profiles_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InvestorProfilesTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('investment_horizon')) {
+      context.handle(
+        _investmentHorizonMeta,
+        investmentHorizon.isAcceptableOrUnknown(
+          data['investment_horizon']!,
+          _investmentHorizonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('withdrawal_horizon')) {
+      context.handle(
+        _withdrawalHorizonMeta,
+        withdrawalHorizon.isAcceptableOrUnknown(
+          data['withdrawal_horizon']!,
+          _withdrawalHorizonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('investment_knowledge')) {
+      context.handle(
+        _investmentKnowledgeMeta,
+        investmentKnowledge.isAcceptableOrUnknown(
+          data['investment_knowledge']!,
+          _investmentKnowledgeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('risk_willingness')) {
+      context.handle(
+        _riskWillingnessMeta,
+        riskWillingness.isAcceptableOrUnknown(
+          data['risk_willingness']!,
+          _riskWillingnessMeta,
+        ),
+      );
+    }
+    if (data.containsKey('investment_experience')) {
+      context.handle(
+        _investmentExperienceMeta,
+        investmentExperience.isAcceptableOrUnknown(
+          data['investment_experience']!,
+          _investmentExperienceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('market_loss_reaction')) {
+      context.handle(
+        _marketLossReactionMeta,
+        marketLossReaction.isAcceptableOrUnknown(
+          data['market_loss_reaction']!,
+          _marketLossReactionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('risk_return_preference')) {
+      context.handle(
+        _riskReturnPreferenceMeta,
+        riskReturnPreference.isAcceptableOrUnknown(
+          data['risk_return_preference']!,
+          _riskReturnPreferenceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('total_score')) {
+      context.handle(
+        _totalScoreMeta,
+        totalScore.isAcceptableOrUnknown(data['total_score']!, _totalScoreMeta),
+      );
+    }
+    if (data.containsKey('investor_profile')) {
+      context.handle(
+        _investorProfileMeta,
+        investorProfile.isAcceptableOrUnknown(
+          data['investor_profile']!,
+          _investorProfileMeta,
+        ),
+      );
+    }
+    if (data.containsKey('assessed_at')) {
+      context.handle(
+        _assessedAtMeta,
+        assessedAt.isAcceptableOrUnknown(data['assessed_at']!, _assessedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InvestorProfilesTableData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InvestorProfilesTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      investmentHorizon: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}investment_horizon'],
+      ),
+      withdrawalHorizon: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}withdrawal_horizon'],
+      ),
+      investmentKnowledge: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}investment_knowledge'],
+      ),
+      riskWillingness: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}risk_willingness'],
+      ),
+      investmentExperience: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}investment_experience'],
+      ),
+      marketLossReaction: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}market_loss_reaction'],
+      ),
+      riskReturnPreference: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}risk_return_preference'],
+      ),
+      totalScore: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total_score'],
+      ),
+      investorProfile: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}investor_profile'],
+      ),
+      assessedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}assessed_at'],
+      ),
+    );
+  }
+
+  @override
+  $InvestorProfilesTableTable createAlias(String alias) {
+    return $InvestorProfilesTableTable(attachedDatabase, alias);
+  }
+}
+
+class InvestorProfilesTableData extends DataClass
+    implements Insertable<InvestorProfilesTableData> {
+  final int id;
+  final String? investmentHorizon;
+  final String? withdrawalHorizon;
+  final String? investmentKnowledge;
+  final String? riskWillingness;
+  final String? investmentExperience;
+  final String? marketLossReaction;
+  final String? riskReturnPreference;
+  final int? totalScore;
+  final String? investorProfile;
+  final DateTime? assessedAt;
+  const InvestorProfilesTableData({
+    required this.id,
+    this.investmentHorizon,
+    this.withdrawalHorizon,
+    this.investmentKnowledge,
+    this.riskWillingness,
+    this.investmentExperience,
+    this.marketLossReaction,
+    this.riskReturnPreference,
+    this.totalScore,
+    this.investorProfile,
+    this.assessedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || investmentHorizon != null) {
+      map['investment_horizon'] = Variable<String>(investmentHorizon);
+    }
+    if (!nullToAbsent || withdrawalHorizon != null) {
+      map['withdrawal_horizon'] = Variable<String>(withdrawalHorizon);
+    }
+    if (!nullToAbsent || investmentKnowledge != null) {
+      map['investment_knowledge'] = Variable<String>(investmentKnowledge);
+    }
+    if (!nullToAbsent || riskWillingness != null) {
+      map['risk_willingness'] = Variable<String>(riskWillingness);
+    }
+    if (!nullToAbsent || investmentExperience != null) {
+      map['investment_experience'] = Variable<String>(investmentExperience);
+    }
+    if (!nullToAbsent || marketLossReaction != null) {
+      map['market_loss_reaction'] = Variable<String>(marketLossReaction);
+    }
+    if (!nullToAbsent || riskReturnPreference != null) {
+      map['risk_return_preference'] = Variable<String>(riskReturnPreference);
+    }
+    if (!nullToAbsent || totalScore != null) {
+      map['total_score'] = Variable<int>(totalScore);
+    }
+    if (!nullToAbsent || investorProfile != null) {
+      map['investor_profile'] = Variable<String>(investorProfile);
+    }
+    if (!nullToAbsent || assessedAt != null) {
+      map['assessed_at'] = Variable<DateTime>(assessedAt);
+    }
+    return map;
+  }
+
+  InvestorProfilesTableCompanion toCompanion(bool nullToAbsent) {
+    return InvestorProfilesTableCompanion(
+      id: Value(id),
+      investmentHorizon: investmentHorizon == null && nullToAbsent
+          ? const Value.absent()
+          : Value(investmentHorizon),
+      withdrawalHorizon: withdrawalHorizon == null && nullToAbsent
+          ? const Value.absent()
+          : Value(withdrawalHorizon),
+      investmentKnowledge: investmentKnowledge == null && nullToAbsent
+          ? const Value.absent()
+          : Value(investmentKnowledge),
+      riskWillingness: riskWillingness == null && nullToAbsent
+          ? const Value.absent()
+          : Value(riskWillingness),
+      investmentExperience: investmentExperience == null && nullToAbsent
+          ? const Value.absent()
+          : Value(investmentExperience),
+      marketLossReaction: marketLossReaction == null && nullToAbsent
+          ? const Value.absent()
+          : Value(marketLossReaction),
+      riskReturnPreference: riskReturnPreference == null && nullToAbsent
+          ? const Value.absent()
+          : Value(riskReturnPreference),
+      totalScore: totalScore == null && nullToAbsent
+          ? const Value.absent()
+          : Value(totalScore),
+      investorProfile: investorProfile == null && nullToAbsent
+          ? const Value.absent()
+          : Value(investorProfile),
+      assessedAt: assessedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(assessedAt),
+    );
+  }
+
+  factory InvestorProfilesTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InvestorProfilesTableData(
+      id: serializer.fromJson<int>(json['id']),
+      investmentHorizon: serializer.fromJson<String?>(
+        json['investmentHorizon'],
+      ),
+      withdrawalHorizon: serializer.fromJson<String?>(
+        json['withdrawalHorizon'],
+      ),
+      investmentKnowledge: serializer.fromJson<String?>(
+        json['investmentKnowledge'],
+      ),
+      riskWillingness: serializer.fromJson<String?>(json['riskWillingness']),
+      investmentExperience: serializer.fromJson<String?>(
+        json['investmentExperience'],
+      ),
+      marketLossReaction: serializer.fromJson<String?>(
+        json['marketLossReaction'],
+      ),
+      riskReturnPreference: serializer.fromJson<String?>(
+        json['riskReturnPreference'],
+      ),
+      totalScore: serializer.fromJson<int?>(json['totalScore']),
+      investorProfile: serializer.fromJson<String?>(json['investorProfile']),
+      assessedAt: serializer.fromJson<DateTime?>(json['assessedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'investmentHorizon': serializer.toJson<String?>(investmentHorizon),
+      'withdrawalHorizon': serializer.toJson<String?>(withdrawalHorizon),
+      'investmentKnowledge': serializer.toJson<String?>(investmentKnowledge),
+      'riskWillingness': serializer.toJson<String?>(riskWillingness),
+      'investmentExperience': serializer.toJson<String?>(investmentExperience),
+      'marketLossReaction': serializer.toJson<String?>(marketLossReaction),
+      'riskReturnPreference': serializer.toJson<String?>(riskReturnPreference),
+      'totalScore': serializer.toJson<int?>(totalScore),
+      'investorProfile': serializer.toJson<String?>(investorProfile),
+      'assessedAt': serializer.toJson<DateTime?>(assessedAt),
+    };
+  }
+
+  InvestorProfilesTableData copyWith({
+    int? id,
+    Value<String?> investmentHorizon = const Value.absent(),
+    Value<String?> withdrawalHorizon = const Value.absent(),
+    Value<String?> investmentKnowledge = const Value.absent(),
+    Value<String?> riskWillingness = const Value.absent(),
+    Value<String?> investmentExperience = const Value.absent(),
+    Value<String?> marketLossReaction = const Value.absent(),
+    Value<String?> riskReturnPreference = const Value.absent(),
+    Value<int?> totalScore = const Value.absent(),
+    Value<String?> investorProfile = const Value.absent(),
+    Value<DateTime?> assessedAt = const Value.absent(),
+  }) => InvestorProfilesTableData(
+    id: id ?? this.id,
+    investmentHorizon: investmentHorizon.present
+        ? investmentHorizon.value
+        : this.investmentHorizon,
+    withdrawalHorizon: withdrawalHorizon.present
+        ? withdrawalHorizon.value
+        : this.withdrawalHorizon,
+    investmentKnowledge: investmentKnowledge.present
+        ? investmentKnowledge.value
+        : this.investmentKnowledge,
+    riskWillingness: riskWillingness.present
+        ? riskWillingness.value
+        : this.riskWillingness,
+    investmentExperience: investmentExperience.present
+        ? investmentExperience.value
+        : this.investmentExperience,
+    marketLossReaction: marketLossReaction.present
+        ? marketLossReaction.value
+        : this.marketLossReaction,
+    riskReturnPreference: riskReturnPreference.present
+        ? riskReturnPreference.value
+        : this.riskReturnPreference,
+    totalScore: totalScore.present ? totalScore.value : this.totalScore,
+    investorProfile: investorProfile.present
+        ? investorProfile.value
+        : this.investorProfile,
+    assessedAt: assessedAt.present ? assessedAt.value : this.assessedAt,
+  );
+  InvestorProfilesTableData copyWithCompanion(
+    InvestorProfilesTableCompanion data,
+  ) {
+    return InvestorProfilesTableData(
+      id: data.id.present ? data.id.value : this.id,
+      investmentHorizon: data.investmentHorizon.present
+          ? data.investmentHorizon.value
+          : this.investmentHorizon,
+      withdrawalHorizon: data.withdrawalHorizon.present
+          ? data.withdrawalHorizon.value
+          : this.withdrawalHorizon,
+      investmentKnowledge: data.investmentKnowledge.present
+          ? data.investmentKnowledge.value
+          : this.investmentKnowledge,
+      riskWillingness: data.riskWillingness.present
+          ? data.riskWillingness.value
+          : this.riskWillingness,
+      investmentExperience: data.investmentExperience.present
+          ? data.investmentExperience.value
+          : this.investmentExperience,
+      marketLossReaction: data.marketLossReaction.present
+          ? data.marketLossReaction.value
+          : this.marketLossReaction,
+      riskReturnPreference: data.riskReturnPreference.present
+          ? data.riskReturnPreference.value
+          : this.riskReturnPreference,
+      totalScore: data.totalScore.present
+          ? data.totalScore.value
+          : this.totalScore,
+      investorProfile: data.investorProfile.present
+          ? data.investorProfile.value
+          : this.investorProfile,
+      assessedAt: data.assessedAt.present
+          ? data.assessedAt.value
+          : this.assessedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvestorProfilesTableData(')
+          ..write('id: $id, ')
+          ..write('investmentHorizon: $investmentHorizon, ')
+          ..write('withdrawalHorizon: $withdrawalHorizon, ')
+          ..write('investmentKnowledge: $investmentKnowledge, ')
+          ..write('riskWillingness: $riskWillingness, ')
+          ..write('investmentExperience: $investmentExperience, ')
+          ..write('marketLossReaction: $marketLossReaction, ')
+          ..write('riskReturnPreference: $riskReturnPreference, ')
+          ..write('totalScore: $totalScore, ')
+          ..write('investorProfile: $investorProfile, ')
+          ..write('assessedAt: $assessedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    investmentHorizon,
+    withdrawalHorizon,
+    investmentKnowledge,
+    riskWillingness,
+    investmentExperience,
+    marketLossReaction,
+    riskReturnPreference,
+    totalScore,
+    investorProfile,
+    assessedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InvestorProfilesTableData &&
+          other.id == this.id &&
+          other.investmentHorizon == this.investmentHorizon &&
+          other.withdrawalHorizon == this.withdrawalHorizon &&
+          other.investmentKnowledge == this.investmentKnowledge &&
+          other.riskWillingness == this.riskWillingness &&
+          other.investmentExperience == this.investmentExperience &&
+          other.marketLossReaction == this.marketLossReaction &&
+          other.riskReturnPreference == this.riskReturnPreference &&
+          other.totalScore == this.totalScore &&
+          other.investorProfile == this.investorProfile &&
+          other.assessedAt == this.assessedAt);
+}
+
+class InvestorProfilesTableCompanion
+    extends UpdateCompanion<InvestorProfilesTableData> {
+  final Value<int> id;
+  final Value<String?> investmentHorizon;
+  final Value<String?> withdrawalHorizon;
+  final Value<String?> investmentKnowledge;
+  final Value<String?> riskWillingness;
+  final Value<String?> investmentExperience;
+  final Value<String?> marketLossReaction;
+  final Value<String?> riskReturnPreference;
+  final Value<int?> totalScore;
+  final Value<String?> investorProfile;
+  final Value<DateTime?> assessedAt;
+  const InvestorProfilesTableCompanion({
+    this.id = const Value.absent(),
+    this.investmentHorizon = const Value.absent(),
+    this.withdrawalHorizon = const Value.absent(),
+    this.investmentKnowledge = const Value.absent(),
+    this.riskWillingness = const Value.absent(),
+    this.investmentExperience = const Value.absent(),
+    this.marketLossReaction = const Value.absent(),
+    this.riskReturnPreference = const Value.absent(),
+    this.totalScore = const Value.absent(),
+    this.investorProfile = const Value.absent(),
+    this.assessedAt = const Value.absent(),
+  });
+  InvestorProfilesTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.investmentHorizon = const Value.absent(),
+    this.withdrawalHorizon = const Value.absent(),
+    this.investmentKnowledge = const Value.absent(),
+    this.riskWillingness = const Value.absent(),
+    this.investmentExperience = const Value.absent(),
+    this.marketLossReaction = const Value.absent(),
+    this.riskReturnPreference = const Value.absent(),
+    this.totalScore = const Value.absent(),
+    this.investorProfile = const Value.absent(),
+    this.assessedAt = const Value.absent(),
+  });
+  static Insertable<InvestorProfilesTableData> custom({
+    Expression<int>? id,
+    Expression<String>? investmentHorizon,
+    Expression<String>? withdrawalHorizon,
+    Expression<String>? investmentKnowledge,
+    Expression<String>? riskWillingness,
+    Expression<String>? investmentExperience,
+    Expression<String>? marketLossReaction,
+    Expression<String>? riskReturnPreference,
+    Expression<int>? totalScore,
+    Expression<String>? investorProfile,
+    Expression<DateTime>? assessedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (investmentHorizon != null) 'investment_horizon': investmentHorizon,
+      if (withdrawalHorizon != null) 'withdrawal_horizon': withdrawalHorizon,
+      if (investmentKnowledge != null)
+        'investment_knowledge': investmentKnowledge,
+      if (riskWillingness != null) 'risk_willingness': riskWillingness,
+      if (investmentExperience != null)
+        'investment_experience': investmentExperience,
+      if (marketLossReaction != null)
+        'market_loss_reaction': marketLossReaction,
+      if (riskReturnPreference != null)
+        'risk_return_preference': riskReturnPreference,
+      if (totalScore != null) 'total_score': totalScore,
+      if (investorProfile != null) 'investor_profile': investorProfile,
+      if (assessedAt != null) 'assessed_at': assessedAt,
+    });
+  }
+
+  InvestorProfilesTableCompanion copyWith({
+    Value<int>? id,
+    Value<String?>? investmentHorizon,
+    Value<String?>? withdrawalHorizon,
+    Value<String?>? investmentKnowledge,
+    Value<String?>? riskWillingness,
+    Value<String?>? investmentExperience,
+    Value<String?>? marketLossReaction,
+    Value<String?>? riskReturnPreference,
+    Value<int?>? totalScore,
+    Value<String?>? investorProfile,
+    Value<DateTime?>? assessedAt,
+  }) {
+    return InvestorProfilesTableCompanion(
+      id: id ?? this.id,
+      investmentHorizon: investmentHorizon ?? this.investmentHorizon,
+      withdrawalHorizon: withdrawalHorizon ?? this.withdrawalHorizon,
+      investmentKnowledge: investmentKnowledge ?? this.investmentKnowledge,
+      riskWillingness: riskWillingness ?? this.riskWillingness,
+      investmentExperience: investmentExperience ?? this.investmentExperience,
+      marketLossReaction: marketLossReaction ?? this.marketLossReaction,
+      riskReturnPreference: riskReturnPreference ?? this.riskReturnPreference,
+      totalScore: totalScore ?? this.totalScore,
+      investorProfile: investorProfile ?? this.investorProfile,
+      assessedAt: assessedAt ?? this.assessedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (investmentHorizon.present) {
+      map['investment_horizon'] = Variable<String>(investmentHorizon.value);
+    }
+    if (withdrawalHorizon.present) {
+      map['withdrawal_horizon'] = Variable<String>(withdrawalHorizon.value);
+    }
+    if (investmentKnowledge.present) {
+      map['investment_knowledge'] = Variable<String>(investmentKnowledge.value);
+    }
+    if (riskWillingness.present) {
+      map['risk_willingness'] = Variable<String>(riskWillingness.value);
+    }
+    if (investmentExperience.present) {
+      map['investment_experience'] = Variable<String>(
+        investmentExperience.value,
+      );
+    }
+    if (marketLossReaction.present) {
+      map['market_loss_reaction'] = Variable<String>(marketLossReaction.value);
+    }
+    if (riskReturnPreference.present) {
+      map['risk_return_preference'] = Variable<String>(
+        riskReturnPreference.value,
+      );
+    }
+    if (totalScore.present) {
+      map['total_score'] = Variable<int>(totalScore.value);
+    }
+    if (investorProfile.present) {
+      map['investor_profile'] = Variable<String>(investorProfile.value);
+    }
+    if (assessedAt.present) {
+      map['assessed_at'] = Variable<DateTime>(assessedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvestorProfilesTableCompanion(')
+          ..write('id: $id, ')
+          ..write('investmentHorizon: $investmentHorizon, ')
+          ..write('withdrawalHorizon: $withdrawalHorizon, ')
+          ..write('investmentKnowledge: $investmentKnowledge, ')
+          ..write('riskWillingness: $riskWillingness, ')
+          ..write('investmentExperience: $investmentExperience, ')
+          ..write('marketLossReaction: $marketLossReaction, ')
+          ..write('riskReturnPreference: $riskReturnPreference, ')
+          ..write('totalScore: $totalScore, ')
+          ..write('investorProfile: $investorProfile, ')
+          ..write('assessedAt: $assessedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -7497,6 +8243,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $BillOccurrencesTableTable(this);
   late final $CreditCardDetailsTableTable creditCardDetailsTable =
       $CreditCardDetailsTableTable(this);
+  late final $InvestorProfilesTableTable investorProfilesTable =
+      $InvestorProfilesTableTable(this);
   late final TransactionsDao transactionsDao = TransactionsDao(
     this as AppDatabase,
   );
@@ -7511,6 +8259,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final BillsDao billsDao = BillsDao(this as AppDatabase);
   late final CategoryDao categoryDao = CategoryDao(this as AppDatabase);
   late final CreditCardDao creditCardDao = CreditCardDao(this as AppDatabase);
+  late final InvestorProfileDao investorProfileDao = InvestorProfileDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7530,6 +8281,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     billsTable,
     billOccurrencesTable,
     creditCardDetailsTable,
+    investorProfilesTable,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -15321,6 +16073,353 @@ typedef $$CreditCardDetailsTableTableProcessedTableManager =
       CreditCardDetailsTableData,
       PrefetchHooks Function({bool accountId})
     >;
+typedef $$InvestorProfilesTableTableCreateCompanionBuilder =
+    InvestorProfilesTableCompanion Function({
+      Value<int> id,
+      Value<String?> investmentHorizon,
+      Value<String?> withdrawalHorizon,
+      Value<String?> investmentKnowledge,
+      Value<String?> riskWillingness,
+      Value<String?> investmentExperience,
+      Value<String?> marketLossReaction,
+      Value<String?> riskReturnPreference,
+      Value<int?> totalScore,
+      Value<String?> investorProfile,
+      Value<DateTime?> assessedAt,
+    });
+typedef $$InvestorProfilesTableTableUpdateCompanionBuilder =
+    InvestorProfilesTableCompanion Function({
+      Value<int> id,
+      Value<String?> investmentHorizon,
+      Value<String?> withdrawalHorizon,
+      Value<String?> investmentKnowledge,
+      Value<String?> riskWillingness,
+      Value<String?> investmentExperience,
+      Value<String?> marketLossReaction,
+      Value<String?> riskReturnPreference,
+      Value<int?> totalScore,
+      Value<String?> investorProfile,
+      Value<DateTime?> assessedAt,
+    });
+
+class $$InvestorProfilesTableTableFilterComposer
+    extends Composer<_$AppDatabase, $InvestorProfilesTableTable> {
+  $$InvestorProfilesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get investmentHorizon => $composableBuilder(
+    column: $table.investmentHorizon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get withdrawalHorizon => $composableBuilder(
+    column: $table.withdrawalHorizon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get investmentKnowledge => $composableBuilder(
+    column: $table.investmentKnowledge,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get riskWillingness => $composableBuilder(
+    column: $table.riskWillingness,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get investmentExperience => $composableBuilder(
+    column: $table.investmentExperience,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get marketLossReaction => $composableBuilder(
+    column: $table.marketLossReaction,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get riskReturnPreference => $composableBuilder(
+    column: $table.riskReturnPreference,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get totalScore => $composableBuilder(
+    column: $table.totalScore,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get investorProfile => $composableBuilder(
+    column: $table.investorProfile,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get assessedAt => $composableBuilder(
+    column: $table.assessedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InvestorProfilesTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $InvestorProfilesTableTable> {
+  $$InvestorProfilesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get investmentHorizon => $composableBuilder(
+    column: $table.investmentHorizon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get withdrawalHorizon => $composableBuilder(
+    column: $table.withdrawalHorizon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get investmentKnowledge => $composableBuilder(
+    column: $table.investmentKnowledge,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get riskWillingness => $composableBuilder(
+    column: $table.riskWillingness,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get investmentExperience => $composableBuilder(
+    column: $table.investmentExperience,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get marketLossReaction => $composableBuilder(
+    column: $table.marketLossReaction,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get riskReturnPreference => $composableBuilder(
+    column: $table.riskReturnPreference,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get totalScore => $composableBuilder(
+    column: $table.totalScore,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get investorProfile => $composableBuilder(
+    column: $table.investorProfile,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get assessedAt => $composableBuilder(
+    column: $table.assessedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InvestorProfilesTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $InvestorProfilesTableTable> {
+  $$InvestorProfilesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get investmentHorizon => $composableBuilder(
+    column: $table.investmentHorizon,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get withdrawalHorizon => $composableBuilder(
+    column: $table.withdrawalHorizon,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get investmentKnowledge => $composableBuilder(
+    column: $table.investmentKnowledge,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get riskWillingness => $composableBuilder(
+    column: $table.riskWillingness,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get investmentExperience => $composableBuilder(
+    column: $table.investmentExperience,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get marketLossReaction => $composableBuilder(
+    column: $table.marketLossReaction,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get riskReturnPreference => $composableBuilder(
+    column: $table.riskReturnPreference,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get totalScore => $composableBuilder(
+    column: $table.totalScore,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get investorProfile => $composableBuilder(
+    column: $table.investorProfile,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get assessedAt => $composableBuilder(
+    column: $table.assessedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$InvestorProfilesTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $InvestorProfilesTableTable,
+          InvestorProfilesTableData,
+          $$InvestorProfilesTableTableFilterComposer,
+          $$InvestorProfilesTableTableOrderingComposer,
+          $$InvestorProfilesTableTableAnnotationComposer,
+          $$InvestorProfilesTableTableCreateCompanionBuilder,
+          $$InvestorProfilesTableTableUpdateCompanionBuilder,
+          (
+            InvestorProfilesTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $InvestorProfilesTableTable,
+              InvestorProfilesTableData
+            >,
+          ),
+          InvestorProfilesTableData,
+          PrefetchHooks Function()
+        > {
+  $$InvestorProfilesTableTableTableManager(
+    _$AppDatabase db,
+    $InvestorProfilesTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InvestorProfilesTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$InvestorProfilesTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$InvestorProfilesTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> investmentHorizon = const Value.absent(),
+                Value<String?> withdrawalHorizon = const Value.absent(),
+                Value<String?> investmentKnowledge = const Value.absent(),
+                Value<String?> riskWillingness = const Value.absent(),
+                Value<String?> investmentExperience = const Value.absent(),
+                Value<String?> marketLossReaction = const Value.absent(),
+                Value<String?> riskReturnPreference = const Value.absent(),
+                Value<int?> totalScore = const Value.absent(),
+                Value<String?> investorProfile = const Value.absent(),
+                Value<DateTime?> assessedAt = const Value.absent(),
+              }) => InvestorProfilesTableCompanion(
+                id: id,
+                investmentHorizon: investmentHorizon,
+                withdrawalHorizon: withdrawalHorizon,
+                investmentKnowledge: investmentKnowledge,
+                riskWillingness: riskWillingness,
+                investmentExperience: investmentExperience,
+                marketLossReaction: marketLossReaction,
+                riskReturnPreference: riskReturnPreference,
+                totalScore: totalScore,
+                investorProfile: investorProfile,
+                assessedAt: assessedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> investmentHorizon = const Value.absent(),
+                Value<String?> withdrawalHorizon = const Value.absent(),
+                Value<String?> investmentKnowledge = const Value.absent(),
+                Value<String?> riskWillingness = const Value.absent(),
+                Value<String?> investmentExperience = const Value.absent(),
+                Value<String?> marketLossReaction = const Value.absent(),
+                Value<String?> riskReturnPreference = const Value.absent(),
+                Value<int?> totalScore = const Value.absent(),
+                Value<String?> investorProfile = const Value.absent(),
+                Value<DateTime?> assessedAt = const Value.absent(),
+              }) => InvestorProfilesTableCompanion.insert(
+                id: id,
+                investmentHorizon: investmentHorizon,
+                withdrawalHorizon: withdrawalHorizon,
+                investmentKnowledge: investmentKnowledge,
+                riskWillingness: riskWillingness,
+                investmentExperience: investmentExperience,
+                marketLossReaction: marketLossReaction,
+                riskReturnPreference: riskReturnPreference,
+                totalScore: totalScore,
+                investorProfile: investorProfile,
+                assessedAt: assessedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InvestorProfilesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $InvestorProfilesTableTable,
+      InvestorProfilesTableData,
+      $$InvestorProfilesTableTableFilterComposer,
+      $$InvestorProfilesTableTableOrderingComposer,
+      $$InvestorProfilesTableTableAnnotationComposer,
+      $$InvestorProfilesTableTableCreateCompanionBuilder,
+      $$InvestorProfilesTableTableUpdateCompanionBuilder,
+      (
+        InvestorProfilesTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $InvestorProfilesTableTable,
+          InvestorProfilesTableData
+        >,
+      ),
+      InvestorProfilesTableData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -15376,4 +16475,6 @@ class $AppDatabaseManager {
         _db,
         _db.creditCardDetailsTable,
       );
+  $$InvestorProfilesTableTableTableManager get investorProfilesTable =>
+      $$InvestorProfilesTableTableTableManager(_db, _db.investorProfilesTable);
 }

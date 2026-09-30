@@ -42,7 +42,9 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
               () => AppAmountField(
                 label: 'Amount',
                 amount: controller.enteredBalance.value,
-                onChanged: (value) => controller.enteredBalance.value = value,
+                onChanged: (value) {
+                  controller.enteredBalance.value = value;
+                },
               ),
             ),
 

@@ -158,93 +158,94 @@ const emergencyFundBands = [
   ),
 ];
 const fundBands = [
+  ...opportunityFundBands, ...emergencyFundBands,
   // Stage 2 — Opportunity Fund
-  RatioScoreBand(
-    category: 'Wealth-Secured Fund',
-    threshold: 142.86,
-    definition: 'Fully resilient continuity and emergency buffer.',
-    interpretation:
-        'Your liquid funds can sustain both your lifestyle and '
-        'wealth-building allocations for an extended period.',
-    points: 20,
-    color: Color(0xFF059669),
-  ),
+  // RatioScoreBand(
+  //   category: 'Wealth-Secured Fund',
+  //   threshold: 142.86,
+  //   definition: 'Fully resilient continuity and emergency buffer.',
+  //   interpretation:
+  //       'Your liquid funds can sustain both your lifestyle and '
+  //       'wealth-building allocations for an extended period.',
+  //   points: 20,
+  //   color: Color(0xFF059669),
+  // ),
 
-  RatioScoreBand(
-    category: 'Comprehensive Fund',
-    threshold: 121.43,
-    definition: 'Strong protection with sustained progress.',
-    interpretation:
-        'Your liquid funds cover a full year of lifestyle needs '
-        'while providing additional capacity for wealth allocation.',
-    points: 18,
-    color: Color(0xFF059669),
-  ),
+  // RatioScoreBand(
+  //   category: 'Comprehensive Fund',
+  //   threshold: 121.43,
+  //   definition: 'Strong protection with sustained progress.',
+  //   interpretation:
+  //       'Your liquid funds cover a full year of lifestyle needs '
+  //       'while providing additional capacity for wealth allocation.',
+  //   points: 18,
+  //   color: Color(0xFF059669),
+  // ),
 
-  RatioScoreBand(
-    category: 'Enhanced Fund',
-    threshold: 110.71,
-    definition: 'Lifestyle protected while continuing some wealth building.',
-    interpretation:
-        'Your liquid funds fully protect your lifestyle and provide '
-        'additional capacity beyond the emergency fund.',
-    points: 15,
-    color: Color(0xFF16A34A),
-  ),
+  // RatioScoreBand(
+  //   category: 'Enhanced Fund',
+  //   threshold: 110.71,
+  //   definition: 'Lifestyle protected while continuing some wealth building.',
+  //   interpretation:
+  //       'Your liquid funds fully protect your lifestyle and provide '
+  //       'additional capacity beyond the emergency fund.',
+  //   points: 15,
+  //   color: Color(0xFF16A34A),
+  // ),
 
-  // Stage 1 — Emergency Fund
-  RatioScoreBand(
-    category: 'Optimal Fund',
-    threshold: 100,
-    definition: 'Full-year safety net for lifestyle needs.',
-    interpretation:
-        'Your emergency fund can sustain your lifestyle allocation '
-        'for a full year without income.',
-    points: 12,
-    color: Color(0xFF16A34A),
-  ),
+  // // Stage 1 — Emergency Fund
+  // RatioScoreBand(
+  //   category: 'Optimal Fund',
+  //   threshold: 100,
+  //   definition: 'Full-year safety net for lifestyle needs.',
+  //   interpretation:
+  //       'Your emergency fund can sustain your lifestyle allocation '
+  //       'for a full year without income.',
+  //   points: 12,
+  //   color: Color(0xFF16A34A),
+  // ),
 
-  RatioScoreBand(
-    category: 'Adequate Fund',
-    threshold: 50,
-    definition: 'Solid short-term financial protection.',
-    interpretation:
-        'Your liquid funds can support roughly half a year of '
-        'lifestyle allocation.',
-    points: 9,
-    color: Color(0xFF16A34A),
-  ),
+  // RatioScoreBand(
+  //   category: 'Adequate Fund',
+  //   threshold: 50,
+  //   definition: 'Solid short-term financial protection.',
+  //   interpretation:
+  //       'Your liquid funds can support roughly half a year of '
+  //       'lifestyle allocation.',
+  //   points: 9,
+  //   color: Color(0xFF16A34A),
+  // ),
 
-  RatioScoreBand(
-    category: 'Low Fund',
-    threshold: 25,
-    definition: 'Can handle short-term disruptions.',
-    interpretation:
-        'Your emergency fund provides some short-term breathing room.',
-    points: 6,
-    color: Color(0xFFCA8A04),
-  ),
+  // RatioScoreBand(
+  //   category: 'Low Fund',
+  //   threshold: 25,
+  //   definition: 'Can handle short-term disruptions.',
+  //   interpretation:
+  //       'Your emergency fund provides some short-term breathing room.',
+  //   points: 6,
+  //   color: Color(0xFFCA8A04),
+  // ),
 
-  RatioScoreBand(
-    category: 'Minimal Fund',
-    threshold: 8.33,
-    definition: 'Covers only very short-term disruptions.',
-    interpretation:
-        'Your liquid funds can cover approximately one month '
-        'of lifestyle allocation.',
-    points: 3,
-    color: Color(0xFFEA580C),
-  ),
+  // RatioScoreBand(
+  //   category: 'Minimal Fund',
+  //   threshold: 8.33,
+  //   definition: 'Covers only very short-term disruptions.',
+  //   interpretation:
+  //       'Your liquid funds can cover approximately one month '
+  //       'of lifestyle allocation.',
+  //   points: 3,
+  //   color: Color(0xFFEA580C),
+  // ),
 
-  RatioScoreBand(
-    category: 'No Fund',
-    threshold: 0,
-    definition: 'You have little to no buffer for emergencies or income loss.',
-    interpretation:
-        'You have little to no liquid funds set aside for emergencies.',
-    points: 0,
-    color: Color(0xFFDC2626),
-  ),
+  // RatioScoreBand(
+  //   category: 'No Fund',
+  //   threshold: 0,
+  //   definition: 'You have little to no buffer for emergencies or income loss.',
+  //   interpretation:
+  //       'You have little to no liquid funds set aside for emergencies.',
+  //   points: 0,
+  //   color: Color(0xFFDC2626),
+  // ),
 ];
 RatioScoreBand fundBand(double? value) {
   if (value == null) {
@@ -255,4 +256,25 @@ RatioScoreBand fundBand(double? value) {
     (band) => value >= band.threshold,
     orElse: () => fundBands.last,
   );
+}
+
+extension RatioScoreBandEmergencyFundExtension on RatioScoreBand {
+  double months(double targetMonths) {
+    return threshold / 100 * targetMonths;
+  }
+
+  double get milestoneMonths {
+    switch (threshold) {
+      case 8.33:
+        return 1;
+      case 25:
+        return 3;
+      case 50:
+        return 6;
+      case 100:
+        return 12;
+      default:
+        return 0;
+    }
+  }
 }

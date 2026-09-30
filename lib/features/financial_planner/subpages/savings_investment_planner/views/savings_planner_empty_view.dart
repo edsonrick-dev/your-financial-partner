@@ -22,7 +22,6 @@ class RiskToleranceAssessmentPromptView extends StatelessWidget {
           bottom: context.bottomPadding,
         ),
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [

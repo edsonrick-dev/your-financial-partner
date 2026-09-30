@@ -248,6 +248,17 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  Stream<List<AccountsTableData>> watchCashAndBankAccounts() {
+    final cashAndBankTypes = AccountType.values
+        .where((type) => type.group == AccountGroup.cashAndBank)
+        .map((type) => type.name)
+        .toList();
+
+    return (select(
+      accountsTable,
+    )..where((tbl) => tbl.accountType.isIn(cashAndBankTypes))).watch();
+  }
+
   Future<int> insertAccount(AccountsTableCompanion entry) {
     return into(accountsTable).insert(entry);
   }

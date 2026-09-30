@@ -10,7 +10,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/add_account/forms/credit_card_installment_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/credit_card_details_sheet/credit_card_transactions_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_sheet/loan_detail_sheet/loan_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/savings_planner_screen.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/controller/savings_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_setup/financial_setup_controller.dart';
 import 'package:getx_drift_app/features/main_shell/controller/main_shell_controller.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
