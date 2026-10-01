@@ -4,6 +4,7 @@ import 'package:getx_drift_app/core/constants/app_border_radius.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/debugger/retirement_fund_debugger.dart';
 import 'package:getx_drift_app/features/financial_state/financial_state.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/views/section_views/finance_home_view/finance_home_view.dart';
@@ -50,7 +51,7 @@ class HomeView extends GetView<HomeController> {
                 SizedBox(height: AppSpacing.sectionSpacing),
                 AppSection(child: Column(children: [FundSummaryCard()])),
                 SizedBox(height: AppSpacing.sectionSpacing),
-
+                RetirementDebugger(),
                 FinanceHomeView(),
                 SizedBox(height: AppSpacing.sectionSpacing),
                 CashflowHistorySection(),

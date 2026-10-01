@@ -6,7 +6,7 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/controller/savings_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/sheet/goal_setting_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/views/sheet/goal_setting_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/sections/investor_profile_section.dart';
 import 'package:getx_drift_app/features/profile/widgets/requirement_row.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';

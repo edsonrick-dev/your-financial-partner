@@ -16,7 +16,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/checks/views/checks_management_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/exports/views/file_export_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/goal_type.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/page/emergency_fund_goal/emergency_fund_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/emergency_fund_goal/emergency_fund_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/retirement_fund_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/binding/risk_tolerance_binding.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/risk_tolerance_assessment_page.dart';
 import 'package:getx_drift_app/features/home/views/home_view.dart';
@@ -286,6 +287,10 @@ class AppPages {
     GetPage(
       name: Routes.EMERGENCYFUNDPAGE,
       page: () => const EmergencyFundPage(type: GoalType.emergencyFund),
+    ),
+    GetPage(
+      name: Routes.RETIREMENTFUNDPAGE,
+      page: () => const RetirementFundPage(type: GoalType.retirement),
     ),
   ];
 }

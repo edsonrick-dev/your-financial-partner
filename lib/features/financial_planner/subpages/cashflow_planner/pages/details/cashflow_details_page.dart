@@ -13,22 +13,33 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
+class CashflowDetailsArguments {
+  static const from = 'from';
+  static const emergencyFund = 'emergencyFund';
+}
+
 class CashflowDetailsPage extends GetView<CashflowController> {
   const CashflowDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    final from = arguments?['from'];
     return Scaffold(
       body: Column(
         children: [
           AppDetailsHeader(
             onBack: () {
-              Get.find<MainShellController>().goToFinancialPlanner(
-                pageIndex: 1,
-              );
-
-              Get.back();
+              if (from == 'emergencyFund') {
+                debugPrint('$arguments');
+                Get.back();
+              } else {
+                Get.find<MainShellController>().goToFinancialPlanner(
+                  pageIndex: 1,
+                );
+                Get.back();
+              }
             },
             actions: [
               IconButton(

@@ -39,7 +39,7 @@ class GoalTypeCard extends StatelessWidget {
             const SizedBox(height: 12),
 
             Text(
-              goal.description,
+              goal.shortDescription,
               style: AppTextStyle.bodyM.copyWith(
                 color: colorScheme.appTextMuted,
               ),

@@ -32,11 +32,13 @@ class GoalSettingSheet extends StatelessWidget {
   void _selectGoal(GoalType goalType) {
     switch (goalType) {
       case GoalType.emergencyFund:
-        Get.toNamed(Routes.EMERGENCYFUNDPAGE);
+        Get.back();
+        Get.toNamed(Routes.EMERGENCYFUNDPAGE, preventDuplicates: false);
         break;
 
       case GoalType.retirement:
-        // Open retirement setup
+        Get.back();
+        Get.toNamed(Routes.RETIREMENTFUNDPAGE, preventDuplicates: false);
         break;
 
       case GoalType.education:

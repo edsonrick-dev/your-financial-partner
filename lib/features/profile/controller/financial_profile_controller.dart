@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:getx_drift_app/domain/financial_metrics_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/controller/retirement_planner_engine.dart';
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
 import 'package:getx_drift_app/features/profile/models/financial_stability_score_model.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_debt_load_extension.dart';
@@ -15,6 +16,75 @@ import 'package:getx_drift_app/features/profile/controller/extensions/financial_
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_wealth_building_extension.dart';
 
 class FinancialProfileController extends GetxController {
+  double get futureAnnualRetirementLifestyle =>
+      RetirementPlannerEngine.calculateFutureAnnualLifestyle(
+        annualLifestyle: retirementAnnualLifestyle,
+        inflationRate: inflationRate,
+        yearsToRetirement: yearsToRetirement,
+      );
+  void calculateRetirementFundNeed() {
+    final retirementDate = RetirementPlannerEngine.calculateRetirementDate(
+      birthday: birthday,
+      retirementAge: retirementAge.value,
+    );
+
+    final yearsToRetirement =
+        RetirementPlannerEngine.calculateYearsToRetirement(
+          planDate: DateTime.now(),
+          retirementDate: retirementDate,
+        );
+
+    final calculatedFutureAnnualLifestyle =
+        RetirementPlannerEngine.calculateFutureAnnualLifestyle(
+          annualLifestyle: retirementAnnualLifestyle,
+          inflationRate: inflationRate,
+          yearsToRetirement: yearsToRetirement,
+        );
+
+    final calculatedRetirementFundNeed =
+        RetirementPlannerEngine.calculateRetirementFundNeed(
+          retirementAnnualLifestyle: calculatedFutureAnnualLifestyle,
+          retirementReturn: retirementReturn,
+          inflationRate: inflationRate,
+          retirementAge: retirementAge.value,
+          fundLastUntilAge: retirementFundEndAge.value,
+        );
+
+    futureAnnualLifestyle.value = calculatedFutureAnnualLifestyle;
+    retirementFundNeed.value = calculatedRetirementFundNeed;
+  }
+
+  final retirementLifestyleShare = 1.0.obs;
+  final inflationRate = 0.041;
+  final retirementReturn = 0.07;
+
+  final futureAnnualLifestyle = 0.0.obs;
+  final retirementFundNeed = 0.0.obs;
+  final currentAge = 28.obs;
+  final retirementAge = 60.obs;
+  final retirementFundEndAge = 85.obs;
+
+  final birthMonth = 1;
+  final birthDay = 1;
+  double get yearsToRetirement =>
+      (retirementAge.value - currentAge.value).toDouble();
+  double get retirementAnnualLifestyle =>
+      annualBudget * retirementLifestyleShare.value;
+
+  DateTime get birthday {
+    final today = DateTime.now();
+
+    var birthYear = today.year - currentAge.value;
+
+    final assumedBirthday = DateTime(birthYear, birthMonth, birthDay);
+
+    if (assumedBirthday.isAfter(today)) {
+      birthYear--;
+    }
+
+    return DateTime(birthYear, birthMonth, birthDay);
+  }
+
   Future<void> revealFinancialStabilityProfile() async {
     hasRevealedProfile.value = true;
 

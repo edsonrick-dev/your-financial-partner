@@ -67,4 +67,5 @@ abstract class Routes {
       '/financial-planner/savings-and-investment/risk-tolerance-assessment';
   // EMERGENCY FUND
   static const EMERGENCYFUNDPAGE = '/financial-planner/goals/emergency-fund';
+  static const RETIREMENTFUNDPAGE = '/financial-planner/goals/retirement-fund';
 }

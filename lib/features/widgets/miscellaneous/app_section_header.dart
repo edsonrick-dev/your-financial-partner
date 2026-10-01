@@ -46,7 +46,10 @@ class AppSectionHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(sectionTitle, style: AppTextStyle.titleL),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(sectionTitle, style: AppTextStyle.titleL),
+                      ),
                       if (subtitle != null && subtitle!.isNotEmpty) ...[
                         // SizedBox(height: 4),
                         Text(
