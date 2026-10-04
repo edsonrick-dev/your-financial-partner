@@ -3,10 +3,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/domain/financial_metrics_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/controller/retirement_planner_engine.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/projection/retirement_projection_engine.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_horizon_model.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_recommendation/portfolio_recommendation_engine.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/risk_tolerance_controller.dart';
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
 import 'package:getx_drift_app/features/profile/models/financial_stability_score_model.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_debt_load_extension.dart';
@@ -16,13 +21,136 @@ import 'package:getx_drift_app/features/profile/controller/extensions/financial_
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_wealth_building_extension.dart';
 
 class FinancialProfileController extends GetxController {
+  final retirementStep = 0.obs;
+  final requiredMonthlyContribution = 0.0.obs;
+  final requiredQuarterlyContribution = 0.0.obs;
+  final requiredSemiAnnualContribution = 0.0.obs;
+  final currentRetirementSavings = 0.0.obs;
+  final requiredAnnualContribution = 0.0.obs;
+  // final accumulationProjection = <AccumulationProjection>[].obs;
+
+  final retirementProjection = <RetirementProjection>[].obs;
+  final retirementFundNeed = 0.0.obs;
+  final futureAnnualLifestyle = 0.0.obs;
+  void calculateRequiredRetirementContributions({
+    required double retirementFundNeed,
+    required double currentSavings,
+    required DateTime planDate,
+    required DateTime retirementDate,
+    required int retirementAge,
+    required int fundLastUntilAge,
+    required double firstYearWithdrawal,
+    required double inflationRate,
+    required double shortReturn,
+    required double mediumReturn,
+    required double longReturn,
+  }) {
+    requiredMonthlyContribution.value =
+        RetirementPlannerEngine.calculateRequiredContribution(
+          birthday: birthday,
+          retirementFundNeed: retirementFundNeed,
+          currentSavings: currentSavings,
+          planDate: planDate,
+          retirementDate: retirementDate,
+          retirementAge: retirementAge,
+          fundLastUntilAge: fundLastUntilAge,
+          firstYearWithdrawal: firstYearWithdrawal,
+          inflationRate: inflationRate,
+          frequency: BillsFrequency.monthly,
+          shortReturn: shortReturn,
+          mediumReturn: mediumReturn,
+          longReturn: longReturn,
+        );
+
+    requiredQuarterlyContribution.value =
+        RetirementPlannerEngine.calculateRequiredContribution(
+          birthday: birthday,
+          retirementFundNeed: retirementFundNeed,
+          currentSavings: currentSavings,
+          planDate: planDate,
+          retirementDate: retirementDate,
+          retirementAge: retirementAge,
+          fundLastUntilAge: fundLastUntilAge,
+          firstYearWithdrawal: firstYearWithdrawal,
+          inflationRate: inflationRate,
+          frequency: BillsFrequency.quarterly,
+          shortReturn: shortReturn,
+          mediumReturn: mediumReturn,
+          longReturn: longReturn,
+        );
+
+    requiredSemiAnnualContribution.value =
+        RetirementPlannerEngine.calculateRequiredContribution(
+          birthday: birthday,
+          retirementFundNeed: retirementFundNeed,
+          currentSavings: currentSavings,
+          planDate: planDate,
+          retirementDate: retirementDate,
+          retirementAge: retirementAge,
+          fundLastUntilAge: fundLastUntilAge,
+          firstYearWithdrawal: firstYearWithdrawal,
+          inflationRate: inflationRate,
+          frequency: BillsFrequency.semiAnnual,
+          shortReturn: shortReturn,
+          mediumReturn: mediumReturn,
+          longReturn: longReturn,
+        );
+
+    requiredAnnualContribution.value =
+        RetirementPlannerEngine.calculateRequiredContribution(
+          birthday: birthday,
+          retirementFundNeed: retirementFundNeed,
+          currentSavings: currentSavings,
+          planDate: planDate,
+          retirementDate: retirementDate,
+          retirementAge: retirementAge,
+          fundLastUntilAge: fundLastUntilAge,
+          firstYearWithdrawal: firstYearWithdrawal,
+          inflationRate: inflationRate,
+          frequency: BillsFrequency.annual,
+          shortReturn: shortReturn,
+          mediumReturn: mediumReturn,
+          longReturn: longReturn,
+        );
+  }
+
   double get futureAnnualRetirementLifestyle =>
       RetirementPlannerEngine.calculateFutureAnnualLifestyle(
         annualLifestyle: retirementAnnualLifestyle,
         inflationRate: inflationRate,
         yearsToRetirement: yearsToRetirement,
       );
+
   void calculateRetirementFundNeed() {
+    Get.put<RiskToleranceController>(RiskToleranceController());
+    final riskToleranceController = Get.find<RiskToleranceController>();
+
+    final profile = riskToleranceController.investorProfile.value;
+    if (profile == null) {
+      debugPrint('Investor profile is incomplete.');
+      return;
+    }
+    // Get profile-specific portfolio returns.
+    final shortRecommendation = PortfolioRecommendationEngine.getRecommendation(
+      profile: profile,
+      horizon: PortfolioHorizon.short,
+    );
+
+    final mediumRecommendation =
+        PortfolioRecommendationEngine.getRecommendation(
+          profile: profile,
+          horizon: PortfolioHorizon.medium,
+        );
+
+    final longRecommendation = PortfolioRecommendationEngine.getRecommendation(
+      profile: profile,
+      horizon: PortfolioHorizon.long,
+    );
+
+    final shortReturn = shortRecommendation.returnRange.average;
+    final mediumReturn = mediumRecommendation.returnRange.average;
+    final longReturn = longRecommendation.returnRange.average;
+
     final retirementDate = RetirementPlannerEngine.calculateRetirementDate(
       birthday: birthday,
       retirementAge: retirementAge.value,
@@ -41,25 +169,139 @@ class FinancialProfileController extends GetxController {
           yearsToRetirement: yearsToRetirement,
         );
 
-    final calculatedRetirementFundNeed =
-        RetirementPlannerEngine.calculateRetirementFundNeed(
-          retirementAnnualLifestyle: calculatedFutureAnnualLifestyle,
-          retirementReturn: retirementReturn,
-          inflationRate: inflationRate,
+    final calculatedRetirementFundNeed = calculateRequiredRetirementFund(
+      retirementDate: retirementDate,
+      retirementAge: retirementAge.value,
+      fundLastUntilAge: retirementFundEndAge.value,
+      firstYearWithdrawal: calculatedFutureAnnualLifestyle,
+      inflationRate: inflationRate,
+      shortReturn: shortReturn,
+      mediumReturn: mediumReturn,
+      longReturn: longReturn,
+    );
+    final calculatedRetirementProjection = calculateRetirementProjection(
+      retirementFund: calculatedRetirementFundNeed,
+      retirementDate: retirementDate,
+      retirementAge: retirementAge.value,
+      fundLastUntilAge: retirementFundEndAge.value,
+      firstYearWithdrawal: calculatedFutureAnnualLifestyle,
+      inflationRate: inflationRate,
+      shortReturn: shortReturn,
+      mediumReturn: mediumReturn,
+      longReturn: longReturn,
+    );
+    final calculatedRequiredMonthlyContribution =
+        RetirementPlannerEngine.calculateRequiredContribution(
+          birthday: birthday,
+          retirementFundNeed: calculatedRetirementFundNeed,
+          currentSavings: currentRetirementSavings.value,
+          planDate: DateTime.now(),
+          retirementDate: retirementDate,
           retirementAge: retirementAge.value,
           fundLastUntilAge: retirementFundEndAge.value,
+          firstYearWithdrawal: calculatedFutureAnnualLifestyle,
+          inflationRate: inflationRate,
+          frequency: BillsFrequency.monthly,
+          shortReturn: shortReturn,
+          mediumReturn: mediumReturn,
+          longReturn: longReturn,
         );
+    final debugProjection = RetirementPlannerEngine.buildAccumulationProjection(
+      birthday: birthday,
+      currentSavings: currentRetirementSavings.value,
+      contribution: calculatedRequiredMonthlyContribution,
+      planDate: DateTime.now(),
+      retirementDate: retirementDate,
+      retirementAge: retirementAge.value,
+      fundLastUntilAge: retirementFundEndAge.value,
+      firstYearWithdrawal: calculatedFutureAnnualLifestyle,
+      inflationRate: inflationRate,
+      frequency: BillsFrequency.monthly,
+      shortReturn: shortReturn,
+      mediumReturn: mediumReturn,
+      longReturn: longReturn,
+    );
 
+    debugPrint('========== RETIREMENT DEBUG ==========');
+    debugPrint('Fund need: $calculatedRetirementFundNeed');
+    debugPrint(
+      'Required monthly contribution: '
+      '$calculatedRequiredMonthlyContribution',
+    );
+    debugPrint('Projection rows: ${debugProjection.length}');
+
+    for (final row in debugProjection) {
+      debugPrint(
+        'AGE ${row.age} | '
+        '${row.date.toIso8601String().substring(0, 10)} | '
+        'BEGIN ${row.beginningBalance.toStringAsFixed(2)} | '
+        'CONTRIB ${row.contributions.toStringAsFixed(2)} | '
+        'RETURN ${(row.returnRate * 100).toStringAsFixed(2)}% | '
+        'GROWTH ${row.interestEarned.toStringAsFixed(2)} | '
+        'END ${row.endingBalance.toStringAsFixed(2)}',
+      );
+    }
+
+    if (debugProjection.isNotEmpty) {
+      debugPrint(
+        'FINAL BALANCE: '
+        '${debugProjection.last.endingBalance.toStringAsFixed(2)}',
+      );
+
+      debugPrint(
+        'TARGET: '
+        '${calculatedRetirementFundNeed.toStringAsFixed(2)}',
+      );
+
+      debugPrint(
+        'DIFFERENCE: '
+        '${(debugProjection.last.endingBalance - calculatedRetirementFundNeed).toStringAsFixed(2)}',
+      );
+    }
+
+    debugPrint('======================================');
     futureAnnualLifestyle.value = calculatedFutureAnnualLifestyle;
     retirementFundNeed.value = calculatedRetirementFundNeed;
+    requiredMonthlyContribution.value = calculatedRequiredMonthlyContribution;
+    retirementProjection.value = calculatedRetirementProjection;
   }
+
+  // void calculateRetirementFundNeed() {
+  //   final retirementDate = RetirementPlannerEngine.calculateRetirementDate(
+  //     birthday: birthday,
+  //     retirementAge: retirementAge.value,
+  //   );
+
+  //   final yearsToRetirement =
+  //       RetirementPlannerEngine.calculateYearsToRetirement(
+  //         planDate: DateTime.now(),
+  //         retirementDate: retirementDate,
+  //       );
+
+  //   final calculatedFutureAnnualLifestyle =
+  //       RetirementPlannerEngine.calculateFutureAnnualLifestyle(
+  //         annualLifestyle: retirementAnnualLifestyle,
+  //         inflationRate: inflationRate,
+  //         yearsToRetirement: yearsToRetirement,
+  //       );
+
+  //   final calculatedRetirementFundNeed =
+  //       RetirementPlannerEngine.calculateRetirementFundNeed(
+  //         retirementAnnualLifestyle: calculatedFutureAnnualLifestyle,
+  //         retirementReturn: retirementReturn,
+  //         inflationRate: inflationRate,
+  //         retirementAge: retirementAge.value,
+  //         fundLastUntilAge: retirementFundEndAge.value,
+  //       );
+
+  //   futureAnnualLifestyle.value = calculatedFutureAnnualLifestyle;
+  //   retirementFundNeed.value = calculatedRetirementFundNeed;
+  // }
 
   final retirementLifestyleShare = 1.0.obs;
   final inflationRate = 0.041;
   final retirementReturn = 0.07;
 
-  final futureAnnualLifestyle = 0.0.obs;
-  final retirementFundNeed = 0.0.obs;
   final currentAge = 28.obs;
   final retirementAge = 60.obs;
   final retirementFundEndAge = 85.obs;

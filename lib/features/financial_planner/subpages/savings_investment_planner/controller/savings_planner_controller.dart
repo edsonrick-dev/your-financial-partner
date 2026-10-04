@@ -1,15 +1,27 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/features/financial_insights/cashflow/models/cashflow_position.dart';
 import 'package:getx_drift_app/features/financial_insights/financial_profile_cashflow_controller_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investory_profile_model.dart';
+import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_emergency_fund_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 
 class SavingsPlannerController extends GetxController {
+  final selectedPageTabIndex = 0.obs;
+  void changePageTabIndex(int index) {
+    selectedPageTabIndex.value = index;
+  }
+
+  void resetHorizonTab() {
+    selectedHorizonTabIndex.value = 0;
+  }
+
   final financialProfileController = Get.find<FinancialProfileController>();
   final selectedHorizonTabIndex = 0.obs;
-
+  double get disposableIncome => financialProfileController.annualSavings;
+  double get emergencyFundTarget => financialProfileController.annualBudget;
   final isUnderConstruction = true.obs;
   final isRiskToleranceAssessmentFinished = false.obs;
   final isLoading = true.obs;

@@ -8,6 +8,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/savings_inves
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/projection/retirement_projection_engine.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_horizon_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_recommendation/portfolio_recommendation_engine.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/risk_return/retirement_horizon_returns.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/risk_return/risk_return_range_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/risk_tolerance_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -394,17 +395,17 @@ class RetirementDebugger extends StatelessWidget {
       yearsToRetirement: yearsToRetirement,
     );
 
-    final requiredMonthlyContribution =
-        RetirementPlannerEngine.calculateRequiredContribution(
-          retirementFundNeed: retirementFundNeed,
-          currentSavings: currentSavings,
-          planDate: planDate,
-          retirementDate: retirementDate,
-          frequency: BillsFrequency.monthly,
-          shortReturn: shortReturn,
-          mediumReturn: mediumReturn,
-          longReturn: longReturn,
-        );
+    // final requiredMonthlyContribution =
+    //     RetirementPlannerEngine.calculateRequiredContribution(
+    //       retirementFundNeed: retirementFundNeed,
+    //       currentSavings: currentSavings,
+    //       planDate: planDate,
+    //       retirementDate: retirementDate,
+    //       frequency: BillsFrequency.monthly,
+    //       shortReturn: shortReturn,
+    //       mediumReturn: mediumReturn,
+    //       longReturn: longReturn,
+    //     );
 
     final futureAnnualLifestyle =
         RetirementPlannerEngine.calculateFutureAnnualLifestyle(
@@ -412,42 +413,46 @@ class RetirementDebugger extends StatelessWidget {
           inflationRate: inflationRate,
           yearsToRetirement: yearsToRetirement,
         );
-    _debugAccumulationProjection(
-      currentAge:
-          now.year -
-          birthday.year -
-          ((now.month < birthday.month ||
-                  (now.month == birthday.month && now.day < birthday.day))
-              ? 1
-              : 0),
+    // _debugAccumulationProjection(
+    //   currentAge:
+    //       now.year -
+    //       birthday.year -
+    //       ((now.month < birthday.month ||
+    //               (now.month == birthday.month && now.day < birthday.day))
+    //           ? 1
+    //           : 0),
 
-      planDate: planDate,
-      retirementDate: retirementDate,
+    //   planDate: planDate,
+    //   retirementDate: retirementDate,
 
-      retirementAge: retirementAge,
-      fundLastUntilAge: fundLastUntilAge,
-      firstYearWithdrawal: futureAnnualLifestyle,
-      inflationRate: inflationRate,
+    //   retirementAge: retirementAge,
+    //   fundLastUntilAge: fundLastUntilAge,
+    //   firstYearWithdrawal: futureAnnualLifestyle,
+    //   inflationRate: inflationRate,
 
-      currentSavings: currentSavings,
-      contribution: requiredMonthlyContribution,
-      frequency: BillsFrequency.monthly,
+    //   currentSavings: currentSavings,
+    //   contribution: requiredMonthlyContribution,
+    //   frequency: BillsFrequency.monthly,
 
-      shortReturn: shortReturn,
-      mediumReturn: mediumReturn,
-      longReturn: longReturn,
-    );
-    final projectedWithRequiredContribution =
-        RetirementPlannerEngine.calculateAccumulationProjection(
-          currentSavings: currentSavings,
-          contribution: requiredMonthlyContribution,
-          planDate: planDate,
-          retirementDate: retirementDate,
-          frequency: BillsFrequency.monthly,
-          shortReturn: shortReturn,
-          mediumReturn: mediumReturn,
-          longReturn: longReturn,
-        );
+    //   shortReturn: shortReturn,
+    //   mediumReturn: mediumReturn,
+    //   longReturn: longReturn,
+    // );
+    // // final projectedWithRequiredContribution =
+    //     RetirementPlannerEngine.calculateAccumulationProjection(
+    //       currentSavings: currentSavings,
+    //       contribution: requiredMonthlyContribution,
+    //       planDate: planDate,
+    //       retirementDate: retirementDate,
+    //       retirementAge: retirementAge,
+    //       fundLastUntilAge: fundLastUntilAge,
+    //       firstYearWithdrawal: retirementAnnualLifestyle,
+    //       inflationRate: inflationRate,
+    //       frequency: BillsFrequency.monthly,
+    //       shortReturn: shortReturn,
+    //       mediumReturn: mediumReturn,
+    //       longReturn: longReturn,
+    //     );
     debugPrint('');
     debugPrint(
       '-------------------- ACCUMULATION VALIDATION --------------------',
@@ -458,55 +463,55 @@ class RetirementDebugger extends StatelessWidget {
       '${retirementFundNeed.toCurrency()}',
     );
 
-    debugPrint(
-      'Required monthly contribution:  '
-      '${requiredMonthlyContribution.toCurrency()}',
-    );
+    // debugPrint(
+    //   'Required monthly contribution:  '
+    //   '${requiredMonthlyContribution.toCurrency()}',
+    // );
 
-    debugPrint(
-      'Projected retirement balance:   '
-      '${projectedWithRequiredContribution.toCurrency()}',
-    );
+    // debugPrint(
+    //   'Projected retirement balance:   '
+    //   '${projectedWithRequiredContribution.toCurrency()}',
+    // );
 
-    debugPrint(
-      'Accumulation difference:        '
-      '${(projectedWithRequiredContribution - retirementFundNeed).toCurrency()}',
-    );
-    final requiredQuarterlyContribution =
-        RetirementPlannerEngine.calculateRequiredContribution(
-          retirementFundNeed: retirementFundNeed,
-          currentSavings: currentSavings,
-          planDate: planDate,
-          retirementDate: retirementDate,
-          frequency: BillsFrequency.quarterly,
-          shortReturn: shortReturn,
-          mediumReturn: mediumReturn,
-          longReturn: longReturn,
-        );
-    final requiredSemiAnnualContribution =
-        RetirementPlannerEngine.calculateRequiredContribution(
-          retirementFundNeed: retirementFundNeed,
-          currentSavings: currentSavings,
-          planDate: planDate,
-          retirementDate: retirementDate,
-          frequency: BillsFrequency.semiAnnual,
-          shortReturn: shortReturn,
-          mediumReturn: mediumReturn,
-          longReturn: longReturn,
-        );
+    // debugPrint(
+    //   'Accumulation difference:        '
+    //   '${(projectedWithRequiredContribution - retirementFundNeed).toCurrency()}',
+    // );
+    // final requiredQuarterlyContribution =
+    //     RetirementPlannerEngine.calculateRequiredContribution(
+    //       retirementFundNeed: retirementFundNeed,
+    //       currentSavings: currentSavings,
+    //       planDate: planDate,
+    //       retirementDate: retirementDate,
+    //       frequency: BillsFrequency.quarterly,
+    //       shortReturn: shortReturn,
+    //       mediumReturn: mediumReturn,
+    //       longReturn: longReturn,
+    //     );
+    // final requiredSemiAnnualContribution =
+    //     RetirementPlannerEngine.calculateRequiredContribution(
+    //       retirementFundNeed: retirementFundNeed,
+    //       currentSavings: currentSavings,
+    //       planDate: planDate,
+    //       retirementDate: retirementDate,
+    //       frequency: BillsFrequency.semiAnnual,
+    //       shortReturn: shortReturn,
+    //       mediumReturn: mediumReturn,
+    //       longReturn: longReturn,
+    //     );
 
-    final requiredAnnualContribution =
-        RetirementPlannerEngine.calculateRequiredContribution(
-          retirementFundNeed: retirementFundNeed,
-          currentSavings: currentSavings,
-          planDate: planDate,
-          retirementDate: retirementDate,
-          frequency: BillsFrequency.annual,
-          shortReturn: shortReturn,
-          mediumReturn: mediumReturn,
-          longReturn: longReturn,
-        );
-    // ============================================================
+    // final requiredAnnualContribution =
+    //     RetirementPlannerEngine.calculateRequiredContribution(
+    //       retirementFundNeed: retirementFundNeed,
+    //       currentSavings: currentSavings,
+    //       planDate: planDate,
+    //       retirementDate: retirementDate,
+    //       frequency: BillsFrequency.annual,
+    //       shortReturn: shortReturn,
+    //       mediumReturn: mediumReturn,
+    //       longReturn: longReturn,
+    //     );
+    // // ============================================================
     // CURRENT SAVINGS — NO FUTURE CONTRIBUTIONS
     // ============================================================
 
@@ -721,25 +726,25 @@ class RetirementDebugger extends StatelessWidget {
       '${requiredLumpSum.toCurrency()}',
     );
 
-    debugPrint(
-      'Required monthly:      '
-      '${requiredMonthlyContribution.toCurrency()}',
-    );
+    // debugPrint(
+    //   'Required monthly:      '
+    //   '${requiredMonthlyContribution.toCurrency()}',
+    // );
 
-    debugPrint(
-      'Required quarterly:    '
-      '${requiredQuarterlyContribution.toCurrency()}',
-    );
+    // debugPrint(
+    //   'Required quarterly:    '
+    //   '${requiredQuarterlyContribution.toCurrency()}',
+    // );
 
-    debugPrint(
-      'Required semi-annual:  '
-      '${requiredSemiAnnualContribution.toCurrency()}',
-    );
+    // debugPrint(
+    //   'Required semi-annual:  '
+    //   '${requiredSemiAnnualContribution.toCurrency()}',
+    // );
 
-    debugPrint(
-      'Required annual:       '
-      '${requiredAnnualContribution.toCurrency()}',
-    );
+    // debugPrint(
+    //   'Required annual:       '
+    //   '${requiredAnnualContribution.toCurrency()}',
+    // );
 
     // ------------------------------------------------------------
     // CURRENT SAVINGS

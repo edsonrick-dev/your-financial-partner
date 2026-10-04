@@ -147,7 +147,7 @@ class InsurancePlannerController extends GetxController {
   }
 
   RxBool isUnderConstruction = true.obs;
-  RxBool justStarted = true.obs;
+  RxBool justStarted = false.obs;
   // Protection amounts
   final deathBenefitCovered = 1000000.0.obs;
   final deathBenefitNeed = 2000000.0.obs;

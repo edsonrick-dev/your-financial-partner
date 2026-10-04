@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/cashflow_details_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/emergency_fund_goal/emergency_fund_allocation_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/goal_type.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -25,21 +27,33 @@ class EmergencyFundNeed extends GetView<FinancialProfileController> {
         child: Column(
           children: [
             AppSection(
-              child: AppSectionBody(
-                padding: 24,
+              child: Container(
+                padding: EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: AppGradient.gradientA(colorScheme),
+                  borderRadius: BorderRadius.circular(24),
+                ),
                 child: Column(
                   children: [
-                    Icon(type.icon, size: 60),
+                    Icon(
+                      type.icon,
+                      size: 60,
+                      color: colorScheme.appInversedtext,
+                    ),
                     SizedBox(height: 16),
                     Text(
                       'Why Build Emergency Fund?',
-                      style: AppTextStyle.headlineM,
+                      style: AppTextStyle.headlineM.copyWith(
+                        color: colorScheme.appInversedtext,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 12),
                     Text(
                       type.description,
-                      style: AppTextStyle.bodyL,
+                      style: AppTextStyle.bodyL.copyWith(
+                        color: colorScheme.appInversedtext,
+                      ),
                       textAlign: TextAlign.justify,
                     ),
                   ],
@@ -59,19 +73,11 @@ class EmergencyFundNeed extends GetView<FinancialProfileController> {
                       'Your Emergency Fund Target',
                       style: AppTextStyle.titleL,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('12 months', style: AppTextStyle.amountXL),
-
-                        Text(
-                          'of your average monthly budget',
-                          style: AppTextStyle.titleM.copyWith(
-                            color: colorScheme.appTextMuted,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'Build up to 12 months of your average monthly budget',
+                      style: AppTextStyle.bodyM,
                     ),
+
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -84,7 +90,7 @@ class EmergencyFundNeed extends GetView<FinancialProfileController> {
                         }),
 
                         Text(
-                          'Based on your current budget plan',
+                          'Your 12-month emergency fund target',
                           style: AppTextStyle.titleM.copyWith(
                             color: colorScheme.appTextMuted,
                           ),
@@ -129,12 +135,18 @@ class EmergencyFundNeed extends GetView<FinancialProfileController> {
                 ),
               ),
             ),
+
             SizedBox(height: 20),
             AppSection(
               child: Column(
                 spacing: 12,
                 children: [
-                  AppButton(text: 'Allocate fund for emergency', onTap: () {}),
+                  AppButton(
+                    text: 'Start building my emergency fund',
+                    onTap: () {
+                      Get.to(() => const EmergencyFundAllocationPage());
+                    },
+                  ),
                   AppButton(
                     text: 'Update my budget',
                     type: ButtonType.outline,

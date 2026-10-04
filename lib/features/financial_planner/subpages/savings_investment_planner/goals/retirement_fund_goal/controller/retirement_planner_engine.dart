@@ -1,7 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/projection/accumulation_projection_engine.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/projection/retirement_projection_engine.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_horizon_model.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/risk_return/retirement_horizon_returns.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/risk_return/risk_return_range_model.dart';
 
 class RetirementPlannerEngine {
   // ============================================================
@@ -147,37 +151,211 @@ class RetirementPlannerEngine {
   }
 
   static double calculateAccumulationProjection({
+    required DateTime birthday,
     required double currentSavings,
     required double contribution,
     required DateTime planDate,
     required DateTime retirementDate,
+    required int retirementAge,
+    required int fundLastUntilAge,
+    required double firstYearWithdrawal,
+    required double inflationRate,
     required BillsFrequency frequency,
     required double shortReturn,
     required double mediumReturn,
     required double longReturn,
   }) {
-    final periodsPerYear = frequency.investmentPeriodsPerYear;
+    final projections = buildAccumulationProjection(
+      birthday: birthday,
+      currentSavings: currentSavings,
+      contribution: contribution,
+      planDate: planDate,
+      retirementDate: retirementDate,
+      retirementAge: retirementAge,
+      fundLastUntilAge: fundLastUntilAge,
+      firstYearWithdrawal: firstYearWithdrawal,
+      inflationRate: inflationRate,
+      frequency: frequency,
+      shortReturn: shortReturn,
+      mediumReturn: mediumReturn,
+      longReturn: longReturn,
+    );
 
-    final totalYears = retirementDate.difference(planDate).inDays / 365.2425;
-
-    if (totalYears <= 0) {
+    if (projections.isEmpty) {
       return currentSavings;
     }
 
-    final totalPeriods = (totalYears * periodsPerYear).ceil();
+    return projections.last.endingBalance;
+  }
+  // static double calculateAccumulationProjection({
+  //   required double currentSavings,
+  //   required double contribution,
+  //   required DateTime planDate,
+  //   required DateTime retirementDate,
+  //   required int retirementAge,
+  //   required int fundLastUntilAge,
+  //   required double firstYearWithdrawal,
+  //   required double inflationRate,
+  //   required BillsFrequency frequency,
+  //   required double shortReturn,
+  //   required double mediumReturn,
+  //   required double longReturn,
+  // }) {
+  //   final yearsToRetirement =
+  //       retirementDate.difference(planDate).inDays / 365.2425;
+
+  //   if (yearsToRetirement <= 0) {
+  //     return currentSavings;
+  //   }
+
+  //   final totalYears = yearsToRetirement.ceil();
+
+  //   final periodsPerYear = frequency.investmentPeriodsPerYear;
+
+  //   final withdrawals = buildRetirementWithdrawals(
+  //     retirementDate: retirementDate,
+  //     retirementAge: retirementAge,
+  //     fundLastUntilAge: fundLastUntilAge,
+  //     firstYearWithdrawal: firstYearWithdrawal,
+  //     inflationRate: inflationRate,
+  //   );
+
+  //   final returns = RetirementHorizonReturns(
+  //     short: shortReturn,
+  //     medium: mediumReturn,
+  //     long: longReturn,
+  //   );
+
+  //   var balance = currentSavings;
+
+  //   for (var year = 0; year < totalYears; year++) {
+  //     final accumulationDate = DateTime(
+  //       planDate.year + year,
+  //       planDate.month,
+  //       planDate.day,
+  //     );
+
+  //     final weights = RetirementHorizonReturns.calculateHorizonWeights(
+  //       currentDate: accumulationDate,
+  //       futureWithdrawals: withdrawals,
+  //     );
+
+  //     final annualReturn =
+  //         RetirementHorizonReturns.calculateBlendedRetirementReturn(
+  //           weights: weights,
+  //           returns: returns,
+  //         );
+
+  //     final periodicReturn = calculatePeriodicReturn(
+  //       annualReturn: annualReturn,
+  //       frequency: frequency,
+  //     );
+
+  //     for (var period = 0; period < periodsPerYear; period++) {
+  //       final interest = balance * periodicReturn;
+
+  //       balance += interest;
+  //       balance += contribution;
+  //     }
+  //   }
+
+  //   return balance;
+  // }
+
+  static List<AccumulationProjection> buildAccumulationProjection({
+    required DateTime birthday,
+    required double currentSavings,
+    required double contribution,
+    required DateTime planDate,
+    required DateTime retirementDate,
+    required int retirementAge,
+    required int fundLastUntilAge,
+    required double firstYearWithdrawal,
+    required double inflationRate,
+    required BillsFrequency frequency,
+    required double shortReturn,
+    required double mediumReturn,
+    required double longReturn,
+  }) {
+    if (!retirementDate.isAfter(planDate)) {
+      return [
+        AccumulationProjection(
+          age: retirementAge,
+          date: retirementDate,
+          beginningBalance: currentSavings,
+          contributions: 0,
+          returnRate: 0,
+          interestEarned: 0,
+          endingBalance: currentSavings,
+        ),
+      ];
+    }
+
+    final withdrawals = buildRetirementWithdrawals(
+      retirementDate: retirementDate,
+      retirementAge: retirementAge,
+      fundLastUntilAge: fundLastUntilAge,
+      firstYearWithdrawal: firstYearWithdrawal,
+      inflationRate: inflationRate,
+    );
+
+    final returns = RetirementHorizonReturns(
+      short: shortReturn,
+      medium: mediumReturn,
+      long: longReturn,
+    );
 
     var balance = currentSavings;
+    var periodDate = planDate;
 
-    for (var period = 0; period < totalPeriods; period++) {
-      final elapsedYears = period / periodsPerYear;
+    final projections = <AccumulationProjection>[];
 
-      final remainingYears = math.max(0.0, totalYears - elapsedYears);
+    var projectionYear = planDate.year;
+    var beginningBalance = balance;
+    var totalContributions = 0.0;
+    var totalInterest = 0.0;
+    var annualReturn = 0.0;
 
-      final annualReturn = calculateAccumulationReturn(
-        yearsToRetirement: remainingYears,
-        shortReturn: shortReturn,
-        mediumReturn: mediumReturn,
-        longReturn: longReturn,
+    while (periodDate.isBefore(retirementDate)) {
+      final nextPeriodDate = switch (frequency) {
+        BillsFrequency.monthly => DateTime(
+          periodDate.year,
+          periodDate.month + 1,
+          periodDate.day,
+        ),
+        BillsFrequency.quarterly => DateTime(
+          periodDate.year,
+          periodDate.month + 3,
+          periodDate.day,
+        ),
+        BillsFrequency.semiAnnual => DateTime(
+          periodDate.year,
+          periodDate.month + 6,
+          periodDate.day,
+        ),
+        BillsFrequency.annual => DateTime(
+          periodDate.year + 1,
+          periodDate.month,
+          periodDate.day,
+        ),
+        _ => throw UnsupportedError(
+          '${frequency.label} is not supported for retirement contributions.',
+        ),
+      };
+
+      final periodEnd = nextPeriodDate.isAfter(retirementDate)
+          ? retirementDate
+          : nextPeriodDate;
+
+      // Determine the retirement-liability mix for this period.
+      final weights = RetirementHorizonReturns.calculateHorizonWeights(
+        currentDate: periodDate,
+        futureWithdrawals: withdrawals,
+      );
+
+      annualReturn = RetirementHorizonReturns.calculateBlendedRetirementReturn(
+        weights: weights,
+        returns: returns,
       );
 
       final periodicReturn = calculatePeriodicReturn(
@@ -185,69 +363,93 @@ class RetirementPlannerEngine {
         frequency: frequency,
       );
 
-      // Grow existing balance.
-      balance *= 1 + periodicReturn;
+      // Grow the existing balance.
+      final interest = balance * periodicReturn;
 
-      // Add contribution at the end of the period.
+      balance += interest;
+
+      // Contribution is made at the end of the period.
       balance += contribution;
+
+      totalInterest += interest;
+      totalContributions += contribution;
+
+      final isRetirement = periodEnd == retirementDate;
+      final isYearEnd = periodEnd.year != projectionYear || isRetirement;
+
+      if (isYearEnd) {
+        final age =
+            periodEnd.year -
+            birthday.year -
+            ((periodEnd.month < birthday.month ||
+                    (periodEnd.month == birthday.month &&
+                        periodEnd.day < birthday.day))
+                ? 1
+                : 0);
+
+        projections.add(
+          AccumulationProjection(
+            age: isRetirement ? retirementAge : age,
+            date: isRetirement
+                ? retirementDate
+                : DateTime(projectionYear, planDate.month, planDate.day),
+            beginningBalance: beginningBalance,
+            contributions: totalContributions,
+            returnRate: annualReturn,
+            interestEarned: totalInterest,
+            endingBalance: balance,
+          ),
+        );
+
+        if (!isRetirement) {
+          projectionYear = periodEnd.year;
+          beginningBalance = balance;
+          totalContributions = 0.0;
+          totalInterest = 0.0;
+        }
+      }
+
+      periodDate = periodEnd;
     }
 
-    return balance;
+    return projections;
   }
 
   static double calculateRequiredContribution({
+    required DateTime birthday,
     required double retirementFundNeed,
     required double currentSavings,
     required DateTime planDate,
     required DateTime retirementDate,
+    required int retirementAge,
+    required int fundLastUntilAge,
+    required double firstYearWithdrawal,
+    required double inflationRate,
     required BillsFrequency frequency,
     required double shortReturn,
     required double mediumReturn,
     required double longReturn,
   }) {
-    final periodsPerYear = frequency.investmentPeriodsPerYear;
-
-    final totalYears = retirementDate.difference(planDate).inDays / 365.2425;
-
-    if (totalYears <= 0) {
-      return math.max(0, retirementFundNeed - currentSavings);
-    }
-
-    final totalPeriods = (totalYears * periodsPerYear).ceil();
-
     // ------------------------------------------------------------
     // PROJECT RETIREMENT VALUE FOR A GIVEN CONTRIBUTION
     // ------------------------------------------------------------
 
     double project(double contribution) {
-      var balance = currentSavings;
-
-      for (var period = 0; period < totalPeriods; period++) {
-        final elapsedYears = period / periodsPerYear;
-
-        final remainingYears = math.max(0.0, totalYears - elapsedYears);
-
-        final annualReturn =
-            RetirementPlannerEngine.calculateAccumulationReturn(
-              yearsToRetirement: remainingYears,
-              shortReturn: shortReturn,
-              mediumReturn: mediumReturn,
-              longReturn: longReturn,
-            );
-
-        final periodicReturn = calculatePeriodicReturn(
-          annualReturn: annualReturn,
-          frequency: frequency,
-        );
-
-        // Grow existing balance.
-        balance *= 1 + periodicReturn;
-
-        // Add contribution at the end of the period.
-        balance += contribution;
-      }
-
-      return balance;
+      return calculateAccumulationProjection(
+        birthday: birthday,
+        currentSavings: currentSavings,
+        contribution: contribution,
+        planDate: planDate,
+        retirementDate: retirementDate,
+        retirementAge: retirementAge,
+        fundLastUntilAge: fundLastUntilAge,
+        firstYearWithdrawal: firstYearWithdrawal,
+        inflationRate: inflationRate,
+        frequency: frequency,
+        shortReturn: shortReturn,
+        mediumReturn: mediumReturn,
+        longReturn: longReturn,
+      );
     }
 
     // ------------------------------------------------------------
@@ -280,8 +482,7 @@ class RetirementPlannerEngine {
     }
 
     return high;
-  }
-  // ============================================================
+  } // ============================================================
   // CURRENT SAVINGS
   // ============================================================
 

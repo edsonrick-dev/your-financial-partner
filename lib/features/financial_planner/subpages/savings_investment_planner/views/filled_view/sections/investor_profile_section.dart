@@ -22,6 +22,7 @@ class InvestorProfileSection extends GetView<SavingsPlannerController> {
     }
     return AdaptivePressable(
       onTap: () {
+        controller.resetHorizonTab();
         Get.bottomSheet(
           InvestorProfileSheet(profile: profile),
           isScrollControlled: true,

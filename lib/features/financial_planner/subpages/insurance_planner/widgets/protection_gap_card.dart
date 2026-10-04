@@ -66,81 +66,51 @@ class ProtectionGapCard extends StatelessWidget {
           ],
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Opacity(
-                      opacity: 0.2,
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: severityColor,
-                        ),
-                      ),
-                    ),
-                    Icon(icon, color: severityColor),
-                  ],
-                ),
+                Icon(icon, color: severityColor),
 
                 const SizedBox(width: 8),
-
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              gapTitle,
-                              style: AppTextStyle.titleM,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            gapAmount.toCompactCurrency(kThreshold: 100000),
-                            style: AppTextStyle.amountL,
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 4),
-                      RichText(
-                        text: TextSpan(
-                          style: AppTextStyle.bodyS.copyWith(
-                            color: colorScheme.appTextMuted,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: amountCovered.toCurrency(),
-                              style: AppTextStyle.bodyS.copyWith(
-                                color: colorScheme.text,
-                              ),
-                            ),
-                            const TextSpan(text: ' covered out of '),
-                            TextSpan(
-                              text: amountNeed.toCurrency(),
-                              style: AppTextStyle.bodyS.copyWith(
-                                color: colorScheme.text,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    gapTitle,
+                    style: AppTextStyle.titleL,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  gapAmount.toCompactCurrency(kThreshold: 100000),
+                  style: AppTextStyle.amountL,
                 ),
               ],
             ),
+            const SizedBox(height: 4),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: RichText(
+                text: TextSpan(
+                  style: AppTextStyle.amountM.copyWith(
+                    color: colorScheme.appTextMuted,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: amountCovered.toCurrency(),
+                      style: TextStyle(color: colorScheme.appText),
+                    ),
+                    TextSpan(
+                      text: ' covered out of ',
+                      style: AppTextStyle.bodyM,
+                    ),
+                    TextSpan(text: amountNeed.toCurrency()),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 6),
-
             Row(
               children: [
                 Expanded(
