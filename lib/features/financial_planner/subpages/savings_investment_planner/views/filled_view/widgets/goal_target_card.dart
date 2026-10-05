@@ -17,6 +17,7 @@ class GoalDetails {
   final double target;
   final double current;
   final DateTime? dueDate;
+  final VoidCallback? onTap;
 
   GoalDetails({
     this.type = GoalType.general,
@@ -25,6 +26,7 @@ class GoalDetails {
     this.target = 0,
     this.current = 0,
     this.dueDate,
+    this.onTap,
   });
 
   double get completionRate => target > 0 ? current / target : 0.0;
@@ -41,6 +43,7 @@ class GoalTargetCard extends GetView<SavingsPlannerController> {
 
     final statusColor = colorScheme.appText;
     return AppCard(
+      onTap: goal.onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

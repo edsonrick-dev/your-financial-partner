@@ -38,15 +38,20 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
             ),
 
             const SizedBox(height: 20),
-            Obx(
-              () => AppAmountField(
+            Obx(() {
+              final value = controller.enteredBalance.value;
+
+              print('REBUILDING AMOUNT FIELD: $value');
+
+              return AppAmountField(
+                key: ValueKey(value),
                 label: 'Amount',
-                amount: controller.enteredBalance.value,
+                amount: value,
                 onChanged: (value) {
                   controller.enteredBalance.value = value;
                 },
-              ),
-            ),
+              );
+            }),
 
             // AppTextField(
             //   onChanged: controller.onBalanceChanged,

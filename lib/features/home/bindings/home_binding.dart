@@ -49,7 +49,7 @@ class HomeBinding extends Bindings {
     );
     Get.lazyPut<FinancialSetupController>(() => FinancialSetupController());
     Get.lazyPut<CashflowController>(() => CashflowController());
-    Get.lazyPut<AccountController>(() => AccountController(), fenix: true);
+    Get.lazyPut<AccountController>(() => AccountController());
     Get.lazyPut<AppCalculatorController>(
       () => AppCalculatorController(),
       fenix: true,

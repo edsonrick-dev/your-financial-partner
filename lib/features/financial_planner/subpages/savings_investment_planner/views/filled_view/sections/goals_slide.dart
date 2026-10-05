@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/design_system/shifters/segment_shifter/app_segmented_selector.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/controller/savings_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/emergency_fund_goal/emergency_fund_details/emergency_fund_details_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/goal_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/views/sheet/goal_setting_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/filled_view/widgets/goal_target_card.dart';
+import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_emergency_fund_extension.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
+import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class GoalsSlide extends GetView<SavingsPlannerController> {
@@ -21,85 +26,46 @@ class GoalsSlide extends GetView<SavingsPlannerController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+
     final hasGoals = true;
     return Column(
       spacing: 12,
       children: [
         if (hasGoals) ...[
-          AppSection(
-            child: AppSectionBody(
-              padding: 16,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Goals Summary', style: AppTextStyle.titleL),
+          Obx(() {
+            final totalTarget = controller.goals.fold<double>(
+              0.0,
+              (sum, goal) => sum + goal.targetAmount,
+            );
 
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(3800000.toCurrency(), style: AppTextStyle.amountXL),
-                      Text(
-                        'Target amount',
-                        style: AppTextStyle.titleS.copyWith(
-                          color: colorScheme.appTextMuted,
+            return AppSection(
+              child: AppSectionBody(
+                padding: 16,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Goals Summary', style: AppTextStyle.titleL),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          totalTarget.toCurrency(),
+                          style: AppTextStyle.amountXL,
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        Text(
+                          'Total target amount',
+                          style: AppTextStyle.titleS.copyWith(
+                            color: colorScheme.appTextMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          }),
 
-          // Container(
-          //   padding: EdgeInsets.all(16),
-          //   decoration: BoxDecoration(
-          //     color: colorScheme.bgLight,
-          //     borderRadius: BorderRadius.circular(24),
-          //   ),
-          //   child: Column(
-          //     children: [
-          //       Row(
-          //         children: [
-          //           Icon(PhosphorIconsFill.trophy, color: colorScheme.appInfo),
-          //           SizedBox(width: 8),
-          //           Text(
-          //             'Goals',
-          //             style: AppTextStyle.headlineS.copyWith(
-          //               color: colorScheme.appInfo,
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //       SizedBox(height: 16),
-          //       Row(
-          //         children: [
-          //           Expanded(
-          //             child: Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //                 Text('Total goals', style: AppTextStyle.titleS),
-          //                 Text(3.toString(), style: AppTextStyle.titleL),
-          //               ],
-          //             ),
-          //           ),
-          //           Expanded(
-          //             child: Column(
-          //               crossAxisAlignment: CrossAxisAlignment.end,
-          //               children: [
-          //                 Text('Total saved'),
-          //                 Text(
-          //                   395708.toCurrency(),
-          //                   style: AppTextStyle.amountL,
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // ),
           AppSection(
             sectionTitle: 'Goals',
             trailingType: SectionTrailingType.custom,
@@ -112,22 +78,49 @@ class GoalsSlide extends GetView<SavingsPlannerController> {
                       isScrollControlled: true,
                     );
                   },
-                  child: Icon(PhosphorIconsRegular.plus, size: 20),
+                  child: SizedBox(
+                    width: 44,
+                    height: 44,
+                    child: Icon(PhosphorIconsRegular.plus, size: 20),
+                  ),
                 ),
-                SizedBox(width: 4),
               ],
             ),
             child: Column(
               spacing: 12,
               children: [
-                GoalTargetCard(
-                  goal: GoalDetails(
-                    type: GoalType.emergencyFund,
-                    target: controller.emergencyFundTarget,
-                    current: 20000,
-                    dueDate: DateTime.now(),
-                  ),
-                ),
+                Obx(() {
+                  final goal = controller.emergencyFundGoal.value;
+
+                  if (goal == null) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return StreamBuilder<List<GoalReservationsTableData>>(
+                    stream: database.goalReservationsDao
+                        .watchReservationsForGoal(goal.id),
+                    builder: (context, snapshot) {
+                      final reservations = snapshot.data ?? [];
+
+                      final current = reservations.fold<double>(
+                        0.0,
+                        (sum, reservation) => sum + reservation.amount,
+                      );
+
+                      return GoalTargetCard(
+                        goal: GoalDetails(
+                          type: GoalType.emergencyFund,
+                          target: goal.targetAmount,
+                          current: current,
+                          dueDate: goal.dueDate,
+                          onTap: () {
+                            Get.to(EmergencyFundGoalDetailsPage(goal: goal));
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }),
 
                 // GoalTargetCard(
                 //   goalType: GoalType.retirement,

@@ -5,6 +5,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/networth_plan
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
+import 'package:getx_drift_app/data/tables/goal_reservations_table.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
 import 'package:getx_drift_app/data/tables/credit_card_details_table.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/models/net_worth_item.dart';
@@ -78,7 +79,12 @@ part 'accounts_dao.g.dart';
 ///
 /// ============================================================================
 @DriftAccessor(
-  tables: [AccountsTable, TransactionsTable, CreditCardDetailsTable],
+  tables: [
+    AccountsTable,
+    TransactionsTable,
+    CreditCardDetailsTable,
+    GoalReservationsTable,
+  ],
 )
 class AccountsDao extends DatabaseAccessor<AppDatabase>
     with _$AccountsDaoMixin {
@@ -329,17 +335,51 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   ///
   /// Rule:
   /// AccountType.group == AccountGroup.cashAndBank
+  // Stream<double> watchAvailableFunds() {
+  //   final cashAndBankTypes = AccountType.values
+  //       .where((type) => type.group == AccountGroup.cashAndBank)
+  //       .map((type) => type.name)
+  //       .toList();
+
+  //   final query = select(accountsTable)
+  //     ..where((tbl) => tbl.accountType.isIn(cashAndBankTypes));
+
+  //   return query.watch().map((accounts) {
+  //     return accounts.fold(0.0, (sum, account) => sum + account.currentValue);
+  //   });
+  // }
   Stream<double> watchAvailableFunds() {
     final cashAndBankTypes = AccountType.values
         .where((type) => type.group == AccountGroup.cashAndBank)
         .map((type) => type.name)
         .toList();
 
-    final query = select(accountsTable)
-      ..where((tbl) => tbl.accountType.isIn(cashAndBankTypes));
+    final query = select(accountsTable).join([
+      leftOuterJoin(
+        goalReservationsTable,
+        goalReservationsTable.accountId.equalsExp(accountsTable.id),
+      ),
+    ])..where(accountsTable.accountType.isIn(cashAndBankTypes));
 
-    return query.watch().map((accounts) {
-      return accounts.fold(0.0, (sum, account) => sum + account.currentValue);
+    return query.watch().map((rows) {
+      final availableByAccount = <int, double>{};
+
+      for (final row in rows) {
+        final account = row.readTable(accountsTable);
+        final reservation = row.readTableOrNull(goalReservationsTable);
+
+        availableByAccount.putIfAbsent(account.id, () => account.currentValue);
+
+        if (reservation != null && reservation.amount > 0) {
+          availableByAccount[account.id] =
+              availableByAccount[account.id]! - reservation.amount;
+        }
+      }
+
+      return availableByAccount.values.fold<double>(
+        0.0,
+        (sum, available) => sum + available.clamp(0.0, double.infinity),
+      );
     });
   }
 

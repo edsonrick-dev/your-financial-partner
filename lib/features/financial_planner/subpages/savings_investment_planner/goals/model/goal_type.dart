@@ -1,7 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-enum GoalType { emergencyFund, retirement, education, general }
+enum GoalType {
+  emergencyFund,
+  retirement,
+  education,
+  general;
+
+  static GoalType fromName(String name) {
+    return GoalType.values.firstWhere(
+      (type) => type.name == name,
+      orElse: () => GoalType.general,
+    );
+  }
+}
 
 extension GoalTypeExtension on GoalType {
   String get title {

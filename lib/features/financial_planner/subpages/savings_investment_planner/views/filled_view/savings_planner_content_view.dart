@@ -22,8 +22,11 @@ class SavingsPlannerContentView extends GetView<SavingsPlannerController> {
       child: Column(
         spacing: 20,
         children: [
+          InvestmentPlanSection(
+            targetInvestment: controller.investmentTarget,
+            currentInvestment: controller.currentInvestment,
+          ),
           InvestorProfileSection(),
-          InvestmentPlanSection(),
           Obx(
             () => Column(
               children: [

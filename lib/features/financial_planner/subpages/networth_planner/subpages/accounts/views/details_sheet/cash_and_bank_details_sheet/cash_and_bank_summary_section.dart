@@ -15,14 +15,25 @@ import 'package:getx_drift_app/core/num_extension.dart';
 
 class CashAndBankSummarySection extends GetView<AccountController> {
   final AccountsTableData account;
+  final double reservedFund;
 
-  const CashAndBankSummarySection({super.key, required this.account});
-
+  const CashAndBankSummarySection({
+    super.key,
+    required this.account,
+    required this.reservedFund,
+  });
   @override
   Widget build(BuildContext context) {
     // final reservedFund = account.initialBalance;
+    // final totalFund = account.currentValue;
+    // final availableFunds = totalFund;
+
     final totalFund = account.currentValue;
-    final availableFunds = totalFund;
+
+    final availableFunds = (totalFund - reservedFund).clamp(
+      0.0,
+      double.infinity,
+    );
     final colorScheme = context.colors;
     return AppSection(
       child: Container(
@@ -88,7 +99,7 @@ class CashAndBankSummarySection extends GetView<AccountController> {
                 Expanded(
                   child: AccountCardMetric(
                     label: 'Reserved Fund',
-                    value: 0.toCurrency(),
+                    value: reservedFund.toCurrency(),
                   ),
                 ),
               ],

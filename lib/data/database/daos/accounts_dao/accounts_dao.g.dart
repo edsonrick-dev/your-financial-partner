@@ -11,6 +11,9 @@ mixin _$AccountsDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.transactionsTable;
   $CreditCardDetailsTableTable get creditCardDetailsTable =>
       attachedDatabase.creditCardDetailsTable;
+  $GoalsTableTable get goalsTable => attachedDatabase.goalsTable;
+  $GoalReservationsTableTable get goalReservationsTable =>
+      attachedDatabase.goalReservationsTable;
   AccountsDaoManager get managers => AccountsDaoManager(this);
 }
 
@@ -33,5 +36,12 @@ class AccountsDaoManager {
       $$CreditCardDetailsTableTableTableManager(
         _db.attachedDatabase,
         _db.creditCardDetailsTable,
+      );
+  $$GoalsTableTableTableManager get goalsTable =>
+      $$GoalsTableTableTableManager(_db.attachedDatabase, _db.goalsTable);
+  $$GoalReservationsTableTableTableManager get goalReservationsTable =>
+      $$GoalReservationsTableTableTableManager(
+        _db.attachedDatabase,
+        _db.goalReservationsTable,
       );
 }

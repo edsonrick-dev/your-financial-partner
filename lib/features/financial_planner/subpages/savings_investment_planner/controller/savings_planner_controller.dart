@@ -1,14 +1,60 @@
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
+import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_insights/cashflow/models/cashflow_position.dart';
 import 'package:getx_drift_app/features/financial_insights/financial_profile_cashflow_controller_extension.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/goal_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investory_profile_model.dart';
-import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_emergency_fund_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 
 class SavingsPlannerController extends GetxController {
+  double get currentInvestment => emergencyFundReservedAmount.value;
+
+  double get monthlyInvestmentCommitment {
+    return emergencyFundGoal.value?.monthlyContribution ?? 0.0;
+  }
+
+  int get remainingInvestmentMonths {
+    final now = DateTime.now();
+    return 12 - now.month + 1;
+  }
+
+  double get investmentTarget {
+    return currentInvestment +
+        (monthlyInvestmentCommitment * remainingInvestmentMonths);
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadInvestorProfile();
+    database.goalsDao.watchGoalByType(GoalType.emergencyFund).listen((goal) {
+      emergencyFundGoal.value = goal;
+
+      if (goal == null) {
+        emergencyFundReservedAmount.value = 0.0;
+        return;
+      }
+
+      database.goalReservationsDao.watchReservationsForGoal(goal.id).listen((
+        reservations,
+      ) {
+        emergencyFundReservedAmount.value = reservations.fold<double>(
+          0.0,
+          (sum, reservation) => sum + reservation.amount,
+        );
+      });
+    });
+    database.goalsDao.watchAllGoals().listen((items) {
+      goals.assignAll(items);
+    });
+  }
+
+  final goals = <GoalsTableData>[].obs;
+  final emergencyFundReservedAmount = 0.0.obs;
+
+  final emergencyFundGoal = Rxn<GoalsTableData>();
   final selectedPageTabIndex = 0.obs;
   void changePageTabIndex(int index) {
     selectedPageTabIndex.value = index;
@@ -109,12 +155,6 @@ class SavingsPlannerController extends GetxController {
       // Go to Cash Flow / Budget Plan
       return;
     }
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    _loadInvestorProfile();
   }
 
   void selectHorizonTab(int index) {

@@ -388,7 +388,8 @@ class FinancialProfileController extends GetxController {
 
   double get annualDebtRepayments =>
       cashflowController.annualDebtRepayment.value;
-
+  double get annualNetCashflow => cashflowController.annualCashflowDifference;
+  double get monthlyNetCashflow => annualNetCashflow / 12;
   double get netWorth => netWorthController.netWorth;
   double get liabilities => netWorthController.totalLiabilities;
   double get assets => netWorthController.totalAssets;

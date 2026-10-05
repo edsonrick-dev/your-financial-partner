@@ -21,6 +21,8 @@ import 'tables/credit_card_billings_table.dart';
 import 'tables/credit_card_details_table.dart';
 import 'tables/credit_card_statements_table.dart';
 import 'tables/investor_profile_table.dart';
+import 'tables/goals_table.dart';
+import 'tables/goal_reservations_table.dart';
 
 import 'tables/loan_table.dart';
 // import 'tables/cashflow_plans_table.dart';
@@ -34,6 +36,8 @@ import 'package:getx_drift_app/data/database/daos/bills_dao/bills_dao.dart';
 import 'package:getx_drift_app/data/database/daos/category_dao/category_dao.dart';
 import 'package:getx_drift_app/data/database/daos/credit_card_dao/credit_card_dao.dart';
 import 'package:getx_drift_app/data/database/daos/investor_profile/investor_profile_dao.dart';
+import 'package:getx_drift_app/data/database/daos/goals/goals_dao.dart';
+import 'package:getx_drift_app/data/database/daos/goal_reservations/goal_reservations_dao.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
@@ -53,6 +57,8 @@ part 'app_database.g.dart';
     CreditCardBillingPeriodsTable,
     CreditCardStatementsTable,
     InvestorProfilesTable,
+    GoalsTable,
+    GoalReservationsTable,
   ],
   daos: [
     TransactionsDao,
@@ -64,6 +70,8 @@ part 'app_database.g.dart';
     CategoryDao,
     CreditCardDao,
     InvestorProfileDao,
+    GoalsDao,
+    GoalReservationsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -83,51 +91,20 @@ class AppDatabase extends _$AppDatabase {
     },
 
     onUpgrade: (m, from, to) async {
-      if (from < 6) {
-        await m.deleteTable('financial_obligations_table');
-        await m.deleteTable('transaction_participants_table');
+      // if (from < 6) {
+      //   await m.deleteTable('financial_obligations_table');
+      //   await m.deleteTable('transaction_participants_table');
 
-        await m.createTable(financialObligationsTable);
-        await m.createTable(transactionParticipantsTable);
-      }
-
-      if (from < 7) {
-        await m.addColumn(accountsTable, accountsTable.creditLimit);
-      }
-      if (from < 10) {
-        await m.createTable(loans);
-        await m.createTable(cashFlowPlans);
-        await m.createTable(cashFlowPlanAllocations);
-      }
-      // SCHEMA 11
-      if (from < 11) {
-        await m.deleteTable('transactions_table');
-        await m.createTable(transactionsTable);
-      }
-      if (from < 12) {
-        await m.createTable(billsTable);
-        await m.createTable(billOccurrencesTable);
-      }
-
-      if (from < 14) {
-        await m.alterTable(TableMigration(billsTable));
-      }
-
-      if (from < 15) {
-        await m.createTable(creditCardDetailsTable);
-        await m.createTable(creditCardBillingPeriodsTable);
-        await m.createTable(creditCardStatementsTable);
-      }
-      if (from < 16) {
-        await m.createTable(investorProfilesTable);
-      }
+      //   await m.createTable(financialObligationsTable);
+      //   await m.createTable(transactionParticipantsTable);
+      // }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
   );
   @override
-  int get schemaVersion => 16;
+  int get schemaVersion => 1;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();

@@ -54,7 +54,18 @@ class CashAndBankDetailsSheet extends StatelessWidget {
               title: currentAccount.name,
               child: Column(
                 children: [
-                  CashAndBankSummarySection(account: currentAccount),
+                  StreamBuilder<double>(
+                    stream: database.goalReservationsDao
+                        .watchTotalReservedForAccount(currentAccount.id),
+                    builder: (context, snapshot) {
+                      final reservedFund = snapshot.data ?? 0.0;
+
+                      return CashAndBankSummarySection(
+                        account: currentAccount,
+                        reservedFund: reservedFund,
+                      );
+                    },
+                  ),
 
                   AppDetailsPageActionSection(
                     selectedIndex: selectedIndex,

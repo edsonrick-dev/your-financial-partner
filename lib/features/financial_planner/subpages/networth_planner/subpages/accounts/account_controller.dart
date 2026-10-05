@@ -12,7 +12,13 @@ import 'package:intl/intl.dart';
 import 'package:getx_drift_app/domain/credit_card/credit_card_dates.dart';
 
 class AccountController extends GetxController {
-  ///
+  @override
+  void onInit() {
+    super.onInit();
+
+    print('ACCOUNT CONTROLLER INIT: $hashCode');
+  }
+
   ///Credit Card
 
   final selectedStatementDate = Rxn<DateTime>();
@@ -106,7 +112,12 @@ class AccountController extends GetxController {
   // ============================================================
 
   void initializeBalanceUpdate(AccountsTableData account) {
+    print('INITIALIZE BALANCE: ${account.currentValue}');
+    print('CONTROLLER HASH: $hashCode');
+
     enteredBalance.value = account.currentValue;
+
+    print('ENTERED BALANCE: ${enteredBalance.value}');
   }
 
   double get actualBalance => enteredBalance.value;
@@ -485,6 +496,7 @@ class AccountController extends GetxController {
 
   @override
   void onClose() {
+    print('ACCOUNT CONTROLLER CLOSE: $hashCode');
     nameController.dispose();
     bankNameController.dispose();
 

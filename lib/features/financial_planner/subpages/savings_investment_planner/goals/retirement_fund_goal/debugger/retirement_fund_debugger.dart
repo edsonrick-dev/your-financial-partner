@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
@@ -9,7 +8,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/savings_inves
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_horizon_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_recommendation/portfolio_recommendation_engine.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/risk_return/retirement_horizon_returns.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/risk_return/risk_return_range_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/risk_tolerance_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 

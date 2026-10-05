@@ -51,7 +51,7 @@ class HomeView extends GetView<HomeController> {
                 SizedBox(height: AppSpacing.sectionSpacing),
                 AppSection(child: Column(children: [FundSummaryCard()])),
                 SizedBox(height: AppSpacing.sectionSpacing),
-                RetirementDebugger(),
+                // RetirementDebugger(),
                 FinanceHomeView(),
                 SizedBox(height: AppSpacing.sectionSpacing),
                 CashflowHistorySection(),

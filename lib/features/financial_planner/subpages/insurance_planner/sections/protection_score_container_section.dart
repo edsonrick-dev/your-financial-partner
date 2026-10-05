@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/enums/protection_profile_enum.dart';
@@ -23,11 +24,7 @@ class ProtectionScoreContainerSection extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         width: double.infinity,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [colorScheme.text, colorScheme.gradient2],
-            begin: Alignment.centerLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppGradient.gradientA(colorScheme),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(
@@ -46,14 +43,14 @@ class ProtectionScoreContainerSection extends StatelessWidget {
                 Text(
                   profile.title,
                   style: AppTextStyle.displayL.copyWith(
-                    color: colorScheme.inversePrimary,
+                    color: colorScheme.appInversedtext,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   '$unmetGoals of 3 essential protection goals are not yet met.',
                   style: AppTextStyle.labelM.copyWith(
-                    color: colorScheme.inversePrimary,
+                    color: colorScheme.appInversedtext,
                   ),
                 ),
               ],
