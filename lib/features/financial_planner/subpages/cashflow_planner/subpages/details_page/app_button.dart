@@ -26,6 +26,7 @@ class AppButton extends StatelessWidget {
   final String text;
   final ButtonType type;
   final VoidCallback? onTap;
+  final bool isLoading;
   final bool isInversed;
   final double borderRadius;
   final ButtonSize size;
@@ -37,6 +38,7 @@ class AppButton extends StatelessWidget {
     this.type = ButtonType.primary,
     this.size = ButtonSize.large,
     this.onTap,
+    this.isLoading = false,
     this.isInversed = false,
     this.borderRadius = 8,
     this.leadingIcon,
@@ -44,10 +46,12 @@ class AppButton extends StatelessWidget {
     required this.text,
   });
 
+  bool get _isDisabled => onTap == null;
+
   Color _backgroundColor(BuildContext context) {
     final colorScheme = context.colors;
 
-    if (onTap == null) {
+    if (_isDisabled) {
       return colorScheme.appText.withValues(alpha: 0.08);
     }
 
@@ -62,7 +66,7 @@ class AppButton extends StatelessWidget {
   Color _foregroundColor(BuildContext context) {
     final colorScheme = context.colors;
 
-    if (onTap == null) {
+    if (_isDisabled) {
       return colorScheme.appText.withValues(alpha: 0.35);
     }
 
@@ -78,7 +82,7 @@ class AppButton extends StatelessWidget {
   Border? _border(BuildContext context) {
     final colorScheme = context.colors;
 
-    if (onTap == null) {
+    if (_isDisabled) {
       return null;
     }
 
@@ -94,8 +98,9 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foregroundColor = _foregroundColor(context);
+
     return AdaptivePressable(
-      onTap: onTap,
+      onTap: isLoading ? null : onTap,
       child: Container(
         height: size.height,
         width: double.infinity,
@@ -104,69 +109,50 @@ class AppButton extends StatelessWidget {
           border: _border(context),
           borderRadius: BorderRadius.circular(borderRadius),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (leadingIcon != null) ...[
-                Icon(leadingIcon, color: foregroundColor, size: size.iconSize),
-                const SizedBox(width: 8),
-              ],
-
-              Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    text,
-                    style: size.textStyle.copyWith(color: foregroundColor),
+          child: isLoading
+              ? SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    color: foregroundColor,
                   ),
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (leadingIcon != null) ...[
+                      Icon(
+                        leadingIcon,
+                        color: foregroundColor,
+                        size: size.iconSize,
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          text,
+                          style: size.textStyle.copyWith(
+                            color: foregroundColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (trailingIcon != null) ...[
+                      const SizedBox(width: 8),
+                      Icon(
+                        trailingIcon,
+                        color: foregroundColor,
+                        size: size.iconSize,
+                      ),
+                    ],
+                  ],
                 ),
-              ),
-
-              if (trailingIcon != null) ...[
-                const SizedBox(width: 8),
-                Icon(trailingIcon, color: foregroundColor),
-              ],
-            ],
-          ),
         ),
-        // Stack(
-        //   alignment: Alignment.center,
-        //   // spacing: 12,
-        //   // mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     Row(
-        //       children: [
-        //         if (leadingIcon != null)
-        //           Icon(leadingIcon, color: _foregroundColor(context)),
-
-        //         Spacer(),
-
-        //         if (trailingIcon != null)
-        //           Icon(trailingIcon, color: _foregroundColor(context)),
-        //       ],
-        //     ),
-
-        //     Center(
-        //       child: Row(
-        //         children: [
-        //           if (leadingIcon != null) SizedBox(width: 32),
-        //           Expanded(
-        //             child: FittedBox(
-        //               fit: BoxFit.scaleDown,
-        //               child: Text(
-        //                 text,
-        //                 style: size.textStyle.copyWith(color: foregroundColor),
-        //               ),
-        //             ),
-        //           ),
-        //           if (trailingIcon != null) SizedBox(width: 32),
-        //         ],
-        //       ),
-        //     ),
-        //   ],
-        // ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:getx_drift_app/core/design_system/shifters/segment_shifter/app_s
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/controller/savings_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/views/sheet/goal_setting_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/filled_view/sections/goals_slide.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/filled_view/sections/investor_profile_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/filled_view/sections/portfolio_slide/portfolio_content/sections/investment_plan_section.dart';
@@ -22,29 +23,32 @@ class SavingsPlannerContentView extends GetView<SavingsPlannerController> {
       child: Column(
         spacing: 20,
         children: [
-          InvestmentPlanSection(
-            targetInvestment: controller.investmentTarget,
-            currentInvestment: controller.currentInvestment,
-          ),
           InvestorProfileSection(),
-          Obx(
-            () => Column(
+
+          InvestmentPlanSection(),
+
+          Obx(() {
+            final hasGoals = controller.goals.isNotEmpty;
+
+            return Column(
               children: [
-                AppSection(
-                  child: AppSegmentedSelector(
-                    items: const ['Goals', 'Portfolio'],
-                    selectedIndex: controller.selectedPageTabIndex.value,
-                    onChanged: controller.changePageTabIndex,
+                if (hasGoals) ...[
+                  AppSection(
+                    child: AppSegmentedSelector(
+                      items: const ['Goals', 'Portfolio'],
+                      selectedIndex: controller.selectedPageTabIndex.value,
+                      onChanged: controller.changePageTabIndex,
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                if (controller.selectedPageTabIndex.value == 0)
-                  GoalsSlide()
-                else
-                  PortfolioSlide(),
+                  const SizedBox(height: 20),
+                  if (!hasGoals || controller.selectedPageTabIndex.value == 0)
+                    const GoalsSlide()
+                  else
+                    const PortfolioSlide(),
+                ],
               ],
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );

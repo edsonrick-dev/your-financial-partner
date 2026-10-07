@@ -27,9 +27,13 @@ class AssessmentSummaryView extends GetView<OnboardingController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Thanks, ${controller.name.value}.',
-                    style: AppTextStyle.displayM,
+                  Obx(
+                    () => Text(
+                      controller.userName.value.isEmpty
+                          ? 'Thanks for completing Ascend’s Assessment.'
+                          : 'Thanks, ${controller.userName.value}.',
+                      style: AppTextStyle.displayM,
+                    ),
                   ),
 
                   const SizedBox(height: 12),

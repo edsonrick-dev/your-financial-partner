@@ -11,6 +11,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/savings_inves
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/emergency_fund_goal/emergency_fund_priority_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/emergency_fund_goal/fund_milestone/fund_milestone_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/goal_type.dart';
+import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
@@ -37,13 +38,12 @@ class EmergencyFundAllocationPage extends GetView<GoalReservationController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Set aside amount from your accounts',
+                            'Tell us about your existing emergency fund',
                             style: AppTextStyle.titleL,
                           ),
                           SizedBox(height: 16),
                           Text(
-                            'Select which payment accounts to use for your emergency fund '
-                            'and how much is set aside.',
+                            "Select the account where you keep your emergency fund and enter how much you already have set aside. If you don't have one yet, you can start with ₱0.",
                             style: AppTextStyle.bodyM,
                           ),
                           SizedBox(height: 16),
@@ -169,7 +169,32 @@ class EmergencyFundAllocationPage extends GetView<GoalReservationController> {
                 );
               }
 
-              return SizedBox.shrink();
+              return Column(
+                children: [
+                  const SizedBox(height: 16),
+                  AppSection(
+                    child: AppButton(
+                      onTap: () {
+                        Get.to(
+                          () => EmergencyFundPriorityPage(
+                            currentAmount: allocation,
+                            monthlyBudget:
+                                Get.find<FinancialProfileController>()
+                                    .monthlyBudget,
+                            netMonthlyCashFlow:
+                                Get.find<FinancialProfileController>()
+                                    .monthlyNetCashflow,
+                          ),
+                          binding: BindingsBuilder(() {
+                            Get.put(EmergencyFundController());
+                          }),
+                        );
+                      },
+                      text: 'Plan My Emergency Fund Contribution',
+                    ),
+                  ),
+                ],
+              );
             }),
           ],
         ),
@@ -204,17 +229,23 @@ class AllocateFundAccountCard extends StatelessWidget {
           Text(accountName, style: AppTextStyle.titleL),
           const SizedBox(height: 8),
 
-          Row(
-            children: [
-              Text(allocatedAmount.toCurrency(), style: AppTextStyle.amountL),
-              Text(' / ', style: AppTextStyle.amountS),
-              Text(allocableAmount.toCurrency(), style: AppTextStyle.amountS),
-            ],
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              children: [
+                Text(
+                  allocatedAmount.toCurrency(),
+                  style: AppTextStyle.amountXL,
+                ),
+                Text(' / ', style: AppTextStyle.amountL),
+                Text(allocableAmount.toCurrency(), style: AppTextStyle.amountL),
+              ],
+            ),
           ),
 
           Text(
             'Allocated / Allocable',
-            style: AppTextStyle.labelS.copyWith(
+            style: AppTextStyle.titleM.copyWith(
               color: colorScheme.appTextMuted,
             ),
           ),

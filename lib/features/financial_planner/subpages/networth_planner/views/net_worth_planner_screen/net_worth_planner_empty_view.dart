@@ -31,8 +31,9 @@ class NetWorthEmptyView extends GetView<NetWorthController> {
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+
                   children: [
+                    SizedBox(height: 48),
                     Icon(
                       PhosphorIconsRegular.wallet,
                       size: 60,

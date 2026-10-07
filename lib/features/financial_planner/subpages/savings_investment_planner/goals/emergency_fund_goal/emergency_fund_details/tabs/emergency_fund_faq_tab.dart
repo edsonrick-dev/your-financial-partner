@@ -145,43 +145,43 @@ class EmergencyFundFAQs extends GetView<SavingsPlannerController> {
                   ),
                 ),
               ),
-              AppSection(
-                sectionTitle: 'How much do I set aside for this goal?',
-                child: AppSectionBody(
-                  padding: 16,
-                  child: Column(
-                    spacing: 16,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _MetricRow(
-                        title: 'Current Amount',
-                        trailing: currentAmount.toCurrency(),
-                      ),
-                      _MetricRow(
-                        title: 'Monthly Expense',
-                        trailing: controller
-                            .financialProfileController
-                            .monthlyBudget
-                            .toCurrency(),
-                      ),
+              // AppSection(
+              //   sectionTitle: 'How much do I set aside for this goal?',
+              //   child: AppSectionBody(
+              //     padding: 16,
+              //     child: Column(
+              //       spacing: 16,
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         _MetricRow(
+              //           title: 'Current Amount',
+              //           trailing: currentAmount.toCurrency(),
+              //         ),
+              //         _MetricRow(
+              //           title: 'Monthly Expense',
+              //           trailing: controller
+              //               .financialProfileController
+              //               .monthlyBudget
+              //               .toCurrency(),
+              //         ),
 
-                      Text(
-                        'Current Amount / Monthly Expense',
-                        style: AppTextStyle.labelM.copyWith(
-                          fontStyle: FontStyle.italic,
-                          color: colorScheme.appInversedtextMuted,
-                        ),
-                      ),
-                      Divider(color: colorScheme.appInversedtext),
-                      _MetricRow(
-                        title: 'Months Covered',
-                        trailing:
-                            '${calculator.currentMonths.toStringAsFixed(1)} months',
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              //         Text(
+              //           'Current Amount / Monthly Expense',
+              //           style: AppTextStyle.labelM.copyWith(
+              //             fontStyle: FontStyle.italic,
+              //             color: colorScheme.appInversedtextMuted,
+              //           ),
+              //         ),
+              //         Divider(color: colorScheme.appInversedtext),
+              //         _MetricRow(
+              //           title: 'Months Covered',
+              //           trailing:
+              //               '${calculator.currentMonths.toStringAsFixed(1)} months',
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               AppSection(
                 sectionTitle: 'How is my required allocation computed?',
                 child: AppSectionBody(
@@ -286,8 +286,8 @@ class EmergencyFundFAQs extends GetView<SavingsPlannerController> {
                       Text(
                         'Your emergency fund becomes more secure as you '
                         'build more months of expense coverage. As your '
-                        'fund reaches higher milestones, Ascend gradually '
-                        'reduces the portion of your net cash flow allocated '
+                        'fund reaches higher milestones, Ascend suggests gradually '
+                        'reducing the portion of your net cash flow allocated '
                         'to the emergency fund so you can direct more money '
                         'toward other financial goals.',
                         style: AppTextStyle.bodyL,

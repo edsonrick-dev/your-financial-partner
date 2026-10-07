@@ -1,52 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/app/main_tab.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
+import 'package:getx_drift_app/features/main_shell/controller/main_shell_controller.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 
 class OnboardingController extends GetxController {
-  static const _userNameKey = 'user_name';
+  final userName = ''.obs;
   final FinancialProfileController financialProfileController =
       Get.find<FinancialProfileController>();
+
+  // static const _userNameKey = 'user_name';
+  // final birthday = Rxn<DateTime>();
+
+  // static const _birthdayKey = 'user_birthday';
+  @override
+  void onInit() {
+    super.onInit();
+
+    loadUserProfile();
+  }
+
+  Future<void> loadUserProfile() async {
+    final profile = await database.userProfileDao.getProfile();
+
+    userName.value = profile?.name?.trim() ?? '';
+  }
+
   @override
   void onClose() {
     plannerScrollController.dispose();
     introPageController.dispose();
     pageController.dispose();
-    nameController.dispose();
-    nameFocusNode.dispose();
     super.onClose();
   }
 
-  @override
-  void onInit() {
-    super.onInit();
+  // Future<void> completeAssessment() async {
+  //   await financialProfileController.markAssessmentCompleted();
 
-    nameController.addListener(() {
-      name.value = nameController.text.trim();
-    });
-  }
+  //   Get.toNamed(Routes.MAINVIEW, arguments: {'initialTab': 3});
+  // }
 
   Future<void> completeAssessment() async {
     await financialProfileController.markAssessmentCompleted();
-    final storage = GetStorage();
 
-    await storage.write(_userNameKey, name.value);
-    Get.toNamed(Routes.MAINVIEW, arguments: {'initialTab': 3});
+    final mainShellController = Get.find<MainShellController>();
+
+    mainShellController.changeTab(MainTab.profile);
+
+    Get.until((route) => route.settings.name == Routes.MAINVIEW);
   }
 
   bool get canContinue {
     switch (currentPage.value) {
       case 0:
-        return name.value.isNotEmpty;
-
-      case 1:
         return selectedImprovementAreas.isNotEmpty;
 
-      case 2:
+      case 1:
         return selectedConfidence.value != null;
 
-      case 3:
+      case 2:
         return currentManagement.value != null;
 
       default:
@@ -58,14 +72,11 @@ class OnboardingController extends GetxController {
 
   final currentPage = 0.obs;
 
-  final nameController = TextEditingController();
-  final nameFocusNode = FocusNode();
-  final name = ''.obs;
   final selectedGoals = <String>{}.obs;
   final selectedConfidence = Rxn<String>();
   final selectedManagementStyle = Rxn<String>();
 
-  final totalPages = 4;
+  final totalPages = 3;
 
   bool get isFirstPage => currentPage.value == 0;
   bool get isLastPage => currentPage.value == totalPages - 1;

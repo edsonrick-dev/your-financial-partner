@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
@@ -9,7 +11,108 @@ import 'package:getx_drift_app/features/financial_planner/subpages/savings_inves
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 
 class SavingsPlannerController extends GetxController {
+  double get monthlyGoalCapacity {
+    return financialProfileController.monthlyNetCashflow.clamp(
+      0.0,
+      double.infinity,
+    );
+  }
+
+  double get emergencyFundMonthlyAllocation {
+    final goal = emergencyFundGoal.value;
+
+    if (goal == null) {
+      return 0.0;
+    }
+
+    final remainingAmount =
+        (goal.targetAmount - emergencyFundReservedAmount.value).clamp(
+          0.0,
+          double.infinity,
+        );
+
+    if (remainingAmount <= 0) {
+      return 0.0;
+    }
+
+    return [
+      goal.monthlyContribution,
+      remainingAmount,
+      monthlyGoalCapacity,
+    ].reduce(min);
+  }
+
+  double get remainingMonthlyGoalCapacity {
+    return (monthlyGoalCapacity - emergencyFundMonthlyAllocation).clamp(
+      0.0,
+      double.infinity,
+    );
+  }
+
+  double get monthlySavingsCapacity {
+    return financialProfileController.annualSavings / 12;
+  }
+
+  // double remainingMonthlyCapacityForGoal(GoalsTableData goal) {
+  //   final higherPriorityContributions = goals
+  //       .where((item) => _hasHigherPriority(item, goal))
+  //       .fold<double>(0.0, (sum, item) => sum + item.monthlyContribution);
+
+  //   return (monthlySavingsCapacity - higherPriorityContributions).clamp(
+  //     0.0,
+  //     double.infinity,
+  //   );
+  // }
+
+  // bool _hasHigherPriority(
+  //   GoalsTableData existingGoal,
+  //   GoalsTableData targetGoal,
+  // ) {
+  //   final existingPriority = goalPriority(
+  //     GoalType.values.byName(existingGoal.type),
+  //   );
+
+  //   final targetPriority = goalPriority(
+  //     GoalType.values.byName(targetGoal.type),
+  //   );
+
+  //   return existingPriority < targetPriority;
+  // }
+
+  double get emergencyFundMonthlyContribution {
+    return emergencyFundGoal.value?.monthlyContribution ?? 0.0;
+  }
+
+  double get otherGoalsMonthlyContribution {
+    return goals
+        .where((goal) => goal.type != GoalType.emergencyFund.name)
+        .fold<double>(0.0, (sum, goal) => sum + goal.monthlyContribution);
+  }
+
+  double get remainingUncommittedMonthlyReservation {
+    final remaining =
+        monthlySavingsCapacity -
+        emergencyFundMonthlyContribution -
+        otherGoalsMonthlyContribution;
+
+    return remaining.clamp(0.0, double.infinity);
+  }
+
   double get currentInvestment => emergencyFundReservedAmount.value;
+
+  double get remainingMonthlyCapacity {
+    return (monthlySavingsCapacity -
+            emergencyFundMonthlyContribution -
+            otherGoalsMonthlyContribution)
+        .clamp(0.0, double.infinity);
+  }
+
+  double get totalMonthlyGoalCommitment {
+    return goals.fold<double>(
+      0.0,
+      (sum, goal) => sum + goal.monthlyContribution,
+    );
+  }
 
   double get monthlyInvestmentCommitment {
     return emergencyFundGoal.value?.monthlyContribution ?? 0.0;

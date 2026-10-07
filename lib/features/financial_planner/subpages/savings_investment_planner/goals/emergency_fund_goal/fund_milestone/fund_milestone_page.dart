@@ -54,76 +54,91 @@ class EmergencyFundMilestonePage extends GetView<FinancialProfileController> {
               AppSection(
                 child: AppSectionBody(
                   padding: 16,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Your Progress', style: AppTextStyle.titleL),
-
-                      const SizedBox(height: 16),
-
-                      Text(
-                        '${currentMonths % 1 == 0 ? currentMonths.toInt() : currentMonths.toStringAsFixed(1)} months',
-                        style: AppTextStyle.amountXL,
-                      ),
-
-                      Text(
-                        'of your monthly budget',
-                        style: AppTextStyle.titleL.copyWith(
-                          color: colorScheme.appTextMuted,
+                  child: amountSetAside <= 0
+                      ? _EmptyProgressState(targetAmount: targetAmount)
+                      : _ProgressState(
+                          currentMonths: currentMonths,
+                          progress: progress,
+                          progressRate: progressRate,
+                          amountSetAside: amountSetAside,
+                          targetAmount: targetAmount,
                         ),
-                      ),
-
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: LinearProgressIndicator(
-                              value: progress,
-                              minHeight: 8,
-                              borderRadius: BorderRadius.circular(8),
-                              color: colorScheme.appInflow,
-                              backgroundColor: colorScheme.appTextMuted,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Text(
-                            '${progressRate.toStringAsFixed(1)}%',
-                            style: AppTextStyle.amountS,
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Row(
-                          spacing: 6,
-                          children: [
-                            Text(
-                              amountSetAside.toCurrency(),
-                              style: AppTextStyle.amountXL,
-                            ),
-                            Text('/', style: AppTextStyle.amountXL),
-                            Text(
-                              targetAmount.toCurrency(),
-                              style: AppTextStyle.amountXL.copyWith(
-                                color: colorScheme.appTextMuted,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        'Current vs. Target',
-                        style: AppTextStyle.titleL.copyWith(
-                          color: colorScheme.appTextMuted,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
+
+              // AppSection(
+              //   child: AppSectionBody(
+              //     padding: 16,
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text('Your Progress', style: AppTextStyle.titleL),
+
+              //         const SizedBox(height: 16),
+
+              //         Text(
+              //           '${currentMonths % 1 == 0 ? currentMonths.toInt() : currentMonths.toStringAsFixed(1)} ${currentMonths > 1.1 ? 'months' : 'month'}',
+              //           style: AppTextStyle.amountXL,
+              //         ),
+
+              //         Text(
+              //           'of your monthly budget',
+              //           style: AppTextStyle.titleL.copyWith(
+              //             color: colorScheme.appTextMuted,
+              //           ),
+              //         ),
+
+              //         const SizedBox(height: 16),
+              //         Row(
+              //           children: [
+              //             Expanded(
+              //               child: LinearProgressIndicator(
+              //                 value: progress,
+              //                 minHeight: 8,
+              //                 borderRadius: BorderRadius.circular(8),
+              //                 color: colorScheme.appInflow,
+              //                 backgroundColor: colorScheme.appTextMuted,
+              //               ),
+              //             ),
+              //             const SizedBox(width: 16),
+              //             Text(
+              //               '${progressRate.toStringAsFixed(1)}%',
+              //               style: AppTextStyle.amountS,
+              //             ),
+              //           ],
+              //         ),
+
+              //         const SizedBox(height: 8),
+
+              //         FittedBox(
+              //           fit: BoxFit.scaleDown,
+              //           child: Row(
+              //             spacing: 6,
+              //             children: [
+              //               Text(
+              //                 amountSetAside.toCurrency(),
+              //                 style: AppTextStyle.amountXL,
+              //               ),
+              //               Text('/', style: AppTextStyle.amountXL),
+              //               Text(
+              //                 targetAmount.toCurrency(),
+              //                 style: AppTextStyle.amountXL.copyWith(
+              //                   color: colorScheme.appTextMuted,
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //         Text(
+              //           'Current vs. Target',
+              //           style: AppTextStyle.titleL.copyWith(
+              //             color: colorScheme.appTextMuted,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 20),
               AppSection(
                 child: AppSectionBody(
@@ -177,6 +192,164 @@ class EmergencyFundMilestonePage extends GetView<FinancialProfileController> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _EmptyProgressState extends StatelessWidget {
+  const _EmptyProgressState({required this.targetAmount});
+
+  final double targetAmount;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Your Progress', style: AppTextStyle.titleL),
+
+        const SizedBox(height: 16),
+
+        Text('No emergency fund yet', style: AppTextStyle.headlineM),
+
+        // const SizedBox(height: 4),
+
+        // Text(
+        //   'Based on the previous page you have no emergency fund yet.',
+        //   style: AppTextStyle.bodyM.copyWith(color: colorScheme.appTextMuted),
+        // ),
+        const SizedBox(height: 20),
+
+        Row(
+          children: [
+            Expanded(
+              child: LinearProgressIndicator(
+                value: 0,
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(8),
+                color: colorScheme.appInflow,
+                backgroundColor: colorScheme.appTextMuted,
+              ),
+            ),
+
+            const SizedBox(width: 16),
+
+            Text('0%', style: AppTextStyle.amountS),
+          ],
+        ),
+
+        const SizedBox(height: 8),
+
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            spacing: 6,
+            children: [
+              Text(0.0.toCurrency(), style: AppTextStyle.amountXL),
+              Text('/', style: AppTextStyle.amountXL),
+              Text(
+                targetAmount.toCurrency(),
+                style: AppTextStyle.amountXL.copyWith(
+                  color: colorScheme.appTextMuted,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Text(
+          'Current vs. Target',
+          style: AppTextStyle.titleL.copyWith(color: colorScheme.appTextMuted),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProgressState extends StatelessWidget {
+  const _ProgressState({
+    required this.currentMonths,
+    required this.progress,
+    required this.progressRate,
+    required this.amountSetAside,
+    required this.targetAmount,
+  });
+
+  final double currentMonths;
+  final double progress;
+  final double progressRate;
+  final double amountSetAside;
+  final double targetAmount;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Your Progress', style: AppTextStyle.titleL),
+
+        const SizedBox(height: 16),
+
+        Text(
+          '${currentMonths % 1 == 0 ? currentMonths.toInt() : currentMonths.toStringAsFixed(1)} '
+          '${currentMonths > 1.1 ? 'months' : 'month'}',
+          style: AppTextStyle.amountXL,
+        ),
+
+        Text(
+          'of your monthly budget',
+          style: AppTextStyle.titleL.copyWith(color: colorScheme.appTextMuted),
+        ),
+
+        const SizedBox(height: 16),
+
+        Row(
+          children: [
+            Expanded(
+              child: LinearProgressIndicator(
+                value: progress,
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(8),
+                color: colorScheme.appInflow,
+                backgroundColor: colorScheme.appTextMuted,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Text(
+              '${progressRate.toStringAsFixed(1)}%',
+              style: AppTextStyle.amountS,
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 8),
+
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            spacing: 6,
+            children: [
+              Text(amountSetAside.toCurrency(), style: AppTextStyle.amountXL),
+              Text('/', style: AppTextStyle.amountXL),
+              Text(
+                targetAmount.toCurrency(),
+                style: AppTextStyle.amountXL.copyWith(
+                  color: colorScheme.appTextMuted,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Text(
+          'Current vs. Target',
+          style: AppTextStyle.titleL.copyWith(color: colorScheme.appTextMuted),
+        ),
+      ],
     );
   }
 }

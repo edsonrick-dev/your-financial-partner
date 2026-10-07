@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:getx_drift_app/core/constants/app_border_radius.dart';
+
 import 'package:getx_drift_app/core/constants/app_scale.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
@@ -14,6 +14,7 @@ class AppSectionHeader extends StatelessWidget {
   final Color textColor;
   final Widget? child;
   final String? subtitle;
+  final double? horizontalPadding;
   const AppSectionHeader({
     super.key,
     required this.sectionTitle,
@@ -23,6 +24,7 @@ class AppSectionHeader extends StatelessWidget {
     this.trailingText,
     this.trailingType,
     this.child,
+    this.horizontalPadding = 16,
   });
 
   @override
@@ -31,7 +33,7 @@ class AppSectionHeader extends StatelessWidget {
     final minHeight = AppTapArea.medium;
 
     return Padding(
-      padding: AppPadding.pageHorizontal,
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding!),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

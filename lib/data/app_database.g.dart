@@ -8929,6 +8929,525 @@ class GoalReservationsTableCompanion
   }
 }
 
+class $UserProfileTableTable extends UserProfileTable
+    with TableInfo<$UserProfileTableTable, UserProfileTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserProfileTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _birthdayMeta = const VerificationMeta(
+    'birthday',
+  );
+  @override
+  late final GeneratedColumn<DateTime> birthday = GeneratedColumn<DateTime>(
+    'birthday',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, birthday];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_profile_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<UserProfileTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('birthday')) {
+      context.handle(
+        _birthdayMeta,
+        birthday.isAcceptableOrUnknown(data['birthday']!, _birthdayMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  UserProfileTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserProfileTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      birthday: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}birthday'],
+      ),
+    );
+  }
+
+  @override
+  $UserProfileTableTable createAlias(String alias) {
+    return $UserProfileTableTable(attachedDatabase, alias);
+  }
+}
+
+class UserProfileTableData extends DataClass
+    implements Insertable<UserProfileTableData> {
+  final int id;
+  final String? name;
+  final DateTime? birthday;
+  const UserProfileTableData({required this.id, this.name, this.birthday});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || birthday != null) {
+      map['birthday'] = Variable<DateTime>(birthday);
+    }
+    return map;
+  }
+
+  UserProfileTableCompanion toCompanion(bool nullToAbsent) {
+    return UserProfileTableCompanion(
+      id: Value(id),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      birthday: birthday == null && nullToAbsent
+          ? const Value.absent()
+          : Value(birthday),
+    );
+  }
+
+  factory UserProfileTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserProfileTableData(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String?>(json['name']),
+      birthday: serializer.fromJson<DateTime?>(json['birthday']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String?>(name),
+      'birthday': serializer.toJson<DateTime?>(birthday),
+    };
+  }
+
+  UserProfileTableData copyWith({
+    int? id,
+    Value<String?> name = const Value.absent(),
+    Value<DateTime?> birthday = const Value.absent(),
+  }) => UserProfileTableData(
+    id: id ?? this.id,
+    name: name.present ? name.value : this.name,
+    birthday: birthday.present ? birthday.value : this.birthday,
+  );
+  UserProfileTableData copyWithCompanion(UserProfileTableCompanion data) {
+    return UserProfileTableData(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      birthday: data.birthday.present ? data.birthday.value : this.birthday,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserProfileTableData(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('birthday: $birthday')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, birthday);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserProfileTableData &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.birthday == this.birthday);
+}
+
+class UserProfileTableCompanion extends UpdateCompanion<UserProfileTableData> {
+  final Value<int> id;
+  final Value<String?> name;
+  final Value<DateTime?> birthday;
+  const UserProfileTableCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.birthday = const Value.absent(),
+  });
+  UserProfileTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.birthday = const Value.absent(),
+  });
+  static Insertable<UserProfileTableData> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<DateTime>? birthday,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (birthday != null) 'birthday': birthday,
+    });
+  }
+
+  UserProfileTableCompanion copyWith({
+    Value<int>? id,
+    Value<String?>? name,
+    Value<DateTime?>? birthday,
+  }) {
+    return UserProfileTableCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      birthday: birthday ?? this.birthday,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (birthday.present) {
+      map['birthday'] = Variable<DateTime>(birthday.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserProfileTableCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('birthday: $birthday')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $RetirementGoalsTableTable extends RetirementGoalsTable
+    with TableInfo<$RetirementGoalsTableTable, RetirementGoalsTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RetirementGoalsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _goalIdMeta = const VerificationMeta('goalId');
+  @override
+  late final GeneratedColumn<int> goalId = GeneratedColumn<int>(
+    'goal_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES goals_table (id)',
+    ),
+  );
+  static const VerificationMeta _retirementAgeMeta = const VerificationMeta(
+    'retirementAge',
+  );
+  @override
+  late final GeneratedColumn<int> retirementAge = GeneratedColumn<int>(
+    'retirement_age',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fundEndAgeMeta = const VerificationMeta(
+    'fundEndAge',
+  );
+  @override
+  late final GeneratedColumn<int> fundEndAge = GeneratedColumn<int>(
+    'fund_end_age',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [goalId, retirementAge, fundEndAge];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'retirement_goals_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<RetirementGoalsTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('goal_id')) {
+      context.handle(
+        _goalIdMeta,
+        goalId.isAcceptableOrUnknown(data['goal_id']!, _goalIdMeta),
+      );
+    }
+    if (data.containsKey('retirement_age')) {
+      context.handle(
+        _retirementAgeMeta,
+        retirementAge.isAcceptableOrUnknown(
+          data['retirement_age']!,
+          _retirementAgeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_retirementAgeMeta);
+    }
+    if (data.containsKey('fund_end_age')) {
+      context.handle(
+        _fundEndAgeMeta,
+        fundEndAge.isAcceptableOrUnknown(
+          data['fund_end_age']!,
+          _fundEndAgeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_fundEndAgeMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {goalId};
+  @override
+  RetirementGoalsTableData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RetirementGoalsTableData(
+      goalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}goal_id'],
+      )!,
+      retirementAge: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}retirement_age'],
+      )!,
+      fundEndAge: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fund_end_age'],
+      )!,
+    );
+  }
+
+  @override
+  $RetirementGoalsTableTable createAlias(String alias) {
+    return $RetirementGoalsTableTable(attachedDatabase, alias);
+  }
+}
+
+class RetirementGoalsTableData extends DataClass
+    implements Insertable<RetirementGoalsTableData> {
+  final int goalId;
+  final int retirementAge;
+  final int fundEndAge;
+  const RetirementGoalsTableData({
+    required this.goalId,
+    required this.retirementAge,
+    required this.fundEndAge,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['goal_id'] = Variable<int>(goalId);
+    map['retirement_age'] = Variable<int>(retirementAge);
+    map['fund_end_age'] = Variable<int>(fundEndAge);
+    return map;
+  }
+
+  RetirementGoalsTableCompanion toCompanion(bool nullToAbsent) {
+    return RetirementGoalsTableCompanion(
+      goalId: Value(goalId),
+      retirementAge: Value(retirementAge),
+      fundEndAge: Value(fundEndAge),
+    );
+  }
+
+  factory RetirementGoalsTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RetirementGoalsTableData(
+      goalId: serializer.fromJson<int>(json['goalId']),
+      retirementAge: serializer.fromJson<int>(json['retirementAge']),
+      fundEndAge: serializer.fromJson<int>(json['fundEndAge']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'goalId': serializer.toJson<int>(goalId),
+      'retirementAge': serializer.toJson<int>(retirementAge),
+      'fundEndAge': serializer.toJson<int>(fundEndAge),
+    };
+  }
+
+  RetirementGoalsTableData copyWith({
+    int? goalId,
+    int? retirementAge,
+    int? fundEndAge,
+  }) => RetirementGoalsTableData(
+    goalId: goalId ?? this.goalId,
+    retirementAge: retirementAge ?? this.retirementAge,
+    fundEndAge: fundEndAge ?? this.fundEndAge,
+  );
+  RetirementGoalsTableData copyWithCompanion(
+    RetirementGoalsTableCompanion data,
+  ) {
+    return RetirementGoalsTableData(
+      goalId: data.goalId.present ? data.goalId.value : this.goalId,
+      retirementAge: data.retirementAge.present
+          ? data.retirementAge.value
+          : this.retirementAge,
+      fundEndAge: data.fundEndAge.present
+          ? data.fundEndAge.value
+          : this.fundEndAge,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RetirementGoalsTableData(')
+          ..write('goalId: $goalId, ')
+          ..write('retirementAge: $retirementAge, ')
+          ..write('fundEndAge: $fundEndAge')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(goalId, retirementAge, fundEndAge);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RetirementGoalsTableData &&
+          other.goalId == this.goalId &&
+          other.retirementAge == this.retirementAge &&
+          other.fundEndAge == this.fundEndAge);
+}
+
+class RetirementGoalsTableCompanion
+    extends UpdateCompanion<RetirementGoalsTableData> {
+  final Value<int> goalId;
+  final Value<int> retirementAge;
+  final Value<int> fundEndAge;
+  const RetirementGoalsTableCompanion({
+    this.goalId = const Value.absent(),
+    this.retirementAge = const Value.absent(),
+    this.fundEndAge = const Value.absent(),
+  });
+  RetirementGoalsTableCompanion.insert({
+    this.goalId = const Value.absent(),
+    required int retirementAge,
+    required int fundEndAge,
+  }) : retirementAge = Value(retirementAge),
+       fundEndAge = Value(fundEndAge);
+  static Insertable<RetirementGoalsTableData> custom({
+    Expression<int>? goalId,
+    Expression<int>? retirementAge,
+    Expression<int>? fundEndAge,
+  }) {
+    return RawValuesInsertable({
+      if (goalId != null) 'goal_id': goalId,
+      if (retirementAge != null) 'retirement_age': retirementAge,
+      if (fundEndAge != null) 'fund_end_age': fundEndAge,
+    });
+  }
+
+  RetirementGoalsTableCompanion copyWith({
+    Value<int>? goalId,
+    Value<int>? retirementAge,
+    Value<int>? fundEndAge,
+  }) {
+    return RetirementGoalsTableCompanion(
+      goalId: goalId ?? this.goalId,
+      retirementAge: retirementAge ?? this.retirementAge,
+      fundEndAge: fundEndAge ?? this.fundEndAge,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (goalId.present) {
+      map['goal_id'] = Variable<int>(goalId.value);
+    }
+    if (retirementAge.present) {
+      map['retirement_age'] = Variable<int>(retirementAge.value);
+    }
+    if (fundEndAge.present) {
+      map['fund_end_age'] = Variable<int>(fundEndAge.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RetirementGoalsTableCompanion(')
+          ..write('goalId: $goalId, ')
+          ..write('retirementAge: $retirementAge, ')
+          ..write('fundEndAge: $fundEndAge')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -8960,6 +9479,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $GoalsTableTable goalsTable = $GoalsTableTable(this);
   late final $GoalReservationsTableTable goalReservationsTable =
       $GoalReservationsTableTable(this);
+  late final $UserProfileTableTable userProfileTable = $UserProfileTableTable(
+    this,
+  );
+  late final $RetirementGoalsTableTable retirementGoalsTable =
+      $RetirementGoalsTableTable(this);
   late final TransactionsDao transactionsDao = TransactionsDao(
     this as AppDatabase,
   );
@@ -8979,6 +9503,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final GoalsDao goalsDao = GoalsDao(this as AppDatabase);
   late final GoalReservationsDao goalReservationsDao = GoalReservationsDao(
+    this as AppDatabase,
+  );
+  late final UserProfileDao userProfileDao = UserProfileDao(
+    this as AppDatabase,
+  );
+  late final RetirementGoalDao retirementGoalDao = RetirementGoalDao(
     this as AppDatabase,
   );
   @override
@@ -9003,6 +9533,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     investorProfilesTable,
     goalsTable,
     goalReservationsTable,
+    userProfileTable,
+    retirementGoalsTable,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -17290,6 +17822,31 @@ final class $$GoalsTableTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<
+    $RetirementGoalsTableTable,
+    List<RetirementGoalsTableData>
+  >
+  _retirementGoalsTableRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.retirementGoalsTable,
+        aliasName: 'goals_table__id__retirement_goals_table__goal_id',
+      );
+
+  $$RetirementGoalsTableTableProcessedTableManager
+  get retirementGoalsTableRefs {
+    final manager = $$RetirementGoalsTableTableTableManager(
+      $_db,
+      $_db.retirementGoalsTable,
+    ).filter((f) => f.goalId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _retirementGoalsTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$GoalsTableTableFilterComposer
@@ -17354,6 +17911,31 @@ class $$GoalsTableTableFilterComposer
                     $removeJoinBuilderFromRootComposer,
               ),
         );
+    return f(composer);
+  }
+
+  Expression<bool> retirementGoalsTableRefs(
+    Expression<bool> Function($$RetirementGoalsTableTableFilterComposer f) f,
+  ) {
+    final $$RetirementGoalsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.retirementGoalsTable,
+      getReferencedColumn: (t) => t.goalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RetirementGoalsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.retirementGoalsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
     return f(composer);
   }
 }
@@ -17454,6 +18036,32 @@ class $$GoalsTableTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> retirementGoalsTableRefs<T extends Object>(
+    Expression<T> Function($$RetirementGoalsTableTableAnnotationComposer a) f,
+  ) {
+    final $$RetirementGoalsTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.retirementGoalsTable,
+          getReferencedColumn: (t) => t.goalId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RetirementGoalsTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.retirementGoalsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$GoalsTableTableTableManager
@@ -17469,7 +18077,10 @@ class $$GoalsTableTableTableManager
           $$GoalsTableTableUpdateCompanionBuilder,
           (GoalsTableData, $$GoalsTableTableReferences),
           GoalsTableData,
-          PrefetchHooks Function({bool goalReservationsTableRefs})
+          PrefetchHooks Function({
+            bool goalReservationsTableRefs,
+            bool retirementGoalsTableRefs,
+          })
         > {
   $$GoalsTableTableTableManager(_$AppDatabase db, $GoalsTableTable table)
     : super(
@@ -17522,38 +18133,66 @@ class $$GoalsTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({goalReservationsTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (goalReservationsTableRefs) db.goalReservationsTable,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (goalReservationsTableRefs)
-                    await $_getPrefetchedData<
-                      GoalsTableData,
-                      $GoalsTableTable,
-                      GoalReservationsTableData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$GoalsTableTableReferences
-                          ._goalReservationsTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$GoalsTableTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).goalReservationsTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.goalId == item.id),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({
+                goalReservationsTableRefs = false,
+                retirementGoalsTableRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (goalReservationsTableRefs) db.goalReservationsTable,
+                    if (retirementGoalsTableRefs) db.retirementGoalsTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (goalReservationsTableRefs)
+                        await $_getPrefetchedData<
+                          GoalsTableData,
+                          $GoalsTableTable,
+                          GoalReservationsTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$GoalsTableTableReferences
+                              ._goalReservationsTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$GoalsTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).goalReservationsTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.goalId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (retirementGoalsTableRefs)
+                        await $_getPrefetchedData<
+                          GoalsTableData,
+                          $GoalsTableTable,
+                          RetirementGoalsTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$GoalsTableTableReferences
+                              ._retirementGoalsTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$GoalsTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).retirementGoalsTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.goalId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -17570,7 +18209,10 @@ typedef $$GoalsTableTableProcessedTableManager =
       $$GoalsTableTableUpdateCompanionBuilder,
       (GoalsTableData, $$GoalsTableTableReferences),
       GoalsTableData,
-      PrefetchHooks Function({bool goalReservationsTableRefs})
+      PrefetchHooks Function({
+        bool goalReservationsTableRefs,
+        bool retirementGoalsTableRefs,
+      })
     >;
 typedef $$GoalReservationsTableTableCreateCompanionBuilder =
     GoalReservationsTableCompanion Function({
@@ -17975,6 +18617,468 @@ typedef $$GoalReservationsTableTableProcessedTableManager =
       GoalReservationsTableData,
       PrefetchHooks Function({bool accountId, bool goalId})
     >;
+typedef $$UserProfileTableTableCreateCompanionBuilder =
+    UserProfileTableCompanion Function({
+      Value<int> id,
+      Value<String?> name,
+      Value<DateTime?> birthday,
+    });
+typedef $$UserProfileTableTableUpdateCompanionBuilder =
+    UserProfileTableCompanion Function({
+      Value<int> id,
+      Value<String?> name,
+      Value<DateTime?> birthday,
+    });
+
+class $$UserProfileTableTableFilterComposer
+    extends Composer<_$AppDatabase, $UserProfileTableTable> {
+  $$UserProfileTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get birthday => $composableBuilder(
+    column: $table.birthday,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$UserProfileTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserProfileTableTable> {
+  $$UserProfileTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get birthday => $composableBuilder(
+    column: $table.birthday,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UserProfileTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserProfileTableTable> {
+  $$UserProfileTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get birthday =>
+      $composableBuilder(column: $table.birthday, builder: (column) => column);
+}
+
+class $$UserProfileTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UserProfileTableTable,
+          UserProfileTableData,
+          $$UserProfileTableTableFilterComposer,
+          $$UserProfileTableTableOrderingComposer,
+          $$UserProfileTableTableAnnotationComposer,
+          $$UserProfileTableTableCreateCompanionBuilder,
+          $$UserProfileTableTableUpdateCompanionBuilder,
+          (
+            UserProfileTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $UserProfileTableTable,
+              UserProfileTableData
+            >,
+          ),
+          UserProfileTableData,
+          PrefetchHooks Function()
+        > {
+  $$UserProfileTableTableTableManager(
+    _$AppDatabase db,
+    $UserProfileTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UserProfileTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UserProfileTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UserProfileTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<DateTime?> birthday = const Value.absent(),
+              }) => UserProfileTableCompanion(
+                id: id,
+                name: name,
+                birthday: birthday,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<DateTime?> birthday = const Value.absent(),
+              }) => UserProfileTableCompanion.insert(
+                id: id,
+                name: name,
+                birthday: birthday,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$UserProfileTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UserProfileTableTable,
+      UserProfileTableData,
+      $$UserProfileTableTableFilterComposer,
+      $$UserProfileTableTableOrderingComposer,
+      $$UserProfileTableTableAnnotationComposer,
+      $$UserProfileTableTableCreateCompanionBuilder,
+      $$UserProfileTableTableUpdateCompanionBuilder,
+      (
+        UserProfileTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $UserProfileTableTable,
+          UserProfileTableData
+        >,
+      ),
+      UserProfileTableData,
+      PrefetchHooks Function()
+    >;
+typedef $$RetirementGoalsTableTableCreateCompanionBuilder =
+    RetirementGoalsTableCompanion Function({
+      Value<int> goalId,
+      required int retirementAge,
+      required int fundEndAge,
+    });
+typedef $$RetirementGoalsTableTableUpdateCompanionBuilder =
+    RetirementGoalsTableCompanion Function({
+      Value<int> goalId,
+      Value<int> retirementAge,
+      Value<int> fundEndAge,
+    });
+
+final class $$RetirementGoalsTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $RetirementGoalsTableTable,
+          RetirementGoalsTableData
+        > {
+  $$RetirementGoalsTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $GoalsTableTable _goalIdTable(_$AppDatabase db) => db.goalsTable
+      .createAlias('retirement_goals_table__goal_id__goals_table__id');
+
+  $$GoalsTableTableProcessedTableManager get goalId {
+    final $_column = $_itemColumn<int>('goal_id')!;
+
+    final manager = $$GoalsTableTableTableManager(
+      $_db,
+      $_db.goalsTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_goalIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$RetirementGoalsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $RetirementGoalsTableTable> {
+  $$RetirementGoalsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get retirementAge => $composableBuilder(
+    column: $table.retirementAge,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fundEndAge => $composableBuilder(
+    column: $table.fundEndAge,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$GoalsTableTableFilterComposer get goalId {
+    final $$GoalsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.goalId,
+      referencedTable: $db.goalsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GoalsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.goalsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RetirementGoalsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $RetirementGoalsTableTable> {
+  $$RetirementGoalsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get retirementAge => $composableBuilder(
+    column: $table.retirementAge,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fundEndAge => $composableBuilder(
+    column: $table.fundEndAge,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$GoalsTableTableOrderingComposer get goalId {
+    final $$GoalsTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.goalId,
+      referencedTable: $db.goalsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GoalsTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.goalsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RetirementGoalsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RetirementGoalsTableTable> {
+  $$RetirementGoalsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get retirementAge => $composableBuilder(
+    column: $table.retirementAge,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get fundEndAge => $composableBuilder(
+    column: $table.fundEndAge,
+    builder: (column) => column,
+  );
+
+  $$GoalsTableTableAnnotationComposer get goalId {
+    final $$GoalsTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.goalId,
+      referencedTable: $db.goalsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$GoalsTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.goalsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RetirementGoalsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RetirementGoalsTableTable,
+          RetirementGoalsTableData,
+          $$RetirementGoalsTableTableFilterComposer,
+          $$RetirementGoalsTableTableOrderingComposer,
+          $$RetirementGoalsTableTableAnnotationComposer,
+          $$RetirementGoalsTableTableCreateCompanionBuilder,
+          $$RetirementGoalsTableTableUpdateCompanionBuilder,
+          (RetirementGoalsTableData, $$RetirementGoalsTableTableReferences),
+          RetirementGoalsTableData,
+          PrefetchHooks Function({bool goalId})
+        > {
+  $$RetirementGoalsTableTableTableManager(
+    _$AppDatabase db,
+    $RetirementGoalsTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RetirementGoalsTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RetirementGoalsTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$RetirementGoalsTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> goalId = const Value.absent(),
+                Value<int> retirementAge = const Value.absent(),
+                Value<int> fundEndAge = const Value.absent(),
+              }) => RetirementGoalsTableCompanion(
+                goalId: goalId,
+                retirementAge: retirementAge,
+                fundEndAge: fundEndAge,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> goalId = const Value.absent(),
+                required int retirementAge,
+                required int fundEndAge,
+              }) => RetirementGoalsTableCompanion.insert(
+                goalId: goalId,
+                retirementAge: retirementAge,
+                fundEndAge: fundEndAge,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$RetirementGoalsTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({goalId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (goalId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.goalId,
+                                referencedTable:
+                                    $$RetirementGoalsTableTableReferences
+                                        ._goalIdTable(db),
+                                referencedColumn:
+                                    $$RetirementGoalsTableTableReferences
+                                        ._goalIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$RetirementGoalsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RetirementGoalsTableTable,
+      RetirementGoalsTableData,
+      $$RetirementGoalsTableTableFilterComposer,
+      $$RetirementGoalsTableTableOrderingComposer,
+      $$RetirementGoalsTableTableAnnotationComposer,
+      $$RetirementGoalsTableTableCreateCompanionBuilder,
+      $$RetirementGoalsTableTableUpdateCompanionBuilder,
+      (RetirementGoalsTableData, $$RetirementGoalsTableTableReferences),
+      RetirementGoalsTableData,
+      PrefetchHooks Function({bool goalId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -18036,4 +19140,8 @@ class $AppDatabaseManager {
       $$GoalsTableTableTableManager(_db, _db.goalsTable);
   $$GoalReservationsTableTableTableManager get goalReservationsTable =>
       $$GoalReservationsTableTableTableManager(_db, _db.goalReservationsTable);
+  $$UserProfileTableTableTableManager get userProfileTable =>
+      $$UserProfileTableTableTableManager(_db, _db.userProfileTable);
+  $$RetirementGoalsTableTableTableManager get retirementGoalsTable =>
+      $$RetirementGoalsTableTableTableManager(_db, _db.retirementGoalsTable);
 }

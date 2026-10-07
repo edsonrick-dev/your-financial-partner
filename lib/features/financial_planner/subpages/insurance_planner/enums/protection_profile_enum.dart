@@ -81,6 +81,28 @@ extension ProtectionProfileX on ProtectionProfile {
     }
   }
 
+  int get points {
+    switch (this) {
+      case ProtectionProfile.financiallySecured:
+        return 20;
+
+      case ProtectionProfile.almostSecured:
+        return 15;
+
+      case ProtectionProfile.moderatelyProtected:
+        return 10;
+
+      case ProtectionProfile.unevenProtection:
+        return 10;
+
+      case ProtectionProfile.vulnerableCoverage:
+        return 5;
+
+      case ProtectionProfile.financiallyExposed:
+        return 0;
+    }
+  }
+
   Color get color {
     switch (this) {
       case ProtectionProfile.financiallySecured:

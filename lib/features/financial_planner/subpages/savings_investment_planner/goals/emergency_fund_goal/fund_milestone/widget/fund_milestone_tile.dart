@@ -125,6 +125,8 @@ class EmergencyFundCurrentMarker extends StatelessWidget {
       double.infinity,
     );
 
+    final monthCount = nextMonths > 1 ? 'months' : 'month';
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
@@ -178,7 +180,7 @@ class EmergencyFundCurrentMarker extends StatelessWidget {
 
           Text(
             '${remainingAmount.toCurrency()} to reach '
-            '${nextMonths.toStringAsFixed(0)} months',
+            '${nextMonths.toStringAsFixed(0)} $monthCount',
             style: AppTextStyle.bodyM.copyWith(color: colorScheme.appTextMuted),
           ),
         ],

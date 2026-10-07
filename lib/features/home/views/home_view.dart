@@ -106,12 +106,14 @@ class HomeView extends GetView<HomeController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            controller.userName.value.isEmpty
-                ? '${controller.timeBasedGreeting}!'
-                : '${controller.timeBasedGreeting}, '
-                      '${controller.userName.value}!',
-            style: AppTextStyle.headlineL,
+          Obx(
+            () => Text(
+              controller.userName.value.isEmpty
+                  ? '${controller.timeBasedGreeting}!'
+                  : '${controller.timeBasedGreeting}, '
+                        '${controller.userName.value}!',
+              style: AppTextStyle.headlineL,
+            ),
           ),
           Text(
             'Let’s make today a great financial day.',

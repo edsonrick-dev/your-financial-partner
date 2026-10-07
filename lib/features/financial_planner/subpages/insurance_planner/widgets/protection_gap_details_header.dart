@@ -28,7 +28,7 @@ class ProtectionGapDetailsHeader extends StatelessWidget {
         Text(
           benefitGap.toCurrency(),
           style: AppTextStyle.amountXL.copyWith(
-            color: colorScheme.inversePrimary,
+            color: colorScheme.appInversedtext,
           ),
         ),
         SizedBox(height: 8),
@@ -53,13 +53,13 @@ class ProtectionGapDetailsHeader extends StatelessWidget {
                   Text(
                     protectionNeed.toCurrency(),
                     style: AppTextStyle.amountL.copyWith(
-                      color: colorScheme.inversePrimary,
+                      color: colorScheme.appInversedtext,
                     ),
                   ),
                   Text(
                     'Protection Need',
                     style: AppTextStyle.titleM.copyWith(
-                      color: colorScheme.inversePrimary.withAlpha(150),
+                      color: colorScheme.appInversedtextMuted,
                     ),
                   ),
                 ],
@@ -71,13 +71,13 @@ class ProtectionGapDetailsHeader extends StatelessWidget {
                   Text(
                     protectionSource.toCurrency(),
                     style: AppTextStyle.amountL.copyWith(
-                      color: colorScheme.inversePrimary,
+                      color: colorScheme.appInversedtext,
                     ),
                   ),
                   Text(
                     'Protection Source',
                     style: AppTextStyle.titleM.copyWith(
-                      color: colorScheme.inversePrimary.withAlpha(150),
+                      color: colorScheme.appInversedtextMuted,
                     ),
                   ),
                 ],

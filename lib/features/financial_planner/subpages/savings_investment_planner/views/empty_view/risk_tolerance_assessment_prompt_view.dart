@@ -4,18 +4,16 @@ import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class CashflowPlannerEmptyView extends GetView<CashflowController> {
-  const CashflowPlannerEmptyView({super.key});
+class RiskToleranceAssessmentPromptView extends StatelessWidget {
+  const RiskToleranceAssessmentPromptView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-
     return SizedBox(
       width: double.infinity,
       child: Padding(
@@ -24,7 +22,6 @@ class CashflowPlannerEmptyView extends GetView<CashflowController> {
           bottom: context.bottomPadding,
         ),
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -32,55 +29,39 @@ class CashflowPlannerEmptyView extends GetView<CashflowController> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 48),
                     Icon(
                       PhosphorIconsRegular.coins,
                       size: 60,
                       color: colorScheme.appAccent,
                     ),
                     Text(
-                      "Ascend's Cashflow Planner",
+                      textAlign: TextAlign.center,
+                      "Ascend's Savings & Investments Planner",
                       style: AppTextStyle.headlineL,
                     ),
 
                     Text(
-                      "See where your money comes from and where it's planned to go.",
+                      "Make your money work for your goals",
                       style: AppTextStyle.headlineS,
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "Add your income and budget plans. Ascend will show how "
-                      "much money you have available, how it's allocated, and "
-                      "whether your plan leaves you with a surplus.",
+                      "Take our risk tolerance assessment, understand your risk profile, set your financial goals, and track whether your savings and investments are keeping you on course.",
                       style: AppTextStyle.bodyM.copyWith(
                         color: colorScheme.appTextMuted,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 20),
-                    Obx(() {
-                      final emptyIncomePlan = !controller.hasIncomePlan;
-                      final emptyBudgetPlan =
-                          !controller.hasExpensePlan &&
-                          !controller.hasDebtRepaymentBills.value;
-                      final emptyCasfhlowPlan =
-                          emptyBudgetPlan && emptyIncomePlan;
-                      String ctaText = emptyCasfhlowPlan
-                          ? 'Build your cashflow plan'
-                          : emptyIncomePlan
-                          ? 'Add your income sources'
-                          : 'Set your budget';
-                      //  "Build your cashflow plan";
-                      return AppButton(
-                        text: ctaText,
-                        onTap: () {
-                          controller.setInitialDetailsTab();
-                          Get.toNamed(Routes.CASHFLOWDETAILS);
-                        },
-                      );
-                    }),
+                    AppButton(
+                      text: "Take Ascend's Risk Tolerance Assessment",
+                      onTap: () {
+                        Get.toNamed(Routes.RISKTOLERANCEASSESSMENT);
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -88,7 +69,7 @@ class CashflowPlannerEmptyView extends GetView<CashflowController> {
             SizedBox(height: 24),
             // Spacer(),
             AppSection(
-              sectionTitle: 'What is Cashflow?',
+              sectionTitle: 'What are Savings & Investments?',
               child: Column(
                 children: [
                   Container(
@@ -114,17 +95,22 @@ class CashflowPlannerEmptyView extends GetView<CashflowController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               FittedBox(
+                                fit: BoxFit.scaleDown,
                                 child: Text(
-                                  'Cashflow = Money In – Money Out',
+                                  maxLines: 2,
+                                  'Savings & Investments → Goals Progress',
                                   style: AppTextStyle.labelM,
                                 ),
                               ),
+                              // FittedBox(
+                              //   child: Text(
+                              //     'Money allocated toward your financial goals',
+                              //     style: AppTextStyle.labelM,
+                              //   ),
+                              // ),
                               SizedBox(height: 8),
                               Text(
-                                "Cash flow shows how money moves into and "
-                                "out of your finances. Your budget plans "
-                                "where your money should go, while "
-                                "transactions record where it actually goes.",
+                                "Your savings and investments are the means to achieve your financial goals. Ascend helps you determine how much to contribute, understand your risk tolerance, and track your progress toward each goal.",
                               ),
                             ],
                           ),
@@ -139,18 +125,5 @@ class CashflowPlannerEmptyView extends GetView<CashflowController> {
         ),
       ),
     );
-    // AppSection(
-    //   child: FinancialPlannerEmptySection(
-    //     icon: PhosphorIconsRegular.wallet,
-    //     title: 'Plan your cashflow',
-    //     description:
-    //         'Start by adding your expected income then budget where it should go. Ascend will help you compare your plan with what actually happens as you use the app.',
-    //     actionText: 'Set up your income plan',
-    //     onTap: () {
-    //       controller.seletectedDetailsTabIndex(0);
-    //       Get.toNamed(Routes.CASHFLOWDETAILS);
-    //     },
-    //   ),
-    // );
   }
 }

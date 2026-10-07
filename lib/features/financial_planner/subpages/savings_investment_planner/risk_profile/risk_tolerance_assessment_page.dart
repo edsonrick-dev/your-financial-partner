@@ -23,13 +23,9 @@ class RiskToleranceAssessmentPage extends GetView<RiskToleranceController> {
       appBar: AppBar(
         title: Text('Risk Tolerance Assessment', style: AppTextStyle.headlineL),
         surfaceTintColor: Colors.transparent,
-        leading: Obx(
-          () => controller.canGoBack
-              ? IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: controller.previousPage,
-                )
-              : const SizedBox.shrink(),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: controller.previousPage,
         ),
       ),
       body: Column(

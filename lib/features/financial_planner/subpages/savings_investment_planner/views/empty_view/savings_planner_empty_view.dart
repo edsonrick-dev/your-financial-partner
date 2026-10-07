@@ -4,126 +4,217 @@ import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_insights/cashflow/models/cashflow_status.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/controller/savings_planner_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class RiskToleranceAssessmentPromptView extends StatelessWidget {
-  const RiskToleranceAssessmentPromptView({super.key});
+class SavingsPlannerEmptyView extends GetView<SavingsPlannerController> {
+  const SavingsPlannerEmptyView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    return SizedBox(
-      width: double.infinity,
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: context.topPadding,
-          bottom: context.bottomPadding,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      PhosphorIconsRegular.coins,
-                      size: 60,
-                      color: colorScheme.appAccent,
-                    ),
-                    Text(
-                      textAlign: TextAlign.center,
-                      "Ascend's Savings & Investments Planner",
-                      style: AppTextStyle.headlineL,
-                    ),
 
-                    Text(
-                      "Make your money work for your goals",
-                      style: AppTextStyle.headlineS,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      "Take our risk tolerance assessment, understand your risk profile, set your financial goals, and track whether your savings and investments are keeping you on course.",
-                      style: AppTextStyle.bodyM.copyWith(
-                        color: colorScheme.appTextMuted,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 20),
-                    AppButton(
-                      text: "Take Ascend's Risk Tolerance Assessment",
-                      onTap: () {
-                        Get.toNamed(Routes.RISKTOLERANCEASSESSMENT);
-                      },
-                    ),
-                  ],
-                ),
-              ),
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(
+        top: context.topPadding,
+        bottom: context.bottomPadding,
+      ),
+      child: AppSection(
+        child: Column(
+          children: [
+            SizedBox(height: 48),
+            Icon(
+              PhosphorIconsRegular.chartLineUp,
+              size: 64,
+              color: colorScheme.appAccent,
             ),
-            SizedBox(height: 24),
-            // Spacer(),
-            AppSection(
-              sectionTitle: 'What are Savings & Investments?',
+
+            const SizedBox(height: 16),
+
+            Text(
+              "Ascend's Savings & Investments Planner",
+              style: AppTextStyle.headlineL,
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 8),
+
+            Text(
+              'Make your money work for your goals.',
+              style: AppTextStyle.headlineS,
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 20),
+
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: colorScheme.bgLight,
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    constraints: BoxConstraints(minHeight: 52),
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: colorScheme.bgLight,
-                      border: Border.all(color: colorScheme.appBorder),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colorScheme.text.withValues(alpha: 0.06),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                  Text('Complete your plan setup', style: AppTextStyle.titleM),
+
+                  const SizedBox(height: 16),
+
+                  _PlannerRequirement(
+                    title: "Risk Tolerance Assessment",
+                    description: 'Understand your investment risk profile.',
+                    isComplete:
+                        controller.isRiskToleranceAssessmentFinished.value,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  Obx(
+                    () => _PlannerRequirement(
+                      title: 'Net Worth Plan',
+                      description: 'Record what you own and what you owe.',
+                      isComplete: controller.hasNetWorth,
                     ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  maxLines: 2,
-                                  'Savings & Investments → Goals Progress',
-                                  style: AppTextStyle.labelM,
-                                ),
-                              ),
-                              // FittedBox(
-                              //   child: Text(
-                              //     'Money allocated toward your financial goals',
-                              //     style: AppTextStyle.labelM,
-                              //   ),
-                              // ),
-                              SizedBox(height: 8),
-                              Text(
-                                "Your savings and investments are the means to achieve your financial goals. Ascend helps you determine how much to contribute, understand your risk tolerance, and track your progress toward each goal.",
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  _PlannerRequirement(
+                    title: 'Income Plan',
+                    description: 'Plan how much money comes in.',
+                    isComplete: controller.hasIncome,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  _PlannerRequirement(
+                    title: 'Expense Plan',
+                    description: 'Plan where your money goes.',
+                    isComplete: controller.hasBudget,
                   ),
                 ],
               ),
             ),
+
+            const SizedBox(height: 20),
+
+            AppButton(
+              onTap: _handleAction,
+              trailingIcon: PhosphorIconsRegular.arrowRight,
+              text: _actionText,
+            ),
+
+            const SizedBox(height: 12),
+
+            Text(
+              'Your Savings & Investments Planner becomes available once everything is complete.',
+              style: AppTextStyle.bodyS.copyWith(
+                color: colorScheme.appTextMuted,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  String get _actionText {
+    if (!controller.isRiskToleranceAssessmentFinished.value) {
+      return "Take Ascend's Risk Tolerance Assessment";
+    }
+
+    if (!controller.hasNetWorth) {
+      return 'Complete net worth plan';
+    }
+
+    if (!controller.hasIncome) {
+      return 'Build income plan';
+    }
+
+    if (!controller.hasBudget) {
+      return 'Build expense plan';
+    }
+
+    return 'Continue';
+  }
+
+  void _handleAction() {
+    final cashflowController =
+        controller.financialProfileController.cashflowController;
+
+    if (!controller.isRiskToleranceAssessmentFinished.value) {
+      Get.toNamed(Routes.RISKTOLERANCEASSESSMENT);
+      return;
+    }
+
+    if (!controller.hasNetWorth) {
+      Get.toNamed(Routes.NETWORTHDETAILS);
+      return;
+    }
+
+    if (!controller.hasIncome) {
+      cashflowController.seletectedDetailsTabIndex.value = 0;
+      Get.toNamed(Routes.CASHFLOWDETAILS);
+      return;
+    }
+
+    if (!controller.hasBudget) {
+      cashflowController.seletectedDetailsTabIndex.value = 1;
+      Get.toNamed(Routes.CASHFLOWDETAILS);
+      return;
+    }
+  }
+}
+
+class _PlannerRequirement extends StatelessWidget {
+  final String title;
+  final String description;
+  final bool isComplete;
+
+  const _PlannerRequirement({
+    required this.title,
+    required this.description,
+    required this.isComplete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colors;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          isComplete
+              ? PhosphorIconsFill.checkCircle
+              : PhosphorIconsRegular.circle,
+          size: 24,
+          color: isComplete ? colorScheme.appInflow : colorScheme.appTextMuted,
+        ),
+
+        const SizedBox(width: 12),
+
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: AppTextStyle.titleM),
+
+              const SizedBox(height: 2),
+
+              Text(
+                description,
+                style: AppTextStyle.bodyS.copyWith(color: colorScheme.appText),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

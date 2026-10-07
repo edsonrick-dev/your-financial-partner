@@ -8,7 +8,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/onboarding/enums/onboarding_selection_type.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_controller.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_option_tile.dart';
-import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -66,7 +65,6 @@ class OnboardingView extends GetView<OnboardingController> {
                   onPageChanged: controller.onPageChanged,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    _NamePage(),
                     _GoalsPage(),
                     _ConfidencePage(),
                     _ManagementPage(),
@@ -88,35 +86,6 @@ class OnboardingView extends GetView<OnboardingController> {
               // SizedBox(height: context.bottomPaddingSub),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NamePage extends GetView<OnboardingController> {
-  const _NamePage();
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: AppSection(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('What should we call you?', style: AppTextStyle.displayM),
-
-            const SizedBox(height: 24),
-
-            AppTextField(
-              label: 'Name',
-              focusNode: controller.nameFocusNode,
-              controller: controller.nameController,
-              onChanged: (value) {
-                controller.name.value = value;
-              },
-            ),
-          ],
         ),
       ),
     );

@@ -7,6 +7,7 @@ import 'package:getx_drift_app/data/default_data/default_categories.dart';
 import 'package:getx_drift_app/data/enums/entity_type_enum.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+
 import 'tables/cashflow_categories_table.dart';
 import 'tables/accounts_table.dart';
 import 'tables/transaction_participants_table.dart';
@@ -23,6 +24,8 @@ import 'tables/credit_card_statements_table.dart';
 import 'tables/investor_profile_table.dart';
 import 'tables/goals_table.dart';
 import 'tables/goal_reservations_table.dart';
+import 'tables/user_profile_table.dart';
+import 'tables/retirement_goal_table.dart';
 
 import 'tables/loan_table.dart';
 // import 'tables/cashflow_plans_table.dart';
@@ -36,8 +39,10 @@ import 'package:getx_drift_app/data/database/daos/bills_dao/bills_dao.dart';
 import 'package:getx_drift_app/data/database/daos/category_dao/category_dao.dart';
 import 'package:getx_drift_app/data/database/daos/credit_card_dao/credit_card_dao.dart';
 import 'package:getx_drift_app/data/database/daos/investor_profile/investor_profile_dao.dart';
-import 'package:getx_drift_app/data/database/daos/goals/goals_dao.dart';
-import 'package:getx_drift_app/data/database/daos/goal_reservations/goal_reservations_dao.dart';
+import 'package:getx_drift_app/data/database/daos/goals_dao/goals_dao.dart';
+import 'package:getx_drift_app/data/database/daos/goal_reservations_dao/goal_reservations_dao.dart';
+import 'package:getx_drift_app/data/database/daos/user_profile_dao/user_profile_dao.dart';
+import 'package:getx_drift_app/data/database/daos/retirement_goal_dao/retirement_goal_dao.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
@@ -59,6 +64,8 @@ part 'app_database.g.dart';
     InvestorProfilesTable,
     GoalsTable,
     GoalReservationsTable,
+    UserProfileTable,
+    RetirementGoalsTable,
   ],
   daos: [
     TransactionsDao,
@@ -72,6 +79,8 @@ part 'app_database.g.dart';
     InvestorProfileDao,
     GoalsDao,
     GoalReservationsDao,
+    UserProfileDao,
+    RetirementGoalDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -91,6 +100,10 @@ class AppDatabase extends _$AppDatabase {
     },
 
     onUpgrade: (m, from, to) async {
+      if (from < 3) {
+        await m.createTable(userProfileTable);
+        await m.createTable(retirementGoalsTable);
+      }
       // if (from < 6) {
       //   await m.deleteTable('financial_obligations_table');
       //   await m.deleteTable('transaction_participants_table');
@@ -104,7 +117,7 @@ class AppDatabase extends _$AppDatabase {
     },
   );
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 4;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();

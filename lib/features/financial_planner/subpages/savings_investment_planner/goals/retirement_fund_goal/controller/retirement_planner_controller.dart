@@ -19,7 +19,7 @@ class RetirementPlannerController extends GetxController {
   final retirementAge = 60.obs;
 
   /// Age until which the retirement fund should last.
-  final retirementFundEndAge = 85.obs;
+  final retirementFundEndAge = 80.obs;
 
   /// Percentage of current lifestyle the user expects to need in retirement.
   final retirementSpendingRate = 0.80.obs;

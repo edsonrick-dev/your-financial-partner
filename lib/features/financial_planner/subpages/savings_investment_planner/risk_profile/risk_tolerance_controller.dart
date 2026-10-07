@@ -15,6 +15,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/savings_inves
 import 'dart:convert';
 
 class RiskToleranceController extends GetxController {
+  late final Future<void> initialization;
   final savingsPlannerController = Get.find<SavingsPlannerController>();
 
   Future<void> saveAssessment() async {
@@ -35,7 +36,7 @@ class RiskToleranceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadAssessment();
+    initialization = _loadAssessment();
   }
 
   T? _enumFromName<T extends Enum>(Iterable<T> values, String? name) {
@@ -134,6 +135,7 @@ class RiskToleranceController extends GetxController {
 
   void previousPage() {
     if (pageHistory.isEmpty) {
+      Get.back();
       return;
     }
 

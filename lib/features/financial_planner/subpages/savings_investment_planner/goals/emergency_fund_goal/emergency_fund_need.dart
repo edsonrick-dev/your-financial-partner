@@ -144,12 +144,14 @@ class EmergencyFundNeed extends GetView<FinancialProfileController> {
                   AppButton(
                     text: 'Start building my emergency fund',
                     onTap: () {
-                      Get.to(
-                        () => const EmergencyFundAllocationPage(),
-                        binding: BindingsBuilder(() {
-                          Get.put(GoalReservationController());
-                        }),
-                      );
+                      if (controller.annualBudget > 0) {
+                        Get.to(
+                          () => const EmergencyFundAllocationPage(),
+                          binding: BindingsBuilder(() {
+                            Get.put(GoalReservationController());
+                          }),
+                        );
+                      }
                     },
                   ),
                   AppButton(

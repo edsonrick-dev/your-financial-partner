@@ -5,6 +5,7 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_insights/financial_profile_cashflow_controller_extension.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/sections/protection_score_container_section.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_debt_load_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_emergency_fund_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_lifestyle_coverage_extension.dart';
@@ -118,7 +119,12 @@ class ProfilePage extends GetView<FinancialProfileController> {
                         ),
                       ),
 
-                      SizedBox(height: spacing),
+                      // SizedBox(height: spacing),
+
+                      // ProtectionScoreContainerSection(
+                      //   profile: controller.protectionProfile,
+                      //   unmetGoals: controller.unmetProtectionGoals,
+                      // ),
                       // Obx(() {
                       //   final recommendations = learnEngine
                       //       .getRecommendedContent(
@@ -156,12 +162,11 @@ class ProfilePage extends GetView<FinancialProfileController> {
               }
 
               return FinancialStabilityProfileEmptyState(
-                hasCashflowPlan: controller.isCashflowComplete,
                 hasNetWorthPlan: controller.hasNetWorth,
+                hasIncomePlan: controller.cashflowController.hasIncomePlan,
+                hasBudgetPlan: controller.cashflowController.hasBudgetPlan,
                 hasAssessment: controller.hasCompletedAssessment.value,
-                onAction: () {
-                  _handleProfileAction();
-                },
+                onAction: _handleProfileAction,
               );
             }),
           ),
@@ -176,8 +181,14 @@ class ProfilePage extends GetView<FinancialProfileController> {
       return;
     }
 
-    if (!controller.isCashflowComplete) {
-      controller.cashflowController.setInitialDetailsTab();
+    if (!controller.hasIncome) {
+      controller.cashflowController.seletectedDetailsTabIndex.value = 0;
+      Get.toNamed(Routes.CASHFLOWDETAILS);
+      return;
+    }
+
+    if (!controller.hasBudget) {
+      controller.cashflowController.seletectedDetailsTabIndex.value = 1;
       Get.toNamed(Routes.CASHFLOWDETAILS);
       return;
     }
