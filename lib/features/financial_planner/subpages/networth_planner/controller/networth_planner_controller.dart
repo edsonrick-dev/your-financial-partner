@@ -172,8 +172,15 @@ class NetWorthController extends GetxController {
     peopleBalances.bindStream(
       database.peopleBalanceDao.watchPeopleBalances(includeSettled: false),
     );
+    creditCardDetails.bindStream(
+      database
+          .select(database.creditCardDetailsTable)
+          .watch()
+          .map((rows) => {for (final row in rows) row.accountId: row}),
+    );
   }
 
+  final creditCardDetails = <int, CreditCardDetailsTableData>{}.obs;
   List<NetWorthItem> get accountNetWorthItems {
     return accounts.map((account) {
       final accountType = AccountType.fromName(account.accountType);
@@ -185,6 +192,7 @@ class NetWorthController extends GetxController {
         source: NetWorthItemSource.account,
         group: accountType.group,
         account: account,
+        creditCardDetails: creditCardDetails[account.id],
       );
     }).toList();
   }

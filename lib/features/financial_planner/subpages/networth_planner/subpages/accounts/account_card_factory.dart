@@ -24,13 +24,20 @@ class AccountCardFactory {
 
     switch (type) {
       case AccountType.creditCard:
+        final creditCardDetails = item.creditCardDetails;
+
+        if (creditCardDetails == null) {
+          return Text('$creditCardDetails');
+        }
+
         return CreditCardAccountCard(
           account: account,
-
+          creditCardDetails: creditCardDetails,
           onTap: () {
             AppSheets.viewCreditCardDetailSheet(account);
           },
         );
+
       case AccountType.loan:
         return LoanAccountCard(
           account: account,

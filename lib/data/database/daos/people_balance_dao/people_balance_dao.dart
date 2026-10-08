@@ -195,7 +195,6 @@ class PeopleBalanceDao extends DatabaseAccessor<AppDatabase>
       entitiesTable,
     )..where((tbl) => tbl.entityType.equals(EntityType.person.name))).get();
 
-    // final currentUserId = await getCurrentUserId();
     final me = await (select(
       entitiesTable,
     )..where((tbl) => tbl.name.equals('Me'))).getSingle();

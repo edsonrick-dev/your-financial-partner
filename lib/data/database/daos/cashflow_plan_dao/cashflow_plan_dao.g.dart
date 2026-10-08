@@ -11,6 +11,8 @@ mixin _$CashflowPlanDaoMixin on DatabaseAccessor<AppDatabase> {
   $CashFlowPlansTable get cashFlowPlans => attachedDatabase.cashFlowPlans;
   $CashFlowPlanAllocationsTable get cashFlowPlanAllocations =>
       attachedDatabase.cashFlowPlanAllocations;
+  $CashflowPlanMetadataTable get cashflowPlanMetadata =>
+      attachedDatabase.cashflowPlanMetadata;
   CashflowPlanDaoManager get managers => CashflowPlanDaoManager(this);
 }
 
@@ -32,5 +34,10 @@ class CashflowPlanDaoManager {
       $$CashFlowPlanAllocationsTableTableManager(
         _db.attachedDatabase,
         _db.cashFlowPlanAllocations,
+      );
+  $$CashflowPlanMetadataTableTableManager get cashflowPlanMetadata =>
+      $$CashflowPlanMetadataTableTableManager(
+        _db.attachedDatabase,
+        _db.cashflowPlanMetadata,
       );
 }

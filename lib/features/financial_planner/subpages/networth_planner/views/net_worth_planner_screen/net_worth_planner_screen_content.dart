@@ -282,7 +282,7 @@ class EmptyBalanceSheetView extends StatelessWidget {
           // Icon(Icons.account_balance_wallet_outlined, size: 24),
           // const SizedBox(height: 12),
           Text(
-            'You have no ${type.plural.toLowerCase()}',
+            'You have no ${type.pluralLabel.toLowerCase()}',
             style: AppTextStyle.bodyM.copyWith(color: context.colors.textMuted),
           ),
           // Text('Add your first ${type.name} to get started.'),

@@ -128,6 +128,7 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
 
   Future<int> createCreditCard({
     required AccountsTableCompanion account,
+    required double creditLimit,
     required int statementDay,
     required int paymentDueDay,
     required DateTime nextStatementDate,
@@ -139,6 +140,7 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
       await into(creditCardDetailsTable).insert(
         CreditCardDetailsTableCompanion.insert(
           accountId: Value(accountId),
+          creditLimit: creditLimit,
           statementDay: statementDay,
           paymentDueDay: paymentDueDay,
           nextStatementDate: nextStatementDate,
@@ -184,6 +186,28 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
     )..where((tbl) => tbl.accountType.isIn(assetTypes))).watch();
   }
 
+  Future<NetWorthItem> _buildNetWorthItem(AccountsTableData account) async {
+    final accountType = AccountType.fromName(account.accountType);
+
+    CreditCardDetailsTableData? creditCardDetails;
+
+    if (accountType == AccountType.creditCard) {
+      creditCardDetails = await (select(
+        creditCardDetailsTable,
+      )..where((tbl) => tbl.accountId.equals(account.id))).getSingleOrNull();
+    }
+
+    return NetWorthItem(
+      id: 'account_${account.id}',
+      name: account.name,
+      value: account.currentValue,
+      source: NetWorthItemSource.account,
+      group: accountType.group,
+      account: account,
+      creditCardDetails: creditCardDetails,
+    );
+  }
+
   Stream<List<AccountGroupSummary>> watchAssetAccountGroups() {
     return watchAccounts().map((accounts) {
       final assetGroups = AccountGroup.values
@@ -220,31 +244,25 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Stream<List<AccountGroupSummary>> watchLiabilityAccountGroups() {
-    return watchAccounts().map((accounts) {
+    return watchAccounts().asyncMap((accounts) async {
       final liabilityGroups = AccountGroup.values
           .where((group) => group.isLiability)
           .toList();
 
+      final items = <NetWorthItem>[];
+
+      for (final account in accounts) {
+        final accountType = AccountType.fromName(account.accountType);
+
+        if (!accountType.isLiability) continue;
+
+        items.add(await _buildNetWorthItem(account));
+      }
+
       return liabilityGroups
           .map((group) {
-            final groupItems = accounts
-                .where((account) {
-                  final accountType = AccountType.fromName(account.accountType);
-
-                  return accountType.group == group;
-                })
-                .map((account) {
-                  final accountType = AccountType.fromName(account.accountType);
-
-                  return NetWorthItem(
-                    id: 'account_${account.id}',
-                    name: account.name,
-                    value: account.currentValue,
-                    source: NetWorthItemSource.account,
-                    group: accountType.group,
-                    account: account,
-                  );
-                })
+            final groupItems = items
+                .where((item) => item.group == group)
                 .toList();
 
             return AccountGroupSummary(group: group, items: groupItems);

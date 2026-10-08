@@ -10,17 +10,22 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class CreditCardAccountCard extends StatelessWidget {
   final AccountsTableData account;
+  final CreditCardDetailsTableData creditCardDetails;
   final VoidCallback? onTap;
 
-  const CreditCardAccountCard({super.key, required this.account, this.onTap});
-
+  const CreditCardAccountCard({
+    super.key,
+    required this.account,
+    required this.creditCardDetails,
+    this.onTap,
+  });
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    final availableCredit = account.availableCredit;
-    final creditLimit = account.creditLimit;
+    final availableCredit = account.availableCredit(creditCardDetails) ?? 0;
+    final creditLimit = creditCardDetails.creditLimit;
 
-    final utilization = creditLimit != null && creditLimit > 0
+    final utilization = creditLimit > 0
         ? account.currentValue / creditLimit
         : null;
     final currentValue = account.currentValue;
@@ -76,13 +81,13 @@ class CreditCardAccountCard extends StatelessWidget {
               Expanded(
                 child: _CreditMetric(
                   label: 'Available credit',
-                  value: availableCredit?.toCurrency() ?? '—',
+                  value: availableCredit.toCurrency() ?? '—',
                 ),
               ),
               Expanded(
                 child: _CreditMetric(
                   label: 'Credit limit',
-                  value: creditLimit?.toCurrency() ?? '—',
+                  value: creditLimit.toCurrency() ?? '—',
                 ),
               ),
             ],

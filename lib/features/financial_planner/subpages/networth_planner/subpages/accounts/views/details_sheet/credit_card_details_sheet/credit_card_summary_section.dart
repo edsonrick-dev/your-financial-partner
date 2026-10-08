@@ -9,6 +9,7 @@ import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_card_metric.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/data/tables/credit_card_details_table.dart';
 
 Color _utilizationColor(double utilization) {
   if (utilization >= 0.90) {
@@ -32,19 +33,26 @@ Color _utilizationColor(double utilization) {
 
 class CreditCardSummarySection extends StatelessWidget {
   final AccountsTableData account;
+  final CreditCardDetailsTableData creditCardDetails;
 
-  const CreditCardSummarySection({super.key, required this.account});
+  const CreditCardSummarySection({
+    super.key,
+    required this.account,
+    required this.creditCardDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    final creditLimit = account.creditLimit ?? 0;
-    final payable = account.currentValue.abs();
-    final availableCredit = account.availableCredit ?? 0;
+    final creditLimit = creditCardDetails.creditLimit;
 
-    final utilization = creditLimit > 0 ? payable / creditLimit : 0.0;
+    final availableCredit = account.availableCredit(creditCardDetails) ?? 0;
+
+    final utilization = account.creditUtilization(creditCardDetails) ?? 0;
 
     final utilizationColor = _utilizationColor(utilization);
+
+    final payable = account.currentValue.abs();
     return AppSection(
       child: Container(
         padding: EdgeInsets.all(24),

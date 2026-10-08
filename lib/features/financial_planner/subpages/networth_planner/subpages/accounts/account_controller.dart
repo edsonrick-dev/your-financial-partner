@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
+import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:drift/drift.dart' as drift;
@@ -130,10 +131,16 @@ class AccountController extends GetxController {
   // ACCOUNT EDITING
   // ============================================================
 
-  void initializeEditAccount(AccountsTableData account) {
+  Future<void> initializeEditAccount(AccountsTableData account) async {
     nameController.text = account.name;
 
-    enteredCreditLimit.value = account.creditLimit ?? 0;
+    if (account.type == AccountType.creditCard) {
+      final details = await database.creditCardDao.getByAccountId(account.id);
+
+      enteredCreditLimit.value = details?.creditLimit ?? 0;
+    } else {
+      enteredCreditLimit.value = 0;
+    }
   }
 
   // ============================================================
@@ -236,13 +243,14 @@ class AccountController extends GetxController {
       return;
     }
 
-    await database.accountsDao.updateAccount(
-      account.id,
-      AccountsTableCompanion(
-        name: drift.Value(name),
-        creditLimit: drift.Value(creditLimit),
-      ),
-    );
+    await database.transaction(() async {
+      await database.accountsDao.updateAccount(
+        account.id,
+        AccountsTableCompanion(name: drift.Value(name)),
+      );
+
+      await database.creditCardDao.updateCreditLimit(account.id, creditLimit);
+    });
 
     nameController.clear();
     enteredCreditLimit.value = 0;
@@ -367,9 +375,6 @@ class AccountController extends GetxController {
           name: name,
           icon: selectedIconKey.value,
           accountType: type.name,
-          creditLimit: type == AccountType.creditCard
-              ? drift.Value<double?>(creditLimit)
-              : const drift.Value<double?>(null),
         ),
       );
       // 2. Create credit card billing configuration
@@ -395,6 +400,7 @@ class AccountController extends GetxController {
         await database.creditCardDao.insert(
           CreditCardDetailsTableCompanion.insert(
             accountId: drift.Value(insertedId),
+            creditLimit: creditLimit,
             statementDay: selectedStatement.day,
             paymentDueDay: selectedDue.day,
             nextStatementDate: nextStatementDate,

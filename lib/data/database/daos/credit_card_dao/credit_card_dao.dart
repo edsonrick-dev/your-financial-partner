@@ -581,6 +581,15 @@ class CreditCardDao extends DatabaseAccessor<AppDatabase>
     return into(creditCardDetailsTable).insert(details);
   }
 
+  /// Updates the credit limit for a credit card.
+  Future<void> updateCreditLimit(int accountId, double creditLimit) {
+    return (update(
+      creditCardDetailsTable,
+    )..where((tbl) => tbl.accountId.equals(accountId))).write(
+      CreditCardDetailsTableCompanion(creditLimit: Value(creditLimit)),
+    );
+  }
+
   /// Advances the credit card by exactly one billing cycle.
   ///
   /// The recurring statement/payment days remain unchanged.

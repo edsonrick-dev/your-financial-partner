@@ -351,6 +351,260 @@ class CashflowCategoriesTableCompanion
   }
 }
 
+class $CashflowPlanMetadataTable extends CashflowPlanMetadata
+    with TableInfo<$CashflowPlanMetadataTable, CashflowPlanMetadataData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CashflowPlanMetadataTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _revisionMeta = const VerificationMeta(
+    'revision',
+  );
+  @override
+  late final GeneratedColumn<int> revision = GeneratedColumn<int>(
+    'revision',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, revision, updatedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cashflow_plan_metadata';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CashflowPlanMetadataData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('revision')) {
+      context.handle(
+        _revisionMeta,
+        revision.isAcceptableOrUnknown(data['revision']!, _revisionMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CashflowPlanMetadataData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CashflowPlanMetadataData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      revision: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}revision'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CashflowPlanMetadataTable createAlias(String alias) {
+    return $CashflowPlanMetadataTable(attachedDatabase, alias);
+  }
+}
+
+class CashflowPlanMetadataData extends DataClass
+    implements Insertable<CashflowPlanMetadataData> {
+  final int id;
+  final int revision;
+  final DateTime updatedAt;
+  const CashflowPlanMetadataData({
+    required this.id,
+    required this.revision,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['revision'] = Variable<int>(revision);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CashflowPlanMetadataCompanion toCompanion(bool nullToAbsent) {
+    return CashflowPlanMetadataCompanion(
+      id: Value(id),
+      revision: Value(revision),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CashflowPlanMetadataData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CashflowPlanMetadataData(
+      id: serializer.fromJson<int>(json['id']),
+      revision: serializer.fromJson<int>(json['revision']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'revision': serializer.toJson<int>(revision),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CashflowPlanMetadataData copyWith({
+    int? id,
+    int? revision,
+    DateTime? updatedAt,
+  }) => CashflowPlanMetadataData(
+    id: id ?? this.id,
+    revision: revision ?? this.revision,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  CashflowPlanMetadataData copyWithCompanion(
+    CashflowPlanMetadataCompanion data,
+  ) {
+    return CashflowPlanMetadataData(
+      id: data.id.present ? data.id.value : this.id,
+      revision: data.revision.present ? data.revision.value : this.revision,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashflowPlanMetadataData(')
+          ..write('id: $id, ')
+          ..write('revision: $revision, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, revision, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CashflowPlanMetadataData &&
+          other.id == this.id &&
+          other.revision == this.revision &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CashflowPlanMetadataCompanion
+    extends UpdateCompanion<CashflowPlanMetadataData> {
+  final Value<int> id;
+  final Value<int> revision;
+  final Value<DateTime> updatedAt;
+  const CashflowPlanMetadataCompanion({
+    this.id = const Value.absent(),
+    this.revision = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  CashflowPlanMetadataCompanion.insert({
+    this.id = const Value.absent(),
+    this.revision = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  static Insertable<CashflowPlanMetadataData> custom({
+    Expression<int>? id,
+    Expression<int>? revision,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (revision != null) 'revision': revision,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  CashflowPlanMetadataCompanion copyWith({
+    Value<int>? id,
+    Value<int>? revision,
+    Value<DateTime>? updatedAt,
+  }) {
+    return CashflowPlanMetadataCompanion(
+      id: id ?? this.id,
+      revision: revision ?? this.revision,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (revision.present) {
+      map['revision'] = Variable<int>(revision.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashflowPlanMetadataCompanion(')
+          ..write('id: $id, ')
+          ..write('revision: $revision, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $AccountsTableTable extends AccountsTable
     with TableInfo<$AccountsTableTable, AccountsTableData> {
   @override
@@ -426,17 +680,6 @@ class $AccountsTableTable extends AccountsTable
     ),
     defaultValue: const Constant(false),
   );
-  static const VerificationMeta _creditLimitMeta = const VerificationMeta(
-    'creditLimit',
-  );
-  @override
-  late final GeneratedColumn<double> creditLimit = GeneratedColumn<double>(
-    'credit_limit',
-    aliasedName,
-    true,
-    type: DriftSqlType.double,
-    requiredDuringInsert: false,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -445,7 +688,6 @@ class $AccountsTableTable extends AccountsTable
     accountType,
     currentValue,
     isSystem,
-    creditLimit,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -504,20 +746,15 @@ class $AccountsTableTable extends AccountsTable
         isSystem.isAcceptableOrUnknown(data['is_system']!, _isSystemMeta),
       );
     }
-    if (data.containsKey('credit_limit')) {
-      context.handle(
-        _creditLimitMeta,
-        creditLimit.isAcceptableOrUnknown(
-          data['credit_limit']!,
-          _creditLimitMeta,
-        ),
-      );
-    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {name},
+  ];
   @override
   AccountsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -546,10 +783,6 @@ class $AccountsTableTable extends AccountsTable
         DriftSqlType.bool,
         data['${effectivePrefix}is_system'],
       )!,
-      creditLimit: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}credit_limit'],
-      ),
     );
   }
 
@@ -567,7 +800,6 @@ class AccountsTableData extends DataClass
   final String accountType;
   final double currentValue;
   final bool isSystem;
-  final double? creditLimit;
   const AccountsTableData({
     required this.id,
     required this.name,
@@ -575,7 +807,6 @@ class AccountsTableData extends DataClass
     required this.accountType,
     required this.currentValue,
     required this.isSystem,
-    this.creditLimit,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -586,9 +817,6 @@ class AccountsTableData extends DataClass
     map['account_type'] = Variable<String>(accountType);
     map['current_value'] = Variable<double>(currentValue);
     map['is_system'] = Variable<bool>(isSystem);
-    if (!nullToAbsent || creditLimit != null) {
-      map['credit_limit'] = Variable<double>(creditLimit);
-    }
     return map;
   }
 
@@ -600,9 +828,6 @@ class AccountsTableData extends DataClass
       accountType: Value(accountType),
       currentValue: Value(currentValue),
       isSystem: Value(isSystem),
-      creditLimit: creditLimit == null && nullToAbsent
-          ? const Value.absent()
-          : Value(creditLimit),
     );
   }
 
@@ -618,7 +843,6 @@ class AccountsTableData extends DataClass
       accountType: serializer.fromJson<String>(json['accountType']),
       currentValue: serializer.fromJson<double>(json['currentValue']),
       isSystem: serializer.fromJson<bool>(json['isSystem']),
-      creditLimit: serializer.fromJson<double?>(json['creditLimit']),
     );
   }
   @override
@@ -631,7 +855,6 @@ class AccountsTableData extends DataClass
       'accountType': serializer.toJson<String>(accountType),
       'currentValue': serializer.toJson<double>(currentValue),
       'isSystem': serializer.toJson<bool>(isSystem),
-      'creditLimit': serializer.toJson<double?>(creditLimit),
     };
   }
 
@@ -642,7 +865,6 @@ class AccountsTableData extends DataClass
     String? accountType,
     double? currentValue,
     bool? isSystem,
-    Value<double?> creditLimit = const Value.absent(),
   }) => AccountsTableData(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -650,7 +872,6 @@ class AccountsTableData extends DataClass
     accountType: accountType ?? this.accountType,
     currentValue: currentValue ?? this.currentValue,
     isSystem: isSystem ?? this.isSystem,
-    creditLimit: creditLimit.present ? creditLimit.value : this.creditLimit,
   );
   AccountsTableData copyWithCompanion(AccountsTableCompanion data) {
     return AccountsTableData(
@@ -664,9 +885,6 @@ class AccountsTableData extends DataClass
           ? data.currentValue.value
           : this.currentValue,
       isSystem: data.isSystem.present ? data.isSystem.value : this.isSystem,
-      creditLimit: data.creditLimit.present
-          ? data.creditLimit.value
-          : this.creditLimit,
     );
   }
 
@@ -678,22 +896,14 @@ class AccountsTableData extends DataClass
           ..write('icon: $icon, ')
           ..write('accountType: $accountType, ')
           ..write('currentValue: $currentValue, ')
-          ..write('isSystem: $isSystem, ')
-          ..write('creditLimit: $creditLimit')
+          ..write('isSystem: $isSystem')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    name,
-    icon,
-    accountType,
-    currentValue,
-    isSystem,
-    creditLimit,
-  );
+  int get hashCode =>
+      Object.hash(id, name, icon, accountType, currentValue, isSystem);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -703,8 +913,7 @@ class AccountsTableData extends DataClass
           other.icon == this.icon &&
           other.accountType == this.accountType &&
           other.currentValue == this.currentValue &&
-          other.isSystem == this.isSystem &&
-          other.creditLimit == this.creditLimit);
+          other.isSystem == this.isSystem);
 }
 
 class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
@@ -714,7 +923,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
   final Value<String> accountType;
   final Value<double> currentValue;
   final Value<bool> isSystem;
-  final Value<double?> creditLimit;
   const AccountsTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -722,7 +930,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     this.accountType = const Value.absent(),
     this.currentValue = const Value.absent(),
     this.isSystem = const Value.absent(),
-    this.creditLimit = const Value.absent(),
   });
   AccountsTableCompanion.insert({
     this.id = const Value.absent(),
@@ -731,7 +938,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     required String accountType,
     this.currentValue = const Value.absent(),
     this.isSystem = const Value.absent(),
-    this.creditLimit = const Value.absent(),
   }) : name = Value(name),
        icon = Value(icon),
        accountType = Value(accountType);
@@ -742,7 +948,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     Expression<String>? accountType,
     Expression<double>? currentValue,
     Expression<bool>? isSystem,
-    Expression<double>? creditLimit,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -751,7 +956,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
       if (accountType != null) 'account_type': accountType,
       if (currentValue != null) 'current_value': currentValue,
       if (isSystem != null) 'is_system': isSystem,
-      if (creditLimit != null) 'credit_limit': creditLimit,
     });
   }
 
@@ -762,7 +966,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     Value<String>? accountType,
     Value<double>? currentValue,
     Value<bool>? isSystem,
-    Value<double?>? creditLimit,
   }) {
     return AccountsTableCompanion(
       id: id ?? this.id,
@@ -771,7 +974,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
       accountType: accountType ?? this.accountType,
       currentValue: currentValue ?? this.currentValue,
       isSystem: isSystem ?? this.isSystem,
-      creditLimit: creditLimit ?? this.creditLimit,
     );
   }
 
@@ -796,9 +998,6 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
     if (isSystem.present) {
       map['is_system'] = Variable<bool>(isSystem.value);
     }
-    if (creditLimit.present) {
-      map['credit_limit'] = Variable<double>(creditLimit.value);
-    }
     return map;
   }
 
@@ -810,8 +1009,7 @@ class AccountsTableCompanion extends UpdateCompanion<AccountsTableData> {
           ..write('icon: $icon, ')
           ..write('accountType: $accountType, ')
           ..write('currentValue: $currentValue, ')
-          ..write('isSystem: $isSystem, ')
-          ..write('creditLimit: $creditLimit')
+          ..write('isSystem: $isSystem')
           ..write(')'))
         .toString();
   }
@@ -7124,6 +7322,17 @@ class $CreditCardDetailsTableTable extends CreditCardDetailsTable
         type: DriftSqlType.dateTime,
         requiredDuringInsert: true,
       );
+  static const VerificationMeta _creditLimitMeta = const VerificationMeta(
+    'creditLimit',
+  );
+  @override
+  late final GeneratedColumn<double> creditLimit = GeneratedColumn<double>(
+    'credit_limit',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     accountId,
@@ -7131,6 +7340,7 @@ class $CreditCardDetailsTableTable extends CreditCardDetailsTable
     paymentDueDay,
     nextStatementDate,
     nextPaymentDueDate,
+    creditLimit,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -7194,6 +7404,17 @@ class $CreditCardDetailsTableTable extends CreditCardDetailsTable
     } else if (isInserting) {
       context.missing(_nextPaymentDueDateMeta);
     }
+    if (data.containsKey('credit_limit')) {
+      context.handle(
+        _creditLimitMeta,
+        creditLimit.isAcceptableOrUnknown(
+          data['credit_limit']!,
+          _creditLimitMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_creditLimitMeta);
+    }
     return context;
   }
 
@@ -7226,6 +7447,10 @@ class $CreditCardDetailsTableTable extends CreditCardDetailsTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}next_payment_due_date'],
       )!,
+      creditLimit: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}credit_limit'],
+      )!,
     );
   }
 
@@ -7257,12 +7482,14 @@ class CreditCardDetailsTableData extends DataClass
   /// Next concrete payment due date associated with
   /// the next statement.
   final DateTime nextPaymentDueDate;
+  final double creditLimit;
   const CreditCardDetailsTableData({
     required this.accountId,
     required this.statementDay,
     required this.paymentDueDay,
     required this.nextStatementDate,
     required this.nextPaymentDueDate,
+    required this.creditLimit,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -7272,6 +7499,7 @@ class CreditCardDetailsTableData extends DataClass
     map['payment_due_day'] = Variable<int>(paymentDueDay);
     map['next_statement_date'] = Variable<DateTime>(nextStatementDate);
     map['next_payment_due_date'] = Variable<DateTime>(nextPaymentDueDate);
+    map['credit_limit'] = Variable<double>(creditLimit);
     return map;
   }
 
@@ -7282,6 +7510,7 @@ class CreditCardDetailsTableData extends DataClass
       paymentDueDay: Value(paymentDueDay),
       nextStatementDate: Value(nextStatementDate),
       nextPaymentDueDate: Value(nextPaymentDueDate),
+      creditLimit: Value(creditLimit),
     );
   }
 
@@ -7300,6 +7529,7 @@ class CreditCardDetailsTableData extends DataClass
       nextPaymentDueDate: serializer.fromJson<DateTime>(
         json['nextPaymentDueDate'],
       ),
+      creditLimit: serializer.fromJson<double>(json['creditLimit']),
     );
   }
   @override
@@ -7311,6 +7541,7 @@ class CreditCardDetailsTableData extends DataClass
       'paymentDueDay': serializer.toJson<int>(paymentDueDay),
       'nextStatementDate': serializer.toJson<DateTime>(nextStatementDate),
       'nextPaymentDueDate': serializer.toJson<DateTime>(nextPaymentDueDate),
+      'creditLimit': serializer.toJson<double>(creditLimit),
     };
   }
 
@@ -7320,12 +7551,14 @@ class CreditCardDetailsTableData extends DataClass
     int? paymentDueDay,
     DateTime? nextStatementDate,
     DateTime? nextPaymentDueDate,
+    double? creditLimit,
   }) => CreditCardDetailsTableData(
     accountId: accountId ?? this.accountId,
     statementDay: statementDay ?? this.statementDay,
     paymentDueDay: paymentDueDay ?? this.paymentDueDay,
     nextStatementDate: nextStatementDate ?? this.nextStatementDate,
     nextPaymentDueDate: nextPaymentDueDate ?? this.nextPaymentDueDate,
+    creditLimit: creditLimit ?? this.creditLimit,
   );
   CreditCardDetailsTableData copyWithCompanion(
     CreditCardDetailsTableCompanion data,
@@ -7344,6 +7577,9 @@ class CreditCardDetailsTableData extends DataClass
       nextPaymentDueDate: data.nextPaymentDueDate.present
           ? data.nextPaymentDueDate.value
           : this.nextPaymentDueDate,
+      creditLimit: data.creditLimit.present
+          ? data.creditLimit.value
+          : this.creditLimit,
     );
   }
 
@@ -7354,7 +7590,8 @@ class CreditCardDetailsTableData extends DataClass
           ..write('statementDay: $statementDay, ')
           ..write('paymentDueDay: $paymentDueDay, ')
           ..write('nextStatementDate: $nextStatementDate, ')
-          ..write('nextPaymentDueDate: $nextPaymentDueDate')
+          ..write('nextPaymentDueDate: $nextPaymentDueDate, ')
+          ..write('creditLimit: $creditLimit')
           ..write(')'))
         .toString();
   }
@@ -7366,6 +7603,7 @@ class CreditCardDetailsTableData extends DataClass
     paymentDueDay,
     nextStatementDate,
     nextPaymentDueDate,
+    creditLimit,
   );
   @override
   bool operator ==(Object other) =>
@@ -7375,7 +7613,8 @@ class CreditCardDetailsTableData extends DataClass
           other.statementDay == this.statementDay &&
           other.paymentDueDay == this.paymentDueDay &&
           other.nextStatementDate == this.nextStatementDate &&
-          other.nextPaymentDueDate == this.nextPaymentDueDate);
+          other.nextPaymentDueDate == this.nextPaymentDueDate &&
+          other.creditLimit == this.creditLimit);
 }
 
 class CreditCardDetailsTableCompanion
@@ -7385,12 +7624,14 @@ class CreditCardDetailsTableCompanion
   final Value<int> paymentDueDay;
   final Value<DateTime> nextStatementDate;
   final Value<DateTime> nextPaymentDueDate;
+  final Value<double> creditLimit;
   const CreditCardDetailsTableCompanion({
     this.accountId = const Value.absent(),
     this.statementDay = const Value.absent(),
     this.paymentDueDay = const Value.absent(),
     this.nextStatementDate = const Value.absent(),
     this.nextPaymentDueDate = const Value.absent(),
+    this.creditLimit = const Value.absent(),
   });
   CreditCardDetailsTableCompanion.insert({
     this.accountId = const Value.absent(),
@@ -7398,16 +7639,19 @@ class CreditCardDetailsTableCompanion
     required int paymentDueDay,
     required DateTime nextStatementDate,
     required DateTime nextPaymentDueDate,
+    required double creditLimit,
   }) : statementDay = Value(statementDay),
        paymentDueDay = Value(paymentDueDay),
        nextStatementDate = Value(nextStatementDate),
-       nextPaymentDueDate = Value(nextPaymentDueDate);
+       nextPaymentDueDate = Value(nextPaymentDueDate),
+       creditLimit = Value(creditLimit);
   static Insertable<CreditCardDetailsTableData> custom({
     Expression<int>? accountId,
     Expression<int>? statementDay,
     Expression<int>? paymentDueDay,
     Expression<DateTime>? nextStatementDate,
     Expression<DateTime>? nextPaymentDueDate,
+    Expression<double>? creditLimit,
   }) {
     return RawValuesInsertable({
       if (accountId != null) 'account_id': accountId,
@@ -7416,6 +7660,7 @@ class CreditCardDetailsTableCompanion
       if (nextStatementDate != null) 'next_statement_date': nextStatementDate,
       if (nextPaymentDueDate != null)
         'next_payment_due_date': nextPaymentDueDate,
+      if (creditLimit != null) 'credit_limit': creditLimit,
     });
   }
 
@@ -7425,6 +7670,7 @@ class CreditCardDetailsTableCompanion
     Value<int>? paymentDueDay,
     Value<DateTime>? nextStatementDate,
     Value<DateTime>? nextPaymentDueDate,
+    Value<double>? creditLimit,
   }) {
     return CreditCardDetailsTableCompanion(
       accountId: accountId ?? this.accountId,
@@ -7432,6 +7678,7 @@ class CreditCardDetailsTableCompanion
       paymentDueDay: paymentDueDay ?? this.paymentDueDay,
       nextStatementDate: nextStatementDate ?? this.nextStatementDate,
       nextPaymentDueDate: nextPaymentDueDate ?? this.nextPaymentDueDate,
+      creditLimit: creditLimit ?? this.creditLimit,
     );
   }
 
@@ -7455,6 +7702,9 @@ class CreditCardDetailsTableCompanion
         nextPaymentDueDate.value,
       );
     }
+    if (creditLimit.present) {
+      map['credit_limit'] = Variable<double>(creditLimit.value);
+    }
     return map;
   }
 
@@ -7465,7 +7715,8 @@ class CreditCardDetailsTableCompanion
           ..write('statementDay: $statementDay, ')
           ..write('paymentDueDay: $paymentDueDay, ')
           ..write('nextStatementDate: $nextStatementDate, ')
-          ..write('nextPaymentDueDate: $nextPaymentDueDate')
+          ..write('nextPaymentDueDate: $nextPaymentDueDate, ')
+          ..write('creditLimit: $creditLimit')
           ..write(')'))
         .toString();
   }
@@ -9448,11 +9699,726 @@ class RetirementGoalsTableCompanion
   }
 }
 
+class $ProtectionScenariosTableTable extends ProtectionScenariosTable
+    with
+        TableInfo<
+          $ProtectionScenariosTableTable,
+          ProtectionScenariosTableData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProtectionScenariosTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _protectionTypeMeta = const VerificationMeta(
+    'protectionType',
+  );
+  @override
+  late final GeneratedColumn<String> protectionType = GeneratedColumn<String>(
+    'protection_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _horizonMeta = const VerificationMeta(
+    'horizon',
+  );
+  @override
+  late final GeneratedColumn<String> horizon = GeneratedColumn<String>(
+    'horizon',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    protectionType,
+    horizon,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'protection_scenarios_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProtectionScenariosTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('protection_type')) {
+      context.handle(
+        _protectionTypeMeta,
+        protectionType.isAcceptableOrUnknown(
+          data['protection_type']!,
+          _protectionTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_protectionTypeMeta);
+    }
+    if (data.containsKey('horizon')) {
+      context.handle(
+        _horizonMeta,
+        horizon.isAcceptableOrUnknown(data['horizon']!, _horizonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_horizonMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {protectionType},
+  ];
+  @override
+  ProtectionScenariosTableData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProtectionScenariosTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      protectionType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}protection_type'],
+      )!,
+      horizon: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}horizon'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ProtectionScenariosTableTable createAlias(String alias) {
+    return $ProtectionScenariosTableTable(attachedDatabase, alias);
+  }
+}
+
+class ProtectionScenariosTableData extends DataClass
+    implements Insertable<ProtectionScenariosTableData> {
+  final int id;
+  final String protectionType;
+  final String horizon;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const ProtectionScenariosTableData({
+    required this.id,
+    required this.protectionType,
+    required this.horizon,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['protection_type'] = Variable<String>(protectionType);
+    map['horizon'] = Variable<String>(horizon);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  ProtectionScenariosTableCompanion toCompanion(bool nullToAbsent) {
+    return ProtectionScenariosTableCompanion(
+      id: Value(id),
+      protectionType: Value(protectionType),
+      horizon: Value(horizon),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory ProtectionScenariosTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProtectionScenariosTableData(
+      id: serializer.fromJson<int>(json['id']),
+      protectionType: serializer.fromJson<String>(json['protectionType']),
+      horizon: serializer.fromJson<String>(json['horizon']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'protectionType': serializer.toJson<String>(protectionType),
+      'horizon': serializer.toJson<String>(horizon),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  ProtectionScenariosTableData copyWith({
+    int? id,
+    String? protectionType,
+    String? horizon,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => ProtectionScenariosTableData(
+    id: id ?? this.id,
+    protectionType: protectionType ?? this.protectionType,
+    horizon: horizon ?? this.horizon,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  ProtectionScenariosTableData copyWithCompanion(
+    ProtectionScenariosTableCompanion data,
+  ) {
+    return ProtectionScenariosTableData(
+      id: data.id.present ? data.id.value : this.id,
+      protectionType: data.protectionType.present
+          ? data.protectionType.value
+          : this.protectionType,
+      horizon: data.horizon.present ? data.horizon.value : this.horizon,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionScenariosTableData(')
+          ..write('id: $id, ')
+          ..write('protectionType: $protectionType, ')
+          ..write('horizon: $horizon, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, protectionType, horizon, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProtectionScenariosTableData &&
+          other.id == this.id &&
+          other.protectionType == this.protectionType &&
+          other.horizon == this.horizon &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class ProtectionScenariosTableCompanion
+    extends UpdateCompanion<ProtectionScenariosTableData> {
+  final Value<int> id;
+  final Value<String> protectionType;
+  final Value<String> horizon;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const ProtectionScenariosTableCompanion({
+    this.id = const Value.absent(),
+    this.protectionType = const Value.absent(),
+    this.horizon = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  ProtectionScenariosTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String protectionType,
+    required String horizon,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) : protectionType = Value(protectionType),
+       horizon = Value(horizon),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<ProtectionScenariosTableData> custom({
+    Expression<int>? id,
+    Expression<String>? protectionType,
+    Expression<String>? horizon,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (protectionType != null) 'protection_type': protectionType,
+      if (horizon != null) 'horizon': horizon,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  ProtectionScenariosTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? protectionType,
+    Value<String>? horizon,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return ProtectionScenariosTableCompanion(
+      id: id ?? this.id,
+      protectionType: protectionType ?? this.protectionType,
+      horizon: horizon ?? this.horizon,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (protectionType.present) {
+      map['protection_type'] = Variable<String>(protectionType.value);
+    }
+    if (horizon.present) {
+      map['horizon'] = Variable<String>(horizon.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionScenariosTableCompanion(')
+          ..write('id: $id, ')
+          ..write('protectionType: $protectionType, ')
+          ..write('horizon: $horizon, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ProtectionBudgetContinuitiesTable extends ProtectionBudgetContinuities
+    with
+        TableInfo<
+          $ProtectionBudgetContinuitiesTable,
+          ProtectionBudgetContinuity
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProtectionBudgetContinuitiesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _protectionScenarioIdMeta =
+      const VerificationMeta('protectionScenarioId');
+  @override
+  late final GeneratedColumn<int> protectionScenarioId = GeneratedColumn<int>(
+    'protection_scenario_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES protection_scenarios_table (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _cashFlowPlanIdMeta = const VerificationMeta(
+    'cashFlowPlanId',
+  );
+  @override
+  late final GeneratedColumn<int> cashFlowPlanId = GeneratedColumn<int>(
+    'cash_flow_plan_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES cash_flow_plans (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _continuityShareMeta = const VerificationMeta(
+    'continuityShare',
+  );
+  @override
+  late final GeneratedColumn<double> continuityShare = GeneratedColumn<double>(
+    'continuity_share',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    protectionScenarioId,
+    cashFlowPlanId,
+    continuityShare,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'protection_budget_continuities';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProtectionBudgetContinuity> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('protection_scenario_id')) {
+      context.handle(
+        _protectionScenarioIdMeta,
+        protectionScenarioId.isAcceptableOrUnknown(
+          data['protection_scenario_id']!,
+          _protectionScenarioIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_protectionScenarioIdMeta);
+    }
+    if (data.containsKey('cash_flow_plan_id')) {
+      context.handle(
+        _cashFlowPlanIdMeta,
+        cashFlowPlanId.isAcceptableOrUnknown(
+          data['cash_flow_plan_id']!,
+          _cashFlowPlanIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_cashFlowPlanIdMeta);
+    }
+    if (data.containsKey('continuity_share')) {
+      context.handle(
+        _continuityShareMeta,
+        continuityShare.isAcceptableOrUnknown(
+          data['continuity_share']!,
+          _continuityShareMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_continuityShareMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ProtectionBudgetContinuity map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProtectionBudgetContinuity(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      protectionScenarioId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}protection_scenario_id'],
+      )!,
+      cashFlowPlanId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cash_flow_plan_id'],
+      )!,
+      continuityShare: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}continuity_share'],
+      )!,
+    );
+  }
+
+  @override
+  $ProtectionBudgetContinuitiesTable createAlias(String alias) {
+    return $ProtectionBudgetContinuitiesTable(attachedDatabase, alias);
+  }
+}
+
+class ProtectionBudgetContinuity extends DataClass
+    implements Insertable<ProtectionBudgetContinuity> {
+  final int id;
+  final int protectionScenarioId;
+  final int cashFlowPlanId;
+  final double continuityShare;
+  const ProtectionBudgetContinuity({
+    required this.id,
+    required this.protectionScenarioId,
+    required this.cashFlowPlanId,
+    required this.continuityShare,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['protection_scenario_id'] = Variable<int>(protectionScenarioId);
+    map['cash_flow_plan_id'] = Variable<int>(cashFlowPlanId);
+    map['continuity_share'] = Variable<double>(continuityShare);
+    return map;
+  }
+
+  ProtectionBudgetContinuitiesCompanion toCompanion(bool nullToAbsent) {
+    return ProtectionBudgetContinuitiesCompanion(
+      id: Value(id),
+      protectionScenarioId: Value(protectionScenarioId),
+      cashFlowPlanId: Value(cashFlowPlanId),
+      continuityShare: Value(continuityShare),
+    );
+  }
+
+  factory ProtectionBudgetContinuity.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProtectionBudgetContinuity(
+      id: serializer.fromJson<int>(json['id']),
+      protectionScenarioId: serializer.fromJson<int>(
+        json['protectionScenarioId'],
+      ),
+      cashFlowPlanId: serializer.fromJson<int>(json['cashFlowPlanId']),
+      continuityShare: serializer.fromJson<double>(json['continuityShare']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'protectionScenarioId': serializer.toJson<int>(protectionScenarioId),
+      'cashFlowPlanId': serializer.toJson<int>(cashFlowPlanId),
+      'continuityShare': serializer.toJson<double>(continuityShare),
+    };
+  }
+
+  ProtectionBudgetContinuity copyWith({
+    int? id,
+    int? protectionScenarioId,
+    int? cashFlowPlanId,
+    double? continuityShare,
+  }) => ProtectionBudgetContinuity(
+    id: id ?? this.id,
+    protectionScenarioId: protectionScenarioId ?? this.protectionScenarioId,
+    cashFlowPlanId: cashFlowPlanId ?? this.cashFlowPlanId,
+    continuityShare: continuityShare ?? this.continuityShare,
+  );
+  ProtectionBudgetContinuity copyWithCompanion(
+    ProtectionBudgetContinuitiesCompanion data,
+  ) {
+    return ProtectionBudgetContinuity(
+      id: data.id.present ? data.id.value : this.id,
+      protectionScenarioId: data.protectionScenarioId.present
+          ? data.protectionScenarioId.value
+          : this.protectionScenarioId,
+      cashFlowPlanId: data.cashFlowPlanId.present
+          ? data.cashFlowPlanId.value
+          : this.cashFlowPlanId,
+      continuityShare: data.continuityShare.present
+          ? data.continuityShare.value
+          : this.continuityShare,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionBudgetContinuity(')
+          ..write('id: $id, ')
+          ..write('protectionScenarioId: $protectionScenarioId, ')
+          ..write('cashFlowPlanId: $cashFlowPlanId, ')
+          ..write('continuityShare: $continuityShare')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, protectionScenarioId, cashFlowPlanId, continuityShare);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProtectionBudgetContinuity &&
+          other.id == this.id &&
+          other.protectionScenarioId == this.protectionScenarioId &&
+          other.cashFlowPlanId == this.cashFlowPlanId &&
+          other.continuityShare == this.continuityShare);
+}
+
+class ProtectionBudgetContinuitiesCompanion
+    extends UpdateCompanion<ProtectionBudgetContinuity> {
+  final Value<int> id;
+  final Value<int> protectionScenarioId;
+  final Value<int> cashFlowPlanId;
+  final Value<double> continuityShare;
+  const ProtectionBudgetContinuitiesCompanion({
+    this.id = const Value.absent(),
+    this.protectionScenarioId = const Value.absent(),
+    this.cashFlowPlanId = const Value.absent(),
+    this.continuityShare = const Value.absent(),
+  });
+  ProtectionBudgetContinuitiesCompanion.insert({
+    this.id = const Value.absent(),
+    required int protectionScenarioId,
+    required int cashFlowPlanId,
+    required double continuityShare,
+  }) : protectionScenarioId = Value(protectionScenarioId),
+       cashFlowPlanId = Value(cashFlowPlanId),
+       continuityShare = Value(continuityShare);
+  static Insertable<ProtectionBudgetContinuity> custom({
+    Expression<int>? id,
+    Expression<int>? protectionScenarioId,
+    Expression<int>? cashFlowPlanId,
+    Expression<double>? continuityShare,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (protectionScenarioId != null)
+        'protection_scenario_id': protectionScenarioId,
+      if (cashFlowPlanId != null) 'cash_flow_plan_id': cashFlowPlanId,
+      if (continuityShare != null) 'continuity_share': continuityShare,
+    });
+  }
+
+  ProtectionBudgetContinuitiesCompanion copyWith({
+    Value<int>? id,
+    Value<int>? protectionScenarioId,
+    Value<int>? cashFlowPlanId,
+    Value<double>? continuityShare,
+  }) {
+    return ProtectionBudgetContinuitiesCompanion(
+      id: id ?? this.id,
+      protectionScenarioId: protectionScenarioId ?? this.protectionScenarioId,
+      cashFlowPlanId: cashFlowPlanId ?? this.cashFlowPlanId,
+      continuityShare: continuityShare ?? this.continuityShare,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (protectionScenarioId.present) {
+      map['protection_scenario_id'] = Variable<int>(protectionScenarioId.value);
+    }
+    if (cashFlowPlanId.present) {
+      map['cash_flow_plan_id'] = Variable<int>(cashFlowPlanId.value);
+    }
+    if (continuityShare.present) {
+      map['continuity_share'] = Variable<double>(continuityShare.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionBudgetContinuitiesCompanion(')
+          ..write('id: $id, ')
+          ..write('protectionScenarioId: $protectionScenarioId, ')
+          ..write('cashFlowPlanId: $cashFlowPlanId, ')
+          ..write('continuityShare: $continuityShare')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $CashflowCategoriesTableTable cashflowCategoriesTable =
       $CashflowCategoriesTableTable(this);
+  late final $CashflowPlanMetadataTable cashflowPlanMetadata =
+      $CashflowPlanMetadataTable(this);
   late final $AccountsTableTable accountsTable = $AccountsTableTable(this);
   late final $TransactionsTableTable transactionsTable =
       $TransactionsTableTable(this);
@@ -9484,6 +10450,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $RetirementGoalsTableTable retirementGoalsTable =
       $RetirementGoalsTableTable(this);
+  late final $ProtectionScenariosTableTable protectionScenariosTable =
+      $ProtectionScenariosTableTable(this);
+  late final $ProtectionBudgetContinuitiesTable protectionBudgetContinuities =
+      $ProtectionBudgetContinuitiesTable(this);
   late final TransactionsDao transactionsDao = TransactionsDao(
     this as AppDatabase,
   );
@@ -9511,12 +10481,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final RetirementGoalDao retirementGoalDao = RetirementGoalDao(
     this as AppDatabase,
   );
+  late final ProtectionDao protectionDao = ProtectionDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     cashflowCategoriesTable,
+    cashflowPlanMetadata,
     accountsTable,
     transactionsTable,
     entitiesTable,
@@ -9535,6 +10507,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     goalReservationsTable,
     userProfileTable,
     retirementGoalsTable,
+    protectionScenariosTable,
+    protectionBudgetContinuities,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -9634,6 +10608,24 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       ),
       result: [
         TableUpdate('credit_card_details_table', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'protection_scenarios_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('protection_budget_continuities', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'cash_flow_plans',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('protection_budget_continuities', kind: UpdateKind.delete),
       ],
     ),
   ]);
@@ -10165,6 +11157,178 @@ typedef $$CashflowCategoriesTableTableProcessedTableManager =
         bool billsTableRefs,
       })
     >;
+typedef $$CashflowPlanMetadataTableCreateCompanionBuilder =
+    CashflowPlanMetadataCompanion Function({
+      Value<int> id,
+      Value<int> revision,
+      Value<DateTime> updatedAt,
+    });
+typedef $$CashflowPlanMetadataTableUpdateCompanionBuilder =
+    CashflowPlanMetadataCompanion Function({
+      Value<int> id,
+      Value<int> revision,
+      Value<DateTime> updatedAt,
+    });
+
+class $$CashflowPlanMetadataTableFilterComposer
+    extends Composer<_$AppDatabase, $CashflowPlanMetadataTable> {
+  $$CashflowPlanMetadataTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CashflowPlanMetadataTableOrderingComposer
+    extends Composer<_$AppDatabase, $CashflowPlanMetadataTable> {
+  $$CashflowPlanMetadataTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CashflowPlanMetadataTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CashflowPlanMetadataTable> {
+  $$CashflowPlanMetadataTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get revision =>
+      $composableBuilder(column: $table.revision, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$CashflowPlanMetadataTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CashflowPlanMetadataTable,
+          CashflowPlanMetadataData,
+          $$CashflowPlanMetadataTableFilterComposer,
+          $$CashflowPlanMetadataTableOrderingComposer,
+          $$CashflowPlanMetadataTableAnnotationComposer,
+          $$CashflowPlanMetadataTableCreateCompanionBuilder,
+          $$CashflowPlanMetadataTableUpdateCompanionBuilder,
+          (
+            CashflowPlanMetadataData,
+            BaseReferences<
+              _$AppDatabase,
+              $CashflowPlanMetadataTable,
+              CashflowPlanMetadataData
+            >,
+          ),
+          CashflowPlanMetadataData,
+          PrefetchHooks Function()
+        > {
+  $$CashflowPlanMetadataTableTableManager(
+    _$AppDatabase db,
+    $CashflowPlanMetadataTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CashflowPlanMetadataTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CashflowPlanMetadataTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$CashflowPlanMetadataTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> revision = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => CashflowPlanMetadataCompanion(
+                id: id,
+                revision: revision,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> revision = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => CashflowPlanMetadataCompanion.insert(
+                id: id,
+                revision: revision,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CashflowPlanMetadataTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CashflowPlanMetadataTable,
+      CashflowPlanMetadataData,
+      $$CashflowPlanMetadataTableFilterComposer,
+      $$CashflowPlanMetadataTableOrderingComposer,
+      $$CashflowPlanMetadataTableAnnotationComposer,
+      $$CashflowPlanMetadataTableCreateCompanionBuilder,
+      $$CashflowPlanMetadataTableUpdateCompanionBuilder,
+      (
+        CashflowPlanMetadataData,
+        BaseReferences<
+          _$AppDatabase,
+          $CashflowPlanMetadataTable,
+          CashflowPlanMetadataData
+        >,
+      ),
+      CashflowPlanMetadataData,
+      PrefetchHooks Function()
+    >;
 typedef $$AccountsTableTableCreateCompanionBuilder =
     AccountsTableCompanion Function({
       Value<int> id,
@@ -10173,7 +11337,6 @@ typedef $$AccountsTableTableCreateCompanionBuilder =
       required String accountType,
       Value<double> currentValue,
       Value<bool> isSystem,
-      Value<double?> creditLimit,
     });
 typedef $$AccountsTableTableUpdateCompanionBuilder =
     AccountsTableCompanion Function({
@@ -10183,7 +11346,6 @@ typedef $$AccountsTableTableUpdateCompanionBuilder =
       Value<String> accountType,
       Value<double> currentValue,
       Value<bool> isSystem,
-      Value<double?> creditLimit,
     });
 
 final class $$AccountsTableTableReferences
@@ -10344,11 +11506,6 @@ class $$AccountsTableTableFilterComposer
 
   ColumnFilters<bool> get isSystem => $composableBuilder(
     column: $table.isSystem,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get creditLimit => $composableBuilder(
-    column: $table.creditLimit,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10522,11 +11679,6 @@ class $$AccountsTableTableOrderingComposer
     column: $table.isSystem,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<double> get creditLimit => $composableBuilder(
-    column: $table.creditLimit,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$AccountsTableTableAnnotationComposer
@@ -10559,11 +11711,6 @@ class $$AccountsTableTableAnnotationComposer
 
   GeneratedColumn<bool> get isSystem =>
       $composableBuilder(column: $table.isSystem, builder: (column) => column);
-
-  GeneratedColumn<double> get creditLimit => $composableBuilder(
-    column: $table.creditLimit,
-    builder: (column) => column,
-  );
 
   Expression<T> loansRefs<T extends Object>(
     Expression<T> Function($$LoansTableAnnotationComposer a) f,
@@ -10737,7 +11884,6 @@ class $$AccountsTableTableTableManager
                 Value<String> accountType = const Value.absent(),
                 Value<double> currentValue = const Value.absent(),
                 Value<bool> isSystem = const Value.absent(),
-                Value<double?> creditLimit = const Value.absent(),
               }) => AccountsTableCompanion(
                 id: id,
                 name: name,
@@ -10745,7 +11891,6 @@ class $$AccountsTableTableTableManager
                 accountType: accountType,
                 currentValue: currentValue,
                 isSystem: isSystem,
-                creditLimit: creditLimit,
               ),
           createCompanionCallback:
               ({
@@ -10755,7 +11900,6 @@ class $$AccountsTableTableTableManager
                 required String accountType,
                 Value<double> currentValue = const Value.absent(),
                 Value<bool> isSystem = const Value.absent(),
-                Value<double?> creditLimit = const Value.absent(),
               }) => AccountsTableCompanion.insert(
                 id: id,
                 name: name,
@@ -10763,7 +11907,6 @@ class $$AccountsTableTableTableManager
                 accountType: accountType,
                 currentValue: currentValue,
                 isSystem: isSystem,
-                creditLimit: creditLimit,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -14054,6 +15197,33 @@ final class $$CashFlowPlansTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<
+    $ProtectionBudgetContinuitiesTable,
+    List<ProtectionBudgetContinuity>
+  >
+  _protectionBudgetContinuitiesRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.protectionBudgetContinuities,
+    aliasName:
+        'cash_flow_plans__id__protection_budget_continuities__cash_flow_plan_id',
+  );
+
+  $$ProtectionBudgetContinuitiesTableProcessedTableManager
+  get protectionBudgetContinuitiesRefs {
+    final manager = $$ProtectionBudgetContinuitiesTableTableManager(
+      $_db,
+      $_db.protectionBudgetContinuities,
+    ).filter((f) => f.cashFlowPlanId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _protectionBudgetContinuitiesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CashFlowPlansTableFilterComposer
@@ -14174,6 +15344,35 @@ class $$CashFlowPlansTableFilterComposer
               }) => $$CashFlowPlanAllocationsTableFilterComposer(
                 $db: $db,
                 $table: $db.cashFlowPlanAllocations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> protectionBudgetContinuitiesRefs(
+    Expression<bool> Function(
+      $$ProtectionBudgetContinuitiesTableFilterComposer f,
+    )
+    f,
+  ) {
+    final $$ProtectionBudgetContinuitiesTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.protectionBudgetContinuities,
+          getReferencedColumn: (t) => t.cashFlowPlanId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionBudgetContinuitiesTableFilterComposer(
+                $db: $db,
+                $table: $db.protectionBudgetContinuities,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -14397,6 +15596,35 @@ class $$CashFlowPlansTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> protectionBudgetContinuitiesRefs<T extends Object>(
+    Expression<T> Function(
+      $$ProtectionBudgetContinuitiesTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$ProtectionBudgetContinuitiesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.protectionBudgetContinuities,
+          getReferencedColumn: (t) => t.cashFlowPlanId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionBudgetContinuitiesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.protectionBudgetContinuities,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$CashFlowPlansTableTableManager
@@ -14416,6 +15644,7 @@ class $$CashFlowPlansTableTableManager
             bool categoryId,
             bool loanId,
             bool cashFlowPlanAllocationsRefs,
+            bool protectionBudgetContinuitiesRefs,
           })
         > {
   $$CashFlowPlansTableTableManager(_$AppDatabase db, $CashFlowPlansTable table)
@@ -14494,11 +15723,14 @@ class $$CashFlowPlansTableTableManager
                 categoryId = false,
                 loanId = false,
                 cashFlowPlanAllocationsRefs = false,
+                protectionBudgetContinuitiesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (cashFlowPlanAllocationsRefs) db.cashFlowPlanAllocations,
+                    if (protectionBudgetContinuitiesRefs)
+                      db.protectionBudgetContinuities,
                   ],
                   addJoins:
                       <
@@ -14572,6 +15804,27 @@ class $$CashFlowPlansTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (protectionBudgetContinuitiesRefs)
+                        await $_getPrefetchedData<
+                          CashFlowPlan,
+                          $CashFlowPlansTable,
+                          ProtectionBudgetContinuity
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CashFlowPlansTableReferences
+                              ._protectionBudgetContinuitiesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CashFlowPlansTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).protectionBudgetContinuitiesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.cashFlowPlanId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -14596,6 +15849,7 @@ typedef $$CashFlowPlansTableProcessedTableManager =
         bool categoryId,
         bool loanId,
         bool cashFlowPlanAllocationsRefs,
+        bool protectionBudgetContinuitiesRefs,
       })
     >;
 typedef $$CashFlowPlanAllocationsTableCreateCompanionBuilder =
@@ -17093,6 +18347,7 @@ typedef $$CreditCardDetailsTableTableCreateCompanionBuilder =
       required int paymentDueDay,
       required DateTime nextStatementDate,
       required DateTime nextPaymentDueDate,
+      required double creditLimit,
     });
 typedef $$CreditCardDetailsTableTableUpdateCompanionBuilder =
     CreditCardDetailsTableCompanion Function({
@@ -17101,6 +18356,7 @@ typedef $$CreditCardDetailsTableTableUpdateCompanionBuilder =
       Value<int> paymentDueDay,
       Value<DateTime> nextStatementDate,
       Value<DateTime> nextPaymentDueDate,
+      Value<double> creditLimit,
     });
 
 final class $$CreditCardDetailsTableTableReferences
@@ -17164,6 +18420,11 @@ class $$CreditCardDetailsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<double> get creditLimit => $composableBuilder(
+    column: $table.creditLimit,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$AccountsTableTableFilterComposer get accountId {
     final $$AccountsTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -17217,6 +18478,11 @@ class $$CreditCardDetailsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get creditLimit => $composableBuilder(
+    column: $table.creditLimit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$AccountsTableTableOrderingComposer get accountId {
     final $$AccountsTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -17267,6 +18533,11 @@ class $$CreditCardDetailsTableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get nextPaymentDueDate => $composableBuilder(
     column: $table.nextPaymentDueDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get creditLimit => $composableBuilder(
+    column: $table.creditLimit,
     builder: (column) => column,
   );
 
@@ -17338,12 +18609,14 @@ class $$CreditCardDetailsTableTableTableManager
                 Value<int> paymentDueDay = const Value.absent(),
                 Value<DateTime> nextStatementDate = const Value.absent(),
                 Value<DateTime> nextPaymentDueDate = const Value.absent(),
+                Value<double> creditLimit = const Value.absent(),
               }) => CreditCardDetailsTableCompanion(
                 accountId: accountId,
                 statementDay: statementDay,
                 paymentDueDay: paymentDueDay,
                 nextStatementDate: nextStatementDate,
                 nextPaymentDueDate: nextPaymentDueDate,
+                creditLimit: creditLimit,
               ),
           createCompanionCallback:
               ({
@@ -17352,12 +18625,14 @@ class $$CreditCardDetailsTableTableTableManager
                 required int paymentDueDay,
                 required DateTime nextStatementDate,
                 required DateTime nextPaymentDueDate,
+                required double creditLimit,
               }) => CreditCardDetailsTableCompanion.insert(
                 accountId: accountId,
                 statementDay: statementDay,
                 paymentDueDay: paymentDueDay,
                 nextStatementDate: nextStatementDate,
                 nextPaymentDueDate: nextPaymentDueDate,
+                creditLimit: creditLimit,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -19079,6 +20354,776 @@ typedef $$RetirementGoalsTableTableProcessedTableManager =
       RetirementGoalsTableData,
       PrefetchHooks Function({bool goalId})
     >;
+typedef $$ProtectionScenariosTableTableCreateCompanionBuilder =
+    ProtectionScenariosTableCompanion Function({
+      Value<int> id,
+      required String protectionType,
+      required String horizon,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+    });
+typedef $$ProtectionScenariosTableTableUpdateCompanionBuilder =
+    ProtectionScenariosTableCompanion Function({
+      Value<int> id,
+      Value<String> protectionType,
+      Value<String> horizon,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+final class $$ProtectionScenariosTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $ProtectionScenariosTableTable,
+          ProtectionScenariosTableData
+        > {
+  $$ProtectionScenariosTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<
+    $ProtectionBudgetContinuitiesTable,
+    List<ProtectionBudgetContinuity>
+  >
+  _protectionBudgetContinuitiesRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.protectionBudgetContinuities,
+    aliasName:
+        'protection_scenarios_table__id__protection_budget_continuities__protection_scenario_id',
+  );
+
+  $$ProtectionBudgetContinuitiesTableProcessedTableManager
+  get protectionBudgetContinuitiesRefs {
+    final manager =
+        $$ProtectionBudgetContinuitiesTableTableManager(
+          $_db,
+          $_db.protectionBudgetContinuities,
+        ).filter(
+          (f) => f.protectionScenarioId.id.sqlEquals($_itemColumn<int>('id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _protectionBudgetContinuitiesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$ProtectionScenariosTableTableFilterComposer
+    extends Composer<_$AppDatabase, $ProtectionScenariosTableTable> {
+  $$ProtectionScenariosTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get protectionType => $composableBuilder(
+    column: $table.protectionType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get horizon => $composableBuilder(
+    column: $table.horizon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> protectionBudgetContinuitiesRefs(
+    Expression<bool> Function(
+      $$ProtectionBudgetContinuitiesTableFilterComposer f,
+    )
+    f,
+  ) {
+    final $$ProtectionBudgetContinuitiesTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.protectionBudgetContinuities,
+          getReferencedColumn: (t) => t.protectionScenarioId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionBudgetContinuitiesTableFilterComposer(
+                $db: $db,
+                $table: $db.protectionBudgetContinuities,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$ProtectionScenariosTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProtectionScenariosTableTable> {
+  $$ProtectionScenariosTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get protectionType => $composableBuilder(
+    column: $table.protectionType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get horizon => $composableBuilder(
+    column: $table.horizon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProtectionScenariosTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProtectionScenariosTableTable> {
+  $$ProtectionScenariosTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get protectionType => $composableBuilder(
+    column: $table.protectionType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get horizon =>
+      $composableBuilder(column: $table.horizon, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> protectionBudgetContinuitiesRefs<T extends Object>(
+    Expression<T> Function(
+      $$ProtectionBudgetContinuitiesTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$ProtectionBudgetContinuitiesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.protectionBudgetContinuities,
+          getReferencedColumn: (t) => t.protectionScenarioId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionBudgetContinuitiesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.protectionBudgetContinuities,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$ProtectionScenariosTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProtectionScenariosTableTable,
+          ProtectionScenariosTableData,
+          $$ProtectionScenariosTableTableFilterComposer,
+          $$ProtectionScenariosTableTableOrderingComposer,
+          $$ProtectionScenariosTableTableAnnotationComposer,
+          $$ProtectionScenariosTableTableCreateCompanionBuilder,
+          $$ProtectionScenariosTableTableUpdateCompanionBuilder,
+          (
+            ProtectionScenariosTableData,
+            $$ProtectionScenariosTableTableReferences,
+          ),
+          ProtectionScenariosTableData,
+          PrefetchHooks Function({bool protectionBudgetContinuitiesRefs})
+        > {
+  $$ProtectionScenariosTableTableTableManager(
+    _$AppDatabase db,
+    $ProtectionScenariosTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProtectionScenariosTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$ProtectionScenariosTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ProtectionScenariosTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> protectionType = const Value.absent(),
+                Value<String> horizon = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => ProtectionScenariosTableCompanion(
+                id: id,
+                protectionType: protectionType,
+                horizon: horizon,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String protectionType,
+                required String horizon,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+              }) => ProtectionScenariosTableCompanion.insert(
+                id: id,
+                protectionType: protectionType,
+                horizon: horizon,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ProtectionScenariosTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({protectionBudgetContinuitiesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (protectionBudgetContinuitiesRefs)
+                  db.protectionBudgetContinuities,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (protectionBudgetContinuitiesRefs)
+                    await $_getPrefetchedData<
+                      ProtectionScenariosTableData,
+                      $ProtectionScenariosTableTable,
+                      ProtectionBudgetContinuity
+                    >(
+                      currentTable: table,
+                      referencedTable: $$ProtectionScenariosTableTableReferences
+                          ._protectionBudgetContinuitiesRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$ProtectionScenariosTableTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).protectionBudgetContinuitiesRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.protectionScenarioId == item.id,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ProtectionScenariosTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProtectionScenariosTableTable,
+      ProtectionScenariosTableData,
+      $$ProtectionScenariosTableTableFilterComposer,
+      $$ProtectionScenariosTableTableOrderingComposer,
+      $$ProtectionScenariosTableTableAnnotationComposer,
+      $$ProtectionScenariosTableTableCreateCompanionBuilder,
+      $$ProtectionScenariosTableTableUpdateCompanionBuilder,
+      (ProtectionScenariosTableData, $$ProtectionScenariosTableTableReferences),
+      ProtectionScenariosTableData,
+      PrefetchHooks Function({bool protectionBudgetContinuitiesRefs})
+    >;
+typedef $$ProtectionBudgetContinuitiesTableCreateCompanionBuilder =
+    ProtectionBudgetContinuitiesCompanion Function({
+      Value<int> id,
+      required int protectionScenarioId,
+      required int cashFlowPlanId,
+      required double continuityShare,
+    });
+typedef $$ProtectionBudgetContinuitiesTableUpdateCompanionBuilder =
+    ProtectionBudgetContinuitiesCompanion Function({
+      Value<int> id,
+      Value<int> protectionScenarioId,
+      Value<int> cashFlowPlanId,
+      Value<double> continuityShare,
+    });
+
+final class $$ProtectionBudgetContinuitiesTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $ProtectionBudgetContinuitiesTable,
+          ProtectionBudgetContinuity
+        > {
+  $$ProtectionBudgetContinuitiesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProtectionScenariosTableTable _protectionScenarioIdTable(
+    _$AppDatabase db,
+  ) => db.protectionScenariosTable.createAlias(
+    'protection_budget_continuities__protection_scenario_id__protection_scenarios_table__id',
+  );
+
+  $$ProtectionScenariosTableTableProcessedTableManager
+  get protectionScenarioId {
+    final $_column = $_itemColumn<int>('protection_scenario_id')!;
+
+    final manager = $$ProtectionScenariosTableTableTableManager(
+      $_db,
+      $_db.protectionScenariosTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(
+      _protectionScenarioIdTable($_db),
+    );
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CashFlowPlansTable _cashFlowPlanIdTable(
+    _$AppDatabase db,
+  ) => db.cashFlowPlans.createAlias(
+    'protection_budget_continuities__cash_flow_plan_id__cash_flow_plans__id',
+  );
+
+  $$CashFlowPlansTableProcessedTableManager get cashFlowPlanId {
+    final $_column = $_itemColumn<int>('cash_flow_plan_id')!;
+
+    final manager = $$CashFlowPlansTableTableManager(
+      $_db,
+      $_db.cashFlowPlans,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_cashFlowPlanIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ProtectionBudgetContinuitiesTableFilterComposer
+    extends Composer<_$AppDatabase, $ProtectionBudgetContinuitiesTable> {
+  $$ProtectionBudgetContinuitiesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get continuityShare => $composableBuilder(
+    column: $table.continuityShare,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProtectionScenariosTableTableFilterComposer get protectionScenarioId {
+    final $$ProtectionScenariosTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.protectionScenarioId,
+          referencedTable: $db.protectionScenariosTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionScenariosTableTableFilterComposer(
+                $db: $db,
+                $table: $db.protectionScenariosTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$CashFlowPlansTableFilterComposer get cashFlowPlanId {
+    final $$CashFlowPlansTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cashFlowPlanId,
+      referencedTable: $db.cashFlowPlans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashFlowPlansTableFilterComposer(
+            $db: $db,
+            $table: $db.cashFlowPlans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ProtectionBudgetContinuitiesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProtectionBudgetContinuitiesTable> {
+  $$ProtectionBudgetContinuitiesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get continuityShare => $composableBuilder(
+    column: $table.continuityShare,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProtectionScenariosTableTableOrderingComposer get protectionScenarioId {
+    final $$ProtectionScenariosTableTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.protectionScenarioId,
+          referencedTable: $db.protectionScenariosTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionScenariosTableTableOrderingComposer(
+                $db: $db,
+                $table: $db.protectionScenariosTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$CashFlowPlansTableOrderingComposer get cashFlowPlanId {
+    final $$CashFlowPlansTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cashFlowPlanId,
+      referencedTable: $db.cashFlowPlans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashFlowPlansTableOrderingComposer(
+            $db: $db,
+            $table: $db.cashFlowPlans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ProtectionBudgetContinuitiesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProtectionBudgetContinuitiesTable> {
+  $$ProtectionBudgetContinuitiesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<double> get continuityShare => $composableBuilder(
+    column: $table.continuityShare,
+    builder: (column) => column,
+  );
+
+  $$ProtectionScenariosTableTableAnnotationComposer get protectionScenarioId {
+    final $$ProtectionScenariosTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.protectionScenarioId,
+          referencedTable: $db.protectionScenariosTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionScenariosTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.protectionScenariosTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$CashFlowPlansTableAnnotationComposer get cashFlowPlanId {
+    final $$CashFlowPlansTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cashFlowPlanId,
+      referencedTable: $db.cashFlowPlans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashFlowPlansTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashFlowPlans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ProtectionBudgetContinuitiesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProtectionBudgetContinuitiesTable,
+          ProtectionBudgetContinuity,
+          $$ProtectionBudgetContinuitiesTableFilterComposer,
+          $$ProtectionBudgetContinuitiesTableOrderingComposer,
+          $$ProtectionBudgetContinuitiesTableAnnotationComposer,
+          $$ProtectionBudgetContinuitiesTableCreateCompanionBuilder,
+          $$ProtectionBudgetContinuitiesTableUpdateCompanionBuilder,
+          (
+            ProtectionBudgetContinuity,
+            $$ProtectionBudgetContinuitiesTableReferences,
+          ),
+          ProtectionBudgetContinuity,
+          PrefetchHooks Function({
+            bool protectionScenarioId,
+            bool cashFlowPlanId,
+          })
+        > {
+  $$ProtectionBudgetContinuitiesTableTableManager(
+    _$AppDatabase db,
+    $ProtectionBudgetContinuitiesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProtectionBudgetContinuitiesTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$ProtectionBudgetContinuitiesTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ProtectionBudgetContinuitiesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> protectionScenarioId = const Value.absent(),
+                Value<int> cashFlowPlanId = const Value.absent(),
+                Value<double> continuityShare = const Value.absent(),
+              }) => ProtectionBudgetContinuitiesCompanion(
+                id: id,
+                protectionScenarioId: protectionScenarioId,
+                cashFlowPlanId: cashFlowPlanId,
+                continuityShare: continuityShare,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int protectionScenarioId,
+                required int cashFlowPlanId,
+                required double continuityShare,
+              }) => ProtectionBudgetContinuitiesCompanion.insert(
+                id: id,
+                protectionScenarioId: protectionScenarioId,
+                cashFlowPlanId: cashFlowPlanId,
+                continuityShare: continuityShare,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ProtectionBudgetContinuitiesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({protectionScenarioId = false, cashFlowPlanId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (protectionScenarioId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.protectionScenarioId,
+                                referencedTable:
+                                    $$ProtectionBudgetContinuitiesTableReferences
+                                        ._protectionScenarioIdTable(db),
+                                referencedColumn:
+                                    $$ProtectionBudgetContinuitiesTableReferences
+                                        ._protectionScenarioIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (cashFlowPlanId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.cashFlowPlanId,
+                                referencedTable:
+                                    $$ProtectionBudgetContinuitiesTableReferences
+                                        ._cashFlowPlanIdTable(db),
+                                referencedColumn:
+                                    $$ProtectionBudgetContinuitiesTableReferences
+                                        ._cashFlowPlanIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ProtectionBudgetContinuitiesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProtectionBudgetContinuitiesTable,
+      ProtectionBudgetContinuity,
+      $$ProtectionBudgetContinuitiesTableFilterComposer,
+      $$ProtectionBudgetContinuitiesTableOrderingComposer,
+      $$ProtectionBudgetContinuitiesTableAnnotationComposer,
+      $$ProtectionBudgetContinuitiesTableCreateCompanionBuilder,
+      $$ProtectionBudgetContinuitiesTableUpdateCompanionBuilder,
+      (
+        ProtectionBudgetContinuity,
+        $$ProtectionBudgetContinuitiesTableReferences,
+      ),
+      ProtectionBudgetContinuity,
+      PrefetchHooks Function({bool protectionScenarioId, bool cashFlowPlanId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -19088,6 +21133,8 @@ class $AppDatabaseManager {
         _db,
         _db.cashflowCategoriesTable,
       );
+  $$CashflowPlanMetadataTableTableManager get cashflowPlanMetadata =>
+      $$CashflowPlanMetadataTableTableManager(_db, _db.cashflowPlanMetadata);
   $$AccountsTableTableTableManager get accountsTable =>
       $$AccountsTableTableTableManager(_db, _db.accountsTable);
   $$TransactionsTableTableTableManager get transactionsTable =>
@@ -19144,4 +21191,15 @@ class $AppDatabaseManager {
       $$UserProfileTableTableTableManager(_db, _db.userProfileTable);
   $$RetirementGoalsTableTableTableManager get retirementGoalsTable =>
       $$RetirementGoalsTableTableTableManager(_db, _db.retirementGoalsTable);
+  $$ProtectionScenariosTableTableTableManager get protectionScenariosTable =>
+      $$ProtectionScenariosTableTableTableManager(
+        _db,
+        _db.protectionScenariosTable,
+      );
+  $$ProtectionBudgetContinuitiesTableTableManager
+  get protectionBudgetContinuities =>
+      $$ProtectionBudgetContinuitiesTableTableManager(
+        _db,
+        _db.protectionBudgetContinuities,
+      );
 }

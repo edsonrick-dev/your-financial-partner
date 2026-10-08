@@ -24,6 +24,8 @@ class CreditCardDetailsTable extends Table {
   /// the next statement.
   DateTimeColumn get nextPaymentDueDate => dateTime()();
 
+  RealColumn get creditLimit => real()();
+
   @override
   Set<Column> get primaryKey => {accountId};
 }

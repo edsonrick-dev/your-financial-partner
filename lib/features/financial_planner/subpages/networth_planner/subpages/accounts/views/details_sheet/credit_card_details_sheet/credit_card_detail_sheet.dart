@@ -64,7 +64,41 @@ class CreditCardDetailSheet extends GetView<CreditCardController> {
                 children: [
                   Column(
                     children: [
-                      CreditCardSummarySection(account: currentAccount),
+                      FutureBuilder<CreditCardDetailsTableData?>(
+                        future: database.creditCardDao.getByAccountId(
+                          currentAccount.id,
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const SizedBox(
+                              height: 120,
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+
+                          if (snapshot.hasError) {
+                            return const Center(
+                              child: Text(
+                                'Unable to load credit card details.',
+                              ),
+                            );
+                          }
+
+                          final creditCardDetails = snapshot.data;
+
+                          if (creditCardDetails == null) {
+                            return const Center(
+                              child: Text('Credit card details not found.'),
+                            );
+                          }
+
+                          return CreditCardSummarySection(
+                            account: currentAccount,
+                            creditCardDetails: creditCardDetails,
+                          );
+                        },
+                      ),
 
                       const SizedBox(height: 16),
                       FutureBuilder<CreditCardPaymentInfo?>(

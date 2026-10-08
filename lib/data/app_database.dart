@@ -15,6 +15,7 @@ import 'tables/entities_table.dart';
 import 'tables/transactions_table.dart';
 import 'tables/financial_obligations_table.dart';
 import 'tables/cashflow_plan_allocation_table.dart';
+import 'tables/cashflow_plan_metadata_table.dart';
 import 'tables/cashflow_plan_table.dart';
 import 'tables/bills_table.dart';
 import 'tables/bill_occurrences_table.dart';
@@ -25,6 +26,8 @@ import 'tables/investor_profile_table.dart';
 import 'tables/goals_table.dart';
 import 'tables/goal_reservations_table.dart';
 import 'tables/user_profile_table.dart';
+import 'tables/protection_budget_continuities_table.dart';
+import 'tables/protection_scenarios_table.dart';
 import 'tables/retirement_goal_table.dart';
 
 import 'tables/loan_table.dart';
@@ -43,11 +46,13 @@ import 'package:getx_drift_app/data/database/daos/goals_dao/goals_dao.dart';
 import 'package:getx_drift_app/data/database/daos/goal_reservations_dao/goal_reservations_dao.dart';
 import 'package:getx_drift_app/data/database/daos/user_profile_dao/user_profile_dao.dart';
 import 'package:getx_drift_app/data/database/daos/retirement_goal_dao/retirement_goal_dao.dart';
+import 'package:getx_drift_app/data/database/daos/protection_dao/protection_dao.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
   tables: [
     CashflowCategoriesTable,
+    CashflowPlanMetadata,
     AccountsTable,
     TransactionsTable,
     EntitiesTable,
@@ -66,6 +71,9 @@ part 'app_database.g.dart';
     GoalReservationsTable,
     UserProfileTable,
     RetirementGoalsTable,
+
+    ProtectionScenariosTable,
+    ProtectionBudgetContinuities,
   ],
   daos: [
     TransactionsDao,
@@ -81,6 +89,7 @@ part 'app_database.g.dart';
     GoalReservationsDao,
     UserProfileDao,
     RetirementGoalDao,
+    ProtectionDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -94,7 +103,7 @@ class AppDatabase extends _$AppDatabase {
       await m.createAll();
 
       await seedDefaultCategories();
-      await seedDefaultPaymentAccounts();
+      // await seedDefaultPaymentAccounts();
       await seedDefaultEntities();
       // await seedDefaultTransactions();
     },
@@ -103,6 +112,13 @@ class AppDatabase extends _$AppDatabase {
       if (from < 3) {
         await m.createTable(userProfileTable);
         await m.createTable(retirementGoalsTable);
+      }
+      if (from < 5) {
+        await m.createTable(cashflowPlanMetadata);
+      }
+      if (from < 7) {
+        await m.createTable(protectionScenariosTable);
+        await m.createTable(protectionBudgetContinuities);
       }
       // if (from < 6) {
       //   await m.deleteTable('financial_obligations_table');
@@ -117,7 +133,7 @@ class AppDatabase extends _$AppDatabase {
     },
   );
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 8;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();
@@ -406,84 +422,92 @@ class AppDatabase extends _$AppDatabase {
     final defaultEntities = [
       // People
       (name: 'Me', entityType: EntityType.person, organizationType: null),
-      (name: 'Juan', entityType: EntityType.person, organizationType: null),
-      (name: 'Maria', entityType: EntityType.person, organizationType: null),
+      (
+        name: 'Katrina Francesca Villano',
+        entityType: EntityType.person,
+        organizationType: null,
+      ),
+      (
+        name: 'Chie Junio',
+        entityType: EntityType.person,
+        organizationType: null,
+      ),
 
       // Banks
-      (
-        name: 'BPI',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
-      (
-        name: 'BDO',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
-      (
-        name: 'Metrobank',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
-      (
-        name: 'UnionBank',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
-      (
-        name: 'Security Bank',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
-      (
-        name: 'RCBC',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
-      (
-        name: 'PNB',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
-      (
-        name: 'LandBank',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
+      // (
+      //   name: 'BPI',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
+      // (
+      //   name: 'BDO',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
+      // (
+      //   name: 'Metrobank',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
+      // (
+      //   name: 'UnionBank',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
+      // (
+      //   name: 'Security Bank',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
+      // (
+      //   name: 'RCBC',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
+      // (
+      //   name: 'PNB',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
+      // (
+      //   name: 'LandBank',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
 
-      // Digital banks
-      (
-        name: 'CIMB Bank',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
-      (
-        name: 'GoTyme Bank',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
-      (
-        name: 'Tonik Bank',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
-      (
-        name: 'Maya Bank',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.bank,
-      ),
+      // // Digital banks
+      // (
+      //   name: 'CIMB Bank',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
+      // (
+      //   name: 'GoTyme Bank',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
+      // (
+      //   name: 'Tonik Bank',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
+      // (
+      //   name: 'Maya Bank',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.bank,
+      // ),
 
-      // E-wallets
-      (
-        name: 'GCash',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.eWallet,
-      ),
-      (
-        name: 'Maya',
-        entityType: EntityType.organization,
-        organizationType: OrganizationType.eWallet,
-      ),
+      // // E-wallets
+      // (
+      //   name: 'GCash',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.eWallet,
+      // ),
+      // (
+      //   name: 'Maya',
+      //   entityType: EntityType.organization,
+      //   organizationType: OrganizationType.eWallet,
+      // ),
     ];
 
     final existing = await select(entitiesTable).get();

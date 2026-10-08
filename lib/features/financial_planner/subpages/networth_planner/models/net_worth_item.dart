@@ -11,6 +11,7 @@ class NetWorthItem {
 
   final AccountsTableData? account;
   final PersonBalanceSummary? personBalance;
+  final CreditCardDetailsTableData? creditCardDetails;
 
   const NetWorthItem({
     required this.id,
@@ -20,6 +21,7 @@ class NetWorthItem {
     required this.group,
     this.account,
     this.personBalance,
+    this.creditCardDetails,
   });
 
   bool get isAsset => group.isAsset;

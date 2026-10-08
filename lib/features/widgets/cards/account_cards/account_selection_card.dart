@@ -1,20 +1,22 @@
 import 'package:flutter/widgets.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
-import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 
 class AccountSelectionCard extends StatelessWidget {
   final AccountsTableData account;
+  final CreditCardDetailsTableData? creditCardDetails;
   final bool isSelected;
   final VoidCallback? onTap;
 
   const AccountSelectionCard({
     super.key,
     required this.account,
+    this.creditCardDetails,
     this.onTap,
     this.isSelected = false,
   });
@@ -22,6 +24,9 @@ class AccountSelectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accountType = AccountType.fromName(account.accountType);
+
+    final availableForPayment = account.availableForPayment(creditCardDetails);
+
     return AppCard(
       onTap: onTap,
       child: Row(
@@ -52,10 +57,7 @@ class AccountSelectionCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Text(
-            account.availableForPayment.toCurrency(),
-            style: AppTextStyle.amountL,
-          ),
+          Text(availableForPayment.toCurrency(), style: AppTextStyle.amountL),
         ],
       ),
     );

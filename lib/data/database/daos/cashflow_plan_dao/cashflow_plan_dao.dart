@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/tables/cashflow_plan_allocation_table.dart';
+import 'package:getx_drift_app/data/tables/cashflow_plan_metadata_table.dart';
 import 'package:getx_drift_app/data/tables/cashflow_plan_table.dart';
 import 'package:getx_drift_app/data/tables/cashflow_categories_table.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
@@ -21,11 +22,40 @@ class CashflowPlanWithCategory {
 }
 
 @DriftAccessor(
-  tables: [CashFlowPlans, CashFlowPlanAllocations, CashflowCategoriesTable],
+  tables: [
+    CashFlowPlans,
+    CashFlowPlanAllocations,
+    CashflowCategoriesTable,
+    CashflowPlanMetadata,
+  ],
 )
 class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
     with _$CashflowPlanDaoMixin {
   CashflowPlanDao(super.db);
+
+  Future<void> _incrementCashflowRevision() async {
+    final metadata = await (select(
+      cashflowPlanMetadata,
+    )..where((tbl) => tbl.id.equals(1))).getSingle();
+
+    await (update(
+      cashflowPlanMetadata,
+    )..where((tbl) => tbl.id.equals(1))).write(
+      CashflowPlanMetadataCompanion(
+        revision: Value(metadata.revision + 1),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<int> getCashflowRevision() async {
+    final metadata = await (select(
+      cashflowPlanMetadata,
+    )..where((tbl) => tbl.id.equals(1))).getSingle();
+
+    return metadata.revision;
+  }
+
   Future<bool> updatePlan({
     required int planId,
     required int categoryId,
@@ -35,21 +65,27 @@ class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
     required String distributionType,
     required DateTime updatedAt,
   }) async {
-    final updated =
-        await (update(
-          cashFlowPlans,
-        )..where((tbl) => tbl.id.equals(planId))).write(
-          CashFlowPlansCompanion(
-            categoryId: Value(categoryId),
-            planType: Value(planType),
-            amount: Value(amount),
-            period: Value(period),
-            distributionType: Value(distributionType),
-            updatedAt: Value(updatedAt),
-          ),
-        );
+    return transaction(() async {
+      final updated =
+          await (update(
+            cashFlowPlans,
+          )..where((tbl) => tbl.id.equals(planId))).write(
+            CashFlowPlansCompanion(
+              categoryId: Value(categoryId),
+              planType: Value(planType),
+              amount: Value(amount),
+              period: Value(period),
+              distributionType: Value(distributionType),
+              updatedAt: Value(updatedAt),
+            ),
+          );
 
-    return updated > 0;
+      if (updated > 0) {
+        await _incrementCashflowRevision();
+      }
+
+      return updated > 0;
+    });
   }
 
   Future<void> deleteAllocationsForPlan(int planId) async {
@@ -97,6 +133,8 @@ class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
           ),
         );
       });
+
+      await _incrementCashflowRevision();
     });
   }
 
@@ -163,17 +201,23 @@ class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
     required int planId,
     required double amount,
   }) async {
-    final updated =
-        await (update(
-          cashFlowPlans,
-        )..where((tbl) => tbl.id.equals(planId))).write(
-          CashFlowPlansCompanion(
-            amount: Value(amount),
-            updatedAt: Value(DateTime.now()),
-          ),
-        );
+    return transaction(() async {
+      final updated =
+          await (update(
+            cashFlowPlans,
+          )..where((tbl) => tbl.id.equals(planId))).write(
+            CashFlowPlansCompanion(
+              amount: Value(amount),
+              updatedAt: Value(DateTime.now()),
+            ),
+          );
 
-    return updated > 0;
+      if (updated > 0) {
+        await _incrementCashflowRevision();
+      }
+
+      return updated > 0;
+    });
   }
   // -----------------------------
   // Plans
@@ -295,8 +339,14 @@ class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
   //   });
   // }
 
-  Future<int> insertPlan(CashFlowPlansCompanion entry) {
-    return into(cashFlowPlans).insert(entry);
+  Future<int> insertPlan(CashFlowPlansCompanion entry) async {
+    return transaction(() async {
+      final id = await into(cashFlowPlans).insert(entry);
+
+      await _incrementCashflowRevision();
+
+      return id;
+    });
   }
 
   Future<void> deletePlan(int planId) async {
@@ -306,6 +356,8 @@ class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
       )..where((tbl) => tbl.planId.equals(planId))).go();
 
       await (delete(cashFlowPlans)..where((tbl) => tbl.id.equals(planId))).go();
+
+      await _incrementCashflowRevision();
     });
   }
 
@@ -330,8 +382,12 @@ class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
   Future<void> insertAllocations(
     List<CashFlowPlanAllocationsCompanion> entries,
   ) async {
-    await batch((batch) {
-      batch.insertAll(cashFlowPlanAllocations, entries);
+    await transaction(() async {
+      await batch((batch) {
+        batch.insertAll(cashFlowPlanAllocations, entries);
+      });
+
+      await _incrementCashflowRevision();
     });
   }
 }

@@ -5,7 +5,6 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/features/financial_insights/financial_profile_cashflow_controller_extension.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/sections/protection_score_container_section.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_debt_load_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_emergency_fund_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_lifestyle_coverage_extension.dart';

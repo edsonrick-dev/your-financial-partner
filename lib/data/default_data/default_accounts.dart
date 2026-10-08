@@ -1,11 +1,25 @@
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_type_enum.dart';
 
+class DefaultCreditCard {
+  final String accountName;
+  final double creditLimit;
+  final int statementDay;
+  final int paymentDueDay;
+
+  const DefaultCreditCard({
+    required this.accountName,
+    required this.creditLimit,
+    required this.statementDay,
+    required this.paymentDueDay,
+  });
+}
+
 class DefaultAccount {
   final String name;
   final String iconKey;
   final AccountType type;
   final double startingBalance;
-  final double? creditLimit;
+
   final bool isSystem;
 
   const DefaultAccount({
@@ -13,7 +27,7 @@ class DefaultAccount {
     required this.iconKey,
     required this.type,
     this.startingBalance = 0,
-    this.creditLimit,
+
     this.isSystem = false,
   });
 }

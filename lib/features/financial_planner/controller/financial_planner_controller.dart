@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/cashflow_planner_page/cashflow_planner_page.dart';
 import 'package:getx_drift_app/features/financial_planner/models/financial_planner_page_model.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/insurance_planner/insurance_planner_screen.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/views/insurance_planner/insurance_planner_screen.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/views/net_worth_planner_screen/networth_planner_screen.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/views/savings_planner_screen.dart';
 
