@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:drift/drift.dart' as d;
+import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:get/get.dart';
@@ -1194,6 +1195,8 @@ class CashflowController extends GetxController {
 
       if (planId == null) {
         // CREATE
+
+        debugPrint('[CashflowPlan] Before insertPlan');
         final newPlanId = await database.cashflowPlanDao.insertPlan(
           CashFlowPlansCompanion.insert(
             categoryId: d.Value<int?>(category.id),
@@ -1208,7 +1211,7 @@ class CashflowController extends GetxController {
             updatedAt: now,
           ),
         );
-
+        debugPrint('[CashflowPlan] Inserted plan ID: $newPlanId');
         if (isCustom) {
           await _saveAllocations(newPlanId);
         }

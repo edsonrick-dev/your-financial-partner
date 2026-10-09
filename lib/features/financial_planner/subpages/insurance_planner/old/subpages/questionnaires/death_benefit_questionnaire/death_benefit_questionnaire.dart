@@ -5,11 +5,11 @@ import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/questionnaires/death_benefit_questionnaire/financial_dependency_question.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/questionnaires/death_benefit_questionnaire/survivor_budget_question.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/3_lifestyle_continuity_questionnaire/lifestyle_continuity_questionnaire.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/questionnaires/death_benefit_questionnaire/time_horizon_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_horizon_options.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/protection_horizon_questionnaire/widgets/protection_horizon_picker.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/widgets/protection_horizon_picker.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class FinancialExpensesQuestion extends StatelessWidget {
@@ -423,7 +423,7 @@ class DeathBenefitQuestionnaire extends GetView<InsurancePlannerController> {
         return TimeHorizonQuestion();
 
       case DeathBenefitPage.survivorBudget:
-        return SurvivorBudgetQuestion();
+        return LifestyleContinuityQuestionnaire();
 
       case DeathBenefitPage.finalExpenses:
         return FinalExpensesQuestion(

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/models/split_expense_summary.dart';
 import 'package:getx_drift_app/data/models/transaction_participant_with_entity.dart';
@@ -618,7 +619,11 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
           final participants = await getParticipantsWithEntities(
             transaction.id,
           );
-
+          debugPrint(
+            'Transaction ${transaction.id}: '
+            'participant entity IDs = '
+            '${participants.map((p) => p.entity.id).toList()}',
+          );
           TransactionParticipantWithEntity? myParticipant;
 
           try {

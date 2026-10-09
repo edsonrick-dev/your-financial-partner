@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:getx_drift_app/data/default_data/default_accounts.dart';
 import 'package:getx_drift_app/data/default_data/default_categories.dart';
 import 'package:getx_drift_app/data/enums/entity_type_enum.dart';
@@ -105,9 +106,9 @@ class AppDatabase extends _$AppDatabase {
       await m.createAll();
 
       await seedDefaultCategories();
-      // await seedDefaultPaymentAccounts();
+
       await seedDefaultEntities();
-      // await seedDefaultTransactions();
+      await seedCashflowPlanMetadata();
     },
 
     onUpgrade: (m, from, to) async {
@@ -169,6 +170,12 @@ class AppDatabase extends _$AppDatabase {
   /// • Transaction effect reversal workflows
   Future<void> deleteTransaction(int id) async {
     await (delete(transactionsTable)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  Future<void> seedCashflowPlanMetadata() async {
+    await into(cashflowPlanMetadata).insertOnConflictUpdate(
+      CashflowPlanMetadataCompanion.insert(id: const Value(1)),
+    );
   }
 
   ///PERSONS
@@ -516,6 +523,13 @@ class AppDatabase extends _$AppDatabase {
     ];
 
     final existing = await select(entitiesTable).get();
+
+    for (final entity in existing) {
+      debugPrint(
+        'Entity: id=${entity.id}, name=${entity.name}, '
+        'type=${entity.entityType}',
+      );
+    }
 
     final existingNames = existing.map((e) => e.name).toSet();
 

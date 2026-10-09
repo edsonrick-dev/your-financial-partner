@@ -8,12 +8,11 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/questionnaires/death_benefit_questionnaire/financial_dependency_question.dart';
-// ignore: unused_import
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/views/insurance_planner/insurance_planner_content_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/widgets/insurance_assessment_card.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/controller/protection_questionnaire_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/protection_horizon_questionnaire/protection_horizon_questionnaire_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/protection_horizon_questionnaire_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/3_lifestyle_continuity_questionnaire/lifestyle_continuity_questionnaire.dart';
+import 'package:getx_drift_app/features/home/bindings/protection_questionnaire_binding.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
@@ -24,7 +23,6 @@ class ProtectionQuestionnaireSheet extends GetView<InsurancePlannerController> {
 
   @override
   Widget build(BuildContext context) {
-    final isExpenseContinuityCompleted = false;
     final isAdditionalNeedsCompleted = false;
     final isExistingProtectionCompleted = false;
 
@@ -64,51 +62,35 @@ class ProtectionQuestionnaireSheet extends GetView<InsurancePlannerController> {
                   child: Column(
                     spacing: 16,
                     children: [
+                      //Protection Horizon
+                      _protectionHorizonQuestionnaire(),
+
+                      //Beneficiaries
+                      _beneficiariesQuestionnaire(),
+
+                      //Lifestyle Continuity
                       Obx(
                         () => QuestionnaireTile(
-                          title: 'Protection Horizon',
-                          description: controller.isProtectionHorizonCompleted
-                              ? '3 protection horizons set'
-                              : 'Choose how long each benefit should provide support.',
-                          isCompleted: controller.isProtectionHorizonCompleted,
-                          onTap: () {
-                            Get.to(
-                              () => const ProtectionHorizonQuestionnaire(),
-                              binding: BindingsBuilder(() {
-                                Get.put(ProtectionQuestionnaireController());
-                              }),
-                            );
-                          },
-                        ),
-                      ),
-                      Obx(
-                        () => QuestionnaireTile(
-                          title: 'Beneficiaries',
-                          description: controller.isFinancialDependencyCompleted
-                              ? '3 protection scenarios set'
+                          title: 'Lifestyle Continuity',
+                          description:
+                              controller.isExpenseContinuityCompleted.value
+                              ? 'Expense continuity preferences saved'
                               : 'Set how expenses would continue under each protection scenario.',
                           isCompleted:
-                              controller.isFinancialDependencyCompleted,
-                          onTap: () {
-                            Get.to(
-                              () => const FinancialDependencyQuestion(),
-                              binding: BindingsBuilder(() {
-                                Get.put(ProtectionQuestionnaireController());
-                              }),
+                              controller.isExpenseContinuityCompleted.value,
+                          onTap: () async {
+                            final saved = await Get.to<bool>(
+                              () => const LifestyleContinuityQuestionnaire(),
+                              binding: ProtectionQuestionnaireBinding(),
+                              preventDuplicates: false,
                             );
-                            // Open Expense Continuity questionnaire
+
+                            if (saved == true) {
+                              controller.isExpenseContinuityCompleted.value =
+                                  true;
+                            }
                           },
                         ),
-                      ),
-                      QuestionnaireTile(
-                        title: 'Lifestyle Continuity',
-                        description: isExpenseContinuityCompleted
-                            ? '3 protection scenarios set'
-                            : 'Set how expenses would continue under each protection scenario.',
-                        isCompleted: isExpenseContinuityCompleted,
-                        onTap: () {
-                          // Open Expense Continuity questionnaire
-                        },
                       ),
 
                       QuestionnaireTile(
@@ -173,6 +155,43 @@ class ProtectionQuestionnaireSheet extends GetView<InsurancePlannerController> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Obx _beneficiariesQuestionnaire() {
+    return Obx(
+      () => QuestionnaireTile(
+        title: 'Beneficiaries',
+        description: controller.isFinancialDependencyCompleted
+            ? '3 protection scenarios set'
+            : 'Set how expenses would continue under each protection scenario.',
+        isCompleted: controller.isFinancialDependencyCompleted,
+        onTap: () {
+          Get.to(
+            () => const FinancialDependencyQuestion(),
+            binding: ProtectionQuestionnaireBinding(),
+          );
+          // Open Expense Continuity questionnaire
+        },
+      ),
+    );
+  }
+
+  Obx _protectionHorizonQuestionnaire() {
+    return Obx(
+      () => QuestionnaireTile(
+        title: 'Protection Horizon',
+        description: controller.isProtectionHorizonCompleted
+            ? '3 protection horizons set'
+            : 'Choose how long each benefit should provide support.',
+        isCompleted: controller.isProtectionHorizonCompleted,
+        onTap: () {
+          Get.to(
+            () => const ProtectionHorizonQuestionnaire(),
+            binding: ProtectionQuestionnaireBinding(),
+          );
+        },
       ),
     );
   }

@@ -11,7 +11,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_gap_severity_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_profile_enum.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/questionnaires/death_benefit_questionnaire/financial_dependency_question.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_input.dart';
@@ -27,7 +27,7 @@ enum DeathBenefitPage {
 
 class InsurancePlannerController extends GetxController {
   final financialDependency = Rxn<FinancialDependency>();
-
+  final isExpenseContinuityCompleted = false.obs;
   StreamSubscription<FinancialDependency?>? _financialDependencySubscription;
 
   bool get isFinancialDependencyCompleted => financialDependency.value != null;
@@ -73,8 +73,9 @@ class InsurancePlannerController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void onClose() async {
     _protectionSubscription?.cancel();
+    _financialDependencySubscription?.cancel();
     super.onClose();
   }
 

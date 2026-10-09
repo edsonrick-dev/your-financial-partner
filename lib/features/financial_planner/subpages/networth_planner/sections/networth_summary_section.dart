@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient.dart';
+import 'package:getx_drift_app/core/design_system/app_gradient_card.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/domain/enums/net_worth_comparison_enum.dart';
@@ -37,13 +38,7 @@ class NetWorthSummaryContainerSection extends StatelessWidget {
         onTap: () {
           Get.toNamed(Routes.NETWORTHDETAILS);
         },
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: AppGradient.gradientA(colorScheme),
-            borderRadius: BorderRadius.circular(24),
-          ),
+        child: AppGradientCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 12,
