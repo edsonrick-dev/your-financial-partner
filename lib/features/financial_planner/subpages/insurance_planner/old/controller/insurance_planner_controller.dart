@@ -26,6 +26,17 @@ enum DeathBenefitPage {
 }
 
 class InsurancePlannerController extends GetxController {
+  final financialDependency = Rxn<FinancialDependency>();
+
+  StreamSubscription<FinancialDependency?>? _financialDependencySubscription;
+
+  bool get isFinancialDependencyCompleted => financialDependency.value != null;
+
+  Future<void> loadFinancialDependency() async {
+    financialDependency.value = await database.protectionDao
+        .getFinancialDependency();
+  }
+
   final protectionScenarios = <ProtectionScenariosTableData>[].obs;
 
   StreamSubscription<List<ProtectionScenariosTableData>>?
@@ -33,6 +44,7 @@ class InsurancePlannerController extends GetxController {
 
   bool get isProtectionHorizonCompleted => protectionScenarios.length == 3;
 
+  final isInsuranceQuestionnairesFinished = false.obs;
   @override
   void onInit() {
     super.onInit();
@@ -42,8 +54,18 @@ class InsurancePlannerController extends GetxController {
         .listen(
           protectionScenarios.assignAll,
           onError: (error, stackTrace) {
-            print('Protection scenarios stream error: $error');
-            print(stackTrace);
+            // print('Protection scenarios stream error: $error');
+            // print(stackTrace);
+          },
+        );
+    _financialDependencySubscription = database.protectionDao
+        .watchFinancialDependency()
+        .listen(
+          (dependency) {
+            financialDependency.value = dependency;
+          },
+          onError: (error, stackTrace) {
+            // handle error
           },
         );
 
@@ -86,20 +108,20 @@ class InsurancePlannerController extends GetxController {
       planValidityYears: FakeDeathBenefitData.planValidityYears,
     );
 
-    print(
-      'Expense Continuity: '
-      '${result.dependentExpenseContinuity}',
-    );
+    // print(
+    //   'Expense Continuity: '
+    //   '${result.dependentExpenseContinuity}',
+    // );
 
-    print(
-      'Total Death Need: '
-      '${result.totalDeathNeed}',
-    );
+    // print(
+    //   'Total Death Need: '
+    //   '${result.totalDeathNeed}',
+    // );
 
-    print(
-      'Protection Gap: '
-      '${result.protectionGap}',
-    );
+    // print(
+    //   'Protection Gap: '
+    //   '${result.protectionGap}',
+    // );
 
     deathBenefitNeed.value = result.totalDeathNeed;
 
@@ -152,16 +174,11 @@ class InsurancePlannerController extends GetxController {
 
   ///FINANCIAL DEPENDENCY QUESTION
   // final financialDependency = FinancialDependency.none.obs;
-  final financialDependency = Rxn<FinancialDependency>();
 
-  void setFinancialDependency(FinancialDependency value) {
-    financialDependency.value = value;
-  }
-
-  bool get hasFinancialDependents {
-    return financialDependency.value != null &&
-        financialDependency.value != FinancialDependency.none;
-  }
+  // bool get hasFinancialDependents {
+  //   return financialDependency.value != null &&
+  //       financialDependency.value != FinancialDependency.none;
+  // }
 
   ///
   final deathBenefitPage = DeathBenefitPage.financialDependency.obs;
@@ -183,11 +200,11 @@ class InsurancePlannerController extends GetxController {
 
     switch (currentPage) {
       case DeathBenefitPage.financialDependency:
-        if (financialDependency.value == FinancialDependency.none) {
-          nextPage = DeathBenefitPage.finalExpenses;
-        } else {
-          nextPage = DeathBenefitPage.protectionHorizon;
-        }
+        // if (financialDependency.value == FinancialDependency.none) {
+        //   nextPage = DeathBenefitPage.finalExpenses;
+        // } else {
+        //   nextPage = DeathBenefitPage.protectionHorizon;
+        // }
         break;
 
       case DeathBenefitPage.protectionHorizon:
@@ -216,7 +233,7 @@ class InsurancePlannerController extends GetxController {
     }
 
     _deathBenefitPageHistory.add(currentPage);
-    deathBenefitPage.value = nextPage;
+    // deathBenefitPage.value = nextPage;
   }
 
   // void nextDeathBenefitPage() {

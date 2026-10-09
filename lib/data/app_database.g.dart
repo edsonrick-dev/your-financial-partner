@@ -10412,6 +10412,323 @@ class ProtectionBudgetContinuitiesCompanion
   }
 }
 
+class $ProtectionDependencyTableTable extends ProtectionDependencyTable
+    with
+        TableInfo<
+          $ProtectionDependencyTableTable,
+          ProtectionDependencyTableData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProtectionDependencyTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dependencyTypeMeta = const VerificationMeta(
+    'dependencyType',
+  );
+  @override
+  late final GeneratedColumn<String> dependencyType = GeneratedColumn<String>(
+    'dependency_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    dependencyType,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'protection_dependency_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProtectionDependencyTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('dependency_type')) {
+      context.handle(
+        _dependencyTypeMeta,
+        dependencyType.isAcceptableOrUnknown(
+          data['dependency_type']!,
+          _dependencyTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_dependencyTypeMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ProtectionDependencyTableData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProtectionDependencyTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      dependencyType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dependency_type'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ProtectionDependencyTableTable createAlias(String alias) {
+    return $ProtectionDependencyTableTable(attachedDatabase, alias);
+  }
+}
+
+class ProtectionDependencyTableData extends DataClass
+    implements Insertable<ProtectionDependencyTableData> {
+  final int id;
+  final String dependencyType;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const ProtectionDependencyTableData({
+    required this.id,
+    required this.dependencyType,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['dependency_type'] = Variable<String>(dependencyType);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  ProtectionDependencyTableCompanion toCompanion(bool nullToAbsent) {
+    return ProtectionDependencyTableCompanion(
+      id: Value(id),
+      dependencyType: Value(dependencyType),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory ProtectionDependencyTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProtectionDependencyTableData(
+      id: serializer.fromJson<int>(json['id']),
+      dependencyType: serializer.fromJson<String>(json['dependencyType']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'dependencyType': serializer.toJson<String>(dependencyType),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  ProtectionDependencyTableData copyWith({
+    int? id,
+    String? dependencyType,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => ProtectionDependencyTableData(
+    id: id ?? this.id,
+    dependencyType: dependencyType ?? this.dependencyType,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  ProtectionDependencyTableData copyWithCompanion(
+    ProtectionDependencyTableCompanion data,
+  ) {
+    return ProtectionDependencyTableData(
+      id: data.id.present ? data.id.value : this.id,
+      dependencyType: data.dependencyType.present
+          ? data.dependencyType.value
+          : this.dependencyType,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionDependencyTableData(')
+          ..write('id: $id, ')
+          ..write('dependencyType: $dependencyType, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, dependencyType, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProtectionDependencyTableData &&
+          other.id == this.id &&
+          other.dependencyType == this.dependencyType &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class ProtectionDependencyTableCompanion
+    extends UpdateCompanion<ProtectionDependencyTableData> {
+  final Value<int> id;
+  final Value<String> dependencyType;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const ProtectionDependencyTableCompanion({
+    this.id = const Value.absent(),
+    this.dependencyType = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  ProtectionDependencyTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String dependencyType,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) : dependencyType = Value(dependencyType),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<ProtectionDependencyTableData> custom({
+    Expression<int>? id,
+    Expression<String>? dependencyType,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (dependencyType != null) 'dependency_type': dependencyType,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  ProtectionDependencyTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? dependencyType,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return ProtectionDependencyTableCompanion(
+      id: id ?? this.id,
+      dependencyType: dependencyType ?? this.dependencyType,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (dependencyType.present) {
+      map['dependency_type'] = Variable<String>(dependencyType.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionDependencyTableCompanion(')
+          ..write('id: $id, ')
+          ..write('dependencyType: $dependencyType, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -10454,6 +10771,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $ProtectionScenariosTableTable(this);
   late final $ProtectionBudgetContinuitiesTable protectionBudgetContinuities =
       $ProtectionBudgetContinuitiesTable(this);
+  late final $ProtectionDependencyTableTable protectionDependencyTable =
+      $ProtectionDependencyTableTable(this);
   late final TransactionsDao transactionsDao = TransactionsDao(
     this as AppDatabase,
   );
@@ -10509,6 +10828,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     retirementGoalsTable,
     protectionScenariosTable,
     protectionBudgetContinuities,
+    protectionDependencyTable,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -21124,6 +21444,202 @@ typedef $$ProtectionBudgetContinuitiesTableProcessedTableManager =
       ProtectionBudgetContinuity,
       PrefetchHooks Function({bool protectionScenarioId, bool cashFlowPlanId})
     >;
+typedef $$ProtectionDependencyTableTableCreateCompanionBuilder =
+    ProtectionDependencyTableCompanion Function({
+      Value<int> id,
+      required String dependencyType,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+    });
+typedef $$ProtectionDependencyTableTableUpdateCompanionBuilder =
+    ProtectionDependencyTableCompanion Function({
+      Value<int> id,
+      Value<String> dependencyType,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+class $$ProtectionDependencyTableTableFilterComposer
+    extends Composer<_$AppDatabase, $ProtectionDependencyTableTable> {
+  $$ProtectionDependencyTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dependencyType => $composableBuilder(
+    column: $table.dependencyType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ProtectionDependencyTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProtectionDependencyTableTable> {
+  $$ProtectionDependencyTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dependencyType => $composableBuilder(
+    column: $table.dependencyType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProtectionDependencyTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProtectionDependencyTableTable> {
+  $$ProtectionDependencyTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get dependencyType => $composableBuilder(
+    column: $table.dependencyType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$ProtectionDependencyTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProtectionDependencyTableTable,
+          ProtectionDependencyTableData,
+          $$ProtectionDependencyTableTableFilterComposer,
+          $$ProtectionDependencyTableTableOrderingComposer,
+          $$ProtectionDependencyTableTableAnnotationComposer,
+          $$ProtectionDependencyTableTableCreateCompanionBuilder,
+          $$ProtectionDependencyTableTableUpdateCompanionBuilder,
+          (
+            ProtectionDependencyTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $ProtectionDependencyTableTable,
+              ProtectionDependencyTableData
+            >,
+          ),
+          ProtectionDependencyTableData,
+          PrefetchHooks Function()
+        > {
+  $$ProtectionDependencyTableTableTableManager(
+    _$AppDatabase db,
+    $ProtectionDependencyTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProtectionDependencyTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$ProtectionDependencyTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ProtectionDependencyTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> dependencyType = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => ProtectionDependencyTableCompanion(
+                id: id,
+                dependencyType: dependencyType,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String dependencyType,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+              }) => ProtectionDependencyTableCompanion.insert(
+                id: id,
+                dependencyType: dependencyType,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ProtectionDependencyTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProtectionDependencyTableTable,
+      ProtectionDependencyTableData,
+      $$ProtectionDependencyTableTableFilterComposer,
+      $$ProtectionDependencyTableTableOrderingComposer,
+      $$ProtectionDependencyTableTableAnnotationComposer,
+      $$ProtectionDependencyTableTableCreateCompanionBuilder,
+      $$ProtectionDependencyTableTableUpdateCompanionBuilder,
+      (
+        ProtectionDependencyTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $ProtectionDependencyTableTable,
+          ProtectionDependencyTableData
+        >,
+      ),
+      ProtectionDependencyTableData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -21201,5 +21717,10 @@ class $AppDatabaseManager {
       $$ProtectionBudgetContinuitiesTableTableManager(
         _db,
         _db.protectionBudgetContinuities,
+      );
+  $$ProtectionDependencyTableTableTableManager get protectionDependencyTable =>
+      $$ProtectionDependencyTableTableTableManager(
+        _db,
+        _db.protectionDependencyTable,
       );
 }

@@ -2,11 +2,33 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
-import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/questionnaires/death_benefit_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/protection_horizon_questionnaire/models/protection_horizon_answers.dart';
 
 class ProtectionQuestionnaireController extends GetxController {
+  final financialDependency = Rxn<FinancialDependency>();
+  void setFinancialDependency(FinancialDependency dependency) {
+    financialDependency.value = dependency;
+  }
+
+  Future<void> saveFinancialDependency() async {
+    final dependency = financialDependency.value;
+
+    if (dependency == null) {
+      return;
+    }
+
+    await database.protectionDao.saveFinancialDependency(dependency);
+
+    Get.back();
+  }
+
+  Future<void> loadFinancialDependency() async {
+    financialDependency.value = await database.protectionDao
+        .getFinancialDependency();
+  }
+
   final deathBenefitHorizon = ProtectionHorizon.zero.obs;
 
   final criticalIllnessBenefitHorizon = ProtectionHorizon.one.obs;
@@ -34,10 +56,6 @@ class ProtectionQuestionnaireController extends GetxController {
   }
 
   Future<void> saveProtectionHorizon() async {
-    final profile = await database.userProfileDao.getProfile();
-
-    print('USER PROFILE: $profile');
-
     await database.protectionDao.saveProtectionHorizons(
       protectionHorizonAnswers,
     );
@@ -82,5 +100,6 @@ class ProtectionQuestionnaireController extends GetxController {
   void onInit() {
     super.onInit();
     loadProtectionHorizons();
+    loadFinancialDependency();
   }
 }

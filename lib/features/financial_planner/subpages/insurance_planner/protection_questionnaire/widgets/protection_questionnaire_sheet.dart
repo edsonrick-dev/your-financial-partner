@@ -8,6 +8,8 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/questionnaires/death_benefit_questionnaire/financial_dependency_question.dart';
+// ignore: unused_import
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/views/insurance_planner/insurance_planner_content_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/widgets/insurance_assessment_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/controller/protection_questionnaire_controller.dart';
@@ -17,13 +19,12 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class InsuranceQuestionnaireSheet extends GetView<InsurancePlannerController> {
-  const InsuranceQuestionnaireSheet({super.key});
+class ProtectionQuestionnaireSheet extends GetView<InsurancePlannerController> {
+  const ProtectionQuestionnaireSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
     final isExpenseContinuityCompleted = false;
-    final isProtectionHorizonCompleted = false;
     final isAdditionalNeedsCompleted = false;
     final isExistingProtectionCompleted = false;
 
@@ -63,27 +64,6 @@ class InsuranceQuestionnaireSheet extends GetView<InsurancePlannerController> {
                   child: Column(
                     spacing: 16,
                     children: [
-                      QuestionnaireTile(
-                        title: 'Beneficiaries',
-                        description: isExpenseContinuityCompleted
-                            ? '3 protection scenarios set'
-                            : 'Set how expenses would continue under each protection scenario.',
-                        isCompleted: isExpenseContinuityCompleted,
-                        onTap: () {
-                          // Open Expense Continuity questionnaire
-                        },
-                      ),
-                      QuestionnaireTile(
-                        title: 'Lifestyle Continuity',
-                        description: isExpenseContinuityCompleted
-                            ? '3 protection scenarios set'
-                            : 'Set how expenses would continue under each protection scenario.',
-                        isCompleted: isExpenseContinuityCompleted,
-                        onTap: () {
-                          // Open Expense Continuity questionnaire
-                        },
-                      ),
-
                       Obx(
                         () => QuestionnaireTile(
                           title: 'Protection Horizon',
@@ -100,6 +80,35 @@ class InsuranceQuestionnaireSheet extends GetView<InsurancePlannerController> {
                             );
                           },
                         ),
+                      ),
+                      Obx(
+                        () => QuestionnaireTile(
+                          title: 'Beneficiaries',
+                          description: controller.isFinancialDependencyCompleted
+                              ? '3 protection scenarios set'
+                              : 'Set how expenses would continue under each protection scenario.',
+                          isCompleted:
+                              controller.isFinancialDependencyCompleted,
+                          onTap: () {
+                            Get.to(
+                              () => const FinancialDependencyQuestion(),
+                              binding: BindingsBuilder(() {
+                                Get.put(ProtectionQuestionnaireController());
+                              }),
+                            );
+                            // Open Expense Continuity questionnaire
+                          },
+                        ),
+                      ),
+                      QuestionnaireTile(
+                        title: 'Lifestyle Continuity',
+                        description: isExpenseContinuityCompleted
+                            ? '3 protection scenarios set'
+                            : 'Set how expenses would continue under each protection scenario.',
+                        isCompleted: isExpenseContinuityCompleted,
+                        onTap: () {
+                          // Open Expense Continuity questionnaire
+                        },
                       ),
 
                       QuestionnaireTile(
@@ -187,24 +196,26 @@ class QuestionnaireTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppCard(
       onTap: onTap,
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 8,
         children: [
-          Row(
-            spacing: 12,
-            children: [
-              _StatusIcon(isCompleted: isCompleted),
-              Expanded(child: Text(title, style: AppTextStyle.titleL)),
-              SizedBox(
-                height: 24,
-                child: PhosphorIcon(PhosphorIconsRegular.caretRight, size: 20),
-              ),
-            ],
+          SizedBox(height: 24, child: _StatusIcon(isCompleted: isCompleted)),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppTextStyle.titleL),
+                const SizedBox(height: 4),
+
+                Text(description, style: AppTextStyle.bodyM),
+              ],
+            ),
           ),
-
-          const SizedBox(height: 12),
-
-          Text(description, style: AppTextStyle.bodyM),
+          SizedBox(
+            height: 24,
+            child: PhosphorIcon(PhosphorIconsRegular.caretRight, size: 20),
+          ),
         ],
       ),
     );
@@ -219,7 +230,7 @@ class _StatusIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    final iconSize = 24.0;
+    final iconSize = 20.0;
 
     if (isCompleted) {
       return Container(
@@ -231,7 +242,7 @@ class _StatusIcon extends StatelessWidget {
         ),
         child: PhosphorIcon(
           PhosphorIconsBold.check,
-          size: 16,
+          size: 12,
           color: Theme.of(context).colorScheme.onPrimary,
         ),
       );

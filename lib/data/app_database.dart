@@ -29,6 +29,7 @@ import 'tables/user_profile_table.dart';
 import 'tables/protection_budget_continuities_table.dart';
 import 'tables/protection_scenarios_table.dart';
 import 'tables/retirement_goal_table.dart';
+import 'tables/protection_dependency_table.dart';
 
 import 'tables/loan_table.dart';
 // import 'tables/cashflow_plans_table.dart';
@@ -74,6 +75,7 @@ part 'app_database.g.dart';
 
     ProtectionScenariosTable,
     ProtectionBudgetContinuities,
+    ProtectionDependencyTable,
   ],
   daos: [
     TransactionsDao,
@@ -120,6 +122,9 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(protectionScenariosTable);
         await m.createTable(protectionBudgetContinuities);
       }
+      if (from < 8) {
+        await m.createTable(protectionDependencyTable);
+      }
       // if (from < 6) {
       //   await m.deleteTable('financial_obligations_table');
       //   await m.deleteTable('transaction_participants_table');
@@ -133,7 +138,7 @@ class AppDatabase extends _$AppDatabase {
     },
   );
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();

@@ -13,6 +13,8 @@ mixin _$ProtectionDaoMixin on DatabaseAccessor<AppDatabase> {
   $CashFlowPlansTable get cashFlowPlans => attachedDatabase.cashFlowPlans;
   $ProtectionBudgetContinuitiesTable get protectionBudgetContinuities =>
       attachedDatabase.protectionBudgetContinuities;
+  $ProtectionDependencyTableTable get protectionDependencyTable =>
+      attachedDatabase.protectionDependencyTable;
   ProtectionDaoManager get managers => ProtectionDaoManager(this);
 }
 
@@ -40,5 +42,10 @@ class ProtectionDaoManager {
       $$ProtectionBudgetContinuitiesTableTableManager(
         _db.attachedDatabase,
         _db.protectionBudgetContinuities,
+      );
+  $$ProtectionDependencyTableTableTableManager get protectionDependencyTable =>
+      $$ProtectionDependencyTableTableTableManager(
+        _db.attachedDatabase,
+        _db.protectionDependencyTable,
       );
 }

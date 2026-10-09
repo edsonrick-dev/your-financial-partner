@@ -41,7 +41,7 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
             Obx(() {
               final value = controller.enteredBalance.value;
 
-              print('REBUILDING AMOUNT FIELD: $value');
+              // print('REBUILDING AMOUNT FIELD: $value');
 
               return AppAmountField(
                 key: ValueKey(value),

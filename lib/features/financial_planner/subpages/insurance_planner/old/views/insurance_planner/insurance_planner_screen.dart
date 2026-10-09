@@ -11,9 +11,11 @@ class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.justStarted.value) {
+      if (!controller.isInsuranceQuestionnairesFinished.value) {
         return InsurancePlannerEmptyView();
       }
+      debugPrint('${controller.isInsuranceQuestionnairesFinished.value}');
+
       return SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(

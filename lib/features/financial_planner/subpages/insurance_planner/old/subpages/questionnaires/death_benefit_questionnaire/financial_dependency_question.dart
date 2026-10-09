@@ -3,45 +3,73 @@ import 'package:get/state_manager.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/controller/protection_questionnaire_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
-class FinancialDependencyQuestion extends GetView<InsurancePlannerController> {
+class FinancialDependencyQuestion
+    extends GetView<ProtectionQuestionnaireController> {
   const FinancialDependencyQuestion({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AppSection(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Who depends on your income or shares essential expenses with you?",
-            style: AppTextStyle.headlineM,
-          ),
-          SizedBox(height: 16),
-          Text('Select one.', style: AppTextStyle.bodyL),
-          SizedBox(height: 16),
-          Obx(
-            () => Column(
-              spacing: 20,
-              children: [
-                ...FinancialDependency.values.map(
-                  (dependency) => _DependencyOption(
-                    dependency: dependency,
-                    isSelected:
-                        controller.financialDependency.value == dependency,
-                    onTap: () {
-                      controller.setFinancialDependency(dependency);
-                    },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Beneficary Questionnaire', style: AppTextStyle.headlineL),
+        surfaceTintColor: Colors.transparent,
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(bottom: context.bottomPaddingSub),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: AppSection(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Who depends on your income or shares essential expenses with you?",
+                        style: AppTextStyle.headlineM,
+                      ),
+                      SizedBox(height: 16),
+                      Text('Select one.', style: AppTextStyle.bodyL),
+                      SizedBox(height: 16),
+                      Obx(
+                        () => Column(
+                          spacing: 20,
+                          children: [
+                            ...FinancialDependency.values.map(
+                              (dependency) => _DependencyOption(
+                                dependency: dependency,
+                                isSelected:
+                                    controller.financialDependency.value ==
+                                    dependency,
+                                onTap: () {
+                                  controller.setFinancialDependency(dependency);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-          SizedBox(height: 16),
-        ],
+            SizedBox(height: 8),
+            AppSection(
+              child: AppButton(
+                text: 'Save my answer',
+                onTap: controller.saveFinancialDependency,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
