@@ -45,14 +45,16 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
             child: Column(
               spacing: 16,
               children: [
-                ProtectionGapCard(
-                  icon: PhosphorIconsRegular.ambulance,
-                  gapTitle: 'Death Benefit Gap',
-                  amountCovered: controller.deathBenefitCovered.value,
-                  amountNeed: controller.deathBenefitNeed.value,
-                  onTap: () {
-                    Get.toNamed(Routes.DEATHBENEFITGAP);
-                  },
+                Obx(
+                  () => ProtectionGapCard(
+                    icon: PhosphorIconsRegular.ambulance,
+                    gapTitle: 'Death Benefit Gap',
+                    amountCovered: controller.deathBenefitCovered.value,
+                    amountNeed: controller.deathBenefitNeed.value,
+                    onTap: () {
+                      Get.toNamed(Routes.DEATHBENEFITGAP);
+                    },
+                  ),
                 ),
                 ProtectionGapCard(
                   icon: PhosphorIconsRegular.hospital,

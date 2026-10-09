@@ -3,6 +3,8 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/tables/protection_scenarios_table.dart';
 import 'package:getx_drift_app/data/tables/protection_budget_continuities_table.dart';
 import 'package:getx_drift_app/data/tables/protection_dependency_table.dart';
+import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/models/protection_horizon_answers.dart';
@@ -20,6 +22,26 @@ part 'protection_dao.g.dart';
 class ProtectionDao extends DatabaseAccessor<AppDatabase>
     with _$ProtectionDaoMixin {
   ProtectionDao(super.db);
+  Future<double> calculateMonthlyDependentExpenses(
+    List<SavedCashflowPlanData> plans,
+  ) async {
+    double total = 0;
+
+    for (final plan in plans) {
+      if (plan.planType != 'expense') continue;
+
+      final shares = await getContinuitySharesForPlan(plan.planId);
+
+      final deathShare = shares[ProtectionType.death] ?? 1.0;
+
+      final monthlyExpense = plan.budgetPeriod.toMonthly(plan.amount);
+
+      total += monthlyExpense * deathShare;
+    }
+
+    return total;
+  }
+
   Future<void> seedDefaultProtectionScenarios() async {
     await transaction(() async {
       for (final type in ProtectionType.values) {
@@ -42,6 +64,13 @@ class ProtectionDao extends DatabaseAccessor<AppDatabase>
         );
       }
     });
+  }
+
+  Future<bool> hasContinuityShares() async {
+    final query = select(protectionBudgetContinuities)..limit(1);
+    final records = await query.get();
+
+    return records.isNotEmpty;
   }
 
   /// Save or update a continuity share for one budget plan and protection type.
