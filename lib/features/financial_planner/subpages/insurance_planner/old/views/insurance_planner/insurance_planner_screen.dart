@@ -17,13 +17,11 @@ class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
       debugPrint('${controller.isInsuranceQuestionnairesFinished.value}');
 
       return SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: context.topPadding,
-            bottom: context.bottomPadding,
-          ),
-          child: InsurancePlannerContentView(),
+        padding: EdgeInsets.only(
+          top: context.topPadding,
+          bottom: context.bottomPadding,
         ),
+        child: InsurancePlannerContentView(),
       );
     });
   }

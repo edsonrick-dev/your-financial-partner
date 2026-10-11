@@ -92,9 +92,6 @@ class SelectionSheets {
       isScrollControlled: true,
     );
   }
-  // Future<AppDay?> selectDay() {
-  //   return Get.bottomSheet<AppDay>(SelectDaySheet(), isScrollControlled: true);
-  // }
 
   Future<AccountType?> selectPaymentAccountType({
     required List<AccountType> accountTypes,

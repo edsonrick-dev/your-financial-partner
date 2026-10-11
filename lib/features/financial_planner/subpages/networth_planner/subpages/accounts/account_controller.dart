@@ -490,6 +490,7 @@ class AccountController extends GetxController {
 
   @override
   void onClose() {
+    debugPrint('AccountController disposed: ${identityHashCode(this)}');
     // print('ACCOUNT CONTROLLER CLOSE: $hashCode');
     nameController.dispose();
     bankNameController.dispose();
@@ -498,5 +499,11 @@ class AccountController extends GetxController {
     bankNameFocusNode.dispose();
 
     super.onClose();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    debugPrint('AccountController initialized: ${identityHashCode(this)}');
   }
 }

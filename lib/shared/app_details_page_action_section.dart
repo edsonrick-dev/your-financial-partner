@@ -31,7 +31,7 @@ class AppDetailsPageActionSection extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.only(right: 16),
                 child: Row(
                   children: [
                     for (int index = 0; index < actions.length; index++)

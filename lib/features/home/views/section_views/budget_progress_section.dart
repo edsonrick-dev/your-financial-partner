@@ -12,6 +12,9 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/home/widgets/budget_progress_indicator.dart';
 import 'package:getx_drift_app/features/home/widgets/budget_tile.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/features/home/widgets/budget_tiles/budget_grid_view.dart';
+import 'package:getx_drift_app/features/home/widgets/budget_tiles/budget_list_view.dart';
+import 'package:getx_drift_app/features/home/widgets/display_mode_toggle.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -395,7 +398,7 @@ class _BudgetGrid extends StatelessWidget {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
+        mainAxisSpacing: 0,
         mainAxisExtent: 140,
       ),
       itemCount: items.length,

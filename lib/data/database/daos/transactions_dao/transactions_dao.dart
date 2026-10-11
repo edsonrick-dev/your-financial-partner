@@ -619,11 +619,11 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
           final participants = await getParticipantsWithEntities(
             transaction.id,
           );
-          debugPrint(
-            'Transaction ${transaction.id}: '
-            'participant entity IDs = '
-            '${participants.map((p) => p.entity.id).toList()}',
-          );
+          // debugPrint(
+          //   'Transaction ${transaction.id}: '
+          //   'participant entity IDs = '
+          //   '${participants.map((p) => p.entity.id).toList()}',
+          // );
           TransactionParticipantWithEntity? myParticipant;
 
           try {

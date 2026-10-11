@@ -6,7 +6,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/cashflow_details_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/beneficiaries/views/beneficiaries_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/critical_illness_benefit_gap/views/critical_illness_details_view.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/death_benefit_gap/views/death_benefit_details_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/details_view/death_benefit_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/disability_benefit_gap/views/disability_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/insurance_policies/views/insurance_policies_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/questionnaires/death_benefit_questionnaire/death_benefit_questionnaire.dart';

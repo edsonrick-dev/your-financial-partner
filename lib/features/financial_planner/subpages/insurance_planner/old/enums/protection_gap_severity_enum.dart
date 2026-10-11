@@ -44,7 +44,7 @@ extension ProtectionGapSeverityX on ProtectionGapSeverity {
   String get label {
     switch (this) {
       case ProtectionGapSeverity.critical:
-        return 'Critical Protection';
+        return 'Protection Critical';
 
       case ProtectionGapSeverity.partial:
         return 'Partially Covered';

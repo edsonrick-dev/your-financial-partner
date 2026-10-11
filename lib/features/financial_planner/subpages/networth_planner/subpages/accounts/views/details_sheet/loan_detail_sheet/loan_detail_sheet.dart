@@ -41,11 +41,6 @@ class LoanDetailSheet extends GetView<LoanController> {
             children: [
               LoanSummarySection(account: currentAccount),
 
-              // const SizedBox(height: 16),
-
-              // AppSection(
-              //   child: AppButton(text: 'Make payment', onTap: () {}),
-              // ),
               AppDetailsPageActionSection(
                 selectedIndex: selectedIndex,
                 actions: const ['Payment History'],

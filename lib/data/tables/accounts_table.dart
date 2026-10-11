@@ -46,7 +46,7 @@ extension AccountExtensions on AccountsTableData {
     if (creditCardDetails == null) return null;
     if (creditCardDetails.creditLimit == 0) return null;
 
-    return (-currentValue) / creditCardDetails.creditLimit;
+    return (currentValue) / creditCardDetails.creditLimit;
   }
 
   double availableForPayment(CreditCardDetailsTableData? creditCardDetails) {

@@ -17,9 +17,12 @@ class AccountGroupSection extends StatelessWidget {
       children: [
         AppSection(
           sectionTitle: summary.group.label,
-          trailingWidget: Text(
-            summary.total.toCurrency(),
-            style: AppTextStyle.amountM,
+          trailingWidget: SizedBox(
+            height: 24,
+            child: Text(
+              summary.total.toCurrency(),
+              style: AppTextStyle.amountL,
+            ),
           ),
           trailingType: SectionTrailingType.custom,
           child:

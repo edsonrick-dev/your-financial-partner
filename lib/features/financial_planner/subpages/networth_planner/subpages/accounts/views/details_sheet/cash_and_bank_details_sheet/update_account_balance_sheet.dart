@@ -39,26 +39,19 @@ class UpdateAccountBalanceSheet extends GetView<AccountController> {
 
             const SizedBox(height: 20),
             Obx(() {
+              // debugPrint('REBUILDING AMOUNT FIELD: $value');
+
               final value = controller.enteredBalance.value;
-
-              // print('REBUILDING AMOUNT FIELD: $value');
-
               return AppAmountField(
                 key: ValueKey(value),
                 label: 'Amount',
                 amount: value,
-                onChanged: (value) {
-                  controller.enteredBalance.value = value;
+                onChanged: (newValue) {
+                  controller.enteredBalance.value = newValue;
                 },
               );
             }),
 
-            // AppTextField(
-            //   onChanged: controller.onBalanceChanged,
-            //   label: 'Actual Balance',
-            //   focusNode: controller.balanceFocusNode,
-            //   controller: controller.balanceController,
-            // ),
             const SizedBox(height: 20),
 
             Obx(() {

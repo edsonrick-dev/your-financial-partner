@@ -10,6 +10,7 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
+import 'package:getx_drift_app/features/home/widgets/display_mode_toggle.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/spend_transaction/spend_transaction_sheet.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/domain/enums/app_day.dart';

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_calculator.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_fund_details_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_input.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_result.dart';
@@ -46,9 +47,20 @@ class DeathBenefitCalculator {
               input.eligibleExistingResources,
         )
         .toDouble();
+    final expenseContinuityDetails = ExpenseContinuityFundDetailsData(
+      planDate: DateTime.now(),
+      monthlyExpense: input.monthlyDependentExpenses,
+      planValidityYears: planValidityYears,
+      supportYears: supportYears,
+      inflationRate: inflationRate,
+      portfolioReturn: portfolioReturn,
+      result: expenseContinuityResult,
+    );
 
     return DeathBenefitResult(
       dependentExpenseContinuity: dependentExpenseContinuity,
+      expenseContinuityResult: expenseContinuityResult,
+      expenseContinuityDetails: expenseContinuityDetails,
       estateSettlementFund: input.estateSettlementFund,
       liabilities: input.liabilities,
       dependentsFutureNeeds: input.dependentsFutureNeeds,

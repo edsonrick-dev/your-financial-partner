@@ -12,12 +12,14 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/fake_data/fake_death_benefit_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/fake_data/fake_insurance_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_calculator.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_gap_severity_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_profile_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_input.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 
 enum DeathBenefitPage {
@@ -30,6 +32,9 @@ enum DeathBenefitPage {
 }
 
 class InsurancePlannerController extends GetxController {
+  final isExpenseProjectionExpanded = false.obs;
+  final deathBenefitResult = Rxn<DeathBenefitResult>();
+  final expenseContinuityResult = Rxn<ExpenseContinuityResult>();
   final financialDependency = Rxn<FinancialDependency>();
   final isExpenseContinuityCompleted = false.obs;
   Future<void> loadExpenseContinuityCompletion() async {
@@ -181,7 +186,13 @@ class InsurancePlannerController extends GetxController {
       planValidityYears: FakeDeathBenefitData.planValidityYears,
     );
 
+    deathBenefitResult.value = result;
+    expenseContinuityResult.value = result.expenseContinuityResult;
+
+    familyExpenseContinuityFund.value = result.dependentExpenseContinuity;
+
     deathBenefitNeed.value = result.totalDeathNeed;
+
     deathBenefitCovered.value = result.existingDeathCoverage;
 
     debugPrint('HORIZON: $horizon');
@@ -245,6 +256,12 @@ class InsurancePlannerController extends GetxController {
   // }
 
   // Protection needs
+  final familyExpenseContinuityFund = 4726.35.obs;
+
+  final funeralAndFinalExpenseFund = 4726.35.obs;
+  final debtsAndObligations = 4726.35.obs;
+  final estateSettlementFund = 4726.35.obs;
+  final educationFunding = 4726.35.obs;
   final deathBenefitNeed = FakeInsuranceData.deathBenefitNeed.obs;
   final criticalIllnessNeed = FakeInsuranceData.criticalIllnessNeed.obs;
   final disabilityNeed = FakeInsuranceData.disabilityNeed.obs;

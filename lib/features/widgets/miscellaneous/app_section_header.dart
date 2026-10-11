@@ -34,16 +34,16 @@ class AppSectionHeader extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding!),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  constraints: BoxConstraints(minHeight: minHeight),
-                  // color: colorScheme.appOutflow,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: minHeight),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -52,48 +52,48 @@ class AppSectionHeader extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                         child: Text(sectionTitle, style: AppTextStyle.titleL),
                       ),
-                      if (subtitle != null && subtitle!.isNotEmpty) ...[
-                        // SizedBox(height: 4),
-                        Text(
-                          subtitle!,
-                          style: AppTextStyle.labelM.copyWith(
-                            color: colorScheme.appTextMuted,
-                          ),
-                        ),
-                        SizedBox(height: 12),
-                      ],
                     ],
                   ),
                 ),
-              ),
 
-              if (trailingType != null) ...[
-                SizedBox(width: AppScale.x3),
-                switch (trailingType) {
-                  SectionTrailingType.textButton => AdaptivePressable(
-                    onTap: onTrailingPressed,
-                    child: Container(
-                      constraints: BoxConstraints(minHeight: minHeight),
-                      child: Center(
-                        child: Text(
-                          trailingText ?? 'See all',
-                          style: AppTextStyle.labelM,
+                if (trailingType != null) ...[
+                  SizedBox(width: AppScale.x3),
+                  switch (trailingType) {
+                    SectionTrailingType.textButton => AdaptivePressable(
+                      onTap: onTrailingPressed,
+                      child: Container(
+                        constraints: BoxConstraints(minHeight: minHeight),
+                        child: Center(
+                          child: Text(
+                            trailingText ?? 'See all',
+                            style: AppTextStyle.labelM,
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  SectionTrailingType.custom => child!,
+                    SectionTrailingType.custom => child!,
 
-                  _ => const SizedBox.shrink(),
-                },
-              ]
-              // No trailing type, but trailing text exists.
-              else if (trailingText != null && trailingText!.isNotEmpty)
-                Text(trailingText!, style: AppTextStyle.labelM),
+                    _ => const SizedBox.shrink(),
+                  },
+                ]
+                // No trailing type, but trailing text exists.
+                else if (trailingText != null && trailingText!.isNotEmpty)
+                  Text(trailingText!, style: AppTextStyle.labelM),
+              ],
+            ),
+            if (subtitle != null && subtitle!.isNotEmpty) ...[
+              // SizedBox(height: 4),
+              Text(
+                subtitle!,
+                style: AppTextStyle.labelM.copyWith(
+                  color: colorScheme.appTextMuted,
+                ),
+              ),
+              SizedBox(height: 12),
             ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/account_group_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/account_controller.dart';
 import 'package:getx_drift_app/features/transactions/controllers/transaction_controller.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
@@ -40,7 +43,17 @@ extension DropdownSelectors on TransactionController {
   }
 
   Future<void> selectAccount(TransactionType transactionType) async {
+    debugPrint(
+      '[AccountController] Before sheet: ${identityHashCode(Get.find<AccountController>())}',
+    );
+
     final result = await AppSheets.selection.selectAccount(transactionType);
+
+    debugPrint('[AccountController] Sheet returned: $result');
+
+    debugPrint(
+      '[AccountController] After sheet: ${identityHashCode(Get.find<AccountController>())}',
+    );
 
     if (result == null) return;
 
