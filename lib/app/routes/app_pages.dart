@@ -9,7 +9,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/details_view/death_benefit_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/3_disability_benefit/disability_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/insurance_policies/views/insurance_policies_view.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/questionnaires/death_benefit_questionnaire/death_benefit_questionnaire.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_page/net_worth_details_page.dart';
 import 'package:getx_drift_app/features/balances/views/people_balances_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/charts/views/networth_charts_view.dart';

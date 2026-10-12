@@ -36,6 +36,7 @@ class ProtectionHorizonQuestion extends StatelessWidget {
       sectionTitle: title,
       subtitle: subtitle,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

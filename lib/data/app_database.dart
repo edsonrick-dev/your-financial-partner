@@ -20,7 +20,7 @@ import 'tables/cashflow_plan_metadata_table.dart';
 import 'tables/cashflow_plan_table.dart';
 import 'tables/bills_table.dart';
 import 'tables/bill_occurrences_table.dart';
-import 'tables/credit_card_billings_table.dart';
+import 'tables/credit_card_billing_periods_table.dart';
 import 'tables/credit_card_details_table.dart';
 import 'tables/credit_card_statements_table.dart';
 import 'tables/investor_profile_table.dart';
@@ -192,7 +192,6 @@ class AppDatabase extends _$AppDatabase {
 
     /// convert default categories
     /// into drift companions
-
     final categories = DefaultCategories.all
         .map(
           (category) => CashflowCategoriesTableCompanion.insert(

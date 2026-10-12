@@ -10,7 +10,6 @@ import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/widgets/insurance_assessment_card.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/protection_horizon_questionnaire_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/3_lifestyle_continuity_questionnaire/lifestyle_continuity_questionnaire.dart';
 import 'package:getx_drift_app/features/home/bindings/protection_questionnaire_binding.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';

@@ -5,7 +5,6 @@ import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/insurance_under_construction_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/widgets/protection_gap_details_header.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/details_view/slides/death_needs_slide.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_need/protection_need_action_resolver.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_need/protection_need_amount_resolver.dart';

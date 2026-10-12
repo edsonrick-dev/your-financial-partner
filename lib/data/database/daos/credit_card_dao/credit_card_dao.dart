@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/transactions/transaction_types/transaction_type.dart';
 import 'package:getx_drift_app/data/tables/credit_card_details_table.dart';
-import 'package:getx_drift_app/data/tables/credit_card_billings_table.dart';
+import 'package:getx_drift_app/data/tables/credit_card_billing_periods_table.dart';
 import 'package:getx_drift_app/data/tables/credit_card_statements_table.dart';
 import 'package:getx_drift_app/data/tables/transactions_table.dart';
 import 'package:getx_drift_app/domain/credit_card/credit_card_dates.dart';

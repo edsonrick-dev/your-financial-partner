@@ -3,7 +3,7 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - PostHog (3.80.0)
+  - PostHog (3.92.0)
   - posthog_flutter (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -34,7 +34,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
-  PostHog: d1da7b0375cfdf574d847a014a25db16ecba625e
+  PostHog: 2e367fb6fadfb1eb851ca97971a7ceac61ffcb48
   posthog_flutter: 641f1b5766582183a971fb7366bb012be599c006
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
 

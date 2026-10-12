@@ -23,7 +23,7 @@ class AppDetailsPageShifter extends StatelessWidget {
         curve: Curves.easeOut,
         opacity: isSelected ? 1 : 0.5,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 0),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           alignment: Alignment.centerLeft,
           constraints: const BoxConstraints(minHeight: 52, minWidth: 80),
           child: Text(text, style: AppTextStyle.headlineM),

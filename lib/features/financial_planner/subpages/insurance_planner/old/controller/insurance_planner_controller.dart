@@ -1,29 +1,23 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
-import 'package:getx_drift_app/core/utils/age_calculator.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/fake_data/fake_death_benefit_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/fake_data/fake_insurance_data.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_gap_severity_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_profile_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_calculator.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_input.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/2_critical_illness_benefit/models/critical_illness_benefit_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/3_disability_benefit/disability_benefit_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/extensions/insurance_questtionaire_completion_extension.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/controller_extensions/death_insurance_planner_controller_extension.dart';
 
 class InsurancePlannerController extends GetxController {
   final deathBenefitResult = Rxn<DeathBenefitResult>();
@@ -124,73 +118,6 @@ class InsurancePlannerController extends GetxController {
     _protectionSubscription?.cancel();
     _financialDependencySubscription?.cancel();
     super.onClose();
-  }
-
-  Future<void> calculateDeathBenefit() async {
-    // 1. Load the saved death benefit horizon.
-    final scenarios = await database.protectionDao.getProtectionScenarios();
-
-    final deathScenario = scenarios.firstWhereOrNull(
-      (scenario) => scenario.protectionType == ProtectionType.death.name,
-    );
-
-    if (deathScenario == null) return;
-
-    final horizon = ProtectionHorizon.values.firstWhere(
-      (value) => value.name == deathScenario.horizon,
-    );
-
-    // 2. Load the user's birthday.
-    final profile = await database.userProfileDao.getProfile();
-    final birthday = profile?.birthday;
-
-    // Birthday is optional for now.
-    // Skip calculation until the user provides one.
-    if (birthday == null) {
-      debugPrint('Death benefit calculation skipped: birthday not configured.');
-      return;
-    }
-
-    final currentAge = calculateAge(birthday);
-
-    // 3. Load saved expense plans and calculate monthly survivor expenses.
-    final plans = await cashflowController.watchSavedBudgetPlans().first;
-
-    final monthlyDependentExpenses = await database.protectionDao
-        .calculateMonthlyDependentExpenses(plans);
-
-    // 4. Calculate the death benefit.
-    final calculator = DeathBenefitCalculator(
-      expenseContinuityCalculator: ExpenseContinuityCalculator(),
-    );
-
-    final result = calculator.calculate(
-      input: DeathBenefitInput(
-        horizon: horizon,
-        monthlyDependentExpenses: monthlyDependentExpenses,
-        estateSettlementFund: 0,
-        liabilities: 0,
-        dependentsFutureNeeds: 0,
-        finalExpenses: 0,
-        eligibleExistingResources: 0,
-        existingDeathCoverage: 0,
-        currentAge: currentAge,
-        retirementAge: 60,
-      ),
-      inflationRate: FakeDeathBenefitData.inflationRate,
-      portfolioReturn: FakeDeathBenefitData.portfolioReturn,
-      planValidityYears: FakeDeathBenefitData.planValidityYears,
-    );
-
-    deathBenefitResult.value = result;
-    expenseContinuityResult.value = result.expenseContinuityResult;
-    deathExpenseContinuityFund.value = result.dependentExpenseContinuity;
-    deathBenefitNeed.value = result.totalDeathNeed;
-    deathBenefitCovered.value = result.existingDeathCoverage;
-
-    debugPrint('HORIZON: $horizon');
-    debugPrint('MONTHLY DEPENDENT EXPENSES: $monthlyDependentExpenses');
-    debugPrint('DEATH BENEFIT NEED: ${deathBenefitNeed.value}');
   }
 
   // Protection gap

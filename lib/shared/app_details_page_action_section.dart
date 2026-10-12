@@ -24,50 +24,51 @@ class AppDetailsPageActionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppSection(
-      child: Obx(
-        () => Row(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.only(right: 16),
-                child: Row(
-                  children: [
-                    for (int index = 0; index < actions.length; index++)
-                      AppDetailsPageShifter(
-                        text: actions[index],
-                        isSelected: selectedIndex.value == index,
-                        onTap: () {
-                          selectedIndex.value = index;
-                        },
-                      ),
-                  ],
-                ),
+    return Obx(
+      () => Row(
+        children: [
+          SizedBox(width: 8),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.only(right: 16),
+              child: Row(
+                children: [
+                  for (int index = 0; index < actions.length; index++)
+                    AppDetailsPageShifter(
+                      text: actions[index],
+                      isSelected: selectedIndex.value == index,
+                      onTap: () {
+                        selectedIndex.value = index;
+                      },
+                    ),
+                ],
               ),
             ),
+          ),
 
-            if (onAdd != null)
-              addButtonLink != null
-                  ? CompositedTransformTarget(
-                      link: addButtonLink!,
-                      child: IconButton(
-                        onPressed: onAdd,
-                        icon: isAddMenuOpen == null
-                            ? Icon(PhosphorIconsRegular.plus)
-                            : Obx(
-                                () => AnimatedRotation(
-                                  turns: isAddMenuOpen!.value ? 0.125 : 0,
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.easeInOut,
-                                  child: const Icon(PhosphorIconsRegular.plus),
-                                ),
+          if (onAdd != null) ...[
+            addButtonLink != null
+                ? CompositedTransformTarget(
+                    link: addButtonLink!,
+                    child: IconButton(
+                      onPressed: onAdd,
+                      icon: isAddMenuOpen == null
+                          ? Icon(PhosphorIconsRegular.plus)
+                          : Obx(
+                              () => AnimatedRotation(
+                                turns: isAddMenuOpen!.value ? 0.125 : 0,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeInOut,
+                                child: const Icon(PhosphorIconsRegular.plus),
                               ),
-                      ),
-                    )
-                  : IconButton(onPressed: onAdd, icon: Icon(icon)),
+                            ),
+                    ),
+                  )
+                : IconButton(onPressed: onAdd, icon: Icon(icon)),
+            SizedBox(width: 8),
           ],
-        ),
+        ],
       ),
     );
   }

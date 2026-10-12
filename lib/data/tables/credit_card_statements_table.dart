@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:getx_drift_app/data/tables/credit_card_billings_table.dart';
+import 'package:getx_drift_app/data/tables/credit_card_billing_periods_table.dart';
 
 class CreditCardStatementsTable extends Table {
   IntColumn get id => integer().autoIncrement()();
