@@ -63,7 +63,7 @@ class ProtectionQuestionnaireSheet extends GetView<InsurancePlannerController> {
                     spacing: 16,
                     children: [
                       //Protection Horizon
-                      _protectionHorizonQuestionnaire(),
+                      // _protectionHorizonQuestionnaire(),
 
                       //Beneficiaries
                       _beneficiariesQuestionnaire(),
@@ -178,23 +178,23 @@ class ProtectionQuestionnaireSheet extends GetView<InsurancePlannerController> {
     );
   }
 
-  Obx _protectionHorizonQuestionnaire() {
-    return Obx(
-      () => QuestionnaireTile(
-        title: 'Protection Horizon',
-        description: controller.isProtectionHorizonCompleted
-            ? '3 protection horizons set'
-            : 'Choose how long each benefit should provide support.',
-        isCompleted: controller.isProtectionHorizonCompleted,
-        onTap: () {
-          Get.to(
-            () => const ProtectionHorizonQuestionnaire(),
-            binding: ProtectionQuestionnaireBinding(),
-          );
-        },
-      ),
-    );
-  }
+  // Obx _protectionHorizonQuestionnaire() {
+  //   return Obx(
+  //     () => QuestionnaireTile(
+  //       title: 'Protection Horizon',
+  //       description: controller.isProtectionHorizonCompleted
+  //           ? '3 protection horizons set'
+  //           : 'Choose how long each benefit should provide support.',
+  //       isCompleted: controller.isProtectionHorizonCompleted,
+  //       onTap: () {
+  //         Get.to(
+  //           () => const ProtectionHorizonQuestionnaire(),
+  //           binding: ProtectionQuestionnaireBinding(),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 }
 
 class QuestionnaireTile extends StatelessWidget {

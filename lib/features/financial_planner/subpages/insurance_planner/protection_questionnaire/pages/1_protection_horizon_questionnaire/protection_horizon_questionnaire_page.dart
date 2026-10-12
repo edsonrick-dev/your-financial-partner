@@ -13,9 +13,38 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+extension protectionHorizon on ProtectionType {
+  String get horizonLabel {
+    switch (this) {
+      case ProtectionType.death:
+        return 'If you were to pass away';
+
+      case ProtectionType.criticalIllness:
+        return 'If you were diagnosed with a critical illness';
+
+      case ProtectionType.disability:
+        return 'If you were permanently disabled';
+    }
+  }
+
+  String get horizonDescription {
+    switch (this) {
+      case ProtectionType.death:
+        return 'How many years should your death benefit provide financial support for your dependents?';
+
+      case ProtectionType.criticalIllness:
+        return 'How many years should your critical illness benefit provide financial support?';
+
+      case ProtectionType.disability:
+        return 'How many years should your disability benefit provide financial support?';
+    }
+  }
+}
+
 class ProtectionHorizonQuestionnaire
     extends GetView<ProtectionQuestionnaireController> {
-  const ProtectionHorizonQuestionnaire({super.key});
+  const ProtectionHorizonQuestionnaire({super.key, required this.type});
+  final ProtectionType type;
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +55,7 @@ class ProtectionHorizonQuestionnaire
         surfaceTintColor: Colors.transparent,
         title: FittedBox(
           fit: BoxFit.scaleDown,
-          child: Text(
-            'Protection Horizon Questionnaire',
-            style: AppTextStyle.headlineL,
-          ),
+          child: Text('${type.label} Horizon', style: AppTextStyle.headlineL),
         ),
       ),
       body: SingleChildScrollView(
@@ -97,52 +123,32 @@ class ProtectionHorizonQuestionnaire
                 ],
               ),
             ),
-
-            Column(
-              spacing: 24,
-              children: [
-                Obx(
-                  () => ProtectionHorizonQuestion(
-                    title: 'If you were to pass away:',
-                    subtitle:
-                        'How many years should your death benefit provide financial support for your dependents?',
-                    options: protectionHorizonOptions[ProtectionType.death]!,
-                    selectedHorizon: controller.deathBenefitHorizon.value,
-                    onChanged: controller.setDeathBenefitHorizon,
-                  ),
-                ),
-                Obx(
-                  () => ProtectionHorizonQuestion(
-                    title: 'If you were diagnosed with a critical illness:',
-                    subtitle:
-                        'How many years should your critical illness benefit provide financial support?',
-                    options:
-                        protectionHorizonOptions[ProtectionType
-                            .criticalIllness]!,
-                    selectedHorizon:
-                        controller.criticalIllnessBenefitHorizon.value,
-                    onChanged: controller.setCriticalIllnessBenefitHorizon,
-                  ),
-                ),
-                Obx(
-                  () => ProtectionHorizonQuestion(
-                    title: 'If you were permanently disabled:',
-                    subtitle:
-                        'How many years should your disability benefit provide financial support?',
-                    options:
-                        protectionHorizonOptions[ProtectionType.disability]!,
-                    selectedHorizon: controller.disabilityBenefitHorizon.value,
-                    onChanged: controller.setDisabilityBenefitHorizon,
-                  ),
-                ),
-              ],
+            Obx(
+              () => ProtectionHorizonQuestion(
+                title: '${type.horizonLabel}:',
+                subtitle: type.horizonDescription,
+                options: protectionHorizonOptions[type]!,
+                selectedHorizon: switch (type) {
+                  ProtectionType.death => controller.deathBenefitHorizon.value,
+                  ProtectionType.criticalIllness =>
+                    controller.criticalIllnessBenefitHorizon.value,
+                  ProtectionType.disability =>
+                    controller.disabilityBenefitHorizon.value,
+                },
+                onChanged: switch (type) {
+                  ProtectionType.death => controller.setDeathBenefitHorizon,
+                  ProtectionType.criticalIllness =>
+                    controller.setCriticalIllnessBenefitHorizon,
+                  ProtectionType.disability =>
+                    controller.setDisabilityBenefitHorizon,
+                },
+              ),
             ),
-
             AppSection(
               child: AppButton(
-                text: 'Save my protection horizon',
+                text: 'Save changes',
                 onTap: () {
-                  controller.saveProtectionHorizon();
+                  controller.saveSingleProtectionHorizon(type);
                 },
               ),
             ),

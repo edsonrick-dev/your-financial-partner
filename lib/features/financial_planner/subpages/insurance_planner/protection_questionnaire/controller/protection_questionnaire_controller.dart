@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
@@ -7,6 +8,35 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 
 class ProtectionQuestionnaireController extends GetxController {
+  final Set<int> _loadingContinuityPlanIds = {};
+  Future<void> updateContinuityShare({
+    required int planId,
+    required ProtectionType protectionType,
+    required double share,
+  }) async {
+    // Update observable state immediately.
+    setContinuityShare(
+      planId: planId,
+      protectionType: protectionType,
+      share: share,
+    );
+
+    // Persist the change.
+    try {
+      await database.protectionDao.saveContinuityShare(
+        cashFlowPlanId: planId,
+        protectionType: protectionType,
+        continuityShare: share.clamp(0.0, 1.0),
+      );
+    } catch (error) {
+      Get.snackbar(
+        'Unable to save',
+        'Your changes could not be saved. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
   Future<void> _initializeQuestionnaire() async {
     await database.protectionDao.seedDefaultProtectionScenarios();
 
@@ -42,7 +72,8 @@ class ProtectionQuestionnaireController extends GetxController {
   /// Missing protection types default to 100%.
   Future<void> loadContinuitySharesForPlans(Iterable<int> planIds) async {
     for (final planId in planIds) {
-      if (!_loadedContinuityPlanIds.add(planId)) {
+      if (_loadedContinuityPlanIds.contains(planId) ||
+          !_loadingContinuityPlanIds.add(planId)) {
         continue;
       }
 
@@ -54,13 +85,36 @@ class ProtectionQuestionnaireController extends GetxController {
         continuityShares[planId] = {
           for (final type in ProtectionType.values) type: saved[type] ?? 1.0,
         };
+
+        _loadedContinuityPlanIds.add(planId);
       } catch (_) {
-        // Allow a retry if loading fails.
-        _loadedContinuityPlanIds.remove(planId);
         rethrow;
+      } finally {
+        _loadingContinuityPlanIds.remove(planId);
       }
     }
   }
+  // Future<void> loadContinuitySharesForPlans(Iterable<int> planIds) async {
+  //   for (final planId in planIds) {
+  //     if (!_loadedContinuityPlanIds.add(planId)) {
+  //       continue;
+  //     }
+
+  //     try {
+  //       final saved = await database.protectionDao.getContinuitySharesForPlan(
+  //         planId,
+  //       );
+
+  //       continuityShares[planId] = {
+  //         for (final type in ProtectionType.values) type: saved[type] ?? 1.0,
+  //       };
+  //     } catch (_) {
+  //       // Allow a retry if loading fails.
+  //       _loadedContinuityPlanIds.remove(planId);
+  //       rethrow;
+  //     }
+  //   }
+  // }
 
   /// Persist all currently loaded plan shares.
   Future<bool> saveContinuityShares() async {
@@ -149,6 +203,22 @@ class ProtectionQuestionnaireController extends GetxController {
     Get.back();
   }
 
+  Future<void> saveSingleProtectionHorizon(ProtectionType type) async {
+    final horizon = switch (type) {
+      ProtectionType.death => protectionHorizonAnswers.death,
+      ProtectionType.criticalIllness =>
+        protectionHorizonAnswers.criticalIllness,
+      ProtectionType.disability => protectionHorizonAnswers.disability,
+    };
+
+    await database.protectionDao.saveProtectionHorizon(
+      protectionType: type,
+      horizon: horizon,
+    );
+
+    Get.back();
+  }
+
   // Future<void> saveProtectionHorizon() async {
   //   await database.protectionDao.saveProtectionHorizons(
   //     protectionHorizonAnswers,
@@ -182,9 +252,31 @@ class ProtectionQuestionnaireController extends GetxController {
     }
   }
 
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   debugPrint('ProtectionQuestionnaireController initialized');
+  //   _initializeQuestionnaire();
+  // }
   @override
   void onInit() {
     super.onInit();
-    _initializeQuestionnaire();
+
+    debugPrint('QUESTIONNAIRE CONTROLLER: onInit');
+
+    _initializeQuestionnaire()
+        .then((_) {
+          debugPrint('QUESTIONNAIRE CONTROLLER: initialization completed');
+        })
+        .catchError((Object error, StackTrace stackTrace) {
+          debugPrint('QUESTIONNAIRE CONTROLLER: initialization failed: $error');
+          debugPrintStack(stackTrace: stackTrace);
+        });
+  }
+
+  @override
+  void onClose() {
+    debugPrint('QUESTIONNAIRE CONTROLLER: onClose');
+    super.onClose();
   }
 }

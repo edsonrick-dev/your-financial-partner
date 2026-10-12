@@ -31,15 +31,15 @@ class LifestyleContinuityCard extends StatelessWidget {
     final colorScheme = context.colors;
     return AppCard(
       onTap: () {
-        Get.bottomSheet(
-          LifestyleContinuitySheet(
-            plan: plan,
-            continuityShares: continuityShares,
-            onSharesChanged: onSharesChanged,
-          ),
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-        );
+        // Get.bottomSheet(
+        // LifestyleContinuitySheet(
+        //   plan: plan,
+        //   continuityShares: continuityShares,
+        //   onSharesChanged: onSharesChanged,
+        // ),
+        // isScrollControlled: true,
+        // backgroundColor: Colors.transparent,
+        // );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

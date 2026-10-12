@@ -231,6 +231,18 @@ class ProtectionDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  Future<void> saveProtectionHorizon({
+    required ProtectionType protectionType,
+    required ProtectionHorizon horizon,
+  }) async {
+    await transaction(() async {
+      await upsertProtectionScenario(
+        protectionType: protectionType,
+        horizon: horizon,
+      );
+    });
+  }
+
   Future<List<ProtectionScenariosTableData>> getProtectionScenarios() {
     return select(protectionScenariosTable).get();
   }

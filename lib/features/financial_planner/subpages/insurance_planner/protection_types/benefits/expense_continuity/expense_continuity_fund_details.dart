@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient_card.dart';
@@ -8,7 +9,12 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_fund_details_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_year.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/protection_horizon_questionnaire_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/benefits/expense_continuity/expense_continuity_questionnaire.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/benefits/expense_continuity/investment_return_disclaimer.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
+import 'package:getx_drift_app/features/home/bindings/protection_questionnaire_binding.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
@@ -16,9 +22,14 @@ import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:intl/intl.dart';
 
 class ExpenseContinuityFundDetailsSheet extends StatefulWidget {
-  const ExpenseContinuityFundDetailsSheet({super.key, required this.data});
+  const ExpenseContinuityFundDetailsSheet({
+    super.key,
+    required this.data,
+    required this.type,
+  });
 
   final ExpenseContinuityFundDetailsData data;
+  final ProtectionType type;
 
   @override
   State<ExpenseContinuityFundDetailsSheet> createState() =>
@@ -29,14 +40,13 @@ class _ExpenseContinuityFundDetailsSheetState
     extends State<ExpenseContinuityFundDetailsSheet> {
   bool _showAllYears = false;
   List<Widget> buildProjectionRows({
+    required ExpenseContinuityFundDetailsData data,
     required List<ExpenseContinuityYear> projection,
     required bool showAllYears,
   }) {
     final rows = <Widget>[];
 
     _ProjectionRow buildRow(ExpenseContinuityYear item) {
-      final data = widget.data;
-
       final yearsFromNow = data.planValidityYears + item.year - 1;
       final calendarYear = data.planDate.year + yearsFromNow;
 
@@ -48,12 +58,10 @@ class _ExpenseContinuityFundDetailsSheetState
       );
     }
 
-    // Show every year when expanded or when there are four or fewer years.
     if (showAllYears || projection.length <= 4) {
       return projection.map(buildRow).toList();
     }
 
-    // Collapsed: show the first two and last two years.
     rows.addAll(projection.take(2).map(buildRow));
 
     rows.add(
@@ -72,7 +80,13 @@ class _ExpenseContinuityFundDetailsSheetState
 
   @override
   Widget build(BuildContext context) {
-    final data = widget.data;
+    final insuranceController = Get.find<InsurancePlannerController>();
+
+    final data = widget.type == ProtectionType.death
+        ? insuranceController.deathBenefitResult.value!.expenseContinuityDetails
+        : widget.data;
+
+    final type = widget.type;
 
     final colorScheme = context.colors;
 
@@ -96,113 +110,20 @@ class _ExpenseContinuityFundDetailsSheetState
               child: Column(
                 spacing: 20,
                 children: [
-                  AppCard(
-                    padding: 16,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Protection Horizon',
-                                style: AppTextStyle.titleL,
-                              ),
-                            ),
-                            Text(
-                              '${data.supportYears} years',
-                              style: AppTextStyle.amountL,
-                            ),
-                          ],
-                        ),
-                        Text(
-                          'How long your family needs financial support after your death.',
-
-                          style: AppTextStyle.labelM.copyWith(
-                            color: colorScheme.appTextMuted,
-                          ),
-                        ),
-                        SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Coverage period: ',
-                                style: AppTextStyle.bodyM,
-                              ),
-                            ),
-                            Text(
-                              '${yearFormat.format(supportStartDate)} '
-                              '- ${yearFormat.format(supportEndDate)}',
-                              style: AppTextStyle.amountM,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                  _protectionHorizon(
+                    type,
+                    data,
+                    colorScheme,
+                    yearFormat,
+                    supportStartDate,
+                    supportEndDate,
                   ),
-                  AppCard(
-                    padding: 16,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Current Annual Expenses',
-                          style: AppTextStyle.titleL,
-                        ),
-                        Text(
-                          "Today's cost of maintaning your family's lifestyle, before inflation",
-                          style: AppTextStyle.labelM.copyWith(
-                            color: colorScheme.appTextMuted,
-                          ),
-                        ),
-
-                        SizedBox(height: 16),
-                        Column(
-                          spacing: 8,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Annual',
-                                        style: AppTextStyle.titleM,
-                                      ),
-                                      Text(
-                                        yearFormat.format(data.planDate),
-                                        style: AppTextStyle.bodyS.copyWith(
-                                          color: colorScheme.appTextMuted,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      data.currentAnnualExpenses.toCurrency(),
-                                      style: AppTextStyle.amountL,
-                                    ),
-                                    Text(
-                                      '${data.monthlyExpense.toCurrency()}/mo',
-                                      style: AppTextStyle.amountS.copyWith(
-                                        color: context.colors.appTextMuted,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                  _expenseContinuity(
+                    colorScheme,
+                    yearFormat,
+                    data,
+                    context,
+                    type,
                   ),
                 ],
               ),
@@ -234,6 +155,7 @@ class _ExpenseContinuityFundDetailsSheetState
                         Column(
                           spacing: 8,
                           children: buildProjectionRows(
+                            data: data,
                             projection: data.result.projection,
                             showAllYears: _showAllYears,
                           ),
@@ -445,7 +367,7 @@ class _ExpenseContinuityFundDetailsSheetState
                             ],
                           ),
                           Text(
-                            "Learn how investing life insurance proceeds may reduce the lump sum needed to support your family's future expenses.",
+                            "Learn how investing life insurance proceeds may reduce the lump sum needed to support your dependent's future expenses.",
                             style: AppTextStyle.labelM.copyWith(
                               color: colorScheme.appInversedtextMuted,
                             ),
@@ -471,10 +393,160 @@ class _ExpenseContinuityFundDetailsSheetState
       ),
     );
   }
+
+  AppCard _expenseContinuity(
+    ColorScheme colorScheme,
+    DateFormat yearFormat,
+    ExpenseContinuityFundDetailsData data,
+    BuildContext context,
+    ProtectionType type,
+  ) {
+    return AppCard(
+      onTap: () async {
+        debugPrint('CONTINUITY CARD: tapped');
+        await Get.to(
+          () => ExpenseContinuityQuestionnaire(type: type),
+          binding: ProtectionQuestionnaireBinding(),
+          preventDuplicates: false,
+        );
+        debugPrint('CONTINUITY CARD: Get.to returned');
+        if (!mounted) return;
+
+        if (type == ProtectionType.death) {
+          final insuranceController = Get.find<InsurancePlannerController>();
+
+          await insuranceController.calculateDeathBenefit();
+
+          if (!mounted) return;
+
+          setState(() {});
+        }
+      },
+      padding: 16,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Dependents' Annual Expenses", style: AppTextStyle.titleL),
+          Text(
+            "Today's cost of maintaning your dependent's lifestyle, before inflation",
+            style: AppTextStyle.labelM.copyWith(
+              color: colorScheme.appTextMuted,
+            ),
+          ),
+
+          SizedBox(height: 16),
+          Column(
+            spacing: 8,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Annual', style: AppTextStyle.titleM),
+                        Text(
+                          yearFormat.format(data.planDate),
+                          style: AppTextStyle.bodyS.copyWith(
+                            color: colorScheme.appTextMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        data.currentAnnualExpenses.toCurrency(),
+                        style: AppTextStyle.amountL,
+                      ),
+                      Text(
+                        '${data.monthlyExpense.toCurrency()}/mo',
+                        style: AppTextStyle.amountS.copyWith(
+                          color: context.colors.appTextMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  AppCard _protectionHorizon(
+    ProtectionType type,
+    ExpenseContinuityFundDetailsData data,
+    ColorScheme colorScheme,
+    DateFormat yearFormat,
+    DateTime supportStartDate,
+    DateTime supportEndDate,
+  ) {
+    return AppCard(
+      onTap: () async {
+        debugPrint('Horizon card tapped: $type');
+
+        await Get.to(
+          () => ProtectionHorizonQuestionnaire(type: type),
+          binding: ProtectionQuestionnaireBinding(),
+        );
+        debugPrint('Horizon questionnaire closed: $type');
+        if (!mounted) return;
+
+        if (type == ProtectionType.death) {
+          final insuranceController = Get.find<InsurancePlannerController>();
+
+          await insuranceController.calculateDeathBenefit();
+
+          if (!mounted) return;
+          setState(() {});
+        }
+      },
+      padding: 16,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text('Protection Horizon', style: AppTextStyle.titleL),
+              ),
+              Text('${data.supportYears} years', style: AppTextStyle.amountL),
+            ],
+          ),
+          Text(
+            'How long your dependent needs financial support after your death.',
+
+            style: AppTextStyle.labelM.copyWith(
+              color: colorScheme.appTextMuted,
+            ),
+          ),
+          SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Text('Coverage period: ', style: AppTextStyle.bodyM),
+              ),
+              Text(
+                '${yearFormat.format(supportStartDate)} '
+                '- ${yearFormat.format(supportEndDate)}',
+                style: AppTextStyle.amountM,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _HowThisWorks extends StatelessWidget {
-  const _HowThisWorks({super.key});
+  const _HowThisWorks();
 
   @override
   Widget build(BuildContext context) {
@@ -494,7 +566,7 @@ class _HowThisWorks extends StatelessWidget {
                 style: AppTextStyle.titleL,
               ),
               Text(
-                'Your family may need money to cover everyday '
+                'Your dependent may need money to cover everyday '
                 'living expenses if you are no longer around.',
               ),
 
@@ -503,7 +575,7 @@ class _HowThisWorks extends StatelessWidget {
               Text('1. Estimate future expenses', style: AppTextStyle.titleM),
               const SizedBox(height: 4),
               const Text(
-                'We project your family’s living expenses over '
+                'We project your dependent’s living expenses over '
                 'your selected protection period, accounting '
                 'for annual inflation.',
               ),
@@ -514,7 +586,7 @@ class _HowThisWorks extends StatelessWidget {
               const SizedBox(height: 4),
               const Text(
                 'Instead of setting aside enough money to cover '
-                'every future expense upfront, your family could '
+                'every future expense upfront, your dependent could '
                 'invest the lump sum and withdraw money each '
                 'year to pay for living expenses.',
               ),
@@ -529,7 +601,7 @@ class _HowThisWorks extends StatelessWidget {
               const Text(
                 'If the investment earns returns, some future '
                 'expenses may be funded by those returns. Your '
-                'family may therefore need a smaller amount '
+                'dependent may therefore need a smaller amount '
                 'upfront than if the money were not invested.',
               ),
 

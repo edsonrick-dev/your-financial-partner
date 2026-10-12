@@ -28,10 +28,12 @@ class DeathBenefitDetailsView extends GetView<InsurancePlannerController> {
         children: [
           AppDetailsHeader(
             title: 'Death Benefit Gap',
-            child: ProtectionGapDetailsHeader(
-              severity: controller.deathBenefitSeverity,
-              protectionNeed: controller.deathBenefitNeed.value,
-              protectionSource: controller.deathBenefitCovered.value,
+            child: Obx(
+              () => ProtectionGapDetailsHeader(
+                severity: controller.deathBenefitSeverity,
+                protectionNeed: controller.deathBenefitNeed.value,
+                protectionSource: controller.deathBenefitCovered.value,
+              ),
             ),
           ),
 

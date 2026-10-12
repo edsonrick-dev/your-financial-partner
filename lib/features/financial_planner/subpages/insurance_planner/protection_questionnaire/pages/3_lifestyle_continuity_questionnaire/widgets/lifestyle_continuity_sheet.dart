@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient_card.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
@@ -20,13 +19,16 @@ class LifestyleContinuitySheet extends StatefulWidget {
   const LifestyleContinuitySheet({
     super.key,
     required this.plan,
-    required this.continuityShares,
-    required this.onSharesChanged,
+    required this.type,
+    required this.continuityShare,
+    required this.onShareChanged,
   });
 
   final SavedCashflowPlanData plan;
-  final Map<ProtectionType, double> continuityShares;
-  final ValueChanged<Map<ProtectionType, double>> onSharesChanged;
+  final ProtectionType type;
+  final double continuityShare;
+  // final ValueChanged<double> onShareChanged;
+  final Future<void> Function(double share) onShareChanged;
 
   @override
   State<LifestyleContinuitySheet> createState() =>
@@ -34,22 +36,28 @@ class LifestyleContinuitySheet extends StatefulWidget {
 }
 
 class _LifestyleContinuitySheetState extends State<LifestyleContinuitySheet> {
-  late Map<ProtectionType, double> shares;
+  late double share;
 
   @override
   void initState() {
     super.initState();
-    shares = {
-      for (final type in ProtectionType.values)
-        type: (widget.continuityShares[type] ?? 1.0).clamp(0.0, 1.0),
-    };
+    share = widget.continuityShare.clamp(0.0, 1.0);
   }
 
-  void updateShare(ProtectionType type, double value) {
+  void updateShare(double value) {
     setState(() {
-      shares[type] = value;
+      share = value;
     });
   }
+
+  String get description => switch (widget.type) {
+    ProtectionType.death =>
+      "Choose how much of this expense your family would still need if you were no longer here.",
+    ProtectionType.criticalIllness =>
+      "Choose how much of this expense would need to be covered if you were diagnosed with a critical illness.",
+    ProtectionType.disability =>
+      "Choose how much of this expense would need to be covered if you became permanently disabled.",
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -68,61 +76,67 @@ class _LifestyleContinuitySheetState extends State<LifestyleContinuitySheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppGradientCard(
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        AppIcons.categories.resolve(widget.plan.iconKey),
-                        color: colorScheme.appInversedtext,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          widget.plan.category,
-                          style: AppTextStyle.titleL.copyWith(
-                            color: colorScheme.appInversedtext,
-                          ),
-                        ),
-                      ),
                       Text(
-                        annualAmount.toCurrency(),
-                        style: AppTextStyle.amountL.copyWith(
+                        "Your Current Budget",
+                        style: AppTextStyle.titleM.copyWith(
                           color: colorScheme.appInversedtext,
                         ),
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(
+                            AppIcons.categories.resolve(widget.plan.iconKey),
+                            color: colorScheme.appInversedtext,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              widget.plan.category,
+                              style: AppTextStyle.titleL.copyWith(
+                                color: colorScheme.appInversedtext,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            annualAmount.toCurrency(),
+                            style: AppTextStyle.amountL.copyWith(
+                              color: colorScheme.appInversedtext,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 24),
-
                 Text(
-                  'Choose how much of this expense needs to continue '
-                  'under each protection scenario.',
+                  description,
                   style: AppTextStyle.bodyM.copyWith(
                     color: colorScheme.appText,
                   ),
                 ),
-
                 const SizedBox(height: 24),
-                for (final type in ProtectionType.values) ...[
-                  _ContinuitySection(
-                    type: type,
-                    share: shares[type] ?? 1.0,
-                    annualAmount: annualAmount,
-                    onChanged: (value) => updateShare(type, value),
-                  ),
-                  if (type != ProtectionType.values.last)
-                    const SizedBox(height: 20),
-                ],
-                const SizedBox(height: 28),
 
+                // Display only the selected protection type.
+                _ContinuitySection(
+                  type: widget.type,
+                  share: share,
+                  annualAmount: annualAmount,
+                  onChanged: updateShare,
+                ),
+
+                const SizedBox(height: 28),
                 AppButton(
-                  text: 'Done',
-                  onTap: () {
-                    widget.onSharesChanged(
-                      Map<ProtectionType, double>.from(shares),
-                    );
-                    Get.back();
+                  text: 'Save changes',
+                  onTap: () async {
+                    final navigator = Navigator.of(context);
+                    await widget.onShareChanged(share);
+                    if (!mounted) return;
+                    navigator.pop();
                   },
                 ),
               ],
@@ -189,7 +203,6 @@ class _ContinuitySection extends StatelessWidget {
                         Text('$percentage%', style: AppTextStyle.amountL),
                       ],
                     ),
-
                     Text(
                       subtitle,
                       style: AppTextStyle.bodyM.copyWith(
