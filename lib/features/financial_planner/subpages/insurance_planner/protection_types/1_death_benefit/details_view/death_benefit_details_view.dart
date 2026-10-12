@@ -8,6 +8,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/insurance_under_construction_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/widgets/protection_gap_details_header.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/details_view/slides/death_needs_slide.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -20,7 +21,7 @@ class DeathBenefitDetailsView extends GetView<InsurancePlannerController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-
+    final type = ProtectionType.death;
     return Scaffold(
       backgroundColor: colorScheme.surface,
 
@@ -48,7 +49,10 @@ class DeathBenefitDetailsView extends GetView<InsurancePlannerController> {
             child: Obx(
               () => IndexedStack(
                 index: controller.selectedDeathDetailsIndex.value,
-                children: const [DeathNeedsSlide(), DeathSourcesSlide()],
+                children: [
+                  DeathNeedsSlide(type: type),
+                  DeathSourcesSlide(),
+                ],
               ),
             ),
           ),

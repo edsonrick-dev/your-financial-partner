@@ -18,7 +18,6 @@ class ExpenseContinuityQuestionnaire
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-    debugPrint('QUESTIONNAIRE: build called');
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

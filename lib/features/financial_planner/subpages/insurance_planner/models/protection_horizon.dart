@@ -21,10 +21,22 @@ extension ProtectionHorizonX on ProtectionHorizon {
   bool get isUntilRetirement => this == ProtectionHorizon.untilRetirement;
 
   int resolveYears({required int currentAge, required int retirementAge}) {
-    if (this == ProtectionHorizon.untilRetirement) {
+    if (isUntilRetirement) {
       return math.max(0, retirementAge - currentAge);
     }
 
     return years!;
   }
+
+  String get horizonLabel => switch (this) {
+    ProtectionHorizon.zero => 'No ongoing support',
+    ProtectionHorizon.one => '1 year',
+    ProtectionHorizon.two => '2 years',
+    ProtectionHorizon.three => '3 years',
+    ProtectionHorizon.five => '5 years',
+    ProtectionHorizon.ten => '10 years',
+    ProtectionHorizon.fifteen => '15 years',
+    ProtectionHorizon.twenty => '20 years',
+    ProtectionHorizon.untilRetirement => 'Until retirement',
+  };
 }

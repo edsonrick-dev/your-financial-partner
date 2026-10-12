@@ -170,7 +170,7 @@ class ProtectionDao extends DatabaseAccessor<AppDatabase>
       await into(protectionScenariosTable).insert(
         ProtectionScenariosTableCompanion.insert(
           protectionType: protectionType.name,
-          horizon: horizon.name,
+          horizon: Value(horizon.name),
           createdAt: now,
           updatedAt: now,
         ),

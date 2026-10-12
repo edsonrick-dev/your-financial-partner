@@ -1,44 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/insurance_under_construction_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/widgets/protection_gap_details_header.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/2_critical_illness_benefit/details_view/slides/critical_illness_needs_slide.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
-class DisabilityDetailsView extends GetView<InsurancePlannerController> {
-  const DisabilityDetailsView({super.key});
+class CriticalIllnessDetailsView extends GetView<InsurancePlannerController> {
+  const CriticalIllnessDetailsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-
     return Scaffold(
-      backgroundColor: colorScheme.surface,
       body: Column(
         children: [
           AppDetailsHeader(
-            title: 'Disability Benefit Gap',
+            title: 'Critical Illness Benefit Gap',
             child: ProtectionGapDetailsHeader(
-              severity: controller.disabilitySeverity,
-              protectionNeed: controller.disabilityNeed.value,
-              protectionSource: controller.disabilityCovered.value,
+              severity: controller.criticalIllnessSeverity,
+              protectionNeed: controller.criticalIllnessNeed.value,
+              protectionSource: controller.criticalIllnessCovered.value,
             ),
           ),
-
           AppDetailsPageActionSection(
-            selectedIndex: controller.selectedDisabilityDetailsIndex,
+            selectedIndex: controller.selectedCriticalIllnessDetailsIndex,
             actions: const ['Needs', 'Sources'],
-            // onAdd: () {},
+            // onAdd: () {
+            //   // Add source/need action
+            // },
           ),
           Expanded(
             child: Obx(
               () => IndexedStack(
-                index: controller.selectedDisabilityDetailsIndex.value,
+                index: controller.selectedCriticalIllnessDetailsIndex.value,
                 children: const [
-                  DisabilityNeedsContent(),
-                  DisabilitySourcesContent(),
+                  CriticalIllnessNeedsSlide(),
+                  CriticalIllnessSourcesContent(),
                 ],
               ),
             ),
@@ -49,20 +47,8 @@ class DisabilityDetailsView extends GetView<InsurancePlannerController> {
   }
 }
 
-class DisabilityNeedsContent extends StatelessWidget {
-  const DisabilityNeedsContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const InsuranceUnderConstructionView(
-      title: 'Needs are coming soon',
-      description: 'We’re still building this part of your protection plan.',
-    );
-  }
-}
-
-class DisabilitySourcesContent extends StatelessWidget {
-  const DisabilitySourcesContent({super.key});
+class CriticalIllnessSourcesContent extends StatelessWidget {
+  const CriticalIllnessSourcesContent({super.key});
 
   @override
   Widget build(BuildContext context) {

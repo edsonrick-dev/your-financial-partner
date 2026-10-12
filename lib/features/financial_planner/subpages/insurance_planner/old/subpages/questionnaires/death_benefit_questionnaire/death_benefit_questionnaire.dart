@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/3_lifestyle_continuity_questionnaire/lifestyle_continuity_questionnaire.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/questionnaires/death_benefit_questionnaire/time_horizon_question.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_horizon_options.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_horizon_options.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/widgets/protection_horizon_picker.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
@@ -412,76 +407,76 @@ class ExistingProtectionQuestion extends StatelessWidget {
   }
 }
 
-class DeathBenefitQuestionnaire extends GetView<InsurancePlannerController> {
-  const DeathBenefitQuestionnaire({super.key});
-  Widget buildDeathBenefitPage(BuildContext context) {
-    switch (controller.deathBenefitPage.value) {
-      case DeathBenefitPage.financialDependency:
-        return FinancialDependencyQuestion();
+// class DeathBenefitQuestionnaire extends GetView<InsurancePlannerController> {
+//   const DeathBenefitQuestionnaire({super.key});
+//   Widget buildDeathBenefitPage(BuildContext context) {
+//     switch (controller.deathBenefitPage.value) {
+//       case DeathBenefitPage.financialDependency:
+//         return FinancialDependencyQuestion();
 
-      case DeathBenefitPage.protectionHorizon:
-        return TimeHorizonQuestion();
+//       case DeathBenefitPage.protectionHorizon:
+//         return TimeHorizonQuestion();
 
-      case DeathBenefitPage.survivorBudget:
-        return LifestyleContinuityQuestionnaire();
+//       case DeathBenefitPage.survivorBudget:
+//         return LifestyleContinuityQuestionnaire();
 
-      case DeathBenefitPage.finalExpenses:
-        return FinalExpensesQuestion(
-          colorScheme: context.colors,
-          controller: controller,
-        );
+//       case DeathBenefitPage.finalExpenses:
+//         return FinalExpensesQuestion(
+//           colorScheme: context.colors,
+//           controller: controller,
+//         );
 
-      case DeathBenefitPage.obligations:
-        return ObligationsQuestion(
-          colorScheme: context.colors,
-          controller: controller,
-        );
+//       case DeathBenefitPage.obligations:
+//         return ObligationsQuestion(
+//           colorScheme: context.colors,
+//           controller: controller,
+//         );
 
-      case DeathBenefitPage.existingProtection:
-        return ExistingProtectionQuestion(
-          colorScheme: context.colors,
-          controller: controller,
-        );
-    }
-  }
+//       case DeathBenefitPage.existingProtection:
+//         return ExistingProtectionQuestion(
+//           colorScheme: context.colors,
+//           controller: controller,
+//         );
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    // final colorScheme = context.colors;
+//   @override
+//   Widget build(BuildContext context) {
+//     // final colorScheme = context.colors;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Death Benefit Assessment', style: AppTextStyle.headlineL),
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            if (controller.canGoBackDeathBenefit) {
-              controller.previousDeathBenefitPage();
-            } else {
-              Get.back();
-            }
-          },
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Obx(
-              () =>
-                  SingleChildScrollView(child: buildDeathBenefitPage(context)),
-            ),
-          ),
-          const SizedBox(height: 8),
-          AppSection(
-            child: AppButton(
-              text: 'Continue',
-              onTap: controller.nextDeathBenefitPage,
-            ),
-          ),
-          SizedBox(height: context.bottomPaddingSub),
-        ],
-      ),
-    );
-  }
-}
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Death Benefit Assessment', style: AppTextStyle.headlineL),
+//         surfaceTintColor: Colors.transparent,
+//         leading: IconButton(
+//           icon: const Icon(Icons.arrow_back),
+//           onPressed: () {
+//             if (controller.canGoBackDeathBenefit) {
+//               controller.previousDeathBenefitPage();
+//             } else {
+//               Get.back();
+//             }
+//           },
+//         ),
+//       ),
+//       body: Column(
+//         children: [
+//           Expanded(
+//             child: Obx(
+//               () =>
+//                   SingleChildScrollView(child: buildDeathBenefitPage(context)),
+//             ),
+//           ),
+//           const SizedBox(height: 8),
+//           AppSection(
+//             child: AppButton(
+//               text: 'Continue',
+//               onTap: controller.nextDeathBenefitPage,
+//             ),
+//           ),
+//           SizedBox(height: context.bottomPaddingSub),
+//         ],
+//       ),
+//     );
+//   }
+// }

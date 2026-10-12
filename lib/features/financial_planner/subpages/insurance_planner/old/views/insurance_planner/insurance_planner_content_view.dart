@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/data/default_data/default_policy_recommendations.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/sections/protection_score_container_section.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/shell/protection_questionnaire_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/widgets/protection_gap_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/widgets/recommended_policy_card.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
@@ -21,64 +19,129 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // SizedBox(height: 20),
           Obx(
             () => ProtectionScoreContainerSection(
               profile: controller.protectionProfile,
               unmetGoals: controller.unmetProtectionGoals,
             ),
           ),
-          SizedBox(height: 24),
-          AppSection(
-            child: AppButton(
-              text: 'Insurance Questionnaires',
-              onTap: () {
-                Get.bottomSheet(
-                  ProtectionQuestionnaireSheet(),
-                  isScrollControlled: true,
-                );
-              },
-            ),
-          ),
+          SizedBox(height: 20),
           AppSection(
             sectionTitle: 'Protection Breakdown',
             child: Column(
               spacing: 16,
-              children: [
-                Obx(
-                  () => ProtectionGapCard(
-                    icon: PhosphorIconsRegular.ambulance,
-                    gapTitle: 'Death Benefit Gap',
-                    amountCovered: controller.deathBenefitCovered.value,
-                    amountNeed: controller.deathBenefitNeed.value,
-                    onTap: () {
-                      Get.toNamed(Routes.DEATHBENEFITGAP);
-                    },
-                  ),
-                ),
-                ProtectionGapCard(
-                  icon: PhosphorIconsRegular.hospital,
-                  gapTitle: 'Critical Illness Benefit Gap',
+              children: ProtectionType.values.map((type) {
+                return Obx(() {
+                  final isCompleted =
+                      controller.protectionGapCompletion[type] ?? false;
 
-                  amountCovered: controller.criticalIllnessCovered.value,
-                  amountNeed: controller.criticalIllnessNeed.value,
-                  onTap: () {
-                    Get.toNamed(Routes.CRITICALILLNESSBENEFITGAP);
-                  },
-                ),
-                ProtectionGapCard(
-                  icon: PhosphorIconsRegular.wheelchair,
-                  gapTitle: 'Disability Benefit Gap',
+                  final amountCovered = switch (type) {
+                    ProtectionType.death =>
+                      controller.deathBenefitCovered.value,
+                    ProtectionType.criticalIllness =>
+                      controller.criticalIllnessCovered.value,
+                    ProtectionType.disability =>
+                      controller.disabilityCovered.value,
+                  };
 
-                  amountCovered: controller.disabilityCovered.value,
-                  amountNeed: controller.disabilityNeed.value,
-                  onTap: () {
-                    Get.toNamed(Routes.DISABILITYBENEFITGAP);
-                  },
-                ),
-              ],
+                  final amountNeed = switch (type) {
+                    ProtectionType.death => controller.deathBenefitNeed.value,
+                    ProtectionType.criticalIllness =>
+                      controller.criticalIllnessNeed.value,
+                    ProtectionType.disability =>
+                      controller.disabilityNeed.value,
+                  };
+
+                  return ProtectionGapCard(
+                    icon: type.icon,
+                    gapTitle: '${type.label} Gap',
+                    amountCovered: amountCovered,
+                    amountNeed: amountNeed,
+                    isCompleted: isCompleted,
+                    onTap: () => Get.toNamed(type.gapRoute),
+                  );
+                });
+              }).toList(),
             ),
           ),
+
+          // AppSection(
+          //   sectionTitle: 'Protection Breakdown',
+          //   child: Column(
+          //     spacing: 16,
+          //     children: ProtectionType.values.map((type) {
+          //       return Obx(() {
+          //         final isCompleted =
+          //             controller.protectionGapCompletion[type] ?? false;
+
+          //         final amountCovered = switch (type) {
+          //           ProtectionType.death =>
+          //             controller.deathBenefitCovered.value,
+          //           ProtectionType.criticalIllness =>
+          //             controller.criticalIllnessCovered.value,
+          //           ProtectionType.disability =>
+          //             controller.disabilityCovered.value,
+          //         };
+
+          //         final amountNeed = switch (type) {
+          //           ProtectionType.death => controller.deathBenefitNeed.value,
+          //           ProtectionType.criticalIllness =>
+          //             controller.criticalIllnessNeed.value,
+          //           ProtectionType.disability =>
+          //             controller.disabilityNeed.value,
+          //         };
+
+          //         return ProtectionGapCard(
+          //           icon: type.icon,
+          //           gapTitle: '${type.label} Gap',
+          //           amountCovered: amountCovered,
+          //           amountNeed: amountNeed,
+          //           isCompleted: isCompleted,
+          //           onTap: () => Get.toNamed(type.gapRoute),
+          //         );
+          //       });
+          //     }).toList(),
+          //   ),
+          // ),
+          // AppSection(
+          //   sectionTitle: 'Protection Breakdown',
+          //   child: Column(
+          //     spacing: 16,
+          //     children: [
+          //       Obx(
+          //         () => ProtectionGapCard(
+          //           icon: PhosphorIconsRegular.ambulance,
+          //           gapTitle: 'Death Benefit Gap',
+          //           amountCovered: controller.deathBenefitCovered.value,
+          //           amountNeed: controller.deathBenefitNeed.value,
+          //           onTap: () {
+          //             Get.toNamed(Routes.DEATHBENEFITGAP);
+          //           },
+          //         ),
+          //       ),
+          //       ProtectionGapCard(
+          //         icon: PhosphorIconsRegular.hospital,
+          //         gapTitle: 'Critical Illness Benefit Gap',
+
+          //         amountCovered: controller.criticalIllnessCovered.value,
+          //         amountNeed: controller.criticalIllnessNeed.value,
+          //         onTap: () {
+          //           Get.toNamed(Routes.CRITICALILLNESSBENEFITGAP);
+          //         },
+          //       ),
+          //       ProtectionGapCard(
+          //         icon: PhosphorIconsRegular.wheelchair,
+          //         gapTitle: 'Disability Benefit Gap',
+
+          //         amountCovered: controller.disabilityCovered.value,
+          //         amountNeed: controller.disabilityNeed.value,
+          //         onTap: () {
+          //           Get.toNamed(Routes.DISABILITYBENEFITGAP);
+          //         },
+          //       ),
+          //     ],
+          //   ),
+          // ),
           SizedBox(height: 20),
           AppSection(
             sectionTitle: 'Recommended Policies',

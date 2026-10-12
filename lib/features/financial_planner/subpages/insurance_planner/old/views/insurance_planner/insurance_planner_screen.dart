@@ -14,7 +14,6 @@ class InsurancePlannerScreen extends GetView<InsurancePlannerController> {
       if (!controller.isInsuranceQuestionnairesFinished.value) {
         return InsurancePlannerEmptyView();
       }
-      debugPrint('${controller.isInsuranceQuestionnairesFinished.value}');
 
       return SingleChildScrollView(
         padding: EdgeInsets.only(

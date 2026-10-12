@@ -17,26 +17,55 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_profile_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_calculator.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_input.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/death_benefit_result.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_calculator.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_input.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_result.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/2_critical_illness_benefit/models/critical_illness_benefit_result.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/3_disability_benefit/disability_benefit_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
-
-enum DeathBenefitPage {
-  financialDependency,
-  protectionHorizon,
-  survivorBudget,
-  finalExpenses,
-  obligations,
-  existingProtection,
-}
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/extensions/insurance_questtionaire_completion_extension.dart';
 
 class InsurancePlannerController extends GetxController {
-  final isExpenseProjectionExpanded = false.obs;
   final deathBenefitResult = Rxn<DeathBenefitResult>();
+  final criticalIllnessBenefitResult = Rxn<CriticalIllnessBenefitResult>();
+  final disabilityBenefitResult = Rxn<DisabilityBenefitResult>();
+  Map<ProtectionType, bool> get protectionGapCompletion => {
+    ProtectionType.death: deathBenefitResult.value != null,
+    ProtectionType.criticalIllness: criticalIllnessBenefitResult.value != null,
+    ProtectionType.disability: disabilityBenefitResult.value != null,
+  };
+  final isInsuranceQuestionnairesFinished = false.obs;
+  final deathBenefitHorizon = ProtectionHorizon.ten.obs;
+  final isExpenseProjectionExpanded = false.obs;
+
   final expenseContinuityResult = Rxn<ExpenseContinuityResult>();
   final financialDependency = Rxn<FinancialDependency>();
   final isExpenseContinuityCompleted = false.obs;
+  final protectionScenarios = <ProtectionScenariosTableData>[].obs;
+  final isCalculatingDeathBenefit = false.obs;
+  final deathBenefitError = RxnString(); // Protection needs
+  ///Funds the family's living expenses after the insured person's death.
+  final deathExpenseContinuityFund = 0.0.obs;
+  final criticalIllnessExpenseContinuityFund = 0.0.obs;
+  final disabilityExpenseContinuityFund = 0.0.obs;
+
+  final funeralAndFinalExpenseFund = 4726.35.obs;
+  final debtsAndObligations = 4726.35.obs;
+  final estateSettlementFund = 4726.35.obs;
+  final educationFunding = 4726.35.obs;
+  final deathBenefitNeed = FakeInsuranceData.deathBenefitNeed.obs;
+  final criticalIllnessNeed = FakeInsuranceData.criticalIllnessNeed.obs;
+  final disabilityNeed = FakeInsuranceData.disabilityNeed.obs;
+
+  // Existing protection
+  final deathBenefitCovered = FakeInsuranceData.deathBenefitCovered.obs;
+  final criticalIllnessCovered = FakeInsuranceData.criticalIllnessCovered.obs;
+  final disabilityCovered = FakeInsuranceData.disabilityCovered.obs;
+
+  void setDeathBenefitHorizon(ProtectionHorizon horizon) {
+    deathBenefitHorizon.value = horizon;
+  }
+
   Future<void> loadExpenseContinuityCompletion() async {
     isExpenseContinuityCompleted.value = await database.protectionDao
         .hasContinuityShares();
@@ -51,14 +80,11 @@ class InsurancePlannerController extends GetxController {
         .getFinancialDependency();
   }
 
-  final protectionScenarios = <ProtectionScenariosTableData>[].obs;
-
   StreamSubscription<List<ProtectionScenariosTableData>>?
   _protectionSubscription;
 
   bool get isProtectionHorizonCompleted => protectionScenarios.length == 3;
 
-  final isInsuranceQuestionnairesFinished = true.obs;
   @override
   void onInit() {
     super.onInit();
@@ -83,7 +109,14 @@ class InsurancePlannerController extends GetxController {
           },
         );
     loadExpenseContinuityCompletion();
-    calculateDeathBenefit();
+
+    _initializeInsurancePlanner();
+    // calculateDeathBenefit();
+  }
+
+  Future<void> _initializeInsurancePlanner() async {
+    await checkInsuranceQuestionnaireCompletion();
+    await calculateDeathBenefit();
   }
 
   @override
@@ -93,66 +126,29 @@ class InsurancePlannerController extends GetxController {
     super.onClose();
   }
 
-  final isCalculatingDeathBenefit = false.obs;
-  final deathBenefitError = RxnString();
-
-  // Future<void> calculateDeathBenefit() async {
-  //   if (isCalculatingDeathBenefit.value) return;
-
-  //   isCalculatingDeathBenefit.value = true;
-  //   deathBenefitError.value = null;
-
-  //   try {
-  //     final profile = await database.userProfileDao.getProfile();
-  //     final birthday = profile?.birthday;
-
-  //     if (birthday == null) {
-  //       deathBenefitError.value =
-  //           'Add your birthday to your profile to calculate your '
-  //           'personalized death benefit.';
-  //       return;
-  //     }
-
-  //     final currentAge = calculateAge(birthday);
-
-  //     // Continue with your existing death benefit calculation here.
-  //     // Use currentAge when constructing DeathBenefitInput.
-  //   } catch (error, stackTrace) {
-  //     // Replace with your app's logger if one is available.
-  //     debugPrint('Death benefit calculation failed: $error');
-  //     debugPrintStack(stackTrace: stackTrace);
-
-  //     deathBenefitError.value =
-  //         'We couldn’t calculate your death benefit. Please try again.';
-  //   } finally {
-  //     isCalculatingDeathBenefit.value = false;
-  //   }
-  // }
   Future<void> calculateDeathBenefit() async {
     // 1. Load the saved death benefit horizon.
     final scenarios = await database.protectionDao.getProtectionScenarios();
 
-    final deathScenario = scenarios
-        .cast<ProtectionScenariosTableData?>()
-        .firstWhere(
-          (scenario) => scenario?.protectionType == ProtectionType.death.name,
-          orElse: () => null,
-        );
+    final deathScenario = scenarios.firstWhereOrNull(
+      (scenario) => scenario.protectionType == ProtectionType.death.name,
+    );
 
-    if (deathScenario == null) {
-      throw StateError('Death benefit horizon has not been configured.');
-    }
+    if (deathScenario == null) return;
 
     final horizon = ProtectionHorizon.values.firstWhere(
       (value) => value.name == deathScenario.horizon,
     );
 
-    // 2. Load the user's birthday and calculate their age.
+    // 2. Load the user's birthday.
     final profile = await database.userProfileDao.getProfile();
     final birthday = profile?.birthday;
 
+    // Birthday is optional for now.
+    // Skip calculation until the user provides one.
     if (birthday == null) {
-      throw StateError('Please add your birthday to your profile.');
+      debugPrint('Death benefit calculation skipped: birthday not configured.');
+      return;
     }
 
     final currentAge = calculateAge(birthday);
@@ -179,7 +175,7 @@ class InsurancePlannerController extends GetxController {
         eligibleExistingResources: 0,
         existingDeathCoverage: 0,
         currentAge: currentAge,
-        retirementAge: 60, // Replace with your persisted retirement age.
+        retirementAge: 60,
       ),
       inflationRate: FakeDeathBenefitData.inflationRate,
       portfolioReturn: FakeDeathBenefitData.portfolioReturn,
@@ -188,88 +184,14 @@ class InsurancePlannerController extends GetxController {
 
     deathBenefitResult.value = result;
     expenseContinuityResult.value = result.expenseContinuityResult;
-
-    familyExpenseContinuityFund.value = result.dependentExpenseContinuity;
-
+    deathExpenseContinuityFund.value = result.dependentExpenseContinuity;
     deathBenefitNeed.value = result.totalDeathNeed;
-
     deathBenefitCovered.value = result.existingDeathCoverage;
 
     debugPrint('HORIZON: $horizon');
-    debugPrint('INFLATION RATE: ${FakeDeathBenefitData.inflationRate}');
-    debugPrint('PORTFOLIO RETURN: ${FakeDeathBenefitData.portfolioReturn}');
-    debugPrint(
-      'PLAN VALIDITY YEARS: ${FakeDeathBenefitData.planValidityYears}',
-    );
     debugPrint('MONTHLY DEPENDENT EXPENSES: $monthlyDependentExpenses');
-    debugPrint('${deathBenefitNeed.value}');
+    debugPrint('DEATH BENEFIT NEED: ${deathBenefitNeed.value}');
   }
-
-  // void calculateDeathBenefit() {
-  //   final calculator = DeathBenefitCalculator(
-  //     expenseContinuityCalculator: ExpenseContinuityCalculator(),
-  //   );
-
-  //   final result = calculator.calculate(
-  //     input: DeathBenefitInput(
-  //       horizon: ProtectionHorizon.ten,
-  //       monthlyDependentExpenses: FakeDeathBenefitData.monthlyDependentExpenses,
-
-  //       // Temporary zeros — we'll replace these later.
-  //       estateSettlementFund: 0,
-  //       liabilities: 0,
-  //       dependentsFutureNeeds: 0,
-  //       finalExpenses: 0,
-  //       eligibleExistingResources: 0,
-  //       existingDeathCoverage: 0,
-
-  //       // Temporary values for resolving the horizon.
-  //       currentAge: 28,
-  //       retirementAge: 60,
-  //     ),
-
-  //     inflationRate: FakeDeathBenefitData.inflationRate,
-
-  //     portfolioReturn: FakeDeathBenefitData.portfolioReturn,
-
-  //     planValidityYears: FakeDeathBenefitData.planValidityYears,
-  //   );
-
-  //   // print(
-  //   //   'Expense Continuity: '
-  //   //   '${result.dependentExpenseContinuity}',
-  //   // );
-
-  //   // print(
-  //   //   'Total Death Need: '
-  //   //   '${result.totalDeathNeed}',
-  //   // );
-
-  //   // print(
-  //   //   'Protection Gap: '
-  //   //   '${result.protectionGap}',
-  //   // );
-
-  //   deathBenefitNeed.value = result.totalDeathNeed;
-
-  //   deathBenefitCovered.value = result.existingDeathCoverage;
-  // }
-
-  // Protection needs
-  final familyExpenseContinuityFund = 4726.35.obs;
-
-  final funeralAndFinalExpenseFund = 4726.35.obs;
-  final debtsAndObligations = 4726.35.obs;
-  final estateSettlementFund = 4726.35.obs;
-  final educationFunding = 4726.35.obs;
-  final deathBenefitNeed = FakeInsuranceData.deathBenefitNeed.obs;
-  final criticalIllnessNeed = FakeInsuranceData.criticalIllnessNeed.obs;
-  final disabilityNeed = FakeInsuranceData.disabilityNeed.obs;
-
-  // Existing protection
-  final deathBenefitCovered = FakeInsuranceData.deathBenefitCovered.obs;
-  final criticalIllnessCovered = FakeInsuranceData.criticalIllnessCovered.obs;
-  final disabilityCovered = FakeInsuranceData.disabilityCovered.obs;
 
   // Protection gap
   double get deathBenefitGap =>
@@ -301,113 +223,6 @@ class InsurancePlannerController extends GetxController {
     return cashflowController.watchSavedBudgetPlans().map(
       (plans) => plans.where((plan) => plan.planType == 'expense').toList(),
     );
-  }
-
-  bool get canGoBackDeathBenefit => _deathBenefitPageHistory.isNotEmpty;
-
-  ///FINANCIAL DEPENDENCY QUESTION
-  // final financialDependency = FinancialDependency.none.obs;
-
-  // bool get hasFinancialDependents {
-  //   return financialDependency.value != null &&
-  //       financialDependency.value != FinancialDependency.none;
-  // }
-
-  ///
-  final deathBenefitPage = DeathBenefitPage.financialDependency.obs;
-  // final deathBenefitPage = DeathBenefitPage.financialDependency.obs;
-
-  final List<DeathBenefitPage> _deathBenefitPageHistory = [];
-  void previousDeathBenefitPage() {
-    if (_deathBenefitPageHistory.isEmpty) {
-      return;
-    }
-
-    deathBenefitPage.value = _deathBenefitPageHistory.removeLast();
-  }
-
-  void nextDeathBenefitPage() {
-    final currentPage = deathBenefitPage.value;
-
-    DeathBenefitPage? nextPage;
-
-    switch (currentPage) {
-      case DeathBenefitPage.financialDependency:
-        // if (financialDependency.value == FinancialDependency.none) {
-        //   nextPage = DeathBenefitPage.finalExpenses;
-        // } else {
-        //   nextPage = DeathBenefitPage.protectionHorizon;
-        // }
-        break;
-
-      case DeathBenefitPage.protectionHorizon:
-        if (deathBenefitHorizon.value == ProtectionHorizon.zero) {
-          nextPage = DeathBenefitPage.finalExpenses;
-        } else {
-          nextPage = DeathBenefitPage.survivorBudget;
-        }
-        break;
-
-      case DeathBenefitPage.survivorBudget:
-        nextPage = DeathBenefitPage.finalExpenses;
-        break;
-
-      case DeathBenefitPage.finalExpenses:
-        nextPage = DeathBenefitPage.obligations;
-        break;
-
-      case DeathBenefitPage.obligations:
-        nextPage = DeathBenefitPage.existingProtection;
-        break;
-
-      case DeathBenefitPage.existingProtection:
-        // calculateDeathBenefit();
-        return;
-    }
-
-    _deathBenefitPageHistory.add(currentPage);
-    // deathBenefitPage.value = nextPage;
-  }
-
-  // void nextDeathBenefitPage() {
-  //   switch (deathBenefitPage.value) {
-  //     case DeathBenefitPage.financialDependency:
-  //       if (hasFinancialDependents == true) {
-  //         deathBenefitPage.value = DeathBenefitPage.protectionHorizon;
-  //       } else {
-  //         deathBenefitPage.value = DeathBenefitPage.finalExpenses;
-  //       }
-  //       break;
-
-  //     case DeathBenefitPage.protectionHorizon:
-  //       if (deathBenefitHorizon.value == ProtectionHorizon.zero) {
-  //         deathBenefitPage.value = DeathBenefitPage.finalExpenses;
-  //       } else {
-  //         deathBenefitPage.value = DeathBenefitPage.survivorBudget;
-  //       }
-  //       break;
-
-  //     case DeathBenefitPage.survivorBudget:
-  //       deathBenefitPage.value = DeathBenefitPage.finalExpenses;
-  //       break;
-
-  //     case DeathBenefitPage.finalExpenses:
-  //       deathBenefitPage.value = DeathBenefitPage.obligations;
-  //       break;
-
-  //     case DeathBenefitPage.obligations:
-  //       deathBenefitPage.value = DeathBenefitPage.existingProtection;
-  //       break;
-
-  //     case DeathBenefitPage.existingProtection:
-  //       // calculateDeathBenefit();
-  //       break;
-  //   }
-  // }
-
-  final deathBenefitHorizon = ProtectionHorizon.ten.obs;
-  void setDeathBenefitHorizon(ProtectionHorizon horizon) {
-    deathBenefitHorizon.value = horizon;
   }
 
   RxBool isUnderConstruction = true.obs;
@@ -443,9 +258,4 @@ class InsurancePlannerController extends GetxController {
       disabilitySeverity,
     ].where((severity) => severity != ProtectionGapSeverity.covered).length;
   }
-  // Recommendations
-  // policies, filtering, selected policy, etc.
-
-  // Protection score
-  // calculations and severity classification
 }

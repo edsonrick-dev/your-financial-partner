@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/shell/protection_questionnaire_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/protection_horizon_questionnaire_page.dart';
+import 'package:getx_drift_app/features/home/bindings/protection_questionnaire_binding.dart';
+import 'package:getx_drift_app/features/profile/user_profile_sheet.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -27,7 +30,6 @@ class InsurancePlannerEmptyView extends GetView<InsurancePlannerController> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            SizedBox(height: 48),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -58,13 +60,29 @@ class InsurancePlannerEmptyView extends GetView<InsurancePlannerController> {
                     ),
                     SizedBox(height: 20),
                     AppButton(
-                      text: 'Plan my insurance need',
-                      onTap: () {
-                        Get.bottomSheet(
-                          ProtectionQuestionnaireSheet(),
-                          isScrollControlled: true,
+                      text: 'Plan my insurance needs',
+                      onTap: () async {
+                        var profile = await database.userProfileDao
+                            .getProfile();
+
+                        if (profile?.birthday == null) {
+                          await Get.bottomSheet(
+                            UserProfileSetupSheet(),
+                            isScrollControlled: true,
+                          );
+
+                          // Re-fetch the profile after the sheet closes.
+                          profile = await database.userProfileDao.getProfile();
+
+                          // Stop if the user dismissed the sheet without saving a birthday.
+                          if (profile?.birthday == null) return;
+                        }
+
+                        // The birthday exists. Continue to the protection questionnaire.
+                        Get.to(
+                          () => const ProtectionHorizonQuestionnaire(),
+                          binding: ProtectionQuestionnaireBinding(),
                         );
-                        // Get.toNamed(Routes.CASHFLOWDETAILS);
                       },
                     ),
                   ],

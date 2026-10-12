@@ -9,6 +9,7 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_fund_details_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_year.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/protection_horizon_questionnaire_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/benefits/expense_continuity/expense_continuity_questionnaire.dart';
@@ -24,12 +25,14 @@ import 'package:intl/intl.dart';
 class ExpenseContinuityFundDetailsSheet extends StatefulWidget {
   const ExpenseContinuityFundDetailsSheet({
     super.key,
-    required this.data,
     required this.type,
+    this.data,
+    this.savedHorizon,
   });
 
-  final ExpenseContinuityFundDetailsData data;
+  final ExpenseContinuityFundDetailsData? data;
   final ProtectionType type;
+  final String? savedHorizon;
 
   @override
   State<ExpenseContinuityFundDetailsSheet> createState() =>
@@ -83,19 +86,25 @@ class _ExpenseContinuityFundDetailsSheetState
     final insuranceController = Get.find<InsurancePlannerController>();
 
     final data = widget.type == ProtectionType.death
-        ? insuranceController.deathBenefitResult.value!.expenseContinuityDetails
+        ? insuranceController
+                  .deathBenefitResult
+                  .value
+                  ?.expenseContinuityDetails ??
+              widget.data
         : widget.data;
 
-    final type = widget.type;
+    final dataExists = data != null;
 
+    final type = widget.type;
     final colorScheme = context.colors;
 
     final dateFormat = DateFormat('MMM d, yyyy');
     final yearFormat = DateFormat('yyyy');
 
-    final planDate = data.planDate;
-    final supportStartDate = data.supportStartDate;
-    final supportEndDate = data.supportEndDate;
+    final planDate = data?.planDate;
+    final supportStartDate = data?.supportStartDate;
+
+    final supportEndDate = data?.supportEndDate;
 
     return AppSheet(
       height: AppSheetHeight.full,
@@ -113,11 +122,13 @@ class _ExpenseContinuityFundDetailsSheetState
                   _protectionHorizon(
                     type,
                     data,
+                    widget.savedHorizon,
                     colorScheme,
                     yearFormat,
                     supportStartDate,
                     supportEndDate,
                   ),
+
                   _expenseContinuity(
                     colorScheme,
                     yearFormat,
@@ -128,204 +139,204 @@ class _ExpenseContinuityFundDetailsSheetState
                 ],
               ),
             ),
-
-            AppSection(
-              sectionTitle: 'Fund Computation',
-              child: Column(
-                spacing: 20,
-                children: [
-                  AppSectionBody(
-                    padding: 16,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Projected Annual Expenses',
-                          style: AppTextStyle.titleL,
-                        ),
-                        Text(
-                          'Based on ${(data.inflationRate * 100).toStringAsFixed(1)}% annual inflation',
-                          style: AppTextStyle.labelM.copyWith(
-                            color: colorScheme.appTextMuted,
+            if (dataExists)
+              AppSection(
+                sectionTitle: 'Fund Computation',
+                child: Column(
+                  spacing: 20,
+                  children: [
+                    AppSectionBody(
+                      padding: 16,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Projected Annual Expenses',
+                            style: AppTextStyle.titleL,
                           ),
-                        ),
-
-                        SizedBox(height: 16),
-
-                        Column(
-                          spacing: 8,
-                          children: buildProjectionRows(
-                            data: data,
-                            projection: data.result.projection,
-                            showAllYears: _showAllYears,
+                          Text(
+                            'Based on ${(data.inflationRate * 100).toStringAsFixed(1)}% annual inflation',
+                            style: AppTextStyle.labelM.copyWith(
+                              color: colorScheme.appTextMuted,
+                            ),
                           ),
-                        ),
-                        const Divider(height: 24),
 
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Total Expense Need',
-                                        style: AppTextStyle.titleL,
+                          SizedBox(height: 16),
+
+                          Column(
+                            spacing: 8,
+                            children: buildProjectionRows(
+                              data: data,
+                              projection: data.result.projection,
+                              showAllYears: _showAllYears,
+                            ),
+                          ),
+                          const Divider(height: 24),
+
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Total Expense Need',
+                                          style: AppTextStyle.titleL,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Text(
+                                    data.result.uninvestedNeed.toCurrency(),
+                                    style: AppTextStyle.amountL,
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'Sum of projected expenses over ${data.supportYears} years',
+                                style: AppTextStyle.labelM.copyWith(
+                                  color: colorScheme.appTextMuted,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 16),
+                          AdaptivePressable(
+                            onTap: () {
+                              setState(() {
+                                _showAllYears = !_showAllYears;
+                              });
+                            },
+                            child: Center(
+                              child: Text(
+                                _showAllYears ? 'Show less' : 'Show all years',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    AppSectionBody(
+                      padding: 16,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Required Expense Continuity Fund',
+                            style: AppTextStyle.titleL,
+                          ),
+                          Text(
+                            "Estimate how much your dependents would need to maintain their lifestyle if you're no longer around.",
+                            style: AppTextStyle.labelM.copyWith(
+                              color: colorScheme.appTextMuted,
+                            ),
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          // Amount needed if invested
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Invested Fund Requirement',
+                                      style: AppTextStyle.titleM,
+                                    ),
+                                    Text(
+                                      'Lump sum needed today',
+                                      style: AppTextStyle.labelM.copyWith(
+                                        color: colorScheme.appTextMuted,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  data.result.uninvestedNeed.toCurrency(),
-                                  style: AppTextStyle.amountL,
+                              ),
+                              Text(
+                                data.result.investedNeed.toCurrency(),
+                                style: AppTextStyle.amountL,
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Amount needed without investment growth
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Uninvested Fund Requirement',
+                                      style: AppTextStyle.titleM,
+                                    ),
+                                    Text(
+                                      'Total projected expenses',
+                                      style: AppTextStyle.labelM.copyWith(
+                                        color: colorScheme.appTextMuted,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            Text(
-                              'Sum of projected expenses over ${data.supportYears} years',
-                              style: AppTextStyle.labelM.copyWith(
-                                color: colorScheme.appTextMuted,
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16),
-                        AdaptivePressable(
-                          onTap: () {
-                            setState(() {
-                              _showAllYears = !_showAllYears;
-                            });
-                          },
-                          child: Center(
-                            child: Text(
-                              _showAllYears ? 'Show less' : 'Show all years',
-                            ),
+                              Text(
+                                data.result.uninvestedNeed.toCurrency(),
+                                style: AppTextStyle.amountL,
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  AppSectionBody(
-                    padding: 16,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Required Expense Continuity Fund',
-                          style: AppTextStyle.titleL,
-                        ),
-                        Text(
-                          "Estimate how much your dependents would need to maintain their lifestyle if you're no longer around.",
-                          style: AppTextStyle.labelM.copyWith(
-                            color: colorScheme.appTextMuted,
+
+                          const SizedBox(height: 16),
+
+                          const Divider(),
+
+                          const SizedBox(height: 8),
+
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Potential Reduction',
+                                      style: AppTextStyle.titleM,
+                                    ),
+                                    Text(
+                                      'Difference from the uninvested requirement',
+                                      style: AppTextStyle.labelM.copyWith(
+                                        color: colorScheme.appTextMuted,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                (data.result.uninvestedNeed -
+                                        data.result.investedNeed)
+                                    .toCurrency(),
+                                style: AppTextStyle.amountL,
+                              ),
+                            ],
                           ),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // Amount needed if invested
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Invested Fund Requirement',
-                                    style: AppTextStyle.titleM,
-                                  ),
-                                  Text(
-                                    'Lump sum needed today',
-                                    style: AppTextStyle.labelM.copyWith(
-                                      color: colorScheme.appTextMuted,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              data.result.investedNeed.toCurrency(),
-                              style: AppTextStyle.amountL,
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Amount needed without investment growth
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Uninvested Fund Requirement',
-                                    style: AppTextStyle.titleM,
-                                  ),
-                                  Text(
-                                    'Total projected expenses',
-                                    style: AppTextStyle.labelM.copyWith(
-                                      color: colorScheme.appTextMuted,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              data.result.uninvestedNeed.toCurrency(),
-                              style: AppTextStyle.amountL,
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        const Divider(),
-
-                        const SizedBox(height: 8),
-
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Potential Reduction',
-                                    style: AppTextStyle.titleM,
-                                  ),
-                                  Text(
-                                    'Difference from the uninvested requirement',
-                                    style: AppTextStyle.labelM.copyWith(
-                                      color: colorScheme.appTextMuted,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              (data.result.uninvestedNeed -
-                                      data.result.investedNeed)
-                                  .toCurrency(),
-                              style: AppTextStyle.amountL,
-                            ),
-                          ],
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
             Column(
               spacing: 20,
               children: [
@@ -377,14 +388,19 @@ class _ExpenseContinuityFundDetailsSheetState
                     ),
                   ),
                 ),
-                AppSection(
-                  child: Opacity(
-                    opacity: 0.8,
-                    child: Text(
-                      'Plan Created on ${dateFormat.format(planDate)} • Valid until ${yearFormat.format(supportStartDate)} (${data.planValidityYears} year validity)',
+                if (data != null &&
+                    planDate != null &&
+                    supportStartDate != null)
+                  AppSection(
+                    child: Opacity(
+                      opacity: 0.8,
+                      child: Text(
+                        'Plan Created on ${dateFormat.format(planDate)}'
+                        ' • Valid until ${yearFormat.format(supportStartDate)}'
+                        ' (${data.planValidityYears} year validity)',
+                      ),
                     ),
                   ),
-                ),
                 InvestmentReturnDisclaimer(),
               ],
             ),
@@ -397,7 +413,7 @@ class _ExpenseContinuityFundDetailsSheetState
   AppCard _expenseContinuity(
     ColorScheme colorScheme,
     DateFormat yearFormat,
-    ExpenseContinuityFundDetailsData data,
+    ExpenseContinuityFundDetailsData? data,
     BuildContext context,
     ProtectionType type,
   ) {
@@ -435,45 +451,48 @@ class _ExpenseContinuityFundDetailsSheetState
           ),
 
           SizedBox(height: 16),
-          Column(
-            spacing: 8,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Annual', style: AppTextStyle.titleM),
-                        Text(
-                          yearFormat.format(data.planDate),
-                          style: AppTextStyle.bodyS.copyWith(
-                            color: colorScheme.appTextMuted,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+          if (data == null)
+            Text(
+              'Tap to configure the expenses used to calculate this fund.',
+              style: AppTextStyle.bodyM.copyWith(
+                color: colorScheme.appTextMuted,
+              ),
+            )
+          else
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text('Annual', style: AppTextStyle.titleM),
                       Text(
-                        data.currentAnnualExpenses.toCurrency(),
-                        style: AppTextStyle.amountL,
-                      ),
-                      Text(
-                        '${data.monthlyExpense.toCurrency()}/mo',
-                        style: AppTextStyle.amountS.copyWith(
-                          color: context.colors.appTextMuted,
+                        yearFormat.format(data.planDate),
+                        style: AppTextStyle.bodyS.copyWith(
+                          color: colorScheme.appTextMuted,
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      data.currentAnnualExpenses.toCurrency(),
+                      style: AppTextStyle.amountL,
+                    ),
+                    Text(
+                      '${data.monthlyExpense.toCurrency()}/mo',
+                      style: AppTextStyle.amountS.copyWith(
+                        color: context.colors.appTextMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
         ],
       ),
     );
@@ -481,12 +500,19 @@ class _ExpenseContinuityFundDetailsSheetState
 
   AppCard _protectionHorizon(
     ProtectionType type,
-    ExpenseContinuityFundDetailsData data,
+    ExpenseContinuityFundDetailsData? data,
+    String? savedHorizon,
     ColorScheme colorScheme,
     DateFormat yearFormat,
-    DateTime supportStartDate,
-    DateTime supportEndDate,
+    DateTime? supportStartDate,
+    DateTime? supportEndDate,
   ) {
+    final horizon = savedHorizon == null
+        ? null
+        : ProtectionHorizon.values.firstWhereOrNull(
+            (value) => value.name == savedHorizon,
+          );
+
     return AppCard(
       onTap: () async {
         debugPrint('Horizon card tapped: $type');
@@ -495,12 +521,11 @@ class _ExpenseContinuityFundDetailsSheetState
           () => ProtectionHorizonQuestionnaire(type: type),
           binding: ProtectionQuestionnaireBinding(),
         );
-        debugPrint('Horizon questionnaire closed: $type');
+
         if (!mounted) return;
 
         if (type == ProtectionType.death) {
           final insuranceController = Get.find<InsurancePlannerController>();
-
           await insuranceController.calculateDeathBenefit();
 
           if (!mounted) return;
@@ -516,29 +541,43 @@ class _ExpenseContinuityFundDetailsSheetState
               Expanded(
                 child: Text('Protection Horizon', style: AppTextStyle.titleL),
               ),
-              Text('${data.supportYears} years', style: AppTextStyle.amountL),
+              Text(
+                horizon?.horizonLabel ?? 'Not configured',
+                style: horizon == null
+                    ? AppTextStyle.labelM.copyWith(
+                        color: colorScheme.appTextMuted,
+                      )
+                    : AppTextStyle.amountL,
+              ),
             ],
           ),
           Text(
             'How long your dependent needs financial support after your death.',
-
             style: AppTextStyle.labelM.copyWith(
               color: colorScheme.appTextMuted,
             ),
           ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: Text('Coverage period: ', style: AppTextStyle.bodyM),
+          const SizedBox(height: 16),
+          if (supportStartDate != null && supportEndDate != null)
+            Row(
+              children: [
+                Expanded(
+                  child: Text('Coverage period:', style: AppTextStyle.bodyM),
+                ),
+                Text(
+                  '${yearFormat.format(supportStartDate)}'
+                  ' - ${yearFormat.format(supportEndDate)}',
+                  style: AppTextStyle.amountM,
+                ),
+              ],
+            )
+          else
+            Text(
+              'Tap to configure your protection horizon.',
+              style: AppTextStyle.bodyM.copyWith(
+                color: colorScheme.appTextMuted,
               ),
-              Text(
-                '${yearFormat.format(supportStartDate)} '
-                '- ${yearFormat.format(supportEndDate)}',
-                style: AppTextStyle.amountM,
-              ),
-            ],
-          ),
+            ),
         ],
       ),
     );

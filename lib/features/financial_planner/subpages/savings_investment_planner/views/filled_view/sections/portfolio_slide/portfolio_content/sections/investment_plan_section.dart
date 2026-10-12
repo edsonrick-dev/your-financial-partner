@@ -193,6 +193,7 @@ class _NoInvestmentTarget extends StatelessWidget {
 
             AppButton(
               type: ButtonType.outline,
+              isInversed: true,
               text: 'Set Financial Goals',
               onTap: () {
                 Get.bottomSheet(GoalSettingSheet(), isScrollControlled: true);

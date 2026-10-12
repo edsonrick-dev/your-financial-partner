@@ -1,16 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/core/constants/app_opacity.dart';
-import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
-import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/home/widgets/budget_progress_bar.dart';
-import 'package:getx_drift_app/core/num_extension.dart';
-import 'package:getx_drift_app/features/transactions/transaction_types/spend_transaction/spend_transaction_sheet.dart';
 import 'dart:math' as math;
-
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class BudgetConsumptionGuagePainter extends CustomPainter {
   final double progress;

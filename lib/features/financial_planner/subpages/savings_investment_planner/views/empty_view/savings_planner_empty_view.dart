@@ -4,7 +4,6 @@ import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/financial_insights/cashflow/models/cashflow_status.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/controller/savings_planner_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -25,7 +24,6 @@ class SavingsPlannerEmptyView extends GetView<SavingsPlannerController> {
       child: AppSection(
         child: Column(
           children: [
-            SizedBox(height: 48),
             Icon(
               PhosphorIconsRegular.chartLineUp,
               size: 64,

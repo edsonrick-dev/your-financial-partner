@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/extensions/insurance_questtionaire_completion_extension.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/models/protection_horizon_answers.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
@@ -38,7 +40,7 @@ class ProtectionQuestionnaireController extends GetxController {
   }
 
   Future<void> _initializeQuestionnaire() async {
-    await database.protectionDao.seedDefaultProtectionScenarios();
+    // await database.protectionDao.seedDefaultProtectionScenarios();
 
     await Future.wait([loadProtectionHorizons(), loadFinancialDependency()]);
   }
@@ -200,6 +202,11 @@ class ProtectionQuestionnaireController extends GetxController {
       protectionHorizonAnswers,
     );
 
+    // Refresh the insurance planner's questionnaire status.
+    final insuranceController = Get.find<InsurancePlannerController>();
+
+    await insuranceController.checkInsuranceQuestionnaireCompletion();
+
     Get.back();
   }
 
@@ -211,6 +218,14 @@ class ProtectionQuestionnaireController extends GetxController {
       ProtectionType.disability => protectionHorizonAnswers.disability,
     };
 
+    if (!_isHorizonConfigured(horizon)) {
+      Get.snackbar(
+        'Horizon required',
+        'Please select a protection horizon before saving.',
+      );
+      return;
+    }
+
     await database.protectionDao.saveProtectionHorizon(
       protectionType: type,
       horizon: horizon,
@@ -219,6 +234,9 @@ class ProtectionQuestionnaireController extends GetxController {
     Get.back();
   }
 
+  bool _isHorizonConfigured(ProtectionHorizon? horizon) {
+    return horizon != null;
+  }
   // Future<void> saveProtectionHorizon() async {
   //   await database.protectionDao.saveProtectionHorizons(
   //     protectionHorizonAnswers,

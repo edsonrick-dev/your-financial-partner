@@ -1,3 +1,4 @@
+import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/protection_continutity_type.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,47 @@ extension ProtectionTypeX on ProtectionType {
       case ProtectionType.criticalIllness:
       case ProtectionType.disability:
         return ProtectionContinuityType.lifestyleExpenses;
+    }
+  }
+
+  String get gapRoute {
+    switch (this) {
+      case ProtectionType.death:
+        return Routes.DEATHBENEFITGAP;
+
+      case ProtectionType.criticalIllness:
+        return Routes.CRITICALILLNESSBENEFITGAP;
+
+      case ProtectionType.disability:
+        return Routes.DISABILITYBENEFITGAP;
+    }
+  }
+}
+
+extension ProtectionHorizonX on ProtectionType {
+  String get horizonLabel {
+    switch (this) {
+      case ProtectionType.death:
+        return 'If you were to pass away';
+
+      case ProtectionType.criticalIllness:
+        return 'If you were diagnosed with a critical illness';
+
+      case ProtectionType.disability:
+        return 'If you were permanently disabled';
+    }
+  }
+
+  String get horizonDescription {
+    switch (this) {
+      case ProtectionType.death:
+        return 'How many years should your death benefit provide financial support for your dependents?';
+
+      case ProtectionType.criticalIllness:
+        return 'How many years should your critical illness benefit provide financial support?';
+
+      case ProtectionType.disability:
+        return 'How many years should your disability benefit provide financial support?';
     }
   }
 }

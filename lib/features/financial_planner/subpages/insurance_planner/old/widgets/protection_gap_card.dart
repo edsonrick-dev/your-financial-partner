@@ -11,6 +11,7 @@ class ProtectionGapCard extends StatelessWidget {
   final double amountCovered;
   final double amountNeed;
   final VoidCallback? onTap;
+  final bool isCompleted;
 
   const ProtectionGapCard({
     super.key,
@@ -18,6 +19,7 @@ class ProtectionGapCard extends StatelessWidget {
     required this.gapTitle,
     required this.amountCovered,
     required this.amountNeed,
+    this.isCompleted = false,
     this.onTap,
   });
 
@@ -65,80 +67,103 @@ class ProtectionGapCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: severityColor),
+        child: isCompleted
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(icon),
 
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    gapTitle,
-                    style: AppTextStyle.titleL,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          gapTitle,
+                          style: AppTextStyle.titleL,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        gapAmount.toCompactCurrency(kThreshold: 100000),
+                        style: AppTextStyle.amountL,
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  gapAmount.toCompactCurrency(kThreshold: 100000),
-                  style: AppTextStyle.amountL,
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: RichText(
-                text: TextSpan(
-                  style: AppTextStyle.amountM.copyWith(
-                    color: colorScheme.appTextMuted,
+                  const SizedBox(height: 4),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: RichText(
+                      text: TextSpan(
+                        style: AppTextStyle.amountM.copyWith(
+                          color: colorScheme.appTextMuted,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: amountCovered.toCurrency(),
+                            style: TextStyle(color: colorScheme.appText),
+                          ),
+                          TextSpan(
+                            text: ' covered out of ',
+                            style: AppTextStyle.bodyM,
+                          ),
+                          TextSpan(text: amountNeed.toCurrency()),
+                        ],
+                      ),
+                    ),
                   ),
-                  children: [
-                    TextSpan(
-                      text: amountCovered.toCurrency(),
-                      style: TextStyle(color: colorScheme.appText),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: coveragePercentage / 100,
+                            minHeight: 8,
+                            backgroundColor: colorScheme.bgDark,
+                            valueColor: AlwaysStoppedAnimation(severityColor),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(width: 8),
+
+                      SizedBox(
+                        width: 40,
+                        child: Text(
+                          '${coveragePercentage.toStringAsFixed(0)}%',
+                          textAlign: TextAlign.right,
+                          style: AppTextStyle.amountS.copyWith(
+                            color: severityColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            : Row(
+                children: [
+                  Icon(icon),
+
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      gapTitle,
+                      style: AppTextStyle.titleL,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    TextSpan(
-                      text: ' covered out of ',
-                      style: AppTextStyle.bodyM,
-                    ),
-                    TextSpan(text: amountNeed.toCurrency()),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    gapAmount.toCompactCurrency(kThreshold: 100000),
+                    style: AppTextStyle.amountL,
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: coveragePercentage / 100,
-                      minHeight: 8,
-                      backgroundColor: colorScheme.bgDark,
-                      valueColor: AlwaysStoppedAnimation(severityColor),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 8),
-
-                SizedBox(
-                  width: 40,
-                  child: Text(
-                    '${coveragePercentage.toStringAsFixed(0)}%',
-                    textAlign: TextAlign.right,
-                    style: AppTextStyle.amountS.copyWith(color: severityColor),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }

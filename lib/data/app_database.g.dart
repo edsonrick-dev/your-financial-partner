@@ -9740,9 +9740,9 @@ class $ProtectionScenariosTableTable extends ProtectionScenariosTable
   late final GeneratedColumn<String> horizon = GeneratedColumn<String>(
     'horizon',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -9805,8 +9805,6 @@ class $ProtectionScenariosTableTable extends ProtectionScenariosTable
         _horizonMeta,
         horizon.isAcceptableOrUnknown(data['horizon']!, _horizonMeta),
       );
-    } else if (isInserting) {
-      context.missing(_horizonMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -9851,7 +9849,7 @@ class $ProtectionScenariosTableTable extends ProtectionScenariosTable
       horizon: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}horizon'],
-      )!,
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -9873,13 +9871,13 @@ class ProtectionScenariosTableData extends DataClass
     implements Insertable<ProtectionScenariosTableData> {
   final int id;
   final String protectionType;
-  final String horizon;
+  final String? horizon;
   final DateTime createdAt;
   final DateTime updatedAt;
   const ProtectionScenariosTableData({
     required this.id,
     required this.protectionType,
-    required this.horizon,
+    this.horizon,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -9888,7 +9886,9 @@ class ProtectionScenariosTableData extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['protection_type'] = Variable<String>(protectionType);
-    map['horizon'] = Variable<String>(horizon);
+    if (!nullToAbsent || horizon != null) {
+      map['horizon'] = Variable<String>(horizon);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -9898,7 +9898,9 @@ class ProtectionScenariosTableData extends DataClass
     return ProtectionScenariosTableCompanion(
       id: Value(id),
       protectionType: Value(protectionType),
-      horizon: Value(horizon),
+      horizon: horizon == null && nullToAbsent
+          ? const Value.absent()
+          : Value(horizon),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -9912,7 +9914,7 @@ class ProtectionScenariosTableData extends DataClass
     return ProtectionScenariosTableData(
       id: serializer.fromJson<int>(json['id']),
       protectionType: serializer.fromJson<String>(json['protectionType']),
-      horizon: serializer.fromJson<String>(json['horizon']),
+      horizon: serializer.fromJson<String?>(json['horizon']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -9923,7 +9925,7 @@ class ProtectionScenariosTableData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'protectionType': serializer.toJson<String>(protectionType),
-      'horizon': serializer.toJson<String>(horizon),
+      'horizon': serializer.toJson<String?>(horizon),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -9932,13 +9934,13 @@ class ProtectionScenariosTableData extends DataClass
   ProtectionScenariosTableData copyWith({
     int? id,
     String? protectionType,
-    String? horizon,
+    Value<String?> horizon = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => ProtectionScenariosTableData(
     id: id ?? this.id,
     protectionType: protectionType ?? this.protectionType,
-    horizon: horizon ?? this.horizon,
+    horizon: horizon.present ? horizon.value : this.horizon,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -9986,7 +9988,7 @@ class ProtectionScenariosTableCompanion
     extends UpdateCompanion<ProtectionScenariosTableData> {
   final Value<int> id;
   final Value<String> protectionType;
-  final Value<String> horizon;
+  final Value<String?> horizon;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const ProtectionScenariosTableCompanion({
@@ -9999,11 +10001,10 @@ class ProtectionScenariosTableCompanion
   ProtectionScenariosTableCompanion.insert({
     this.id = const Value.absent(),
     required String protectionType,
-    required String horizon,
+    this.horizon = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
   }) : protectionType = Value(protectionType),
-       horizon = Value(horizon),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
   static Insertable<ProtectionScenariosTableData> custom({
@@ -10025,7 +10026,7 @@ class ProtectionScenariosTableCompanion
   ProtectionScenariosTableCompanion copyWith({
     Value<int>? id,
     Value<String>? protectionType,
-    Value<String>? horizon,
+    Value<String?>? horizon,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
   }) {
@@ -20678,7 +20679,7 @@ typedef $$ProtectionScenariosTableTableCreateCompanionBuilder =
     ProtectionScenariosTableCompanion Function({
       Value<int> id,
       required String protectionType,
-      required String horizon,
+      Value<String?> horizon,
       required DateTime createdAt,
       required DateTime updatedAt,
     });
@@ -20686,7 +20687,7 @@ typedef $$ProtectionScenariosTableTableUpdateCompanionBuilder =
     ProtectionScenariosTableCompanion Function({
       Value<int> id,
       Value<String> protectionType,
-      Value<String> horizon,
+      Value<String?> horizon,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -20934,7 +20935,7 @@ class $$ProtectionScenariosTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> protectionType = const Value.absent(),
-                Value<String> horizon = const Value.absent(),
+                Value<String?> horizon = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => ProtectionScenariosTableCompanion(
@@ -20948,7 +20949,7 @@ class $$ProtectionScenariosTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String protectionType,
-                required String horizon,
+                Value<String?> horizon = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
               }) => ProtectionScenariosTableCompanion.insert(

@@ -39,7 +39,7 @@ class NetWorthEmptyView extends GetView<NetWorthController> {
                       size: 60,
                       color: colorScheme.appAccent,
                     ),
-                    Text(
+                  Text(
                       "Ascend's Networth Planner",
                       style: AppTextStyle.headlineL,
                     ),
