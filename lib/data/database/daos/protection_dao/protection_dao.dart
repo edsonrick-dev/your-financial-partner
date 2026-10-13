@@ -1,13 +1,19 @@
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/tables/protection_scenarios_table.dart';
 import 'package:getx_drift_app/data/tables/protection_budget_continuities_table.dart';
 import 'package:getx_drift_app/data/tables/protection_dependency_table.dart';
+import 'package:getx_drift_app/data/tables/expense_continuity_table.dart';
+import 'package:getx_drift_app/data/tables/protection_needs_table.dart';
+import 'package:getx_drift_app/data/tables/protection_plan_continuity_shares_table.dart';
+import 'package:getx_drift_app/data/tables/protection_plans_table.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/models/protection_horizon_answers.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_need/protection_need_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 
 part 'protection_dao.g.dart';
@@ -17,11 +23,216 @@ part 'protection_dao.g.dart';
     ProtectionScenariosTable,
     ProtectionBudgetContinuities,
     ProtectionDependencyTable,
+
+    ExpenseContinuityTable,
+    ProtectionNeedsTable,
+    ProtectionPlanContinuitySharesTable,
+    ProtectionPlansTable,
   ],
 )
 class ProtectionDao extends DatabaseAccessor<AppDatabase>
     with _$ProtectionDaoMixin {
   ProtectionDao(super.db);
+  Future<void> updateExpenseContinuityMonthlyExpense({
+    required int protectionNeedId,
+    required double monthlyExpense,
+  }) async {
+    await (update(
+      expenseContinuityTable,
+    )..where((tbl) => tbl.protectionNeedId.equals(protectionNeedId))).write(
+      ExpenseContinuityTableCompanion(monthlyExpense: Value(monthlyExpense)),
+    );
+  }
+
+  Future<double?> getExpenseContinuityMonthlyExpense({
+    required int protectionPlanId,
+    required ProtectionType protectionType,
+  }) async {
+    final need = await getProtectionNeed(
+      protectionPlanId: protectionPlanId,
+      protectionType: protectionType,
+      needType: ProtectionNeedType.expenseContinuity,
+    );
+
+    if (need == null) return null;
+
+    final result = await (select(
+      expenseContinuityTable,
+    )..where((tbl) => tbl.protectionNeedId.equals(need.id))).getSingleOrNull();
+
+    return result?.monthlyExpense;
+  }
+
+  Future<void> saveExpenseContinuity({
+    required int protectionPlanId,
+    required ProtectionType protectionType,
+    required int protectionHorizon,
+    required double monthlyExpense,
+    required int planValidityYears,
+    required double investedNeed,
+    required double uninvestedNeed,
+    required int calculationVersion,
+  }) async {
+    await transaction(() async {
+      final now = DateTime.now();
+
+      // Find the existing expense-continuity need.
+      final existingNeed =
+          await (select(protectionNeedsTable)..where(
+                (tbl) =>
+                    tbl.protectionPlanId.equals(protectionPlanId) &
+                    tbl.protectionType.equals(protectionType.name) &
+                    tbl.protectionNeedType.equals(
+                      ProtectionNeedType.expenseContinuity.name,
+                    ),
+              ))
+              .getSingleOrNull();
+
+      late final int protectionNeedId;
+
+      if (existingNeed == null) {
+        // Create the protection need for the first time.
+        protectionNeedId = await into(protectionNeedsTable).insert(
+          ProtectionNeedsTableCompanion.insert(
+            protectionPlanId: protectionPlanId,
+            protectionType: protectionType.name,
+            protectionNeedType: ProtectionNeedType.expenseContinuity.name,
+            amount: Value(investedNeed),
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
+      } else {
+        // Update the existing need without changing createdAt.
+        protectionNeedId = existingNeed.id;
+
+        await (update(
+          protectionNeedsTable,
+        )..where((tbl) => tbl.id.equals(protectionNeedId))).write(
+          ProtectionNeedsTableCompanion(
+            amount: Value(investedNeed),
+            updatedAt: Value(now),
+          ),
+        );
+      }
+
+      // Insert a new calculation or update the existing calculation.
+      await into(expenseContinuityTable).insertOnConflictUpdate(
+        ExpenseContinuityTableCompanion.insert(
+          protectionNeedId: Value(protectionNeedId),
+          protectionHorizon: protectionHorizon,
+          monthlyExpense: monthlyExpense,
+          planValidityYears: planValidityYears,
+          investedNeed: investedNeed,
+          uninvestedNeed: uninvestedNeed,
+          calculationVersion: calculationVersion,
+          calculatedAt: Value(now),
+        ),
+      );
+    });
+  }
+
+  Future<ProtectionNeedsTableData?> getProtectionNeed({
+    required int protectionPlanId,
+    required ProtectionType protectionType,
+    required ProtectionNeedType needType,
+  }) {
+    return (select(protectionNeedsTable)..where(
+          (tbl) =>
+              tbl.protectionPlanId.equals(protectionPlanId) &
+              tbl.protectionType.equals(protectionType.name) &
+              tbl.protectionNeedType.equals(needType.name),
+        ))
+        .getSingleOrNull();
+  }
+
+  Future<Set<ProtectionNeedType>> getExistingNeedTypes({
+    required int protectionPlanId,
+    required ProtectionType protectionType,
+  }) async {
+    final query = select(protectionNeedsTable)
+      ..where(
+        (tbl) =>
+            tbl.protectionPlanId.equals(protectionPlanId) &
+            tbl.protectionType.equals(protectionType.name),
+      );
+
+    final records = await query.get();
+
+    return records
+        .map(
+          (record) => ProtectionNeedType.values.firstWhere(
+            (type) => type.name == record.protectionNeedType,
+          ),
+        )
+        .toSet();
+  }
+
+  Future<bool> isProtectionGapComplete({
+    required int protectionPlanId,
+    required ProtectionType protectionType,
+  }) async {
+    final existingNeeds = await getExistingNeedTypes(
+      protectionPlanId: protectionPlanId,
+      protectionType: protectionType,
+    );
+
+    return protectionType.requiredNeeds.every(
+      (requiredNeed) => existingNeeds.contains(requiredNeed),
+    );
+  }
+
+  Future<bool> isProtectionPlannerComplete({
+    required int protectionPlanId,
+  }) async {
+    for (final protectionType in ProtectionType.values) {
+      final isComplete = await isProtectionGapComplete(
+        protectionPlanId: protectionPlanId,
+        protectionType: protectionType,
+      );
+
+      if (!isComplete) return false;
+    }
+
+    return true;
+  }
+
+  Future<ProtectionPlansTableData?> getActiveProtectionPlan() {
+    final now = DateTime.now();
+
+    return (select(protectionPlansTable)
+          ..where(
+            (tbl) =>
+                tbl.startDate.isSmallerOrEqualValue(now) &
+                tbl.endDate.isBiggerOrEqualValue(now),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+  }
+
+  Future<void> createInitialProtectionPlanIfNeeded() async {
+    final existingPlan = await select(protectionPlansTable).getSingleOrNull();
+
+    if (existingPlan != null) return;
+
+    final now = DateTime.now();
+    debugPrint("Today's Date: $now");
+    await into(protectionPlansTable).insert(
+      ProtectionPlansTableCompanion.insert(
+        startDate: now,
+        endDate: DateTime(
+          now.year + 5,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          now.second,
+        ),
+        createdAt: now,
+        updatedAt: now,
+      ),
+    );
+  }
 
   double _defaultContinuityShare(ProtectionType protectionType) {
     return switch (protectionType) {
@@ -238,6 +449,8 @@ class ProtectionDao extends DatabaseAccessor<AppDatabase>
         protectionType: ProtectionType.disability,
         horizon: answers.disability,
       );
+
+      await createInitialProtectionPlanIfNeeded();
     });
   }
 

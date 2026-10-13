@@ -84,16 +84,19 @@ class AppToolbar extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 16.0, right: 16),
                   child: SizedBox(
                     width: titleWidth.clamp(0.0, constraints.maxWidth),
-                    child: Text(
-                      title,
-                      style: AppTextStyle.headlineM.copyWith(
-                        color: isDark
-                            ? colorScheme.appInversedtext
-                            : colorScheme.appText,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        title,
+                        style: AppTextStyle.headlineM.copyWith(
+                          color: isDark
+                              ? colorScheme.appInversedtext
+                              : colorScheme.appText,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),

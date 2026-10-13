@@ -7,6 +7,7 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_fund_details_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_year.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
@@ -82,6 +83,37 @@ class _ExpenseContinuityFundDetailsSheetState
     return rows;
   }
 
+  bool _isSaving = false;
+
+  Future<void> _saveChanges() async {
+    if (_isSaving) return;
+
+    setState(() => _isSaving = true);
+
+    try {
+      // TODO:
+      // 1. Validate the inputs.
+      // 2. Run ExpenseContinuityCalculator.
+      // 3. Get the invested and uninvested requirements.
+      // 4. Call InsurancePlannerController to save the results.
+      // 5. Refresh the displayed calculation.
+
+      Get.snackbar(
+        'Not implemented',
+        'Expense-continuity saving is not connected yet.',
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Failed to save expense continuity: $error');
+      debugPrintStack(stackTrace: stackTrace);
+
+      Get.snackbar('Error', 'Unable to save the expense-continuity plan.');
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final insuranceController = Get.find<InsurancePlannerController>();
@@ -147,6 +179,7 @@ class _ExpenseContinuityFundDetailsSheetState
                     context,
                     type,
                   ),
+                  AppButton(text: 'Save changes', onTap: _saveChanges),
                 ],
               ),
             ),
@@ -534,14 +567,25 @@ class _ExpenseContinuityFundDetailsSheetState
         );
 
         if (!mounted) return;
+        final insuranceController = Get.find<InsurancePlannerController>();
 
-        if (type == ProtectionType.death) {
-          final insuranceController = Get.find<InsurancePlannerController>();
-          await insuranceController.calculateDeathBenefit();
+        switch (type) {
+          case ProtectionType.death:
+            await insuranceController.calculateDeathBenefit();
+            break;
 
-          if (!mounted) return;
-          setState(() {});
+          case ProtectionType.criticalIllness:
+            // Connect the critical illness calculation here.
+            break;
+
+          case ProtectionType.disability:
+            // Connect the disability calculation here.
+            break;
         }
+
+        if (!mounted) return;
+
+        setState(() {});
       },
       padding: 16,
       child: Column(

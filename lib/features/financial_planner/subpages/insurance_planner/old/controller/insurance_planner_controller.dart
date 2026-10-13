@@ -15,6 +15,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/computation/death_benefit_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/2_critical_illness_benefit/models/critical_illness_benefit_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/3_disability_benefit/disability_benefit_result.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_need/protection_need_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/extensions/insurance_questtionaire_completion_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/controller_extensions/calculate_death_benefit_controller_extension.dart';
@@ -30,6 +31,34 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 /// focused on shared state and UI coordination.
 class InsurancePlannerController extends GetxController {
   final fakeDouble = 0.0.obs;
+  Future<double?> getProtectionNeedAmount({
+    required int protectionPlanId,
+    required ProtectionType protectionType,
+    required ProtectionNeedType needType,
+  }) async {
+    final need = await database.protectionDao.getProtectionNeed(
+      protectionPlanId: protectionPlanId,
+      protectionType: protectionType,
+      needType: needType,
+    );
+
+    return need?.amount;
+  }
+
+  Future<double?> getSavedProtectionNeedAmount({
+    required ProtectionType protectionType,
+    required ProtectionNeedType needType,
+  }) async {
+    final plan = await database.protectionDao.getActiveProtectionPlan();
+
+    if (plan == null) return null;
+
+    return getProtectionNeedAmount(
+      protectionPlanId: plan.id,
+      protectionType: protectionType,
+      needType: needType,
+    );
+  }
 
   /// Latest calculation result for each protection type.
   ///
@@ -40,11 +69,35 @@ class InsurancePlannerController extends GetxController {
   final disabilityBenefitResult = Rxn<DisabilityBenefitResult>();
 
   /// Whether each protection gap has already been calculated.
-  Map<ProtectionType, bool> get protectionGapCompletion => {
-    ProtectionType.death: deathBenefitResult.value != null,
-    ProtectionType.criticalIllness: criticalIllnessBenefitResult.value != null,
-    ProtectionType.disability: disabilityBenefitResult.value != null,
-  };
+  // Map<ProtectionType, bool> get protectionGapCompletion => {
+  //   ProtectionType.death: deathBenefitResult.value != null,
+  //   ProtectionType.criticalIllness: criticalIllnessBenefitResult.value != null,
+  //   ProtectionType.disability: disabilityBenefitResult.value != null,
+  // };
+  final protectionGapCompletion = <ProtectionType, bool>{
+    for (final type in ProtectionType.values) type: false,
+  }.obs;
+  Future<void> refreshProtectionGapCompletion() async {
+    final activePlan = await database.protectionDao.getActiveProtectionPlan();
+
+    if (activePlan == null) {
+      protectionGapCompletion.assignAll({
+        for (final type in ProtectionType.values) type: false,
+      });
+      return;
+    }
+
+    final results = <ProtectionType, bool>{};
+
+    for (final type in ProtectionType.values) {
+      results[type] = await database.protectionDao.isProtectionGapComplete(
+        protectionPlanId: activePlan.id,
+        protectionType: type,
+      );
+    }
+
+    protectionGapCompletion.assignAll(results);
+  }
 
   /// Whether all protection gaps have been calculated.
   bool get areAllProtectionGapsComplete =>
@@ -184,6 +237,7 @@ class InsurancePlannerController extends GetxController {
 
     _initializeInsurancePlanner();
     // calculateDeathBenefit();
+    refreshProtectionGapCompletion();
   }
 
   /// Performs initial completion checks and runs the first death benefit

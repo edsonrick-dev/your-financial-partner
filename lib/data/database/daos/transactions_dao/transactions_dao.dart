@@ -68,6 +68,9 @@ part 'transactions_dao.g.dart';
 class TransactionsDao extends DatabaseAccessor<AppDatabase>
     with _$TransactionsDaoMixin {
   TransactionsDao(super.db);
+  Future<void> deleteTransaction(int id) async {
+    await (delete(transactionsTable)..where((tbl) => tbl.id.equals(id))).go();
+  }
 
   Stream<List<TransactionWithDetails>> watchDebtRepaymentsForAccount(
     int accountId,
@@ -502,6 +505,12 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
       transactionParticipantsTable,
     )..where((tbl) => tbl.transactionId.equals(transactionId))).go();
   }
+
+  // Future<int> deleteFinancialObligationsByTransaction(int transactionId) {
+  //   return (delete(
+  //     financialObligationsTable,
+  //   )..where((tbl) => tbl.transactionId.equals(transactionId))).go();
+  // }
 
   /// =============================================================================
   /// OBLIGATION MANAGEMENT

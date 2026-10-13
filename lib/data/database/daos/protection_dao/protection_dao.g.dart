@@ -15,6 +15,15 @@ mixin _$ProtectionDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.protectionBudgetContinuities;
   $ProtectionDependencyTableTable get protectionDependencyTable =>
       attachedDatabase.protectionDependencyTable;
+  $ProtectionPlansTableTable get protectionPlansTable =>
+      attachedDatabase.protectionPlansTable;
+  $ProtectionNeedsTableTable get protectionNeedsTable =>
+      attachedDatabase.protectionNeedsTable;
+  $ExpenseContinuityTableTable get expenseContinuityTable =>
+      attachedDatabase.expenseContinuityTable;
+  $ProtectionPlanContinuitySharesTableTable
+  get protectionPlanContinuitySharesTable =>
+      attachedDatabase.protectionPlanContinuitySharesTable;
   ProtectionDaoManager get managers => ProtectionDaoManager(this);
 }
 
@@ -47,5 +56,26 @@ class ProtectionDaoManager {
       $$ProtectionDependencyTableTableTableManager(
         _db.attachedDatabase,
         _db.protectionDependencyTable,
+      );
+  $$ProtectionPlansTableTableTableManager get protectionPlansTable =>
+      $$ProtectionPlansTableTableTableManager(
+        _db.attachedDatabase,
+        _db.protectionPlansTable,
+      );
+  $$ProtectionNeedsTableTableTableManager get protectionNeedsTable =>
+      $$ProtectionNeedsTableTableTableManager(
+        _db.attachedDatabase,
+        _db.protectionNeedsTable,
+      );
+  $$ExpenseContinuityTableTableTableManager get expenseContinuityTable =>
+      $$ExpenseContinuityTableTableTableManager(
+        _db.attachedDatabase,
+        _db.expenseContinuityTable,
+      );
+  $$ProtectionPlanContinuitySharesTableTableTableManager
+  get protectionPlanContinuitySharesTable =>
+      $$ProtectionPlanContinuitySharesTableTableTableManager(
+        _db.attachedDatabase,
+        _db.protectionPlanContinuitySharesTable,
       );
 }

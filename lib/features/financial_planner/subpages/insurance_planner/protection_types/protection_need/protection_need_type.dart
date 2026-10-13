@@ -69,28 +69,102 @@ extension ProtectionTypeNeedsX on ProtectionType {
     switch (this) {
       case ProtectionType.death:
         return [
-          ProtectionNeedType.funeralAndFinalExpense,
           ProtectionNeedType.expenseContinuity,
-          ProtectionNeedType.educationFunding,
-          ProtectionNeedType.debtsAndObligations,
-          ProtectionNeedType.estateSettlement,
+          // ProtectionNeedType.funeralAndFinalExpense,
+          // ProtectionNeedType.educationFunding,
+          // ProtectionNeedType.debtsAndObligations,
+          // ProtectionNeedType.estateSettlement,
         ];
 
       case ProtectionType.criticalIllness:
         return [
-          ProtectionNeedType.medicalAndRecoveryFund,
           ProtectionNeedType.expenseContinuity,
-          ProtectionNeedType.educationFunding,
-          ProtectionNeedType.debtsAndObligations,
+          // ProtectionNeedType.medicalAndRecoveryFund,
+          // ProtectionNeedType.educationFunding,
+          // ProtectionNeedType.debtsAndObligations,
         ];
 
       case ProtectionType.disability:
         return [
-          ProtectionNeedType.medicalAndRecoveryFund,
           ProtectionNeedType.expenseContinuity,
-          ProtectionNeedType.educationFunding,
-          ProtectionNeedType.debtsAndObligations,
+          // ProtectionNeedType.medicalAndRecoveryFund,
+          // ProtectionNeedType.educationFunding,
+          // ProtectionNeedType.debtsAndObligations,
         ];
+    }
+  }
+
+  String get horizonExplainerText {
+    switch (this) {
+      case ProtectionType.death:
+        return 'How long your dependents will need financial support after your death.';
+      case ProtectionType.criticalIllness:
+        return 'How long you may need financial support to cover living expenses while recovering from a critical illness.';
+      case ProtectionType.disability:
+        return 'How long you may need financial support to cover living expenses if a disability prevents you from earning an income.';
+    }
+  }
+
+  String get continuityFundTitle {
+    switch (this) {
+      case ProtectionType.death:
+        return "Dependents' annual living expenses";
+
+      case ProtectionType.criticalIllness:
+      case ProtectionType.disability:
+        return 'Your annual living expenses';
+    }
+  }
+
+  String get continuityFundDescription {
+    switch (this) {
+      case ProtectionType.death:
+        return "The annual cost of maintaining your dependents' lifestyle if you pass away, expressed in today's value before inflation.";
+
+      case ProtectionType.criticalIllness:
+        return "The annual cost of maintaining your lifestyle if you are diagnosed with a critical illness and can no longer work as usual, expressed in today's value before inflation.";
+
+      case ProtectionType.disability:
+        return "The annual cost of maintaining your lifestyle if a disability prevents you from earning an income, expressed in today's value before inflation.";
+    }
+  }
+
+  String get continuityFundExplainerText {
+    switch (this) {
+      case ProtectionType.death:
+        return "Not all expenses would continue after your death. Choose how much of each expense your family would still need.";
+
+      case ProtectionType.criticalIllness:
+        return "Your expenses may change if you experience a critical illness. Choose how much of each expense you would still need during your recovery.";
+
+      case ProtectionType.disability:
+        return "Your expenses may change if you become disabled. Choose how much of each expense you would still need to maintain your lifestyle.";
+    }
+  }
+
+  String get continuityFundQuestion {
+    switch (this) {
+      case ProtectionType.death:
+        return "Which of your current expenses would your dependents still need if you passed away?";
+
+      case ProtectionType.criticalIllness:
+        return "Which of your current expenses would you still need to cover during your recovery?";
+
+      case ProtectionType.disability:
+        return "Which of your current expenses would you still need to cover if you became disabled?";
+    }
+  }
+
+  String get continuityFundQuestionHelper {
+    switch (this) {
+      case ProtectionType.death:
+        return "Tap each card to adjust the share your dependents would need.";
+
+      case ProtectionType.criticalIllness:
+        return "Tap each card to adjust the share of each expense you expect to retain.";
+
+      case ProtectionType.disability:
+        return "Tap each card to adjust the share of each expense you expect to retain.";
     }
   }
 }

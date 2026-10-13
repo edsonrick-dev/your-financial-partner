@@ -68,7 +68,11 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
                     amountCovered: amountCovered,
                     amountNeed: amountNeed,
                     isCompleted: isCompleted,
-                    onTap: () => Get.toNamed(type.gapRoute),
+                    onTap: () async {
+                      await Get.toNamed(type.gapRoute);
+
+                      await controller.refreshProtectionGapCompletion();
+                    },
                   );
                 });
               }).toList(),

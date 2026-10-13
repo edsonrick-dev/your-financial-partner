@@ -65,11 +65,12 @@ extension DeleteFunctions on TransactionController {
           break;
 
         case TransactionType.spend:
-          await database.deleteFinancialObligationsByTransaction(
+          await database.transactionsDao
+              .deleteFinancialObligationsByTransaction(transactionData.id);
+
+          await database.transactionsDao.deleteParticipantsByTransaction(
             transactionData.id,
           );
-
-          await database.deleteParticipantsByTransaction(transactionData.id);
           break;
 
         case TransactionType.transfer:
@@ -77,19 +78,21 @@ extension DeleteFunctions on TransactionController {
         case TransactionType.debtRepayment:
           break;
         case TransactionType.receive:
-          await database.deleteFinancialObligationsByTransaction(
+          await database.transactionsDao
+              .deleteFinancialObligationsByTransaction(transactionData.id);
+
+          await database.transactionsDao.deleteParticipantsByTransaction(
             transactionData.id,
           );
-
-          await database.deleteParticipantsByTransaction(transactionData.id);
           break;
 
         case TransactionType.give:
-          await database.deleteFinancialObligationsByTransaction(
+          await database.transactionsDao
+              .deleteFinancialObligationsByTransaction(transactionData.id);
+
+          await database.transactionsDao.deleteParticipantsByTransaction(
             transactionData.id,
           );
-
-          await database.deleteParticipantsByTransaction(transactionData.id);
           break;
 
         case TransactionType.balanceUpdate:
@@ -98,7 +101,7 @@ extension DeleteFunctions on TransactionController {
       }
 
       /// DELETE TRANSACTION
-      await database.deleteTransaction(transactionData.id);
+      await database.transactionsDao.deleteTransaction(transactionData.id);
       if (billOccurrence != null) {
         await database.billsDao.unmarkOccurrenceAsPaid(billOccurrence.id);
       }

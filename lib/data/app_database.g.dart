@@ -10730,6 +10730,1843 @@ class ProtectionDependencyTableCompanion
   }
 }
 
+class $ProtectionPlansTableTable extends ProtectionPlansTable
+    with TableInfo<$ProtectionPlansTableTable, ProtectionPlansTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProtectionPlansTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+    'end_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    startDate,
+    endDate,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'protection_plans_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProtectionPlansTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endDateMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ProtectionPlansTableData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProtectionPlansTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_date'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ProtectionPlansTableTable createAlias(String alias) {
+    return $ProtectionPlansTableTable(attachedDatabase, alias);
+  }
+}
+
+class ProtectionPlansTableData extends DataClass
+    implements Insertable<ProtectionPlansTableData> {
+  final int id;
+  final DateTime startDate;
+  final DateTime endDate;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const ProtectionPlansTableData({
+    required this.id,
+    required this.startDate,
+    required this.endDate,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['end_date'] = Variable<DateTime>(endDate);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  ProtectionPlansTableCompanion toCompanion(bool nullToAbsent) {
+    return ProtectionPlansTableCompanion(
+      id: Value(id),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory ProtectionPlansTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProtectionPlansTableData(
+      id: serializer.fromJson<int>(json['id']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      endDate: serializer.fromJson<DateTime>(json['endDate']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'endDate': serializer.toJson<DateTime>(endDate),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  ProtectionPlansTableData copyWith({
+    int? id,
+    DateTime? startDate,
+    DateTime? endDate,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => ProtectionPlansTableData(
+    id: id ?? this.id,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  ProtectionPlansTableData copyWithCompanion(
+    ProtectionPlansTableCompanion data,
+  ) {
+    return ProtectionPlansTableData(
+      id: data.id.present ? data.id.value : this.id,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionPlansTableData(')
+          ..write('id: $id, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, startDate, endDate, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProtectionPlansTableData &&
+          other.id == this.id &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class ProtectionPlansTableCompanion
+    extends UpdateCompanion<ProtectionPlansTableData> {
+  final Value<int> id;
+  final Value<DateTime> startDate;
+  final Value<DateTime> endDate;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const ProtectionPlansTableCompanion({
+    this.id = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  ProtectionPlansTableCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime startDate,
+    required DateTime endDate,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) : startDate = Value(startDate),
+       endDate = Value(endDate),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<ProtectionPlansTableData> custom({
+    Expression<int>? id,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  ProtectionPlansTableCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? startDate,
+    Value<DateTime>? endDate,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return ProtectionPlansTableCompanion(
+      id: id ?? this.id,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionPlansTableCompanion(')
+          ..write('id: $id, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ProtectionNeedsTableTable extends ProtectionNeedsTable
+    with TableInfo<$ProtectionNeedsTableTable, ProtectionNeedsTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProtectionNeedsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _protectionPlanIdMeta = const VerificationMeta(
+    'protectionPlanId',
+  );
+  @override
+  late final GeneratedColumn<int> protectionPlanId = GeneratedColumn<int>(
+    'protection_plan_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES protection_plans_table (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _protectionTypeMeta = const VerificationMeta(
+    'protectionType',
+  );
+  @override
+  late final GeneratedColumn<String> protectionType = GeneratedColumn<String>(
+    'protection_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _protectionNeedTypeMeta =
+      const VerificationMeta('protectionNeedType');
+  @override
+  late final GeneratedColumn<String> protectionNeedType =
+      GeneratedColumn<String>(
+        'protection_need_type',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    protectionPlanId,
+    protectionType,
+    protectionNeedType,
+    amount,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'protection_needs_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProtectionNeedsTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('protection_plan_id')) {
+      context.handle(
+        _protectionPlanIdMeta,
+        protectionPlanId.isAcceptableOrUnknown(
+          data['protection_plan_id']!,
+          _protectionPlanIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_protectionPlanIdMeta);
+    }
+    if (data.containsKey('protection_type')) {
+      context.handle(
+        _protectionTypeMeta,
+        protectionType.isAcceptableOrUnknown(
+          data['protection_type']!,
+          _protectionTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_protectionTypeMeta);
+    }
+    if (data.containsKey('protection_need_type')) {
+      context.handle(
+        _protectionNeedTypeMeta,
+        protectionNeedType.isAcceptableOrUnknown(
+          data['protection_need_type']!,
+          _protectionNeedTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_protectionNeedTypeMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {protectionPlanId, protectionType, protectionNeedType},
+  ];
+  @override
+  ProtectionNeedsTableData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProtectionNeedsTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      protectionPlanId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}protection_plan_id'],
+      )!,
+      protectionType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}protection_type'],
+      )!,
+      protectionNeedType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}protection_need_type'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ProtectionNeedsTableTable createAlias(String alias) {
+    return $ProtectionNeedsTableTable(attachedDatabase, alias);
+  }
+}
+
+class ProtectionNeedsTableData extends DataClass
+    implements Insertable<ProtectionNeedsTableData> {
+  final int id;
+  final int protectionPlanId;
+  final String protectionType;
+  final String protectionNeedType;
+  final double amount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const ProtectionNeedsTableData({
+    required this.id,
+    required this.protectionPlanId,
+    required this.protectionType,
+    required this.protectionNeedType,
+    required this.amount,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['protection_plan_id'] = Variable<int>(protectionPlanId);
+    map['protection_type'] = Variable<String>(protectionType);
+    map['protection_need_type'] = Variable<String>(protectionNeedType);
+    map['amount'] = Variable<double>(amount);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  ProtectionNeedsTableCompanion toCompanion(bool nullToAbsent) {
+    return ProtectionNeedsTableCompanion(
+      id: Value(id),
+      protectionPlanId: Value(protectionPlanId),
+      protectionType: Value(protectionType),
+      protectionNeedType: Value(protectionNeedType),
+      amount: Value(amount),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory ProtectionNeedsTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProtectionNeedsTableData(
+      id: serializer.fromJson<int>(json['id']),
+      protectionPlanId: serializer.fromJson<int>(json['protectionPlanId']),
+      protectionType: serializer.fromJson<String>(json['protectionType']),
+      protectionNeedType: serializer.fromJson<String>(
+        json['protectionNeedType'],
+      ),
+      amount: serializer.fromJson<double>(json['amount']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'protectionPlanId': serializer.toJson<int>(protectionPlanId),
+      'protectionType': serializer.toJson<String>(protectionType),
+      'protectionNeedType': serializer.toJson<String>(protectionNeedType),
+      'amount': serializer.toJson<double>(amount),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  ProtectionNeedsTableData copyWith({
+    int? id,
+    int? protectionPlanId,
+    String? protectionType,
+    String? protectionNeedType,
+    double? amount,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => ProtectionNeedsTableData(
+    id: id ?? this.id,
+    protectionPlanId: protectionPlanId ?? this.protectionPlanId,
+    protectionType: protectionType ?? this.protectionType,
+    protectionNeedType: protectionNeedType ?? this.protectionNeedType,
+    amount: amount ?? this.amount,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  ProtectionNeedsTableData copyWithCompanion(
+    ProtectionNeedsTableCompanion data,
+  ) {
+    return ProtectionNeedsTableData(
+      id: data.id.present ? data.id.value : this.id,
+      protectionPlanId: data.protectionPlanId.present
+          ? data.protectionPlanId.value
+          : this.protectionPlanId,
+      protectionType: data.protectionType.present
+          ? data.protectionType.value
+          : this.protectionType,
+      protectionNeedType: data.protectionNeedType.present
+          ? data.protectionNeedType.value
+          : this.protectionNeedType,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionNeedsTableData(')
+          ..write('id: $id, ')
+          ..write('protectionPlanId: $protectionPlanId, ')
+          ..write('protectionType: $protectionType, ')
+          ..write('protectionNeedType: $protectionNeedType, ')
+          ..write('amount: $amount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    protectionPlanId,
+    protectionType,
+    protectionNeedType,
+    amount,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProtectionNeedsTableData &&
+          other.id == this.id &&
+          other.protectionPlanId == this.protectionPlanId &&
+          other.protectionType == this.protectionType &&
+          other.protectionNeedType == this.protectionNeedType &&
+          other.amount == this.amount &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class ProtectionNeedsTableCompanion
+    extends UpdateCompanion<ProtectionNeedsTableData> {
+  final Value<int> id;
+  final Value<int> protectionPlanId;
+  final Value<String> protectionType;
+  final Value<String> protectionNeedType;
+  final Value<double> amount;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const ProtectionNeedsTableCompanion({
+    this.id = const Value.absent(),
+    this.protectionPlanId = const Value.absent(),
+    this.protectionType = const Value.absent(),
+    this.protectionNeedType = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  ProtectionNeedsTableCompanion.insert({
+    this.id = const Value.absent(),
+    required int protectionPlanId,
+    required String protectionType,
+    required String protectionNeedType,
+    this.amount = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) : protectionPlanId = Value(protectionPlanId),
+       protectionType = Value(protectionType),
+       protectionNeedType = Value(protectionNeedType),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<ProtectionNeedsTableData> custom({
+    Expression<int>? id,
+    Expression<int>? protectionPlanId,
+    Expression<String>? protectionType,
+    Expression<String>? protectionNeedType,
+    Expression<double>? amount,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (protectionPlanId != null) 'protection_plan_id': protectionPlanId,
+      if (protectionType != null) 'protection_type': protectionType,
+      if (protectionNeedType != null)
+        'protection_need_type': protectionNeedType,
+      if (amount != null) 'amount': amount,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  ProtectionNeedsTableCompanion copyWith({
+    Value<int>? id,
+    Value<int>? protectionPlanId,
+    Value<String>? protectionType,
+    Value<String>? protectionNeedType,
+    Value<double>? amount,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return ProtectionNeedsTableCompanion(
+      id: id ?? this.id,
+      protectionPlanId: protectionPlanId ?? this.protectionPlanId,
+      protectionType: protectionType ?? this.protectionType,
+      protectionNeedType: protectionNeedType ?? this.protectionNeedType,
+      amount: amount ?? this.amount,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (protectionPlanId.present) {
+      map['protection_plan_id'] = Variable<int>(protectionPlanId.value);
+    }
+    if (protectionType.present) {
+      map['protection_type'] = Variable<String>(protectionType.value);
+    }
+    if (protectionNeedType.present) {
+      map['protection_need_type'] = Variable<String>(protectionNeedType.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionNeedsTableCompanion(')
+          ..write('id: $id, ')
+          ..write('protectionPlanId: $protectionPlanId, ')
+          ..write('protectionType: $protectionType, ')
+          ..write('protectionNeedType: $protectionNeedType, ')
+          ..write('amount: $amount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ExpenseContinuityTableTable extends ExpenseContinuityTable
+    with TableInfo<$ExpenseContinuityTableTable, ExpenseContinuityTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ExpenseContinuityTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _protectionNeedIdMeta = const VerificationMeta(
+    'protectionNeedId',
+  );
+  @override
+  late final GeneratedColumn<int> protectionNeedId = GeneratedColumn<int>(
+    'protection_need_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES protection_needs_table (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _protectionHorizonMeta = const VerificationMeta(
+    'protectionHorizon',
+  );
+  @override
+  late final GeneratedColumn<int> protectionHorizon = GeneratedColumn<int>(
+    'protection_horizon',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _monthlyExpenseMeta = const VerificationMeta(
+    'monthlyExpense',
+  );
+  @override
+  late final GeneratedColumn<double> monthlyExpense = GeneratedColumn<double>(
+    'monthly_expense',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _planValidityYearsMeta = const VerificationMeta(
+    'planValidityYears',
+  );
+  @override
+  late final GeneratedColumn<int> planValidityYears = GeneratedColumn<int>(
+    'plan_validity_years',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _investedNeedMeta = const VerificationMeta(
+    'investedNeed',
+  );
+  @override
+  late final GeneratedColumn<double> investedNeed = GeneratedColumn<double>(
+    'invested_need',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _uninvestedNeedMeta = const VerificationMeta(
+    'uninvestedNeed',
+  );
+  @override
+  late final GeneratedColumn<double> uninvestedNeed = GeneratedColumn<double>(
+    'uninvested_need',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _calculationVersionMeta =
+      const VerificationMeta('calculationVersion');
+  @override
+  late final GeneratedColumn<int> calculationVersion = GeneratedColumn<int>(
+    'calculation_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _calculatedAtMeta = const VerificationMeta(
+    'calculatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> calculatedAt = GeneratedColumn<DateTime>(
+    'calculated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    protectionNeedId,
+    protectionHorizon,
+    monthlyExpense,
+    planValidityYears,
+    investedNeed,
+    uninvestedNeed,
+    calculationVersion,
+    calculatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'expense_continuity_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ExpenseContinuityTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('protection_need_id')) {
+      context.handle(
+        _protectionNeedIdMeta,
+        protectionNeedId.isAcceptableOrUnknown(
+          data['protection_need_id']!,
+          _protectionNeedIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('protection_horizon')) {
+      context.handle(
+        _protectionHorizonMeta,
+        protectionHorizon.isAcceptableOrUnknown(
+          data['protection_horizon']!,
+          _protectionHorizonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_protectionHorizonMeta);
+    }
+    if (data.containsKey('monthly_expense')) {
+      context.handle(
+        _monthlyExpenseMeta,
+        monthlyExpense.isAcceptableOrUnknown(
+          data['monthly_expense']!,
+          _monthlyExpenseMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_monthlyExpenseMeta);
+    }
+    if (data.containsKey('plan_validity_years')) {
+      context.handle(
+        _planValidityYearsMeta,
+        planValidityYears.isAcceptableOrUnknown(
+          data['plan_validity_years']!,
+          _planValidityYearsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_planValidityYearsMeta);
+    }
+    if (data.containsKey('invested_need')) {
+      context.handle(
+        _investedNeedMeta,
+        investedNeed.isAcceptableOrUnknown(
+          data['invested_need']!,
+          _investedNeedMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_investedNeedMeta);
+    }
+    if (data.containsKey('uninvested_need')) {
+      context.handle(
+        _uninvestedNeedMeta,
+        uninvestedNeed.isAcceptableOrUnknown(
+          data['uninvested_need']!,
+          _uninvestedNeedMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_uninvestedNeedMeta);
+    }
+    if (data.containsKey('calculation_version')) {
+      context.handle(
+        _calculationVersionMeta,
+        calculationVersion.isAcceptableOrUnknown(
+          data['calculation_version']!,
+          _calculationVersionMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_calculationVersionMeta);
+    }
+    if (data.containsKey('calculated_at')) {
+      context.handle(
+        _calculatedAtMeta,
+        calculatedAt.isAcceptableOrUnknown(
+          data['calculated_at']!,
+          _calculatedAtMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {protectionNeedId};
+  @override
+  ExpenseContinuityTableData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ExpenseContinuityTableData(
+      protectionNeedId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}protection_need_id'],
+      )!,
+      protectionHorizon: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}protection_horizon'],
+      )!,
+      monthlyExpense: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}monthly_expense'],
+      )!,
+      planValidityYears: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}plan_validity_years'],
+      )!,
+      investedNeed: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}invested_need'],
+      )!,
+      uninvestedNeed: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}uninvested_need'],
+      )!,
+      calculationVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}calculation_version'],
+      )!,
+      calculatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}calculated_at'],
+      ),
+    );
+  }
+
+  @override
+  $ExpenseContinuityTableTable createAlias(String alias) {
+    return $ExpenseContinuityTableTable(attachedDatabase, alias);
+  }
+}
+
+class ExpenseContinuityTableData extends DataClass
+    implements Insertable<ExpenseContinuityTableData> {
+  final int protectionNeedId;
+  final int protectionHorizon;
+  final double monthlyExpense;
+  final int planValidityYears;
+  final double investedNeed;
+  final double uninvestedNeed;
+  final int calculationVersion;
+  final DateTime? calculatedAt;
+  const ExpenseContinuityTableData({
+    required this.protectionNeedId,
+    required this.protectionHorizon,
+    required this.monthlyExpense,
+    required this.planValidityYears,
+    required this.investedNeed,
+    required this.uninvestedNeed,
+    required this.calculationVersion,
+    this.calculatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['protection_need_id'] = Variable<int>(protectionNeedId);
+    map['protection_horizon'] = Variable<int>(protectionHorizon);
+    map['monthly_expense'] = Variable<double>(monthlyExpense);
+    map['plan_validity_years'] = Variable<int>(planValidityYears);
+    map['invested_need'] = Variable<double>(investedNeed);
+    map['uninvested_need'] = Variable<double>(uninvestedNeed);
+    map['calculation_version'] = Variable<int>(calculationVersion);
+    if (!nullToAbsent || calculatedAt != null) {
+      map['calculated_at'] = Variable<DateTime>(calculatedAt);
+    }
+    return map;
+  }
+
+  ExpenseContinuityTableCompanion toCompanion(bool nullToAbsent) {
+    return ExpenseContinuityTableCompanion(
+      protectionNeedId: Value(protectionNeedId),
+      protectionHorizon: Value(protectionHorizon),
+      monthlyExpense: Value(monthlyExpense),
+      planValidityYears: Value(planValidityYears),
+      investedNeed: Value(investedNeed),
+      uninvestedNeed: Value(uninvestedNeed),
+      calculationVersion: Value(calculationVersion),
+      calculatedAt: calculatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(calculatedAt),
+    );
+  }
+
+  factory ExpenseContinuityTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ExpenseContinuityTableData(
+      protectionNeedId: serializer.fromJson<int>(json['protectionNeedId']),
+      protectionHorizon: serializer.fromJson<int>(json['protectionHorizon']),
+      monthlyExpense: serializer.fromJson<double>(json['monthlyExpense']),
+      planValidityYears: serializer.fromJson<int>(json['planValidityYears']),
+      investedNeed: serializer.fromJson<double>(json['investedNeed']),
+      uninvestedNeed: serializer.fromJson<double>(json['uninvestedNeed']),
+      calculationVersion: serializer.fromJson<int>(json['calculationVersion']),
+      calculatedAt: serializer.fromJson<DateTime?>(json['calculatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'protectionNeedId': serializer.toJson<int>(protectionNeedId),
+      'protectionHorizon': serializer.toJson<int>(protectionHorizon),
+      'monthlyExpense': serializer.toJson<double>(monthlyExpense),
+      'planValidityYears': serializer.toJson<int>(planValidityYears),
+      'investedNeed': serializer.toJson<double>(investedNeed),
+      'uninvestedNeed': serializer.toJson<double>(uninvestedNeed),
+      'calculationVersion': serializer.toJson<int>(calculationVersion),
+      'calculatedAt': serializer.toJson<DateTime?>(calculatedAt),
+    };
+  }
+
+  ExpenseContinuityTableData copyWith({
+    int? protectionNeedId,
+    int? protectionHorizon,
+    double? monthlyExpense,
+    int? planValidityYears,
+    double? investedNeed,
+    double? uninvestedNeed,
+    int? calculationVersion,
+    Value<DateTime?> calculatedAt = const Value.absent(),
+  }) => ExpenseContinuityTableData(
+    protectionNeedId: protectionNeedId ?? this.protectionNeedId,
+    protectionHorizon: protectionHorizon ?? this.protectionHorizon,
+    monthlyExpense: monthlyExpense ?? this.monthlyExpense,
+    planValidityYears: planValidityYears ?? this.planValidityYears,
+    investedNeed: investedNeed ?? this.investedNeed,
+    uninvestedNeed: uninvestedNeed ?? this.uninvestedNeed,
+    calculationVersion: calculationVersion ?? this.calculationVersion,
+    calculatedAt: calculatedAt.present ? calculatedAt.value : this.calculatedAt,
+  );
+  ExpenseContinuityTableData copyWithCompanion(
+    ExpenseContinuityTableCompanion data,
+  ) {
+    return ExpenseContinuityTableData(
+      protectionNeedId: data.protectionNeedId.present
+          ? data.protectionNeedId.value
+          : this.protectionNeedId,
+      protectionHorizon: data.protectionHorizon.present
+          ? data.protectionHorizon.value
+          : this.protectionHorizon,
+      monthlyExpense: data.monthlyExpense.present
+          ? data.monthlyExpense.value
+          : this.monthlyExpense,
+      planValidityYears: data.planValidityYears.present
+          ? data.planValidityYears.value
+          : this.planValidityYears,
+      investedNeed: data.investedNeed.present
+          ? data.investedNeed.value
+          : this.investedNeed,
+      uninvestedNeed: data.uninvestedNeed.present
+          ? data.uninvestedNeed.value
+          : this.uninvestedNeed,
+      calculationVersion: data.calculationVersion.present
+          ? data.calculationVersion.value
+          : this.calculationVersion,
+      calculatedAt: data.calculatedAt.present
+          ? data.calculatedAt.value
+          : this.calculatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExpenseContinuityTableData(')
+          ..write('protectionNeedId: $protectionNeedId, ')
+          ..write('protectionHorizon: $protectionHorizon, ')
+          ..write('monthlyExpense: $monthlyExpense, ')
+          ..write('planValidityYears: $planValidityYears, ')
+          ..write('investedNeed: $investedNeed, ')
+          ..write('uninvestedNeed: $uninvestedNeed, ')
+          ..write('calculationVersion: $calculationVersion, ')
+          ..write('calculatedAt: $calculatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    protectionNeedId,
+    protectionHorizon,
+    monthlyExpense,
+    planValidityYears,
+    investedNeed,
+    uninvestedNeed,
+    calculationVersion,
+    calculatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ExpenseContinuityTableData &&
+          other.protectionNeedId == this.protectionNeedId &&
+          other.protectionHorizon == this.protectionHorizon &&
+          other.monthlyExpense == this.monthlyExpense &&
+          other.planValidityYears == this.planValidityYears &&
+          other.investedNeed == this.investedNeed &&
+          other.uninvestedNeed == this.uninvestedNeed &&
+          other.calculationVersion == this.calculationVersion &&
+          other.calculatedAt == this.calculatedAt);
+}
+
+class ExpenseContinuityTableCompanion
+    extends UpdateCompanion<ExpenseContinuityTableData> {
+  final Value<int> protectionNeedId;
+  final Value<int> protectionHorizon;
+  final Value<double> monthlyExpense;
+  final Value<int> planValidityYears;
+  final Value<double> investedNeed;
+  final Value<double> uninvestedNeed;
+  final Value<int> calculationVersion;
+  final Value<DateTime?> calculatedAt;
+  const ExpenseContinuityTableCompanion({
+    this.protectionNeedId = const Value.absent(),
+    this.protectionHorizon = const Value.absent(),
+    this.monthlyExpense = const Value.absent(),
+    this.planValidityYears = const Value.absent(),
+    this.investedNeed = const Value.absent(),
+    this.uninvestedNeed = const Value.absent(),
+    this.calculationVersion = const Value.absent(),
+    this.calculatedAt = const Value.absent(),
+  });
+  ExpenseContinuityTableCompanion.insert({
+    this.protectionNeedId = const Value.absent(),
+    required int protectionHorizon,
+    required double monthlyExpense,
+    required int planValidityYears,
+    required double investedNeed,
+    required double uninvestedNeed,
+    required int calculationVersion,
+    this.calculatedAt = const Value.absent(),
+  }) : protectionHorizon = Value(protectionHorizon),
+       monthlyExpense = Value(monthlyExpense),
+       planValidityYears = Value(planValidityYears),
+       investedNeed = Value(investedNeed),
+       uninvestedNeed = Value(uninvestedNeed),
+       calculationVersion = Value(calculationVersion);
+  static Insertable<ExpenseContinuityTableData> custom({
+    Expression<int>? protectionNeedId,
+    Expression<int>? protectionHorizon,
+    Expression<double>? monthlyExpense,
+    Expression<int>? planValidityYears,
+    Expression<double>? investedNeed,
+    Expression<double>? uninvestedNeed,
+    Expression<int>? calculationVersion,
+    Expression<DateTime>? calculatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (protectionNeedId != null) 'protection_need_id': protectionNeedId,
+      if (protectionHorizon != null) 'protection_horizon': protectionHorizon,
+      if (monthlyExpense != null) 'monthly_expense': monthlyExpense,
+      if (planValidityYears != null) 'plan_validity_years': planValidityYears,
+      if (investedNeed != null) 'invested_need': investedNeed,
+      if (uninvestedNeed != null) 'uninvested_need': uninvestedNeed,
+      if (calculationVersion != null) 'calculation_version': calculationVersion,
+      if (calculatedAt != null) 'calculated_at': calculatedAt,
+    });
+  }
+
+  ExpenseContinuityTableCompanion copyWith({
+    Value<int>? protectionNeedId,
+    Value<int>? protectionHorizon,
+    Value<double>? monthlyExpense,
+    Value<int>? planValidityYears,
+    Value<double>? investedNeed,
+    Value<double>? uninvestedNeed,
+    Value<int>? calculationVersion,
+    Value<DateTime?>? calculatedAt,
+  }) {
+    return ExpenseContinuityTableCompanion(
+      protectionNeedId: protectionNeedId ?? this.protectionNeedId,
+      protectionHorizon: protectionHorizon ?? this.protectionHorizon,
+      monthlyExpense: monthlyExpense ?? this.monthlyExpense,
+      planValidityYears: planValidityYears ?? this.planValidityYears,
+      investedNeed: investedNeed ?? this.investedNeed,
+      uninvestedNeed: uninvestedNeed ?? this.uninvestedNeed,
+      calculationVersion: calculationVersion ?? this.calculationVersion,
+      calculatedAt: calculatedAt ?? this.calculatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (protectionNeedId.present) {
+      map['protection_need_id'] = Variable<int>(protectionNeedId.value);
+    }
+    if (protectionHorizon.present) {
+      map['protection_horizon'] = Variable<int>(protectionHorizon.value);
+    }
+    if (monthlyExpense.present) {
+      map['monthly_expense'] = Variable<double>(monthlyExpense.value);
+    }
+    if (planValidityYears.present) {
+      map['plan_validity_years'] = Variable<int>(planValidityYears.value);
+    }
+    if (investedNeed.present) {
+      map['invested_need'] = Variable<double>(investedNeed.value);
+    }
+    if (uninvestedNeed.present) {
+      map['uninvested_need'] = Variable<double>(uninvestedNeed.value);
+    }
+    if (calculationVersion.present) {
+      map['calculation_version'] = Variable<int>(calculationVersion.value);
+    }
+    if (calculatedAt.present) {
+      map['calculated_at'] = Variable<DateTime>(calculatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ExpenseContinuityTableCompanion(')
+          ..write('protectionNeedId: $protectionNeedId, ')
+          ..write('protectionHorizon: $protectionHorizon, ')
+          ..write('monthlyExpense: $monthlyExpense, ')
+          ..write('planValidityYears: $planValidityYears, ')
+          ..write('investedNeed: $investedNeed, ')
+          ..write('uninvestedNeed: $uninvestedNeed, ')
+          ..write('calculationVersion: $calculationVersion, ')
+          ..write('calculatedAt: $calculatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ProtectionPlanContinuitySharesTableTable
+    extends ProtectionPlanContinuitySharesTable
+    with
+        TableInfo<
+          $ProtectionPlanContinuitySharesTableTable,
+          ProtectionPlanContinuitySharesTableData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProtectionPlanContinuitySharesTableTable(
+    this.attachedDatabase, [
+    this._alias,
+  ]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _protectionPlanIdMeta = const VerificationMeta(
+    'protectionPlanId',
+  );
+  @override
+  late final GeneratedColumn<int> protectionPlanId = GeneratedColumn<int>(
+    'protection_plan_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES protection_plans_table (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _protectionTypeMeta = const VerificationMeta(
+    'protectionType',
+  );
+  @override
+  late final GeneratedColumn<String> protectionType = GeneratedColumn<String>(
+    'protection_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _continuityShareMeta = const VerificationMeta(
+    'continuityShare',
+  );
+  @override
+  late final GeneratedColumn<double> continuityShare = GeneratedColumn<double>(
+    'continuity_share',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    protectionPlanId,
+    protectionType,
+    continuityShare,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'protection_plan_continuity_shares_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProtectionPlanContinuitySharesTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('protection_plan_id')) {
+      context.handle(
+        _protectionPlanIdMeta,
+        protectionPlanId.isAcceptableOrUnknown(
+          data['protection_plan_id']!,
+          _protectionPlanIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_protectionPlanIdMeta);
+    }
+    if (data.containsKey('protection_type')) {
+      context.handle(
+        _protectionTypeMeta,
+        protectionType.isAcceptableOrUnknown(
+          data['protection_type']!,
+          _protectionTypeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_protectionTypeMeta);
+    }
+    if (data.containsKey('continuity_share')) {
+      context.handle(
+        _continuityShareMeta,
+        continuityShare.isAcceptableOrUnknown(
+          data['continuity_share']!,
+          _continuityShareMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_continuityShareMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {protectionPlanId, protectionType},
+  ];
+  @override
+  ProtectionPlanContinuitySharesTableData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProtectionPlanContinuitySharesTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      protectionPlanId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}protection_plan_id'],
+      )!,
+      protectionType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}protection_type'],
+      )!,
+      continuityShare: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}continuity_share'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ProtectionPlanContinuitySharesTableTable createAlias(String alias) {
+    return $ProtectionPlanContinuitySharesTableTable(attachedDatabase, alias);
+  }
+}
+
+class ProtectionPlanContinuitySharesTableData extends DataClass
+    implements Insertable<ProtectionPlanContinuitySharesTableData> {
+  final int id;
+  final int protectionPlanId;
+  final String protectionType;
+  final double continuityShare;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const ProtectionPlanContinuitySharesTableData({
+    required this.id,
+    required this.protectionPlanId,
+    required this.protectionType,
+    required this.continuityShare,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['protection_plan_id'] = Variable<int>(protectionPlanId);
+    map['protection_type'] = Variable<String>(protectionType);
+    map['continuity_share'] = Variable<double>(continuityShare);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  ProtectionPlanContinuitySharesTableCompanion toCompanion(bool nullToAbsent) {
+    return ProtectionPlanContinuitySharesTableCompanion(
+      id: Value(id),
+      protectionPlanId: Value(protectionPlanId),
+      protectionType: Value(protectionType),
+      continuityShare: Value(continuityShare),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory ProtectionPlanContinuitySharesTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProtectionPlanContinuitySharesTableData(
+      id: serializer.fromJson<int>(json['id']),
+      protectionPlanId: serializer.fromJson<int>(json['protectionPlanId']),
+      protectionType: serializer.fromJson<String>(json['protectionType']),
+      continuityShare: serializer.fromJson<double>(json['continuityShare']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'protectionPlanId': serializer.toJson<int>(protectionPlanId),
+      'protectionType': serializer.toJson<String>(protectionType),
+      'continuityShare': serializer.toJson<double>(continuityShare),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  ProtectionPlanContinuitySharesTableData copyWith({
+    int? id,
+    int? protectionPlanId,
+    String? protectionType,
+    double? continuityShare,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => ProtectionPlanContinuitySharesTableData(
+    id: id ?? this.id,
+    protectionPlanId: protectionPlanId ?? this.protectionPlanId,
+    protectionType: protectionType ?? this.protectionType,
+    continuityShare: continuityShare ?? this.continuityShare,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  ProtectionPlanContinuitySharesTableData copyWithCompanion(
+    ProtectionPlanContinuitySharesTableCompanion data,
+  ) {
+    return ProtectionPlanContinuitySharesTableData(
+      id: data.id.present ? data.id.value : this.id,
+      protectionPlanId: data.protectionPlanId.present
+          ? data.protectionPlanId.value
+          : this.protectionPlanId,
+      protectionType: data.protectionType.present
+          ? data.protectionType.value
+          : this.protectionType,
+      continuityShare: data.continuityShare.present
+          ? data.continuityShare.value
+          : this.continuityShare,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionPlanContinuitySharesTableData(')
+          ..write('id: $id, ')
+          ..write('protectionPlanId: $protectionPlanId, ')
+          ..write('protectionType: $protectionType, ')
+          ..write('continuityShare: $continuityShare, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    protectionPlanId,
+    protectionType,
+    continuityShare,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProtectionPlanContinuitySharesTableData &&
+          other.id == this.id &&
+          other.protectionPlanId == this.protectionPlanId &&
+          other.protectionType == this.protectionType &&
+          other.continuityShare == this.continuityShare &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class ProtectionPlanContinuitySharesTableCompanion
+    extends UpdateCompanion<ProtectionPlanContinuitySharesTableData> {
+  final Value<int> id;
+  final Value<int> protectionPlanId;
+  final Value<String> protectionType;
+  final Value<double> continuityShare;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const ProtectionPlanContinuitySharesTableCompanion({
+    this.id = const Value.absent(),
+    this.protectionPlanId = const Value.absent(),
+    this.protectionType = const Value.absent(),
+    this.continuityShare = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  ProtectionPlanContinuitySharesTableCompanion.insert({
+    this.id = const Value.absent(),
+    required int protectionPlanId,
+    required String protectionType,
+    required double continuityShare,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) : protectionPlanId = Value(protectionPlanId),
+       protectionType = Value(protectionType),
+       continuityShare = Value(continuityShare),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<ProtectionPlanContinuitySharesTableData> custom({
+    Expression<int>? id,
+    Expression<int>? protectionPlanId,
+    Expression<String>? protectionType,
+    Expression<double>? continuityShare,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (protectionPlanId != null) 'protection_plan_id': protectionPlanId,
+      if (protectionType != null) 'protection_type': protectionType,
+      if (continuityShare != null) 'continuity_share': continuityShare,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  ProtectionPlanContinuitySharesTableCompanion copyWith({
+    Value<int>? id,
+    Value<int>? protectionPlanId,
+    Value<String>? protectionType,
+    Value<double>? continuityShare,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return ProtectionPlanContinuitySharesTableCompanion(
+      id: id ?? this.id,
+      protectionPlanId: protectionPlanId ?? this.protectionPlanId,
+      protectionType: protectionType ?? this.protectionType,
+      continuityShare: continuityShare ?? this.continuityShare,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (protectionPlanId.present) {
+      map['protection_plan_id'] = Variable<int>(protectionPlanId.value);
+    }
+    if (protectionType.present) {
+      map['protection_type'] = Variable<String>(protectionType.value);
+    }
+    if (continuityShare.present) {
+      map['continuity_share'] = Variable<double>(continuityShare.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProtectionPlanContinuitySharesTableCompanion(')
+          ..write('id: $id, ')
+          ..write('protectionPlanId: $protectionPlanId, ')
+          ..write('protectionType: $protectionType, ')
+          ..write('continuityShare: $continuityShare, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -10774,6 +12611,15 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $ProtectionBudgetContinuitiesTable(this);
   late final $ProtectionDependencyTableTable protectionDependencyTable =
       $ProtectionDependencyTableTable(this);
+  late final $ProtectionPlansTableTable protectionPlansTable =
+      $ProtectionPlansTableTable(this);
+  late final $ProtectionNeedsTableTable protectionNeedsTable =
+      $ProtectionNeedsTableTable(this);
+  late final $ExpenseContinuityTableTable expenseContinuityTable =
+      $ExpenseContinuityTableTable(this);
+  late final $ProtectionPlanContinuitySharesTableTable
+  protectionPlanContinuitySharesTable =
+      $ProtectionPlanContinuitySharesTableTable(this);
   late final TransactionsDao transactionsDao = TransactionsDao(
     this as AppDatabase,
   );
@@ -10830,6 +12676,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     protectionScenariosTable,
     protectionBudgetContinuities,
     protectionDependencyTable,
+    protectionPlansTable,
+    protectionNeedsTable,
+    expenseContinuityTable,
+    protectionPlanContinuitySharesTable,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -10947,6 +12797,34 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       ),
       result: [
         TableUpdate('protection_budget_continuities', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'protection_plans_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('protection_needs_table', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'protection_needs_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('expense_continuity_table', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'protection_plans_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate(
+          'protection_plan_continuity_shares_table',
+          kind: UpdateKind.delete,
+        ),
       ],
     ),
   ]);
@@ -21641,6 +23519,1719 @@ typedef $$ProtectionDependencyTableTableProcessedTableManager =
       ProtectionDependencyTableData,
       PrefetchHooks Function()
     >;
+typedef $$ProtectionPlansTableTableCreateCompanionBuilder =
+    ProtectionPlansTableCompanion Function({
+      Value<int> id,
+      required DateTime startDate,
+      required DateTime endDate,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+    });
+typedef $$ProtectionPlansTableTableUpdateCompanionBuilder =
+    ProtectionPlansTableCompanion Function({
+      Value<int> id,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+final class $$ProtectionPlansTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $ProtectionPlansTableTable,
+          ProtectionPlansTableData
+        > {
+  $$ProtectionPlansTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<
+    $ProtectionNeedsTableTable,
+    List<ProtectionNeedsTableData>
+  >
+  _protectionNeedsTableRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.protectionNeedsTable,
+    aliasName:
+        'protection_plans_table__id__protection_needs_table__protection_plan_id',
+  );
+
+  $$ProtectionNeedsTableTableProcessedTableManager
+  get protectionNeedsTableRefs {
+    final manager = $$ProtectionNeedsTableTableTableManager(
+      $_db,
+      $_db.protectionNeedsTable,
+    ).filter((f) => f.protectionPlanId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _protectionNeedsTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $ProtectionPlanContinuitySharesTableTable,
+    List<ProtectionPlanContinuitySharesTableData>
+  >
+  _protectionPlanContinuitySharesTableRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.protectionPlanContinuitySharesTable,
+    aliasName:
+        'protection_plans_table__id__protection_plan_continuity_shares_table__protection_plan_id',
+  );
+
+  $$ProtectionPlanContinuitySharesTableTableProcessedTableManager
+  get protectionPlanContinuitySharesTableRefs {
+    final manager = $$ProtectionPlanContinuitySharesTableTableTableManager(
+      $_db,
+      $_db.protectionPlanContinuitySharesTable,
+    ).filter((f) => f.protectionPlanId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _protectionPlanContinuitySharesTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$ProtectionPlansTableTableFilterComposer
+    extends Composer<_$AppDatabase, $ProtectionPlansTableTable> {
+  $$ProtectionPlansTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> protectionNeedsTableRefs(
+    Expression<bool> Function($$ProtectionNeedsTableTableFilterComposer f) f,
+  ) {
+    final $$ProtectionNeedsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.protectionNeedsTable,
+      getReferencedColumn: (t) => t.protectionPlanId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProtectionNeedsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.protectionNeedsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> protectionPlanContinuitySharesTableRefs(
+    Expression<bool> Function(
+      $$ProtectionPlanContinuitySharesTableTableFilterComposer f,
+    )
+    f,
+  ) {
+    final $$ProtectionPlanContinuitySharesTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.protectionPlanContinuitySharesTable,
+          getReferencedColumn: (t) => t.protectionPlanId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionPlanContinuitySharesTableTableFilterComposer(
+                $db: $db,
+                $table: $db.protectionPlanContinuitySharesTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$ProtectionPlansTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProtectionPlansTableTable> {
+  $$ProtectionPlansTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProtectionPlansTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProtectionPlansTableTable> {
+  $$ProtectionPlansTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> protectionNeedsTableRefs<T extends Object>(
+    Expression<T> Function($$ProtectionNeedsTableTableAnnotationComposer a) f,
+  ) {
+    final $$ProtectionNeedsTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.protectionNeedsTable,
+          getReferencedColumn: (t) => t.protectionPlanId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionNeedsTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.protectionNeedsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> protectionPlanContinuitySharesTableRefs<T extends Object>(
+    Expression<T> Function(
+      $$ProtectionPlanContinuitySharesTableTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$ProtectionPlanContinuitySharesTableTableAnnotationComposer
+    composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.protectionPlanContinuitySharesTable,
+      getReferencedColumn: (t) => t.protectionPlanId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProtectionPlanContinuitySharesTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.protectionPlanContinuitySharesTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$ProtectionPlansTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProtectionPlansTableTable,
+          ProtectionPlansTableData,
+          $$ProtectionPlansTableTableFilterComposer,
+          $$ProtectionPlansTableTableOrderingComposer,
+          $$ProtectionPlansTableTableAnnotationComposer,
+          $$ProtectionPlansTableTableCreateCompanionBuilder,
+          $$ProtectionPlansTableTableUpdateCompanionBuilder,
+          (ProtectionPlansTableData, $$ProtectionPlansTableTableReferences),
+          ProtectionPlansTableData,
+          PrefetchHooks Function({
+            bool protectionNeedsTableRefs,
+            bool protectionPlanContinuitySharesTableRefs,
+          })
+        > {
+  $$ProtectionPlansTableTableTableManager(
+    _$AppDatabase db,
+    $ProtectionPlansTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProtectionPlansTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProtectionPlansTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ProtectionPlansTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => ProtectionPlansTableCompanion(
+                id: id,
+                startDate: startDate,
+                endDate: endDate,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required DateTime startDate,
+                required DateTime endDate,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+              }) => ProtectionPlansTableCompanion.insert(
+                id: id,
+                startDate: startDate,
+                endDate: endDate,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ProtectionPlansTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                protectionNeedsTableRefs = false,
+                protectionPlanContinuitySharesTableRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (protectionNeedsTableRefs) db.protectionNeedsTable,
+                    if (protectionPlanContinuitySharesTableRefs)
+                      db.protectionPlanContinuitySharesTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (protectionNeedsTableRefs)
+                        await $_getPrefetchedData<
+                          ProtectionPlansTableData,
+                          $ProtectionPlansTableTable,
+                          ProtectionNeedsTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProtectionPlansTableTableReferences
+                              ._protectionNeedsTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProtectionPlansTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).protectionNeedsTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.protectionPlanId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (protectionPlanContinuitySharesTableRefs)
+                        await $_getPrefetchedData<
+                          ProtectionPlansTableData,
+                          $ProtectionPlansTableTable,
+                          ProtectionPlanContinuitySharesTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProtectionPlansTableTableReferences
+                              ._protectionPlanContinuitySharesTableRefsTable(
+                                db,
+                              ),
+                          managerFromTypedResult: (p0) =>
+                              $$ProtectionPlansTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).protectionPlanContinuitySharesTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.protectionPlanId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$ProtectionPlansTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProtectionPlansTableTable,
+      ProtectionPlansTableData,
+      $$ProtectionPlansTableTableFilterComposer,
+      $$ProtectionPlansTableTableOrderingComposer,
+      $$ProtectionPlansTableTableAnnotationComposer,
+      $$ProtectionPlansTableTableCreateCompanionBuilder,
+      $$ProtectionPlansTableTableUpdateCompanionBuilder,
+      (ProtectionPlansTableData, $$ProtectionPlansTableTableReferences),
+      ProtectionPlansTableData,
+      PrefetchHooks Function({
+        bool protectionNeedsTableRefs,
+        bool protectionPlanContinuitySharesTableRefs,
+      })
+    >;
+typedef $$ProtectionNeedsTableTableCreateCompanionBuilder =
+    ProtectionNeedsTableCompanion Function({
+      Value<int> id,
+      required int protectionPlanId,
+      required String protectionType,
+      required String protectionNeedType,
+      Value<double> amount,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+    });
+typedef $$ProtectionNeedsTableTableUpdateCompanionBuilder =
+    ProtectionNeedsTableCompanion Function({
+      Value<int> id,
+      Value<int> protectionPlanId,
+      Value<String> protectionType,
+      Value<String> protectionNeedType,
+      Value<double> amount,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+final class $$ProtectionNeedsTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $ProtectionNeedsTableTable,
+          ProtectionNeedsTableData
+        > {
+  $$ProtectionNeedsTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProtectionPlansTableTable _protectionPlanIdTable(
+    _$AppDatabase db,
+  ) => db.protectionPlansTable.createAlias(
+    'protection_needs_table__protection_plan_id__protection_plans_table__id',
+  );
+
+  $$ProtectionPlansTableTableProcessedTableManager get protectionPlanId {
+    final $_column = $_itemColumn<int>('protection_plan_id')!;
+
+    final manager = $$ProtectionPlansTableTableTableManager(
+      $_db,
+      $_db.protectionPlansTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_protectionPlanIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $ExpenseContinuityTableTable,
+    List<ExpenseContinuityTableData>
+  >
+  _expenseContinuityTableRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.expenseContinuityTable,
+    aliasName:
+        'protection_needs_table__id__expense_continuity_table__protection_need_id',
+  );
+
+  $$ExpenseContinuityTableTableProcessedTableManager
+  get expenseContinuityTableRefs {
+    final manager = $$ExpenseContinuityTableTableTableManager(
+      $_db,
+      $_db.expenseContinuityTable,
+    ).filter((f) => f.protectionNeedId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _expenseContinuityTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$ProtectionNeedsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $ProtectionNeedsTableTable> {
+  $$ProtectionNeedsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get protectionType => $composableBuilder(
+    column: $table.protectionType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get protectionNeedType => $composableBuilder(
+    column: $table.protectionNeedType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProtectionPlansTableTableFilterComposer get protectionPlanId {
+    final $$ProtectionPlansTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.protectionPlanId,
+      referencedTable: $db.protectionPlansTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProtectionPlansTableTableFilterComposer(
+            $db: $db,
+            $table: $db.protectionPlansTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> expenseContinuityTableRefs(
+    Expression<bool> Function($$ExpenseContinuityTableTableFilterComposer f) f,
+  ) {
+    final $$ExpenseContinuityTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.expenseContinuityTable,
+          getReferencedColumn: (t) => t.protectionNeedId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ExpenseContinuityTableTableFilterComposer(
+                $db: $db,
+                $table: $db.expenseContinuityTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$ProtectionNeedsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProtectionNeedsTableTable> {
+  $$ProtectionNeedsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get protectionType => $composableBuilder(
+    column: $table.protectionType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get protectionNeedType => $composableBuilder(
+    column: $table.protectionNeedType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProtectionPlansTableTableOrderingComposer get protectionPlanId {
+    final $$ProtectionPlansTableTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.protectionPlanId,
+          referencedTable: $db.protectionPlansTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionPlansTableTableOrderingComposer(
+                $db: $db,
+                $table: $db.protectionPlansTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$ProtectionNeedsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProtectionNeedsTableTable> {
+  $$ProtectionNeedsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get protectionType => $composableBuilder(
+    column: $table.protectionType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get protectionNeedType => $composableBuilder(
+    column: $table.protectionNeedType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$ProtectionPlansTableTableAnnotationComposer get protectionPlanId {
+    final $$ProtectionPlansTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.protectionPlanId,
+          referencedTable: $db.protectionPlansTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionPlansTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.protectionPlansTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  Expression<T> expenseContinuityTableRefs<T extends Object>(
+    Expression<T> Function($$ExpenseContinuityTableTableAnnotationComposer a) f,
+  ) {
+    final $$ExpenseContinuityTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.expenseContinuityTable,
+          getReferencedColumn: (t) => t.protectionNeedId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ExpenseContinuityTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.expenseContinuityTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$ProtectionNeedsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProtectionNeedsTableTable,
+          ProtectionNeedsTableData,
+          $$ProtectionNeedsTableTableFilterComposer,
+          $$ProtectionNeedsTableTableOrderingComposer,
+          $$ProtectionNeedsTableTableAnnotationComposer,
+          $$ProtectionNeedsTableTableCreateCompanionBuilder,
+          $$ProtectionNeedsTableTableUpdateCompanionBuilder,
+          (ProtectionNeedsTableData, $$ProtectionNeedsTableTableReferences),
+          ProtectionNeedsTableData,
+          PrefetchHooks Function({
+            bool protectionPlanId,
+            bool expenseContinuityTableRefs,
+          })
+        > {
+  $$ProtectionNeedsTableTableTableManager(
+    _$AppDatabase db,
+    $ProtectionNeedsTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProtectionNeedsTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProtectionNeedsTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ProtectionNeedsTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> protectionPlanId = const Value.absent(),
+                Value<String> protectionType = const Value.absent(),
+                Value<String> protectionNeedType = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => ProtectionNeedsTableCompanion(
+                id: id,
+                protectionPlanId: protectionPlanId,
+                protectionType: protectionType,
+                protectionNeedType: protectionNeedType,
+                amount: amount,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int protectionPlanId,
+                required String protectionType,
+                required String protectionNeedType,
+                Value<double> amount = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+              }) => ProtectionNeedsTableCompanion.insert(
+                id: id,
+                protectionPlanId: protectionPlanId,
+                protectionType: protectionType,
+                protectionNeedType: protectionNeedType,
+                amount: amount,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ProtectionNeedsTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({protectionPlanId = false, expenseContinuityTableRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (expenseContinuityTableRefs) db.expenseContinuityTable,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (protectionPlanId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.protectionPlanId,
+                                    referencedTable:
+                                        $$ProtectionNeedsTableTableReferences
+                                            ._protectionPlanIdTable(db),
+                                    referencedColumn:
+                                        $$ProtectionNeedsTableTableReferences
+                                            ._protectionPlanIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (expenseContinuityTableRefs)
+                        await $_getPrefetchedData<
+                          ProtectionNeedsTableData,
+                          $ProtectionNeedsTableTable,
+                          ExpenseContinuityTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProtectionNeedsTableTableReferences
+                              ._expenseContinuityTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProtectionNeedsTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).expenseContinuityTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.protectionNeedId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$ProtectionNeedsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProtectionNeedsTableTable,
+      ProtectionNeedsTableData,
+      $$ProtectionNeedsTableTableFilterComposer,
+      $$ProtectionNeedsTableTableOrderingComposer,
+      $$ProtectionNeedsTableTableAnnotationComposer,
+      $$ProtectionNeedsTableTableCreateCompanionBuilder,
+      $$ProtectionNeedsTableTableUpdateCompanionBuilder,
+      (ProtectionNeedsTableData, $$ProtectionNeedsTableTableReferences),
+      ProtectionNeedsTableData,
+      PrefetchHooks Function({
+        bool protectionPlanId,
+        bool expenseContinuityTableRefs,
+      })
+    >;
+typedef $$ExpenseContinuityTableTableCreateCompanionBuilder =
+    ExpenseContinuityTableCompanion Function({
+      Value<int> protectionNeedId,
+      required int protectionHorizon,
+      required double monthlyExpense,
+      required int planValidityYears,
+      required double investedNeed,
+      required double uninvestedNeed,
+      required int calculationVersion,
+      Value<DateTime?> calculatedAt,
+    });
+typedef $$ExpenseContinuityTableTableUpdateCompanionBuilder =
+    ExpenseContinuityTableCompanion Function({
+      Value<int> protectionNeedId,
+      Value<int> protectionHorizon,
+      Value<double> monthlyExpense,
+      Value<int> planValidityYears,
+      Value<double> investedNeed,
+      Value<double> uninvestedNeed,
+      Value<int> calculationVersion,
+      Value<DateTime?> calculatedAt,
+    });
+
+final class $$ExpenseContinuityTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $ExpenseContinuityTableTable,
+          ExpenseContinuityTableData
+        > {
+  $$ExpenseContinuityTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProtectionNeedsTableTable _protectionNeedIdTable(
+    _$AppDatabase db,
+  ) => db.protectionNeedsTable.createAlias(
+    'expense_continuity_table__protection_need_id__protection_needs_table__id',
+  );
+
+  $$ProtectionNeedsTableTableProcessedTableManager get protectionNeedId {
+    final $_column = $_itemColumn<int>('protection_need_id')!;
+
+    final manager = $$ProtectionNeedsTableTableTableManager(
+      $_db,
+      $_db.protectionNeedsTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_protectionNeedIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ExpenseContinuityTableTableFilterComposer
+    extends Composer<_$AppDatabase, $ExpenseContinuityTableTable> {
+  $$ExpenseContinuityTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get protectionHorizon => $composableBuilder(
+    column: $table.protectionHorizon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get monthlyExpense => $composableBuilder(
+    column: $table.monthlyExpense,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get planValidityYears => $composableBuilder(
+    column: $table.planValidityYears,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get investedNeed => $composableBuilder(
+    column: $table.investedNeed,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get uninvestedNeed => $composableBuilder(
+    column: $table.uninvestedNeed,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get calculationVersion => $composableBuilder(
+    column: $table.calculationVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get calculatedAt => $composableBuilder(
+    column: $table.calculatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProtectionNeedsTableTableFilterComposer get protectionNeedId {
+    final $$ProtectionNeedsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.protectionNeedId,
+      referencedTable: $db.protectionNeedsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProtectionNeedsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.protectionNeedsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ExpenseContinuityTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $ExpenseContinuityTableTable> {
+  $$ExpenseContinuityTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get protectionHorizon => $composableBuilder(
+    column: $table.protectionHorizon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get monthlyExpense => $composableBuilder(
+    column: $table.monthlyExpense,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get planValidityYears => $composableBuilder(
+    column: $table.planValidityYears,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get investedNeed => $composableBuilder(
+    column: $table.investedNeed,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get uninvestedNeed => $composableBuilder(
+    column: $table.uninvestedNeed,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get calculationVersion => $composableBuilder(
+    column: $table.calculationVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get calculatedAt => $composableBuilder(
+    column: $table.calculatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProtectionNeedsTableTableOrderingComposer get protectionNeedId {
+    final $$ProtectionNeedsTableTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.protectionNeedId,
+          referencedTable: $db.protectionNeedsTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionNeedsTableTableOrderingComposer(
+                $db: $db,
+                $table: $db.protectionNeedsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$ExpenseContinuityTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ExpenseContinuityTableTable> {
+  $$ExpenseContinuityTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get protectionHorizon => $composableBuilder(
+    column: $table.protectionHorizon,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get monthlyExpense => $composableBuilder(
+    column: $table.monthlyExpense,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get planValidityYears => $composableBuilder(
+    column: $table.planValidityYears,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get investedNeed => $composableBuilder(
+    column: $table.investedNeed,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get uninvestedNeed => $composableBuilder(
+    column: $table.uninvestedNeed,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get calculationVersion => $composableBuilder(
+    column: $table.calculationVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get calculatedAt => $composableBuilder(
+    column: $table.calculatedAt,
+    builder: (column) => column,
+  );
+
+  $$ProtectionNeedsTableTableAnnotationComposer get protectionNeedId {
+    final $$ProtectionNeedsTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.protectionNeedId,
+          referencedTable: $db.protectionNeedsTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionNeedsTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.protectionNeedsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$ExpenseContinuityTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ExpenseContinuityTableTable,
+          ExpenseContinuityTableData,
+          $$ExpenseContinuityTableTableFilterComposer,
+          $$ExpenseContinuityTableTableOrderingComposer,
+          $$ExpenseContinuityTableTableAnnotationComposer,
+          $$ExpenseContinuityTableTableCreateCompanionBuilder,
+          $$ExpenseContinuityTableTableUpdateCompanionBuilder,
+          (ExpenseContinuityTableData, $$ExpenseContinuityTableTableReferences),
+          ExpenseContinuityTableData,
+          PrefetchHooks Function({bool protectionNeedId})
+        > {
+  $$ExpenseContinuityTableTableTableManager(
+    _$AppDatabase db,
+    $ExpenseContinuityTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ExpenseContinuityTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$ExpenseContinuityTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ExpenseContinuityTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> protectionNeedId = const Value.absent(),
+                Value<int> protectionHorizon = const Value.absent(),
+                Value<double> monthlyExpense = const Value.absent(),
+                Value<int> planValidityYears = const Value.absent(),
+                Value<double> investedNeed = const Value.absent(),
+                Value<double> uninvestedNeed = const Value.absent(),
+                Value<int> calculationVersion = const Value.absent(),
+                Value<DateTime?> calculatedAt = const Value.absent(),
+              }) => ExpenseContinuityTableCompanion(
+                protectionNeedId: protectionNeedId,
+                protectionHorizon: protectionHorizon,
+                monthlyExpense: monthlyExpense,
+                planValidityYears: planValidityYears,
+                investedNeed: investedNeed,
+                uninvestedNeed: uninvestedNeed,
+                calculationVersion: calculationVersion,
+                calculatedAt: calculatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> protectionNeedId = const Value.absent(),
+                required int protectionHorizon,
+                required double monthlyExpense,
+                required int planValidityYears,
+                required double investedNeed,
+                required double uninvestedNeed,
+                required int calculationVersion,
+                Value<DateTime?> calculatedAt = const Value.absent(),
+              }) => ExpenseContinuityTableCompanion.insert(
+                protectionNeedId: protectionNeedId,
+                protectionHorizon: protectionHorizon,
+                monthlyExpense: monthlyExpense,
+                planValidityYears: planValidityYears,
+                investedNeed: investedNeed,
+                uninvestedNeed: uninvestedNeed,
+                calculationVersion: calculationVersion,
+                calculatedAt: calculatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ExpenseContinuityTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({protectionNeedId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (protectionNeedId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.protectionNeedId,
+                                referencedTable:
+                                    $$ExpenseContinuityTableTableReferences
+                                        ._protectionNeedIdTable(db),
+                                referencedColumn:
+                                    $$ExpenseContinuityTableTableReferences
+                                        ._protectionNeedIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ExpenseContinuityTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ExpenseContinuityTableTable,
+      ExpenseContinuityTableData,
+      $$ExpenseContinuityTableTableFilterComposer,
+      $$ExpenseContinuityTableTableOrderingComposer,
+      $$ExpenseContinuityTableTableAnnotationComposer,
+      $$ExpenseContinuityTableTableCreateCompanionBuilder,
+      $$ExpenseContinuityTableTableUpdateCompanionBuilder,
+      (ExpenseContinuityTableData, $$ExpenseContinuityTableTableReferences),
+      ExpenseContinuityTableData,
+      PrefetchHooks Function({bool protectionNeedId})
+    >;
+typedef $$ProtectionPlanContinuitySharesTableTableCreateCompanionBuilder =
+    ProtectionPlanContinuitySharesTableCompanion Function({
+      Value<int> id,
+      required int protectionPlanId,
+      required String protectionType,
+      required double continuityShare,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+    });
+typedef $$ProtectionPlanContinuitySharesTableTableUpdateCompanionBuilder =
+    ProtectionPlanContinuitySharesTableCompanion Function({
+      Value<int> id,
+      Value<int> protectionPlanId,
+      Value<String> protectionType,
+      Value<double> continuityShare,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+final class $$ProtectionPlanContinuitySharesTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $ProtectionPlanContinuitySharesTableTable,
+          ProtectionPlanContinuitySharesTableData
+        > {
+  $$ProtectionPlanContinuitySharesTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProtectionPlansTableTable _protectionPlanIdTable(
+    _$AppDatabase db,
+  ) => db.protectionPlansTable.createAlias(
+    'protection_plan_continuity_shares_table__protection_plan_id__protection_plans_table__id',
+  );
+
+  $$ProtectionPlansTableTableProcessedTableManager get protectionPlanId {
+    final $_column = $_itemColumn<int>('protection_plan_id')!;
+
+    final manager = $$ProtectionPlansTableTableTableManager(
+      $_db,
+      $_db.protectionPlansTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_protectionPlanIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ProtectionPlanContinuitySharesTableTableFilterComposer
+    extends Composer<_$AppDatabase, $ProtectionPlanContinuitySharesTableTable> {
+  $$ProtectionPlanContinuitySharesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get protectionType => $composableBuilder(
+    column: $table.protectionType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get continuityShare => $composableBuilder(
+    column: $table.continuityShare,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ProtectionPlansTableTableFilterComposer get protectionPlanId {
+    final $$ProtectionPlansTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.protectionPlanId,
+      referencedTable: $db.protectionPlansTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProtectionPlansTableTableFilterComposer(
+            $db: $db,
+            $table: $db.protectionPlansTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ProtectionPlanContinuitySharesTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProtectionPlanContinuitySharesTableTable> {
+  $$ProtectionPlanContinuitySharesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get protectionType => $composableBuilder(
+    column: $table.protectionType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get continuityShare => $composableBuilder(
+    column: $table.continuityShare,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ProtectionPlansTableTableOrderingComposer get protectionPlanId {
+    final $$ProtectionPlansTableTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.protectionPlanId,
+          referencedTable: $db.protectionPlansTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionPlansTableTableOrderingComposer(
+                $db: $db,
+                $table: $db.protectionPlansTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$ProtectionPlanContinuitySharesTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProtectionPlanContinuitySharesTableTable> {
+  $$ProtectionPlanContinuitySharesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get protectionType => $composableBuilder(
+    column: $table.protectionType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get continuityShare => $composableBuilder(
+    column: $table.continuityShare,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$ProtectionPlansTableTableAnnotationComposer get protectionPlanId {
+    final $$ProtectionPlansTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.protectionPlanId,
+          referencedTable: $db.protectionPlansTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$ProtectionPlansTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.protectionPlansTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$ProtectionPlanContinuitySharesTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProtectionPlanContinuitySharesTableTable,
+          ProtectionPlanContinuitySharesTableData,
+          $$ProtectionPlanContinuitySharesTableTableFilterComposer,
+          $$ProtectionPlanContinuitySharesTableTableOrderingComposer,
+          $$ProtectionPlanContinuitySharesTableTableAnnotationComposer,
+          $$ProtectionPlanContinuitySharesTableTableCreateCompanionBuilder,
+          $$ProtectionPlanContinuitySharesTableTableUpdateCompanionBuilder,
+          (
+            ProtectionPlanContinuitySharesTableData,
+            $$ProtectionPlanContinuitySharesTableTableReferences,
+          ),
+          ProtectionPlanContinuitySharesTableData,
+          PrefetchHooks Function({bool protectionPlanId})
+        > {
+  $$ProtectionPlanContinuitySharesTableTableTableManager(
+    _$AppDatabase db,
+    $ProtectionPlanContinuitySharesTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProtectionPlanContinuitySharesTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$ProtectionPlanContinuitySharesTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$ProtectionPlanContinuitySharesTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> protectionPlanId = const Value.absent(),
+                Value<String> protectionType = const Value.absent(),
+                Value<double> continuityShare = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => ProtectionPlanContinuitySharesTableCompanion(
+                id: id,
+                protectionPlanId: protectionPlanId,
+                protectionType: protectionType,
+                continuityShare: continuityShare,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int protectionPlanId,
+                required String protectionType,
+                required double continuityShare,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+              }) => ProtectionPlanContinuitySharesTableCompanion.insert(
+                id: id,
+                protectionPlanId: protectionPlanId,
+                protectionType: protectionType,
+                continuityShare: continuityShare,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ProtectionPlanContinuitySharesTableTableReferences(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({protectionPlanId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (protectionPlanId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.protectionPlanId,
+                                referencedTable:
+                                    $$ProtectionPlanContinuitySharesTableTableReferences
+                                        ._protectionPlanIdTable(db),
+                                referencedColumn:
+                                    $$ProtectionPlanContinuitySharesTableTableReferences
+                                        ._protectionPlanIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ProtectionPlanContinuitySharesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProtectionPlanContinuitySharesTableTable,
+      ProtectionPlanContinuitySharesTableData,
+      $$ProtectionPlanContinuitySharesTableTableFilterComposer,
+      $$ProtectionPlanContinuitySharesTableTableOrderingComposer,
+      $$ProtectionPlanContinuitySharesTableTableAnnotationComposer,
+      $$ProtectionPlanContinuitySharesTableTableCreateCompanionBuilder,
+      $$ProtectionPlanContinuitySharesTableTableUpdateCompanionBuilder,
+      (
+        ProtectionPlanContinuitySharesTableData,
+        $$ProtectionPlanContinuitySharesTableTableReferences,
+      ),
+      ProtectionPlanContinuitySharesTableData,
+      PrefetchHooks Function({bool protectionPlanId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -21723,5 +25314,20 @@ class $AppDatabaseManager {
       $$ProtectionDependencyTableTableTableManager(
         _db,
         _db.protectionDependencyTable,
+      );
+  $$ProtectionPlansTableTableTableManager get protectionPlansTable =>
+      $$ProtectionPlansTableTableTableManager(_db, _db.protectionPlansTable);
+  $$ProtectionNeedsTableTableTableManager get protectionNeedsTable =>
+      $$ProtectionNeedsTableTableTableManager(_db, _db.protectionNeedsTable);
+  $$ExpenseContinuityTableTableTableManager get expenseContinuityTable =>
+      $$ExpenseContinuityTableTableTableManager(
+        _db,
+        _db.expenseContinuityTable,
+      );
+  $$ProtectionPlanContinuitySharesTableTableTableManager
+  get protectionPlanContinuitySharesTable =>
+      $$ProtectionPlanContinuitySharesTableTableTableManager(
+        _db,
+        _db.protectionPlanContinuitySharesTable,
       );
 }

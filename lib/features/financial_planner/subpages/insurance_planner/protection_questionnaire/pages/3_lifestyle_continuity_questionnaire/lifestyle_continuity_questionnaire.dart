@@ -92,7 +92,7 @@ class LifestyleContinuityQuestionnaire
                             );
                           }
                           WidgetsBinding.instance.addPostFrameCallback((_) {
-                            controller.loadContinuitySharesForPlans(
+                            controller.loadContinuitySharesForPlans1(
                               plans.map((plan) => plan.planId),
                             );
                           });

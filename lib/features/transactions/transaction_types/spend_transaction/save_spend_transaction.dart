@@ -48,8 +48,12 @@ extension SaveSpendTransaction on TransactionController {
       int? transactionId = editingTransaction.value?.transaction.id;
 
       if (transactionId != null) {
-        await database.deleteParticipantsByTransaction(transactionId);
-        await database.deleteFinancialObligationsByTransaction(transactionId);
+        await database.transactionsDao.deleteParticipantsByTransaction(
+          transactionId,
+        );
+        await database.transactionsDao.deleteFinancialObligationsByTransaction(
+          transactionId,
+        );
 
         await database.transactionsDao.updateTransaction(
           transactionId,

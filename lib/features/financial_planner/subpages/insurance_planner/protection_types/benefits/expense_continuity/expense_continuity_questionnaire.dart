@@ -131,7 +131,7 @@ class _ContinuityPlansListState extends State<_ContinuityPlansList> {
   }
 
   Future<void> _loadShares() async {
-    await widget.controller.loadContinuitySharesForPlans(
+    await widget.controller.loadContinuitySharesForPlans1(
       widget.plans.map((plan) => plan.planId),
     );
   }
