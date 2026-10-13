@@ -12,13 +12,9 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/sections/protection_score_container_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/computation/death_benefit_result.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/2_critical_illness_benefit/models/critical_illness_benefit_result.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/3_disability_benefit/disability_benefit_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_need/protection_need_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/extensions/insurance_questtionaire_completion_extension.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/controller_extensions/calculate_death_benefit_controller_extension.dart';
 
 /// Controller for the Insurance Planner feature.
 ///
@@ -30,6 +26,12 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 /// extensions, such as `calculateDeathBenefit`, so this controller can stay
 /// focused on shared state and UI coordination.
 class InsurancePlannerController extends GetxController {
+  final protectionNeedRefreshVersion = 0.obs;
+
+  void refreshProtectionNeeds() {
+    protectionNeedRefreshVersion.value++;
+  }
+
   final fakeDouble = 0.0.obs;
   Future<double?> getProtectionNeedAmount({
     required int protectionPlanId,
@@ -60,20 +62,8 @@ class InsurancePlannerController extends GetxController {
     );
   }
 
-  /// Latest calculation result for each protection type.
-  ///
-  /// When a result is non-null, that protection type has enough data to show a
-  /// calculated need, coverage gap, severity, and detail view.
-  final deathBenefitResult = Rxn<DeathBenefitResult>();
-  final criticalIllnessBenefitResult = Rxn<CriticalIllnessBenefitResult>();
-  final disabilityBenefitResult = Rxn<DisabilityBenefitResult>();
-
   /// Whether each protection gap has already been calculated.
-  // Map<ProtectionType, bool> get protectionGapCompletion => {
-  //   ProtectionType.death: deathBenefitResult.value != null,
-  //   ProtectionType.criticalIllness: criticalIllnessBenefitResult.value != null,
-  //   ProtectionType.disability: disabilityBenefitResult.value != null,
-  // };
+
   final protectionGapCompletion = <ProtectionType, bool>{
     for (final type in ProtectionType.values) type: false,
   }.obs;
@@ -244,7 +234,7 @@ class InsurancePlannerController extends GetxController {
   /// calculation for the current saved data.
   Future<void> _initializeInsurancePlanner() async {
     await checkInsuranceQuestionnaireCompletion();
-    await calculateDeathBenefit();
+    // await calculateDeathBenefit();
   }
 
   @override

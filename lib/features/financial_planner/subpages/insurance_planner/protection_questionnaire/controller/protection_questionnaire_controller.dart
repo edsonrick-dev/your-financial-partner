@@ -15,6 +15,20 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 
 class ProtectionQuestionnaireController extends GetxController {
+  final editingExpenseContinuity = <ProtectionType, bool>{}.obs;
+
+  bool isEditingExpenseContinuity(ProtectionType type) {
+    return editingExpenseContinuity[type] ?? false;
+  }
+
+  void startEditingExpenseContinuity(ProtectionType type) {
+    editingExpenseContinuity[type] = true;
+  }
+
+  void cancelEditingExpenseContinuity(ProtectionType type) {
+    editingExpenseContinuity[type] = false;
+  }
+
   final Set<String> _loadedExpenseContinuityResults = {};
   final Set<String> _loadingExpenseContinuityResults = {};
   Future<void> ensureExpenseContinuityResultLoaded({
@@ -88,7 +102,7 @@ class ProtectionQuestionnaireController extends GetxController {
       ExpenseContinuityCalculator();
 
   final isComputingExpenseContinuity = false.obs;
-  Future<void> computeExpenseContinuity({
+  Future<bool> computeExpenseContinuity({
     required int protectionPlanId,
     required ProtectionType protectionType,
     required int currentAge,
@@ -97,7 +111,7 @@ class ProtectionQuestionnaireController extends GetxController {
     required double inflationRate,
     required double portfolioReturn,
   }) async {
-    if (isComputingExpenseContinuity.value) return;
+    if (isComputingExpenseContinuity.value) return false;
 
     final monthlyExpense = continuityMonthlyTotals[protectionType];
 
@@ -107,7 +121,7 @@ class ProtectionQuestionnaireController extends GetxController {
         'Configure your expenses before computing this fund.',
         snackPosition: SnackPosition.BOTTOM,
       );
-      return;
+      return false;
     }
 
     isComputingExpenseContinuity.value = true;
@@ -141,12 +155,16 @@ class ProtectionQuestionnaireController extends GetxController {
 
       // Publish the result only after persistence succeeds.
       expenseContinuityResults[protectionType] = result;
+      final insuranceController = Get.find<InsurancePlannerController>();
+
+      insuranceController.refreshProtectionNeeds();
 
       Get.snackbar(
         'Plan computed',
         'Your expense continuity fund has been calculated.',
         snackPosition: SnackPosition.BOTTOM,
       );
+      return true;
     } catch (error, stackTrace) {
       debugPrint('Expense continuity computation failed: $error');
       debugPrintStack(stackTrace: stackTrace);
@@ -156,6 +174,7 @@ class ProtectionQuestionnaireController extends GetxController {
         'Unable to compute your expense continuity fund.',
         snackPosition: SnackPosition.BOTTOM,
       );
+      return false;
     } finally {
       isComputingExpenseContinuity.value = false;
     }

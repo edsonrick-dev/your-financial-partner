@@ -52,60 +52,49 @@ class ProtectionNeedCard extends GetView<InsurancePlannerController> {
                       child: Text(needType.title, style: AppTextStyle.titleL),
                     ),
                     const SizedBox(width: 12),
-                    FutureBuilder<double?>(
-                      future: controller.getSavedProtectionNeedAmount(
-                        protectionType: type,
-                        needType: needType,
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const SizedBox(
-                            width: 60,
-                            height: 20,
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: SizedBox(
-                                width: 14,
-                                height: 14,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                    Obx(() {
+                      controller.protectionNeedRefreshVersion.value;
+
+                      return FutureBuilder<double?>(
+                        future: controller.getSavedProtectionNeedAmount(
+                          protectionType: type,
+                          needType: needType,
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const SizedBox(
+                              width: 60,
+                              height: 20,
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: SizedBox(
+                                  width: 14,
+                                  height: 14,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        }
+                            );
+                          }
 
-                        if (snapshot.hasError) {
-                          return const Text('Unavailable');
-                        }
+                          if (snapshot.hasError) {
+                            return const Text('Unavailable');
+                          }
 
-                        final amount = snapshot.data;
+                          final amount = snapshot.data;
 
-                        final amountText = switch (amount) {
-                          null => 'Not configured',
-                          0 => amount.toCurrency(decimalDigits: 0),
-                          _ => amount.toCompactCurrency(),
-                        };
+                          final amountText = switch (amount) {
+                            null => 'Not configured',
+                            0 => amount.toCurrency(decimalDigits: 0),
+                            _ => amount.toCompactCurrency(),
+                          };
 
-                        return Text(amountText, style: AppTextStyle.amountL);
-                      },
-                    ),
-                    // Text(() {
-                    //   final resolvedAmount = resolveProtectionNeedAmount(
-                    //     type: type,
-                    //     needType: needType,
-                    //     controller: controller,
-                    //   );
-
-                    //   if (resolvedAmount == null) {
-                    //     return 'Not configured';
-                    //   }
-
-                    //   return resolvedAmount == 0
-                    //       ? resolvedAmount.toCurrency(decimalDigits: 0)
-                    //       : resolvedAmount.toCompactCurrency();
-                    // }(), style: AppTextStyle.amountL),
+                          return Text(amountText, style: AppTextStyle.amountL);
+                        },
+                      );
+                    }),
                   ],
                 ),
                 Text(

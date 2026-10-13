@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient_card.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_year.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/controller/protection_questionnaire_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_need/expense_continuity/inputs/protection_continuity/protection_continuity_fund_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_need/expense_continuity/inputs/protection_horizon/protection_horizon_card.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_need/protection_need_type.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_needs/expense_continuity/investment_return_disclaimer.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
+import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
 class ExpenseContinuityPage extends GetView<ProtectionQuestionnaireController> {
   const ExpenseContinuityPage({super.key, required this.type});
@@ -101,9 +106,14 @@ class ExpenseContinuityPage extends GetView<ProtectionQuestionnaireController> {
             children: [
               Obx(() {
                 final result = controller.expenseContinuityResults[type];
-
-                if (result == null) {
-                  return const SizedBox.shrink();
+                final isEditing = controller.isEditingExpenseContinuity(type);
+                if (result == null || isEditing) {
+                  return _ExpenseContinuityInputSection(
+                    type: type,
+                    protectionPlan: protectionPlan,
+                    controller: controller,
+                    hasExistingResult: result != null,
+                  );
                 }
 
                 return Padding(
@@ -141,6 +151,54 @@ class ExpenseContinuityPage extends GetView<ProtectionQuestionnaireController> {
                           children: [
                             AppSectionBody(
                               padding: 20,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          type.continuityFundTitle,
+                                          style: AppTextStyle.titleL,
+                                        ),
+                                      ),
+                                      SizedBox(width: 16),
+                                      Obx(() {
+                                        final monthlyAmount =
+                                            controller
+                                                .continuityMonthlyTotals[type] ??
+                                            0.0;
+                                        final annualAmount = monthlyAmount * 12;
+
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              annualAmount.toCurrency(),
+                                              style: AppTextStyle.amountL,
+                                            ),
+                                            Text(
+                                              '${monthlyAmount.toCurrency()}/mo',
+                                              style: AppTextStyle.amountS,
+                                            ),
+                                          ],
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    type.continuityFundDescription,
+                                    style: AppTextStyle.labelM.copyWith(
+                                      color: context.colors.appTextMuted,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            AppSectionBody(
+                              padding: 20,
                               child: Obx(() {
                                 final result =
                                     controller.expenseContinuityResults[type];
@@ -159,9 +217,9 @@ class ExpenseContinuityPage extends GetView<ProtectionQuestionnaireController> {
                                       'Projected Living Expenses',
                                       style: AppTextStyle.titleL,
                                     ),
-                                    const SizedBox(height: 8),
+                                    // const SizedBox(height: 8),
                                     Text(
-                                      'Your estimated annual living expenses, adjusted for inflation.',
+                                      'Based on 3% inflation.',
                                       style: AppTextStyle.labelM.copyWith(
                                         color: context.colors.appTextMuted,
                                       ),
@@ -276,65 +334,108 @@ class ExpenseContinuityPage extends GetView<ProtectionQuestionnaireController> {
                                 ],
                               ),
                             ),
+                            AppButton(
+                              text: 'Edit Plan',
+                              onTap: () {
+                                controller.startEditingExpenseContinuity(type);
+                              },
+                            ),
                           ],
                         ),
                       ),
+                      SizedBox(height: 20),
+                      Column(children: [InvestmentReturnDisclaimer()]),
                     ],
                   ),
                 );
               }),
-
-              AppSection(
-                sectionTitle: 'Fund Inputs',
-                child: Column(
-                  spacing: 20,
-                  children: [
-                    ProtectionHorizonCard(
-                      type: type,
-                      planEndDate: protectionPlan.endDate,
-                    ),
-                    ProtectionContinuityFundCard(type: type),
-                    Obx(() {
-                      final isComputing =
-                          controller.isComputingExpenseContinuity.value;
-
-                      final hasMonthlyTotal = controller.continuityMonthlyTotals
-                          .containsKey(type);
-                      final hasComputedPlan = controller
-                          .expenseContinuityResults
-                          .containsKey(type);
-                      return AppButton(
-                        type: ButtonType.outline,
-                        text: isComputing
-                            ? 'Computing...'
-                            : hasComputedPlan
-                            ? 'Recompute Plan'
-                            : 'Compute Plan',
-                        onTap: isComputing || !hasMonthlyTotal
-                            ? null
-                            : () async {
-                                await controller.computeExpenseContinuity(
-                                  protectionPlanId: protectionPlan.id,
-                                  protectionType: type,
-                                  currentAge: 28,
-                                  retirementAge: 60,
-                                  planValidityYears: 5,
-                                  inflationRate: 0.03,
-                                  portfolioReturn: 0.06,
-                                );
-                                controller
-                                        .expandedExpenseContinuityProjections[type] =
-                                    false;
-                              },
-                      );
-                    }),
-                  ],
-                ),
-              ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class _ExpenseContinuityInputSection extends StatelessWidget {
+  const _ExpenseContinuityInputSection({
+    required this.type,
+    required this.protectionPlan,
+    required this.controller,
+    required this.hasExistingResult,
+  });
+
+  final ProtectionType type;
+  final ProtectionPlansTableData protectionPlan;
+  final ProtectionQuestionnaireController controller;
+  final bool hasExistingResult;
+  @override
+  Widget build(BuildContext context) {
+    return AppSection(
+      sectionTitle: 'Fund Inputs',
+      child: Column(
+        spacing: 20,
+        children: [
+          ProtectionHorizonCard(
+            type: type,
+            planEndDate: protectionPlan.endDate,
+          ),
+          ProtectionContinuityFundCard(type: type),
+          Obx(() {
+            final isComputing = controller.isComputingExpenseContinuity.value;
+
+            final hasMonthlyTotal = controller.continuityMonthlyTotals
+                .containsKey(type);
+
+            return Column(
+              children: [
+                AppButton(
+                  text: isComputing
+                      ? 'Computing...'
+                      : hasExistingResult
+                      ? 'Recompute Plan'
+                      : 'Compute Plan',
+                  onTap: isComputing || !hasMonthlyTotal
+                      ? null
+                      : () async {
+                          final success = await controller
+                              .computeExpenseContinuity(
+                                protectionPlanId: protectionPlan.id,
+                                protectionType: type,
+                                currentAge: 28,
+                                retirementAge: 60,
+                                planValidityYears: 5,
+                                inflationRate: 0.03,
+                                portfolioReturn: 0.06,
+                              );
+
+                          if (!success) return;
+
+                          controller
+                                  .expandedExpenseContinuityProjections[type] =
+                              false;
+
+                          // Return to the results section.
+                          controller.cancelEditingExpenseContinuity(type);
+                        },
+                ),
+
+                if (hasExistingResult) ...[
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: isComputing
+                        ? null
+                        : () {
+                            controller.cancelEditingExpenseContinuity(type);
+                          },
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              ],
+            );
+          }),
+        ],
+      ),
     );
   }
 }
