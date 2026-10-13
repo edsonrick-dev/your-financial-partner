@@ -68,7 +68,7 @@ extension CalculateCriticalIllnessBenefitControllerExtension
         retirementAge: 0,
       ),
       inflationRate: 0.03,
-      portfolioReturn: 0.6,
+      portfolioReturn: 0.06,
       planValidityYears: 5,
     );
 

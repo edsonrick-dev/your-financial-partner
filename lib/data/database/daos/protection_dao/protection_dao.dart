@@ -33,6 +33,23 @@ part 'protection_dao.g.dart';
 class ProtectionDao extends DatabaseAccessor<AppDatabase>
     with _$ProtectionDaoMixin {
   ProtectionDao(super.db);
+  Future<ExpenseContinuityTableData?> getExpenseContinuity({
+    required int protectionPlanId,
+    required ProtectionType protectionType,
+  }) async {
+    final need = await getProtectionNeed(
+      protectionPlanId: protectionPlanId,
+      protectionType: protectionType,
+      needType: ProtectionNeedType.expenseContinuity,
+    );
+
+    if (need == null) return null;
+
+    return (select(
+      expenseContinuityTable,
+    )..where((tbl) => tbl.protectionNeedId.equals(need.id))).getSingleOrNull();
+  }
+
   Future<void> updateExpenseContinuityMonthlyExpense({
     required int protectionNeedId,
     required double monthlyExpense,

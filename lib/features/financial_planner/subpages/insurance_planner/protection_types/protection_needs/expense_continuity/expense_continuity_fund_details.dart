@@ -14,8 +14,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/protection_horizon_questionnaire_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/controller_extensions/calculate_death_benefit_controller_extension.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/benefits/expense_continuity/expense_continuity_questionnaire.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/benefits/expense_continuity/investment_return_disclaimer.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_needs/expense_continuity/expense_continuity_questionnaire.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_needs/expense_continuity/investment_return_disclaimer.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/home/bindings/protection_questionnaire_binding.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';

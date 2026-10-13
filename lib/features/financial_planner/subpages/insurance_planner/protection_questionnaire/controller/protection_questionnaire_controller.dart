@@ -4,6 +4,8 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_calculator.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/extensions/insurance_questtionaire_completion_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
@@ -13,6 +15,152 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 
 class ProtectionQuestionnaireController extends GetxController {
+  final Set<String> _loadedExpenseContinuityResults = {};
+  final Set<String> _loadingExpenseContinuityResults = {};
+  Future<void> ensureExpenseContinuityResultLoaded({
+    required int protectionPlanId,
+    required ProtectionType protectionType,
+    required double inflationRate,
+    required double portfolioReturn,
+  }) async {
+    final key = '$protectionPlanId-${protectionType.name}';
+
+    if (_loadedExpenseContinuityResults.contains(key) ||
+        !_loadingExpenseContinuityResults.add(key)) {
+      return;
+    }
+
+    try {
+      await loadExpenseContinuityResult(
+        protectionPlanId: protectionPlanId,
+        protectionType: protectionType,
+        inflationRate: inflationRate,
+        portfolioReturn: portfolioReturn,
+      );
+
+      _loadedExpenseContinuityResults.add(key);
+    } finally {
+      _loadingExpenseContinuityResults.remove(key);
+    }
+  }
+
+  Future<void> loadExpenseContinuityResult({
+    required int protectionPlanId,
+    required ProtectionType protectionType,
+    required double inflationRate,
+    required double portfolioReturn,
+  }) async {
+    try {
+      final saved = await database.protectionDao.getExpenseContinuity(
+        protectionPlanId: protectionPlanId,
+        protectionType: protectionType,
+      );
+
+      if (saved == null) return;
+
+      final result = _expenseContinuityCalculator.calculate(
+        monthlyExpense: saved.monthlyExpense,
+        planValidityYears: saved.planValidityYears,
+        supportYears: saved.protectionHorizon,
+        inflationRate: inflationRate,
+        portfolioReturn: portfolioReturn,
+      );
+
+      expenseContinuityResults[protectionType] = result;
+    } catch (error, stackTrace) {
+      debugPrint('Failed to load expense continuity result: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    }
+  }
+
+  final expandedExpenseContinuityProjections = <ProtectionType, bool>{}.obs;
+
+  bool isProjectionExpanded(ProtectionType type) =>
+      expandedExpenseContinuityProjections[type] ?? false;
+
+  void toggleProjectionExpanded(ProtectionType type) {
+    expandedExpenseContinuityProjections[type] = !isProjectionExpanded(type);
+  }
+
+  final expenseContinuityResults =
+      <ProtectionType, ExpenseContinuityResult>{}.obs;
+  final ExpenseContinuityCalculator _expenseContinuityCalculator =
+      ExpenseContinuityCalculator();
+
+  final isComputingExpenseContinuity = false.obs;
+  Future<void> computeExpenseContinuity({
+    required int protectionPlanId,
+    required ProtectionType protectionType,
+    required int currentAge,
+    required int retirementAge,
+    required int planValidityYears,
+    required double inflationRate,
+    required double portfolioReturn,
+  }) async {
+    if (isComputingExpenseContinuity.value) return;
+
+    final monthlyExpense = continuityMonthlyTotals[protectionType];
+
+    if (monthlyExpense == null) {
+      Get.snackbar(
+        'Expenses not configured',
+        'Configure your expenses before computing this fund.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    isComputingExpenseContinuity.value = true;
+
+    try {
+      final horizon = getHorizonObservable(protectionType).value;
+
+      final supportYears = horizon.resolveYears(
+        currentAge: currentAge,
+        retirementAge: retirementAge,
+      );
+
+      final result = _expenseContinuityCalculator.calculate(
+        monthlyExpense: monthlyExpense,
+        planValidityYears: planValidityYears,
+        supportYears: supportYears,
+        inflationRate: inflationRate,
+        portfolioReturn: portfolioReturn,
+      );
+
+      await database.protectionDao.saveExpenseContinuity(
+        protectionPlanId: protectionPlanId,
+        protectionType: protectionType,
+        protectionHorizon: supportYears,
+        monthlyExpense: monthlyExpense,
+        planValidityYears: planValidityYears,
+        investedNeed: result.investedNeed,
+        uninvestedNeed: result.uninvestedNeed,
+        calculationVersion: 1,
+      );
+
+      // Publish the result only after persistence succeeds.
+      expenseContinuityResults[protectionType] = result;
+
+      Get.snackbar(
+        'Plan computed',
+        'Your expense continuity fund has been calculated.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Expense continuity computation failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+
+      Get.snackbar(
+        'Computation failed',
+        'Unable to compute your expense continuity fund.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isComputingExpenseContinuity.value = false;
+    }
+  }
+
   Future<void> loadContinuityMonthlyTotals() async {
     final protectionPlan = await database.protectionDao
         .getActiveProtectionPlan();
@@ -85,32 +233,33 @@ class ProtectionQuestionnaireController extends GetxController {
     final normalizedShare = share.clamp(0.0, 1.0);
 
     try {
-      // 1. Save the individual cash flow plan's continuity share.
+      // 1. Persist the selected continuity share.
       await database.protectionDao.saveContinuityShare(
         cashFlowPlanId: planId,
         protectionType: protectionType,
         continuityShare: normalizedShare,
       );
 
-      // 2. Update the in-memory continuity share.
+      // 2. Update the in-memory share.
       setContinuityShare(
         planId: planId,
         protectionType: protectionType,
         share: normalizedShare,
       );
 
-      // 3. Load cash flow plans and calculate the total monthly expense.
+      // 3. Get the current cash-flow plans.
       final plans = await cashflowController.watchSavedBudgetPlans().first;
 
+      // 4. Calculate the total monthly continuity expense.
       final total = await calculateTotalMonthlyContinuityExpense(
         plans: plans,
         type: protectionType,
       );
 
-      // 4. Update the displayed total.
+      // 5. Update the reactive UI.
       continuityMonthlyTotals[protectionType] = total;
 
-      // 5. Persist the total if an expense continuity record exists.
+      // 6. Persist the updated input if an expense continuity record exists.
       final protectionPlan = await database.protectionDao
           .getActiveProtectionPlan();
 
@@ -128,7 +277,10 @@ class ProtectionQuestionnaireController extends GetxController {
           monthlyExpense: total,
         );
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
+      debugPrint('Failed to update continuity share: $error');
+      debugPrintStack(stackTrace: stackTrace);
+
       Get.snackbar(
         'Unable to save',
         'Your changes could not be saved. Please try again.',
@@ -138,13 +290,23 @@ class ProtectionQuestionnaireController extends GetxController {
   }
 
   Future<void> _initializeQuestionnaire() async {
-    // await database.protectionDao.seedDefaultProtectionScenarios();
+    await Future.wait([loadProtectionHorizons(), loadFinancialDependency()]);
 
-    await Future.wait([
-      loadProtectionHorizons(),
-      loadFinancialDependency(),
-      loadContinuityMonthlyTotals(),
-    ]);
+    await loadContinuityMonthlyTotals();
+
+    final plans = await cashflowController.watchSavedBudgetPlans().first;
+
+    await loadContinuitySharesForPlans1(plans.map((plan) => plan.planId));
+
+    // Refresh totals from saved continuity shares and current budget plans.
+    for (final type in ProtectionType.values) {
+      final total = await calculateTotalMonthlyContinuityExpense(
+        plans: plans,
+        type: type,
+      );
+
+      continuityMonthlyTotals[type] = total;
+    }
   }
 
   final CashflowController cashflowController = Get.find<CashflowController>();

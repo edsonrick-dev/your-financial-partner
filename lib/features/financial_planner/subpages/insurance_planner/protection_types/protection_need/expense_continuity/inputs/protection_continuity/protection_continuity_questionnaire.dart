@@ -6,13 +6,14 @@ import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/controller/protection_questionnaire_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/benefits/expense_continuity/expense_continuity_budget_card.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_need/protection_need_type.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_needs/expense_continuity/expense_continuity_budget_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
-class ExpenseContinuityQuestionnaire
+class ProtectionContinuityQuestionnaire
     extends GetView<ProtectionQuestionnaireController> {
-  const ExpenseContinuityQuestionnaire({super.key, required this.type});
+  const ProtectionContinuityQuestionnaire({super.key, required this.type});
   final ProtectionType type;
 
   @override
@@ -24,7 +25,10 @@ class ExpenseContinuityQuestionnaire
         surfaceTintColor: Colors.transparent,
         title: FittedBox(
           fit: BoxFit.scaleDown,
-          child: Text('Expense Continuity Plan', style: AppTextStyle.headlineL),
+          child: Text(
+            '${type.continuityFundTitle.capitalize}',
+            style: AppTextStyle.headlineL,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -33,31 +37,28 @@ class ExpenseContinuityQuestionnaire
           children: [
             AppSection(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16,
                 children: [
                   AppGradientCard(
                     child: Text(
-                      "Not all expenses would continue after your death. Choose how much of each expense your family would still need.",
+                      type.continuityFundExplainerText,
                       style: AppTextStyle.bodyL.copyWith(
                         color: colorScheme.appInversedtext,
                       ),
                     ),
                   ),
-
-                  SizedBox(height: 16),
                   Text(
-                    "Which of your current expenses would still need to be covered if you were no longer here?",
+                    type.continuityFundQuestion,
                     style: AppTextStyle.headlineM,
                   ),
-                  SizedBox(height: 16),
                   Text(
-                    "Tap each card to adjust your dependents' share.",
+                    type.continuityFundQuestionHelper,
                     style: AppTextStyle.bodyL,
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 20),
             AppSection(
               child: StreamBuilder<List<SavedCashflowPlanData>>(
                 stream: controller.cashflowController.watchSavedBudgetPlans(),
@@ -78,11 +79,7 @@ class ExpenseContinuityQuestionnaire
                   if (plans.isEmpty) {
                     return const Text('No survivor budget plans found.');
                   }
-                  // WidgetsBinding.instance.addPostFrameCallback((_) {
-                  //   controller.loadContinuitySharesForPlans(
-                  //     plans.map((plan) => plan.planId),
-                  //   );
-                  // });
+
                   return _ContinuityPlansList(
                     plans: plans,
                     type: type,
