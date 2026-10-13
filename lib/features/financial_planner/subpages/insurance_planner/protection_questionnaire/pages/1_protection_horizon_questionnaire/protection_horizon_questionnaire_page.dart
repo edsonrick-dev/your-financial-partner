@@ -13,7 +13,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-
 class ProtectionHorizonQuestionnaire
     extends GetView<ProtectionQuestionnaireController> {
   const ProtectionHorizonQuestionnaire({super.key, this.type});
@@ -100,15 +99,13 @@ class ProtectionHorizonQuestionnaire
                 ],
               ),
             ),
-            AppSection(
-              child: Column(
-                spacing: 20,
-                children: [
-                  for (final protectionType
-                      in type == null ? ProtectionType.values : [type!])
-                    _buildHorizonQuestion(protectionType, context),
-                ],
-              ),
+            Column(
+              spacing: 20,
+              children: [
+                for (final protectionType
+                    in type == null ? ProtectionType.values : [type!])
+                  _buildHorizonQuestion(protectionType, context),
+              ],
             ),
             AppSection(
               child: AppButton(

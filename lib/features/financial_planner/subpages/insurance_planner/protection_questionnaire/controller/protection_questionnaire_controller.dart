@@ -49,8 +49,16 @@ class ProtectionQuestionnaireController extends GetxController {
   final RxMap<int, Map<ProtectionType, double>> continuityShares =
       <int, Map<ProtectionType, double>>{}.obs;
 
+  double _defaultContinuityShare(ProtectionType protectionType) {
+    return switch (protectionType) {
+      ProtectionType.death => 0.0,
+      ProtectionType.criticalIllness || ProtectionType.disability => 1.0,
+    };
+  }
+
   double getContinuityShare(int planId, ProtectionType protectionType) {
-    return continuityShares[planId]?[protectionType] ?? 1.0;
+    return continuityShares[planId]?[protectionType] ??
+        _defaultContinuityShare(protectionType);
   }
 
   void setContinuityShare({
@@ -71,7 +79,8 @@ class ProtectionQuestionnaireController extends GetxController {
   final Set<int> _loadedContinuityPlanIds = {};
 
   /// Load saved values once per plan ID.
-  /// Missing protection types default to 100%.
+  /// Missing protection types use their product-specific default share.
+  /// Death benefit defaults to 0% because dependent expenses should be opted in.
   Future<void> loadContinuitySharesForPlans(Iterable<int> planIds) async {
     for (final planId in planIds) {
       if (_loadedContinuityPlanIds.contains(planId) ||
@@ -85,7 +94,8 @@ class ProtectionQuestionnaireController extends GetxController {
         );
 
         continuityShares[planId] = {
-          for (final type in ProtectionType.values) type: saved[type] ?? 1.0,
+          for (final type in ProtectionType.values)
+            type: saved[type] ?? _defaultContinuityShare(type),
         };
 
         _loadedContinuityPlanIds.add(planId);
@@ -130,7 +140,8 @@ class ProtectionQuestionnaireController extends GetxController {
           await database.protectionDao.saveContinuityShare(
             cashFlowPlanId: planEntry.key,
             protectionType: type,
-            continuityShare: planEntry.value[type] ?? 1.0,
+            continuityShare:
+                planEntry.value[type] ?? _defaultContinuityShare(type),
           );
         }
       }

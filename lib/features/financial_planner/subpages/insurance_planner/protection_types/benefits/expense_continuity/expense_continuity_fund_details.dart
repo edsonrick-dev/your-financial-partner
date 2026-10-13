@@ -12,7 +12,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/protection_horizon_questionnaire_page.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/controller_extensions/death_insurance_planner_controller_extension.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/controller_extensions/calculate_death_benefit_controller_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/benefits/expense_continuity/expense_continuity_questionnaire.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/benefits/expense_continuity/investment_return_disclaimer.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
@@ -92,6 +92,16 @@ class _ExpenseContinuityFundDetailsSheetState
                   .value
                   ?.expenseContinuityDetails ??
               widget.data
+        : widget.type == ProtectionType.criticalIllness
+        ? insuranceController
+              .criticalIllnessBenefitResult
+              .value
+              ?.expenseContinuityDetails
+        : widget.type == ProtectionType.disability
+        ? insuranceController
+              .disabilityBenefitResult
+              .value
+              ?.expenseContinuityDetails
         : widget.data;
 
     final dataExists = data != null;

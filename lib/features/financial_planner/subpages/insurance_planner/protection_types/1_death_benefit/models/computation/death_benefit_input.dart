@@ -13,8 +13,8 @@ class DeathBenefitInput {
   final double eligibleExistingResources;
   final double existingDeathCoverage;
 
-  final int currentAge;
-  final int retirementAge;
+  final int? currentAge;
+  final int? retirementAge;
 
   const DeathBenefitInput({
     required this.horizon,
@@ -25,7 +25,7 @@ class DeathBenefitInput {
     required this.finalExpenses,
     required this.eligibleExistingResources,
     required this.existingDeathCoverage,
-    required this.currentAge,
-    required this.retirementAge,
+    this.currentAge,
+    this.retirementAge,
   });
 }

@@ -53,21 +53,36 @@ class ProtectionNeedCard extends GetView<InsurancePlannerController> {
                       child: Text(needType.title, style: AppTextStyle.titleL),
                     ),
                     const SizedBox(width: 12),
-                    Text(() {
+                    Obx(() {
                       final resolvedAmount = resolveProtectionNeedAmount(
                         type: type,
                         needType: needType,
                         controller: controller,
                       );
 
-                      if (resolvedAmount == null) {
-                        return 'Not configured';
-                      }
+                      final amountText = switch (resolvedAmount) {
+                        null => 'Not configured',
+                        0 => resolvedAmount.toCurrency(decimalDigits: 0),
+                        _ => resolvedAmount.toCompactCurrency(),
+                      };
 
-                      return resolvedAmount == 0
-                          ? resolvedAmount.toCurrency(decimalDigits: 0)
-                          : resolvedAmount.toCompactCurrency();
-                    }(), style: AppTextStyle.amountL),
+                      return Text(amountText, style: AppTextStyle.amountL);
+                    }),
+                    // Text(() {
+                    //   final resolvedAmount = resolveProtectionNeedAmount(
+                    //     type: type,
+                    //     needType: needType,
+                    //     controller: controller,
+                    //   );
+
+                    //   if (resolvedAmount == null) {
+                    //     return 'Not configured';
+                    //   }
+
+                    //   return resolvedAmount == 0
+                    //       ? resolvedAmount.toCurrency(decimalDigits: 0)
+                    //       : resolvedAmount.toCompactCurrency();
+                    // }(), style: AppTextStyle.amountL),
                   ],
                 ),
                 Text(

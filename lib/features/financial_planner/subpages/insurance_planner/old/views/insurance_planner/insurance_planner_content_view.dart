@@ -19,12 +19,22 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Obx(
-            () => ProtectionScoreContainerSection(
+          Obx(() {
+            final status = controller.protectionAssessmentStatus;
+
+            return ProtectionScoreContainerSection(
               profile: controller.protectionProfile,
               unmetGoals: controller.unmetProtectionGoals,
-            ),
-          ),
+              status: status,
+            );
+          }),
+          // Obx(
+          //   () => ProtectionScoreContainerSection(
+          //     profile: controller.protectionProfile,
+          //     unmetGoals: controller.unmetProtectionGoals,
+          //     isComplete: controller.areAllProtectionGapsComplete,
+          //   ),
+          // ),
           SizedBox(height: 20),
           AppSection(
             sectionTitle: 'Protection Breakdown',

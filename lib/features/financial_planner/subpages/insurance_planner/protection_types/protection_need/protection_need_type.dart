@@ -69,27 +69,27 @@ extension ProtectionTypeNeedsX on ProtectionType {
     switch (this) {
       case ProtectionType.death:
         return [
-          // ProtectionNeedType.funeralAndFinalExpense,
+          ProtectionNeedType.funeralAndFinalExpense,
           ProtectionNeedType.expenseContinuity,
-          // ProtectionNeedType.educationFunding,
-          // ProtectionNeedType.debtsAndObligations,
-          // ProtectionNeedType.estateSettlement,
+          ProtectionNeedType.educationFunding,
+          ProtectionNeedType.debtsAndObligations,
+          ProtectionNeedType.estateSettlement,
         ];
 
       case ProtectionType.criticalIllness:
         return [
-          // ProtectionNeedType.medicalAndRecoveryFund,
+          ProtectionNeedType.medicalAndRecoveryFund,
           ProtectionNeedType.expenseContinuity,
-          // ProtectionNeedType.educationFunding,
-          // ProtectionNeedType.debtsAndObligations,
+          ProtectionNeedType.educationFunding,
+          ProtectionNeedType.debtsAndObligations,
         ];
 
       case ProtectionType.disability:
         return [
-          // ProtectionNeedType.medicalAndRecoveryFund,
+          ProtectionNeedType.medicalAndRecoveryFund,
           ProtectionNeedType.expenseContinuity,
-          // ProtectionNeedType.educationFunding,
-          // ProtectionNeedType.debtsAndObligations,
+          ProtectionNeedType.educationFunding,
+          ProtectionNeedType.debtsAndObligations,
         ];
     }
   }

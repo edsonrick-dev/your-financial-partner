@@ -22,9 +22,18 @@ part 'protection_dao.g.dart';
 class ProtectionDao extends DatabaseAccessor<AppDatabase>
     with _$ProtectionDaoMixin {
   ProtectionDao(super.db);
+
+  double _defaultContinuityShare(ProtectionType protectionType) {
+    return switch (protectionType) {
+      ProtectionType.death => 0.0,
+      ProtectionType.criticalIllness || ProtectionType.disability => 1.0,
+    };
+  }
+
   Future<double> calculateMonthlyDependentExpenses(
-    List<SavedCashflowPlanData> plans,
-  ) async {
+    List<SavedCashflowPlanData> plans, {
+    required ProtectionType protectionType,
+  }) async {
     double total = 0;
 
     for (final plan in plans) {
@@ -32,11 +41,12 @@ class ProtectionDao extends DatabaseAccessor<AppDatabase>
 
       final shares = await getContinuitySharesForPlan(plan.planId);
 
-      final deathShare = shares[ProtectionType.death] ?? 1.0;
+      final continuityShare =
+          shares[protectionType] ?? _defaultContinuityShare(protectionType);
 
       final monthlyExpense = plan.budgetPeriod.toMonthly(plan.amount);
 
-      total += monthlyExpense * deathShare;
+      total += monthlyExpense * continuityShare;
     }
 
     return total;

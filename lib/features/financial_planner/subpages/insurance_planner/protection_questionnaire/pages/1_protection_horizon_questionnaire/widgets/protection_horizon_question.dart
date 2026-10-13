@@ -51,9 +51,12 @@ class ProtectionHorizonQuestion extends StatelessWidget {
             }).toList(),
           ),
 
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
 
-          Text(selectedOption.description),
+          Text(
+            selectedOption.description,
+            style: AppTextStyle.bodyS.copyWith(fontSize: 13),
+          ),
 
           const SizedBox(height: 12),
 
@@ -68,22 +71,22 @@ class ProtectionHorizonQuestion extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 8,
               children: [
-                Icon(PhosphorIconsRegular.info, size: 24),
+                Icon(PhosphorIconsRegular.info, size: 16),
 
                 Expanded(
                   child: Column(
-                    spacing: 2,
+                    // spacing: 2,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (selectedOption.isRecommended)
                         Text(
                           "Ascend's Recommendation",
-                          style: AppTextStyle.titleL,
+                          style: AppTextStyle.titleS,
                         ),
 
                       Text(
                         selectedOption.whenToChoose,
-                        style: AppTextStyle.bodyM,
+                        style: AppTextStyle.bodyS,
                       ),
                     ],
                   ),

@@ -5,24 +5,25 @@ import 'package:getx_drift_app/core/utils/age_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_calculator.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_input.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/computation/death_benefit_calculator.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/computation/death_benefit_input.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 
 extension CalculateDeathBenefitControllerExtension
     on InsurancePlannerController {
   Future<void> calculateDeathBenefit() async {
     // 1. Load the saved death benefit horizon.
+    final protectionType = ProtectionType.death;
     final scenarios = await database.protectionDao.getProtectionScenarios();
 
-    final deathScenario = scenarios.firstWhereOrNull(
-      (scenario) => scenario.protectionType == ProtectionType.death.name,
+    final scenario = scenarios.firstWhereOrNull(
+      (scenario) => scenario.protectionType == protectionType.name,
     );
 
-    if (deathScenario == null) return;
+    if (scenario == null) return;
 
     final horizon = ProtectionHorizon.values.firstWhere(
-      (value) => value.name == deathScenario.horizon,
+      (value) => value.name == scenario.horizon,
     );
 
     // 2. Load the user's birthday.
@@ -42,21 +43,25 @@ extension CalculateDeathBenefitControllerExtension
     final plans = await cashflowController.watchSavedBudgetPlans().first;
 
     final monthlyDependentExpenses = await database.protectionDao
-        .calculateMonthlyDependentExpenses(plans);
+        .calculateMonthlyDependentExpenses(
+          plans,
+          protectionType: protectionType,
+        );
 
     // 4. Calculate the death benefit.
     final calculator = DeathBenefitCalculator(
       expenseContinuityCalculator: ExpenseContinuityCalculator(),
     );
+    debugPrint('$monthlyDependentExpenses');
 
     final result = calculator.calculate(
       input: DeathBenefitInput(
         horizon: horizon,
         monthlyDependentExpenses: monthlyDependentExpenses,
-        estateSettlementFund: 0,
-        liabilities: 0,
-        dependentsFutureNeeds: 0,
-        finalExpenses: 0,
+        estateSettlementFund: estateSettlementFund.value,
+        liabilities: debtsAndObligations.value,
+        dependentsFutureNeeds: educationFunding.value,
+        finalExpenses: funeralAndFinalExpenseFund.value,
         eligibleExistingResources: 0,
         existingDeathCoverage: 0,
         currentAge: currentAge,

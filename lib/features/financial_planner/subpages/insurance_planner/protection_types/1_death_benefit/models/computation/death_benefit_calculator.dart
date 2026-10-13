@@ -3,8 +3,8 @@ import 'dart:math' as math;
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_fund_details_data.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/protection_horizon.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_input.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/death_benefit_result.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/computation/death_benefit_input.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/1_death_benefit/models/computation/death_benefit_result.dart';
 
 class DeathBenefitCalculator {
   final ExpenseContinuityCalculator expenseContinuityCalculator;
@@ -18,8 +18,8 @@ class DeathBenefitCalculator {
     required int planValidityYears,
   }) {
     final supportYears = input.horizon.resolveYears(
-      currentAge: input.currentAge,
-      retirementAge: input.retirementAge,
+      currentAge: input.currentAge ?? 0,
+      retirementAge: input.retirementAge ?? 0,
     );
 
     final expenseContinuityResult = expenseContinuityCalculator.calculate(

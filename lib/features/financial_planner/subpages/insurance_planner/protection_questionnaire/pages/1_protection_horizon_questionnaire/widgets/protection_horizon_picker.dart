@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -27,6 +28,8 @@ class ProtectionHorizonPicker extends StatelessWidget {
         constraints: BoxConstraints(minHeight: 44, minWidth: 44),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
+          boxShadow: AppShadows.card(colorScheme.appText),
+          border: Border.all(color: colorScheme.appBorderMuted),
           color: isSelected
               ? colorScheme.pageShifterFillSelected
               : colorScheme.pageShifterFillUnselected,

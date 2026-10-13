@@ -10,31 +10,37 @@ double? resolveProtectionNeedAmount({
   switch (type) {
     case ProtectionType.death:
       switch (needType) {
+        case ProtectionNeedType.funeralAndFinalExpense:
+          return controller.funeralAndFinalExpenseFund.value;
         case ProtectionNeedType.expenseContinuity:
           return controller.deathExpenseContinuityFund.value;
+        case ProtectionNeedType.educationFunding:
+          return controller.educationFunding.value;
+        case ProtectionNeedType.debtsAndObligations:
+          return controller.debtsAndObligations.value;
+        case ProtectionNeedType.estateSettlement:
+          return controller.estateSettlementFund.value;
 
         default:
-          return null;
+          return 0;
       }
 
     case ProtectionType.criticalIllness:
       switch (needType) {
         case ProtectionNeedType.expenseContinuity:
-          // Connect your critical illness calculation here.
-          return null;
+          return controller.criticalIllnessExpenseContinuityFund.value;
 
         default:
-          return null;
+          return controller.fakeDouble.value;
       }
 
     case ProtectionType.disability:
       switch (needType) {
         case ProtectionNeedType.expenseContinuity:
-          // Connect your disability calculation here.
-          return null;
+          return controller.disabilityExpenseContinuityFund.value;
 
         default:
-          return null;
+          return controller.fakeDouble.value;
       }
   }
 }
