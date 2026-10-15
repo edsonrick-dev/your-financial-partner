@@ -123,139 +123,6 @@ class RetirementDebugger extends StatelessWidget {
     );
   }
 
-  void _debugAccumulationProjection({
-    required DateTime planDate,
-    required DateTime retirementDate,
-    required int currentAge,
-    required int retirementAge,
-    required int fundLastUntilAge,
-    required double firstYearWithdrawal,
-    required double inflationRate,
-    required double currentSavings,
-    required double contribution,
-    required BillsFrequency frequency,
-    required double shortReturn,
-    required double mediumReturn,
-    required double longReturn,
-  }) {
-    final yearsToRetirement =
-        retirementDate.difference(planDate).inDays / 365.2425;
-
-    final totalYears = yearsToRetirement.ceil();
-
-    final periodsPerYear = frequency.investmentPeriodsPerYear;
-    final withdrawals = buildRetirementWithdrawals(
-      retirementDate: retirementDate,
-      retirementAge: retirementAge,
-      fundLastUntilAge: fundLastUntilAge,
-      firstYearWithdrawal: firstYearWithdrawal,
-      inflationRate: inflationRate,
-    );
-
-    final returns = RetirementHorizonReturns(
-      short: shortReturn,
-      medium: mediumReturn,
-      long: longReturn,
-    );
-    final annualInvestment = contribution * periodsPerYear;
-
-    var balance = currentSavings;
-    var totalInvested = currentSavings;
-
-    debugPrint('');
-    debugPrint('============================================================');
-    debugPrint('                  ACCUMULATION PROJECTION');
-    debugPrint('============================================================');
-
-    debugPrint('Starting savings:      ${currentSavings.toCurrency()}');
-
-    debugPrint('Periodic contribution: ${contribution.toCurrency()}');
-
-    debugPrint('Annual investment:     ${annualInvestment.toCurrency()}');
-
-    debugPrint('');
-
-    debugPrint(
-      'AGE | BEGINNING BALANCE | ANNUAL INVESTMENT | '
-      'TOTAL AMOUNT INVESTED | Short | Medium | Long | '
-      'Ave. RETURN (%) | INTEREST EARNED | END BALANCE',
-    );
-
-    debugPrint('-' * 120);
-
-    for (var year = 0; year < totalYears; year++) {
-      final age = currentAge + year;
-
-      final beginningBalance = balance;
-
-      final accumulationDate = DateTime(
-        planDate.year + year,
-        planDate.month,
-        planDate.day,
-      );
-
-      final weights = RetirementHorizonReturns.calculateHorizonWeights(
-        currentDate: accumulationDate,
-        futureWithdrawals: withdrawals,
-      );
-
-      final annualReturn =
-          RetirementHorizonReturns.calculateBlendedRetirementReturn(
-            weights: weights,
-            returns: returns,
-          );
-      final periodicReturn = RetirementPlannerEngine.calculatePeriodicReturn(
-        annualReturn: annualReturn,
-        frequency: frequency,
-      );
-
-      var interestEarned = 0.0;
-
-      for (var period = 0; period < periodsPerYear; period++) {
-        final interest = balance * periodicReturn;
-
-        balance += interest;
-        interestEarned += interest;
-
-        balance += contribution;
-      }
-
-      totalInvested += annualInvestment;
-
-      debugPrint(
-        '$age | '
-        '${beginningBalance.toCurrency()} | '
-        '${annualInvestment.toCurrency()} | '
-        '${totalInvested.toCurrency()} | '
-        '${((weights[PortfolioHorizon.short] ?? 0) * 100).toStringAsFixed(2)}% | '
-        '${((weights[PortfolioHorizon.medium] ?? 0) * 100).toStringAsFixed(2)}% | '
-        '${((weights[PortfolioHorizon.long] ?? 0) * 100).toStringAsFixed(2)}% | '
-        '${(annualReturn * 100).toStringAsFixed(2)}% | '
-        '${interestEarned.toCurrency()} | '
-        '${balance.toCurrency()}',
-      );
-    }
-
-    debugPrint('');
-
-    debugPrint(
-      'FINAL BALANCE: '
-      '${balance.toCurrency()}',
-    );
-
-    debugPrint(
-      'TOTAL INVESTED: '
-      '${totalInvested.toCurrency()}',
-    );
-
-    debugPrint(
-      'TOTAL INTEREST: '
-      '${(balance - totalInvested).toCurrency()}',
-    );
-
-    debugPrint('============================================================');
-  }
-
   void _debugRetirementPlanner() {
     Get.put<RiskToleranceController>(RiskToleranceController());
     final riskToleranceController = Get.find<RiskToleranceController>();
@@ -405,12 +272,11 @@ class RetirementDebugger extends StatelessWidget {
     //       longReturn: longReturn,
     //     );
 
-    final futureAnnualLifestyle =
-        RetirementPlannerEngine.calculateFutureAnnualLifestyle(
-          annualLifestyle: annualLifestyle,
-          inflationRate: inflationRate,
-          yearsToRetirement: yearsToRetirement,
-        );
+    RetirementPlannerEngine.calculateFutureAnnualLifestyle(
+      annualLifestyle: annualLifestyle,
+      inflationRate: inflationRate,
+      yearsToRetirement: yearsToRetirement,
+    );
     // _debugAccumulationProjection(
     //   currentAge:
     //       now.year -

@@ -20,7 +20,6 @@ class EmergencyFundMilestonePage extends GetView<FinancialProfileController> {
   final double amountSetAside;
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
     final monthlyBudget = controller.monthlyBudget;
 
     final currentMonths = monthlyBudget > 0.0

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
@@ -116,11 +117,11 @@ class ProtectionQuestionnaireController extends GetxController {
     final monthlyExpense = continuityMonthlyTotals[protectionType];
 
     if (monthlyExpense == null) {
-      Get.snackbar(
-        'Expenses not configured',
-        'Configure your expenses before computing this fund.',
-        snackPosition: SnackPosition.BOTTOM,
+      AppSnackbar.show(
+        title: 'Expenses not configured',
+        message: 'Configure your expenses before computing this fund.',
       );
+
       return false;
     }
 
@@ -159,20 +160,18 @@ class ProtectionQuestionnaireController extends GetxController {
 
       insuranceController.refreshProtectionNeeds();
 
-      Get.snackbar(
-        'Plan computed',
-        'Your expense continuity fund has been calculated.',
-        snackPosition: SnackPosition.BOTTOM,
+      AppSnackbar.show(
+        title: 'Plan computed',
+        message: 'Your expense continuity fund has been calculated.',
       );
       return true;
     } catch (error, stackTrace) {
       debugPrint('Expense continuity computation failed: $error');
       debugPrintStack(stackTrace: stackTrace);
 
-      Get.snackbar(
-        'Computation failed',
-        'Unable to compute your expense continuity fund.',
-        snackPosition: SnackPosition.BOTTOM,
+      AppSnackbar.show(
+        title: 'Computation failed',
+        message: 'Unable to compute your expense continuity fund.',
       );
       return false;
     } finally {
@@ -300,10 +299,9 @@ class ProtectionQuestionnaireController extends GetxController {
       debugPrint('Failed to update continuity share: $error');
       debugPrintStack(stackTrace: stackTrace);
 
-      Get.snackbar(
-        'Unable to save',
-        'Your changes could not be saved. Please try again.',
-        snackPosition: SnackPosition.BOTTOM,
+      AppSnackbar.show(
+        title: 'Unable to save',
+        message: 'Your changes could not be saved. Please try again.',
       );
     }
   }
@@ -460,10 +458,10 @@ class ProtectionQuestionnaireController extends GetxController {
 
       return true;
     } catch (error) {
-      Get.snackbar(
-        'Unable to save',
-        'Your survivor budget selections could not be saved. Please try again.',
-        snackPosition: SnackPosition.BOTTOM,
+      AppSnackbar.show(
+        title: 'Unable to save',
+        message:
+            'Your survivor budget selections could not be saved. Please try again.',
       );
 
       return false;
@@ -553,9 +551,9 @@ class ProtectionQuestionnaireController extends GetxController {
     };
 
     if (!_isHorizonConfigured(horizon)) {
-      Get.snackbar(
-        'Horizon required',
-        'Please select a protection horizon before saving.',
+      AppSnackbar.show(
+        title: 'Horizon required',
+        message: 'Please select a protection horizon before saving.',
       );
       return;
     }

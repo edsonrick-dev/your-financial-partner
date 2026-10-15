@@ -7,8 +7,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class CriticalIllnessNeedsSlide extends GetView<InsurancePlannerController> {
-  const CriticalIllnessNeedsSlide({super.key});
-
+  const CriticalIllnessNeedsSlide({super.key, required this.type});
+  final ProtectionType type;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -16,9 +16,7 @@ class CriticalIllnessNeedsSlide extends GetView<InsurancePlannerController> {
       child: AppSection(
         child: Column(
           spacing: 20,
-          children: ProtectionNeedCardBuilder.build(
-            type: ProtectionType.criticalIllness,
-          ),
+          children: ProtectionNeedCardBuilder.build(type: type),
         ),
       ),
     );

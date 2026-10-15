@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
 import 'package:getx_drift_app/data/tables/accounts_table.dart';
@@ -159,7 +160,10 @@ class AccountController extends GetxController {
     final name = nameController.text.trim();
 
     if (name.isEmpty) {
-      Get.snackbar('Missing Account Name', 'Enter an account name.');
+      AppSnackbar.show(
+        title: 'Missing Account Name',
+        message: 'Enter an account name.',
+      );
       return;
     }
 
@@ -182,7 +186,11 @@ class AccountController extends GetxController {
     final adjustment = actual - account.currentValue;
 
     if (actual < 0) {
-      Get.snackbar('Invalid Balance', 'Balance cannot be negative.');
+      AppSnackbar.show(
+        title: 'Invalid Balance',
+        message: 'Balance cannot be negative.',
+      );
+
       return;
     }
 
@@ -222,12 +230,20 @@ class AccountController extends GetxController {
     final creditLimit = enteredCreditLimit.value;
 
     if (name.isEmpty) {
-      Get.snackbar('Missing Account Name', 'Enter an account name.');
+      AppSnackbar.show(
+        title: 'Missing Account Name',
+        message: 'Enter an account name.',
+      );
+
       return;
     }
 
     if (creditLimit <= 0) {
-      Get.snackbar('Invalid Credit Limit', 'Enter a valid credit limit.');
+      AppSnackbar.show(
+        title: 'Invalid Credit Limit',
+        message: 'Enter a valid credit limit.',
+      );
+
       return;
     }
 
@@ -248,10 +264,11 @@ class AccountController extends GetxController {
 
   Future<void> deleteAccount(AccountsTableData account) async {
     if (account.isSystem) {
-      Get.snackbar(
-        'Account cannot be deleted',
-        'This account is required by Ascend.',
+      AppSnackbar.show(
+        title: 'Account cannot be deleted',
+        message: 'This account is required by Ascend.',
       );
+
       return;
     }
 
@@ -289,11 +306,15 @@ class AccountController extends GetxController {
         await database.accountsDao.deleteAccount(account.id);
       });
       Get.back();
-      Get.snackbar('Account deleted', '${account.name} was removed.');
+      AppSnackbar.show(
+        title: 'Account deleted',
+        message: '${account.name} was removed.',
+      );
     } catch (_) {
-      Get.snackbar(
-        'Account not deleted',
-        'Delete or move linked transactions before deleting this account.',
+      AppSnackbar.show(
+        title: 'Account not deleted',
+        message:
+            'Delete or move linked transactions before deleting this account.',
       );
     }
   }
@@ -318,21 +339,29 @@ class AccountController extends GetxController {
     final nameTaken = await isAccountNameTaken();
 
     if (nameTaken) {
-      Get.snackbar(
-        'Account Already Exists',
-        'An account with this name already exists.',
+      AppSnackbar.show(
+        title: 'Account Already Exists',
+        message: 'An account with this name already exists.',
       );
+
       return null;
     }
     final initialBalance = enteredBalance.value;
     final creditLimit = enteredCreditLimit.value;
 
     if (initialBalance < 0) {
-      Get.snackbar('Invalid Balance', 'Initial balance cannot be negative.');
+      AppSnackbar.show(
+        title: 'Invalid Balance',
+        message: 'Initial balance cannot be negative.',
+      );
+
       return null;
     }
     if (type == AccountType.creditCard && creditLimit <= 0) {
-      Get.snackbar('Invalid Credit Limit', 'Enter a valid credit limit.');
+      AppSnackbar.show(
+        title: 'Invalid Credit Limit',
+        message: 'Enter a valid credit limit.',
+      );
 
       return null;
     }
@@ -341,18 +370,20 @@ class AccountController extends GetxController {
       final due = selectedPaymentDueDate.value;
 
       if (statement == null || due == null) {
-        Get.snackbar(
-          'Missing Billing Dates',
-          'Select a statement date and payment due date.',
+        AppSnackbar.show(
+          title: 'Missing Billing Dates',
+          message: 'Select a statement date and payment due date.',
         );
+
         return null;
       }
 
       if (!due.isAfter(statement)) {
-        Get.snackbar(
-          'Invalid Billing Dates',
-          'The payment due date must be after the statement date.',
+        AppSnackbar.show(
+          title: 'Invalid Billing Dates',
+          message: 'The payment due date must be after the statement date.',
         );
+
         return null;
       }
     }

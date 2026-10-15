@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_page_shifter.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class AppDetailsPageActionSection extends StatelessWidget {
@@ -27,13 +26,13 @@ class AppDetailsPageActionSection extends StatelessWidget {
     return Obx(
       () => Row(
         children: [
-          SizedBox(width: 8),
           Expanded(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.only(right: 16),
               child: Row(
                 children: [
+                  SizedBox(width: 8),
                   for (int index = 0; index < actions.length; index++)
                     AppDetailsPageShifter(
                       text: actions[index],

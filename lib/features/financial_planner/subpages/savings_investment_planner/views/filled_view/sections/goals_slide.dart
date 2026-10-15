@@ -6,7 +6,6 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/controller/savings_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/emergency_fund_goal/emergency_fund_details/emergency_fund_details_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/goal_type.dart';
@@ -159,56 +158,56 @@ class GoalsSlide extends GetView<SavingsPlannerController> {
   }
 }
 
-class _BuildFirstGoal extends StatelessWidget {
-  const _BuildFirstGoal();
+// class _BuildFirstGoal extends StatelessWidget {
+//   const _BuildFirstGoal();
 
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
+//   @override
+//   Widget build(BuildContext context) {
+//     final colorScheme = context.colors;
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            PhosphorIconsRegular.target,
-            size: 60,
-            color: colorScheme.appAccent,
-          ),
+//     return Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.center,
+//         children: [
+//           Icon(
+//             PhosphorIconsRegular.target,
+//             size: 60,
+//             color: colorScheme.appAccent,
+//           ),
 
-          const SizedBox(height: 8),
+//           const SizedBox(height: 8),
 
-          Text(
-            'You have no goals set yet',
-            style: AppTextStyle.headlineM,
-            textAlign: TextAlign.center,
-          ),
+//           Text(
+//             'You have no goals set yet',
+//             style: AppTextStyle.headlineM,
+//             textAlign: TextAlign.center,
+//           ),
 
-          Text(
-            'Give your money a purpose',
-            style: AppTextStyle.headlineS,
-            textAlign: TextAlign.center,
-          ),
+//           Text(
+//             'Give your money a purpose',
+//             style: AppTextStyle.headlineS,
+//             textAlign: TextAlign.center,
+//           ),
 
-          Text(
-            'Create goals to give your savings and investments a clear direction.',
-            style: AppTextStyle.bodyM.copyWith(color: colorScheme.appTextMuted),
-            textAlign: TextAlign.center,
-          ),
+//           Text(
+//             'Create goals to give your savings and investments a clear direction.',
+//             style: AppTextStyle.bodyM.copyWith(color: colorScheme.appTextMuted),
+//             textAlign: TextAlign.center,
+//           ),
 
-          const SizedBox(height: 12),
+//           const SizedBox(height: 12),
 
-          AppButton(
-            type: ButtonType.outline,
-            text: 'Set Financial Goals',
-            onTap: () {
-              Get.bottomSheet(GoalSettingSheet(), isScrollControlled: true);
-              // Open GoalSetupSheet
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
+//           AppButton(
+//             type: ButtonType.outline,
+//             text: 'Set Financial Goals',
+//             onTap: () {
+//               Get.bottomSheet(GoalSettingSheet(), isScrollControlled: true);
+//               // Open GoalSetupSheet
+//             },
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

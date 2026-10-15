@@ -6,7 +6,6 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/controller/retirement_fund_reservation_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/projection/retirement_projection_engine.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/set_retirement_goal_flow/retirement_projection_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/retirement_fund_goal/set_retirement_goal_flow/retirement_reservation_page.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
@@ -134,92 +133,92 @@ class RetirementFundNeedPage extends GetView<FinancialProfileController> {
   }
 }
 
-class _RetirementWithdrawalTable extends StatelessWidget {
-  final List<RetirementProjection> projections;
+// class _RetirementWithdrawalTable extends StatelessWidget {
+//   final List<RetirementProjection> projections;
 
-  const _RetirementWithdrawalTable({required this.projections});
+//   const _RetirementWithdrawalTable({required this.projections});
 
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    final textStyle = AppTextStyle.amountS;
-    final headerStyle = AppTextStyle.titleM;
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.bgLight,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      child: DataTable(
-        columnSpacing: 16,
-        horizontalMargin: 8,
-        columns: [
-          DataColumn(label: Text('Age', style: headerStyle)),
-          DataColumn(
-            label: Text('Beginning', style: headerStyle),
-            numeric: true,
-          ),
-          DataColumn(
-            label: Text('Withdrawal', style: headerStyle),
-            numeric: true,
-          ),
-          DataColumn(
-            label: Text('Remaining', style: headerStyle),
-            numeric: true,
-          ),
-          DataColumn(label: Text('Return', style: headerStyle), numeric: true),
-          DataColumn(label: Text('Growth', style: headerStyle), numeric: true),
-          DataColumn(label: Text('Ending', style: headerStyle), numeric: true),
-        ],
-        rows: projections.map((projection) {
-          return DataRow(
-            cells: [
-              DataCell(Text(projection.age.toString(), style: textStyle)),
-              DataCell(
-                Text(
-                  projection.beginningBalance.toCompactCurrency(
-                    kThreshold: 100000,
-                  ),
-                  style: textStyle,
-                ),
-              ),
+//   @override
+//   Widget build(BuildContext context) {
+//     final colorScheme = context.colors;
+//     final textStyle = AppTextStyle.amountS;
+//     final headerStyle = AppTextStyle.titleM;
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: colorScheme.bgLight,
+//         borderRadius: BorderRadius.circular(16),
+//       ),
+//       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+//       child: DataTable(
+//         columnSpacing: 16,
+//         horizontalMargin: 8,
+//         columns: [
+//           DataColumn(label: Text('Age', style: headerStyle)),
+//           DataColumn(
+//             label: Text('Beginning', style: headerStyle),
+//             numeric: true,
+//           ),
+//           DataColumn(
+//             label: Text('Withdrawal', style: headerStyle),
+//             numeric: true,
+//           ),
+//           DataColumn(
+//             label: Text('Remaining', style: headerStyle),
+//             numeric: true,
+//           ),
+//           DataColumn(label: Text('Return', style: headerStyle), numeric: true),
+//           DataColumn(label: Text('Growth', style: headerStyle), numeric: true),
+//           DataColumn(label: Text('Ending', style: headerStyle), numeric: true),
+//         ],
+//         rows: projections.map((projection) {
+//           return DataRow(
+//             cells: [
+//               DataCell(Text(projection.age.toString(), style: textStyle)),
+//               DataCell(
+//                 Text(
+//                   projection.beginningBalance.toCompactCurrency(
+//                     kThreshold: 100000,
+//                   ),
+//                   style: textStyle,
+//                 ),
+//               ),
 
-              DataCell(
-                Text(
-                  '-${projection.withdrawal.toCompactCurrency(kThreshold: 100000)}',
-                  style: textStyle.copyWith(color: colorScheme.appOutflow),
-                ),
-              ),
-              DataCell(
-                Text(
-                  (projection.remainingBalance).toCompactCurrency(
-                    kThreshold: 100000,
-                  ),
-                  style: textStyle,
-                ),
-              ),
-              DataCell(
-                Text(
-                  '+${(projection.returnRate * 100).toStringAsFixed(1)}%',
-                  style: textStyle.copyWith(color: colorScheme.appInflow),
-                ),
-              ),
-              DataCell(
-                Text(
-                  '+${projection.interestEarned.toCompactCurrency(kThreshold: 100000)}',
-                  style: textStyle.copyWith(color: colorScheme.appInflow),
-                ),
-              ),
-              DataCell(
-                Text(
-                  projection.endBalance.toCompactCurrency(kThreshold: 100000),
-                  style: textStyle,
-                ),
-              ),
-            ],
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
+//               DataCell(
+//                 Text(
+//                   '-${projection.withdrawal.toCompactCurrency(kThreshold: 100000)}',
+//                   style: textStyle.copyWith(color: colorScheme.appOutflow),
+//                 ),
+//               ),
+//               DataCell(
+//                 Text(
+//                   (projection.remainingBalance).toCompactCurrency(
+//                     kThreshold: 100000,
+//                   ),
+//                   style: textStyle,
+//                 ),
+//               ),
+//               DataCell(
+//                 Text(
+//                   '+${(projection.returnRate * 100).toStringAsFixed(1)}%',
+//                   style: textStyle.copyWith(color: colorScheme.appInflow),
+//                 ),
+//               ),
+//               DataCell(
+//                 Text(
+//                   '+${projection.interestEarned.toCompactCurrency(kThreshold: 100000)}',
+//                   style: textStyle.copyWith(color: colorScheme.appInflow),
+//                 ),
+//               ),
+//               DataCell(
+//                 Text(
+//                   projection.endBalance.toCompactCurrency(kThreshold: 100000),
+//                   style: textStyle,
+//                 ),
+//               ),
+//             ],
+//           );
+//         }).toList(),
+//       ),
+//     );
+//   }
+// }

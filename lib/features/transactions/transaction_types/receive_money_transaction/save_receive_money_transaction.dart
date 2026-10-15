@@ -21,17 +21,20 @@ extension SaveTransferTransaction on TransactionController {
     final amountValue = amount.value;
 
     if (person == null) {
-      Get.snackbar('Missing Person', 'Select a person.');
+      AppSnackbar.show(title: 'Missing Person', message: 'Select a person.');
+
       return;
     }
 
     if (account == null) {
-      Get.snackbar('Missing Account', 'Select an account.');
+      AppSnackbar.show(title: 'Missing Account', message: 'Select an account.');
+
       return;
     }
 
     if (amountValue <= 0) {
-      Get.snackbar('Invalid Amount', 'Enter an amount.');
+      AppSnackbar.show(title: 'Invalid Amount', message: 'Enter an amount.');
+
       return;
     }
 

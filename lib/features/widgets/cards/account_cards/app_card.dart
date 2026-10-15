@@ -10,12 +10,14 @@ class AppCard extends StatelessWidget {
     this.onLongPressed,
     this.padding = 16,
     this.borderColor,
+    this.width,
   });
   final VoidCallback? onTap;
   final VoidCallback? onLongPressed;
   final Widget child;
   final double padding;
   final Color? borderColor;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class AppCard extends StatelessWidget {
       onLongPress: onLongPressed,
       child: Container(
         constraints: BoxConstraints(minHeight: 52),
-        width: double.infinity,
+        width: width ?? double.infinity,
         padding: EdgeInsets.all(padding),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),

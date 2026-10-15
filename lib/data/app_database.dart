@@ -313,6 +313,7 @@ class AppDatabase extends _$AppDatabase {
           return EntitiesTableCompanion.insert(
             name: entity.name,
             entityType: entity.entityType.name,
+            // ignore: dead_code
             organizationType: Value(entity.organizationType?.name),
             isSystem: const Value(true),
           );

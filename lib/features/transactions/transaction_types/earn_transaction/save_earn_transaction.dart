@@ -19,17 +19,23 @@ extension SaveEarnTransaction on TransactionController {
     /// VALIDATION
 
     if (category == null) {
-      Get.snackbar('Missing Category', 'Select a category.');
+      AppSnackbar.show(
+        title: 'Missing Category',
+        message: 'Select a category.',
+      );
+
       return;
     }
 
     if (account == null) {
-      Get.snackbar('Missing Account', 'Select an account.');
+      AppSnackbar.show(title: 'Missing Account', message: 'Select an account.');
+
       return;
     }
 
     if (amountValue <= 0) {
-      Get.snackbar('Invalid Amount', 'Enter an amount.');
+      AppSnackbar.show(title: 'Invalid Amount', message: 'Enter an amount.');
+
       return;
     }
     await database.transaction(() async {

@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
@@ -286,9 +287,9 @@ class CashflowController extends GetxController {
         );
 
     if (transaction == null) {
-      Get.snackbar(
-        'Transaction unavailable',
-        'The payment transaction could not be found.',
+      AppSnackbar.show(
+        title: 'Transaction unavailable',
+        message: 'The payment transaction could not be found',
       );
       return;
     }

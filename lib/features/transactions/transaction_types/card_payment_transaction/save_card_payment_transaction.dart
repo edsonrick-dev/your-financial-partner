@@ -23,31 +23,38 @@ extension SaveCardPaymentTransaction on TransactionController {
     // ============================================================
 
     if (paymentAccount == null) {
-      Get.snackbar(
-        'Missing Account',
-        'Select the account you are paying from.',
+      AppSnackbar.show(
+        title: 'Missing Account',
+        message: 'Select the account you are paying from.',
       );
+
       return;
     }
 
     if (creditCardAccount == null) {
-      Get.snackbar(
-        'Missing Credit Card',
-        'Select the credit card you are paying.',
+      AppSnackbar.show(
+        title: 'Missing Credit Card',
+        message: 'Select the credit card you are paying.',
       );
+
       return;
     }
 
     if (paymentAccount.id == creditCardAccount.id) {
-      Get.snackbar(
-        'Invalid Payment',
-        'The payment account and credit card must be different.',
+      AppSnackbar.show(
+        title: 'Invalid Payment',
+        message: 'The payment account and credit card must be different.',
       );
+
       return;
     }
 
     if (amountValue <= 0) {
-      Get.snackbar('Invalid Amount', 'Enter a payment amount.');
+      AppSnackbar.show(
+        title: 'Invalid Amount',
+        message: 'Enter a payment amount.',
+      );
+
       return;
     }
 

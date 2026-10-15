@@ -161,7 +161,56 @@ class InsurancePlannerController extends GetxController {
   final educationFunding = 0.0.obs;
 
   /// Total protection need for each protection type.
-  final deathBenefitNeed = 0.0.obs;
+  final protectionNeedsTotals = <ProtectionType, double>{}.obs;
+
+  Future<void> refreshProtectionNeedsTotals() async {
+    final plan = await database.protectionDao.getActiveProtectionPlan();
+
+    if (plan == null) {
+      protectionNeedsTotals.clear();
+      return;
+    }
+
+    final totals = await Future.wait([
+      database.protectionDao.getTotalProtectionNeeds(
+        protectionPlanId: plan.id,
+        protectionType: ProtectionType.death,
+      ),
+      database.protectionDao.getTotalProtectionNeeds(
+        protectionPlanId: plan.id,
+        protectionType: ProtectionType.criticalIllness,
+      ),
+      database.protectionDao.getTotalProtectionNeeds(
+        protectionPlanId: plan.id,
+        protectionType: ProtectionType.disability,
+      ),
+    ]);
+
+    protectionNeedsTotals.addAll({
+      ProtectionType.death: totals[0],
+      ProtectionType.criticalIllness: totals[1],
+      ProtectionType.disability: totals[2],
+    });
+  }
+
+  Future<void> loadProtectionNeedsTotal({
+    required ProtectionType protectionType,
+  }) async {
+    final plan = await database.protectionDao.getActiveProtectionPlan();
+
+    if (plan == null) {
+      protectionNeedsTotals[protectionType] = 0.0;
+      return;
+    }
+
+    final total = await database.protectionDao.getTotalProtectionNeeds(
+      protectionPlanId: plan.id,
+      protectionType: protectionType,
+    );
+
+    protectionNeedsTotals[protectionType] = total;
+  }
+
   final criticalIllnessNeed = 0.0.obs;
   final disabilityNeed = 0.0.obs;
 
@@ -234,6 +283,11 @@ class InsurancePlannerController extends GetxController {
   /// calculation for the current saved data.
   Future<void> _initializeInsurancePlanner() async {
     await checkInsuranceQuestionnaireCompletion();
+    await Future.wait([
+      loadProtectionNeedsTotal(protectionType: ProtectionType.death),
+      loadProtectionNeedsTotal(protectionType: ProtectionType.criticalIllness),
+      loadProtectionNeedsTotal(protectionType: ProtectionType.disability),
+    ]);
     // await calculateDeathBenefit();
   }
 
@@ -245,16 +299,25 @@ class InsurancePlannerController extends GetxController {
   }
 
   /// Uncovered death benefit amount after existing death coverage.
-  double get deathBenefitGap =>
-      max(0, deathBenefitNeed.value - deathBenefitCovered.value);
+  double get deathBenefitGap => max(
+    0,
+    (protectionNeedsTotals[ProtectionType.death] ?? 0.0) -
+        deathBenefitCovered.value,
+  );
 
   /// Uncovered critical illness amount after existing critical illness coverage.
-  double get criticalIllnessGap =>
-      max(0, criticalIllnessNeed.value - criticalIllnessCovered.value);
+  double get criticalIllnessGap => max(
+    0,
+    (protectionNeedsTotals[ProtectionType.criticalIllness] ?? 0.0) -
+        criticalIllnessCovered.value,
+  );
 
   /// Uncovered disability amount after existing disability coverage.
-  double get disabilityGap =>
-      max(0, disabilityNeed.value - disabilityCovered.value);
+  double get disabilityGap => max(
+    0,
+    (protectionNeedsTotals[ProtectionType.disability] ?? 0.0) -
+        disabilityCovered.value,
+  );
 
   /// Selected tab indexes for each protection detail page.
   final selectedDisabilityDetailsIndex = 0.obs;
@@ -292,7 +355,7 @@ class InsurancePlannerController extends GetxController {
   /// Severity of the death benefit gap.
   ProtectionGapSeverity get deathBenefitSeverity => getProtectionGapSeverity(
     amountCovered: deathBenefitCovered.value,
-    amountNeed: deathBenefitNeed.value,
+    amountNeed: protectionNeedsTotals[ProtectionType.death] ?? 0.0,
   );
 
   /// Severity of the critical illness protection gap.

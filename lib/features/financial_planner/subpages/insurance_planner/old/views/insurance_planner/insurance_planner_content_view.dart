@@ -37,7 +37,7 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
           // ),
           SizedBox(height: 20),
           AppSection(
-            sectionTitle: 'Protection Breakdown',
+            sectionTitle: 'Protection Gap Breakdown',
             child: Column(
               spacing: 16,
               children: ProtectionType.values.map((type) {
@@ -53,18 +53,20 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
                     ProtectionType.disability =>
                       controller.disabilityCovered.value,
                   };
-
-                  final amountNeed = switch (type) {
-                    ProtectionType.death => controller.deathBenefitNeed.value,
-                    ProtectionType.criticalIllness =>
-                      controller.criticalIllnessNeed.value,
-                    ProtectionType.disability =>
-                      controller.disabilityNeed.value,
-                  };
+                  final amountNeed =
+                      controller.protectionNeedsTotals[type] ?? 0.0;
+                  // final amountNeed = switch (type) {
+                  //   case ProtectionType.death => return
+                  //     controller.protectionNeedsTotals[type] ?? 0.0;
+                  //   ProtectionType.criticalIllness =>
+                  //     controller.criticalIllnessNeed.value,
+                  //   ProtectionType.disability =>
+                  //     controller.disabilityNeed.value,
+                  // };
 
                   return ProtectionGapCard(
                     icon: type.icon,
-                    gapTitle: '${type.label} Gap',
+                    gapTitle: type.label,
                     amountCovered: amountCovered,
                     amountNeed: amountNeed,
                     isCompleted: isCompleted,

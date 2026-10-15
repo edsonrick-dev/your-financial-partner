@@ -5,6 +5,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/insurance_under_construction_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/widgets/protection_gap_details_header.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/3_disability_benefit/details_view/slides/disability_needs_slide.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_details_header.dart';
 import 'package:getx_drift_app/shared/app_details_page_action_section.dart';
 
@@ -14,17 +15,19 @@ class DisabilityDetailsView extends GetView<InsurancePlannerController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
-
+    final type = ProtectionType.disability;
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: Column(
         children: [
           AppDetailsHeader(
             title: 'Disability Benefit Gap',
-            child: ProtectionGapDetailsHeader(
-              severity: controller.disabilitySeverity,
-              protectionNeed: controller.disabilityNeed.value,
-              protectionSource: controller.disabilityCovered.value,
+            child: Obx(
+              () => ProtectionGapDetailsHeader(
+                severity: controller.disabilitySeverity,
+                protectionNeed: controller.protectionNeedsTotals[type] ?? 0.0,
+                protectionSource: controller.disabilityCovered.value,
+              ),
             ),
           ),
 

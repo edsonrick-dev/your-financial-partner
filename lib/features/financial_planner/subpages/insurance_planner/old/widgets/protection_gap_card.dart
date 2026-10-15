@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_gap_severity_enum.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 
 class ProtectionGapCard extends StatelessWidget {
   final IconData icon;
@@ -51,117 +51,100 @@ class ProtectionGapCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     final severityColor = severity.color;
-    return AdaptivePressable(
+    return AppCard(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        constraints: const BoxConstraints(minHeight: 44),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: colorScheme.bgLight,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon),
+
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      gapTitle,
+                      style: AppTextStyle.titleL,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (!isCompleted)
+                      Text(
+                        'Tap to take assessment',
+                        style: AppTextStyle.bodyM.copyWith(
+                          color: colorScheme.appTextMuted,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+
+              if (isCompleted) ...[
+                const SizedBox(width: 12),
+                Text(
+                  gapAmount.toCompactCurrency(kThreshold: 100000),
+                  style: AppTextStyle.amountL,
+                ),
+              ],
+            ],
+          ),
+
+          if (isCompleted) ...[
+            const SizedBox(height: 8),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: RichText(
+                text: TextSpan(
+                  style: AppTextStyle.amountM.copyWith(
+                    color: colorScheme.appTextMuted,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: amountCovered.toCurrency(),
+                      style: TextStyle(color: colorScheme.appText),
+                    ),
+                    TextSpan(
+                      text: ' covered out of ',
+                      style: AppTextStyle.bodyM,
+                    ),
+                    TextSpan(text: amountNeed.toCurrency()),
+                  ],
+                ),
+              ),
             ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+            const SizedBox(height: 6),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(icon),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: coveragePercentage / 100,
+                      minHeight: 8,
+                      backgroundColor: colorScheme.bgDark,
+                      valueColor: AlwaysStoppedAnimation(severityColor),
+                    ),
+                  ),
+                ),
 
                 const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        gapTitle,
-                        style: AppTextStyle.titleL,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (!isCompleted)
-                        Text(
-                          'Tap to take assessment',
-                          style: AppTextStyle.bodyM.copyWith(
-                            color: colorScheme.appTextMuted,
-                          ),
-                        ),
-                    ],
+
+                SizedBox(
+                  width: 40,
+                  child: Text(
+                    '${coveragePercentage.toStringAsFixed(0)}%',
+                    textAlign: TextAlign.right,
+                    style: AppTextStyle.amountS.copyWith(color: severityColor),
                   ),
                 ),
-
-                if (isCompleted) ...[
-                  const SizedBox(width: 12),
-                  Text(
-                    gapAmount.toCompactCurrency(kThreshold: 100000),
-                    style: AppTextStyle.amountL,
-                  ),
-                ],
               ],
             ),
-
-            if (isCompleted) ...[
-              const SizedBox(height: 8),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: RichText(
-                  text: TextSpan(
-                    style: AppTextStyle.amountM.copyWith(
-                      color: colorScheme.appTextMuted,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: amountCovered.toCurrency(),
-                        style: TextStyle(color: colorScheme.appText),
-                      ),
-                      TextSpan(
-                        text: ' covered out of ',
-                        style: AppTextStyle.bodyM,
-                      ),
-                      TextSpan(text: amountNeed.toCurrency()),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 6),
-              Row(
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: coveragePercentage / 100,
-                        minHeight: 8,
-                        backgroundColor: colorScheme.bgDark,
-                        valueColor: AlwaysStoppedAnimation(severityColor),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(width: 8),
-
-                  SizedBox(
-                    width: 40,
-                    child: Text(
-                      '${coveragePercentage.toStringAsFixed(0)}%',
-                      textAlign: TextAlign.right,
-                      style: AppTextStyle.amountS.copyWith(
-                        color: severityColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
           ],
-        ),
+        ],
       ),
     );
   }

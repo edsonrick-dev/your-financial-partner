@@ -81,13 +81,13 @@ class CreditCardAccountCard extends StatelessWidget {
               Expanded(
                 child: _CreditMetric(
                   label: 'Available credit',
-                  value: availableCredit.toCurrency() ?? '—',
+                  value: availableCredit.toCurrency(),
                 ),
               ),
               Expanded(
                 child: _CreditMetric(
                   label: 'Credit limit',
-                  value: creditLimit.toCurrency() ?? '—',
+                  value: creditLimit.toCurrency(),
                 ),
               ),
             ],

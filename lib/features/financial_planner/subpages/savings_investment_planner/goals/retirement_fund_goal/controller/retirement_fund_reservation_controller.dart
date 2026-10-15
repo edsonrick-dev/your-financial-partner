@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/goal_type.dart';
@@ -79,9 +80,9 @@ class RetirementFundReservationController extends GetxController {
     if (amount < 0) return;
 
     if (amount > allocableAmount) {
-      Get.snackbar(
-        'You can reserve up to ${allocableAmount.toCurrency()}.',
-        '${amount.toCurrency()} is higher than the available amount.',
+      AppSnackbar.show(
+        title: 'You can reserve up to ${allocableAmount.toCurrency()}.',
+        message: '${amount.toCurrency()} is higher than the available amount.',
       );
 
       return;

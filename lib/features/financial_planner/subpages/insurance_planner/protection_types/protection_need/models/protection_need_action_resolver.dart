@@ -24,7 +24,8 @@ class ProtectionNeedActionResolver {
             ProtectionType.disability,
         ProtectionNeedType.expenseContinuity,
       ):
-        return () => _openExpenseContinuitySheet(type: type);
+        return () =>
+            _openExpenseContinuitySheet(type: type, controller: controller);
       default:
         return null;
     }
@@ -32,10 +33,11 @@ class ProtectionNeedActionResolver {
 
   static Future<void> _openExpenseContinuitySheet({
     required ProtectionType type,
+    required InsurancePlannerController controller,
   }) async {
     final binding = ProtectionQuestionnaireBinding();
     binding.dependencies();
-    Get.bottomSheet(
+    await Get.bottomSheet<void>(
       AppSheet(
         title: '${type.label} Expense Continuity Fund',
         height: AppSheetHeight.full,
@@ -43,5 +45,7 @@ class ProtectionNeedActionResolver {
       ),
       isScrollControlled: true,
     );
+
+    await controller.refreshProtectionNeedsTotals();
   }
 }

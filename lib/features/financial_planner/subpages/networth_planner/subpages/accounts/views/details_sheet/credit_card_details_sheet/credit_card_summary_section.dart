@@ -9,7 +9,6 @@ import 'package:getx_drift_app/data/tables/accounts_table.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/widgets/account_card_metric.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
-import 'package:getx_drift_app/data/tables/credit_card_details_table.dart';
 
 Color _utilizationColor(double utilization) {
   if (utilization >= 0.90) {

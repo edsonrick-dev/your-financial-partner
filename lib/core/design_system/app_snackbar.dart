@@ -8,7 +8,7 @@ class AppSnackbar {
   static void show({
     required String title,
     required String message,
-    AppSnackType type = AppSnackType.success,
+    AppSnackType type = AppSnackType.warning,
   }) {
     final context = Get.context!;
     final colors = context.colors;
@@ -34,7 +34,7 @@ class AppSnackbar {
         break;
     }
     Get.rawSnackbar(
-      snackPosition: SnackPosition.BOTTOM,
+      snackPosition: SnackPosition.TOP,
       backgroundColor: Colors.transparent,
       padding: const EdgeInsets.all(16),
       duration: const Duration(seconds: 4),

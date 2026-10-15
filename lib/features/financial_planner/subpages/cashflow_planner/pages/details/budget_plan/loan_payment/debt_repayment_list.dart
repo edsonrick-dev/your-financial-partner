@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -23,9 +23,9 @@ class LoanPaymentList extends StatelessWidget {
     final accountId = item.bill.accountId;
 
     if (accountId == null) {
-      Get.snackbar(
-        'Loan unavailable',
-        'This repayment is not linked to a loan account.',
+      AppSnackbar.show(
+        title: 'Loan unavailable',
+        message: 'This repayment is not linked to a loan account.',
       );
       return;
     }
@@ -33,7 +33,11 @@ class LoanPaymentList extends StatelessWidget {
     final account = await database.accountsDao.getAccountById(accountId);
 
     if (account == null) {
-      Get.snackbar('Loan unavailable', 'The loan account could not be found.');
+      AppSnackbar.show(
+        title: 'Loan unavailable',
+        message: 'The loan account could not be found.',
+      );
+
       return;
     }
 
@@ -67,16 +71,6 @@ class LoanPaymentList extends StatelessWidget {
               item: item,
               onTap: () {
                 _openLoan(context, item);
-                // Get.bottomSheet(
-                //   DebtRepaymentDetailsSheet(
-                //     bill: item,
-                //     // plan: plan,
-                //     // selectedIndex: selectedIndex,
-                //   ),
-                //   backgroundColor: Colors.transparent,
-                //   isDismissible: true,
-                //   isScrollControlled: true,
-                // );
               },
             ),
         ],

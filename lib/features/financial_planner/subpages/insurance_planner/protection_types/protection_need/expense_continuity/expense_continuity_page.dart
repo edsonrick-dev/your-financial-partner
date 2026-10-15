@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
-import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient_card.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
@@ -18,7 +17,6 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
-import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
 
 class ExpenseContinuityPage extends GetView<ProtectionQuestionnaireController> {
   const ExpenseContinuityPage({super.key, required this.type});

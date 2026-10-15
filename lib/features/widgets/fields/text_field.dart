@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 
 class AppTextField extends StatelessWidget {
@@ -27,6 +28,7 @@ class AppTextField extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
       builder: (context, value, child) {
@@ -39,9 +41,14 @@ class AppTextField extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '$label ${optional ? '(Optional)' : ''}',
-                style: AppTextStyle.titleM,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '$label ${optional ? '(Optional)' : ''}',
+                  style: AppTextStyle.titleM.copyWith(
+                    // color: FieldColors.label(effectiveState, context),
+                  ),
+                ),
               ),
               TextField(
                 textCapitalization: TextCapitalization.sentences,
@@ -63,6 +70,9 @@ class AppTextField extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   border: InputBorder.none,
                   hintText: hintText,
+                  hintStyle: AppTextStyle.titleL.copyWith(
+                    color: colorScheme.appTextMuted,
+                  ),
                 ),
                 buildCounter:
                     (

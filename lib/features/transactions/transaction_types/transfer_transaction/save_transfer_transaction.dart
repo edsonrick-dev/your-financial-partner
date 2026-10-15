@@ -20,25 +20,33 @@ extension SaveTransferTransaction on TransactionController {
     /// VALIDATION
 
     if (accountFrom == null) {
-      Get.snackbar('Missing Account', 'Select an account.');
+      AppSnackbar.show(
+        title: 'Missing Account',
+        message: 'Select an account where money comes from.',
+      );
+
       return;
     }
 
     if (accountTo == null) {
-      Get.snackbar('Missing Account', 'Select an account.');
+      AppSnackbar.show(
+        title: 'Missing Account',
+        message: 'Select an account where money goes to.',
+      );
       return;
     }
 
     if (accountFrom.id == accountTo.id) {
-      Get.snackbar(
-        'Invalid Transfer',
-        'The source and destination accounts must be different.',
+      AppSnackbar.show(
+        title: 'Invalid Transfer',
+        message: 'The source and destination accounts must be different.',
       );
       return;
     }
 
     if (amountValue <= 0) {
-      Get.snackbar('Invalid Amount', 'Enter an amount.');
+      AppSnackbar.show(title: 'Invalid Amount', message: 'Enter an amount.');
+
       return;
     }
 
