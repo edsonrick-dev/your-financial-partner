@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "AscendYFP",
+        "request": "launch",
+        "type": "dart",
+        "args": [
+          "--dart-define=SUPABASE_URL=https://opclmmluhqzlzifxqqsb.supabase.co",
+          "--dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_oKAJUOS_PxpUyrGwX54eYg_VljVUjPg"
+        ]
+      }
+    ]
+  }

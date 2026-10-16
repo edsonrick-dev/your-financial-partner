@@ -6,7 +6,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await AppBootstrap.initialize();
-  // await SeedInitializer.initialize();
+
 
   runApp(const App());
 }

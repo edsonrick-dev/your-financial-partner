@@ -49,6 +49,7 @@ dependencies:
   month_picker_dialog: ^6.7.2
   get_storage: ^2.1.1
   posthog_flutter: ^5.43.1
+  supabase_flutter: ^2.18.3
   
 dev_dependencies:
 

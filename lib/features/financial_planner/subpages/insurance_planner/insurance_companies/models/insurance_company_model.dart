@@ -1,16 +1,19 @@
 class InsuranceCompany {
+  final int id;
   final String name;
-  final bool isUserCreated;
+  final String shortName;
 
-  const InsuranceCompany({required this.name, this.isUserCreated = false});
+  const InsuranceCompany({
+    required this.id,
+    required this.name,
+    required this.shortName,
+  });
+
+  factory InsuranceCompany.fromJson(Map<String, dynamic> json) {
+    return InsuranceCompany(
+      id: (json['id'] as num).toInt(),
+      name: json['name'] as String,
+      shortName: json['short_name'] as String,
+    );
+  }
 }
-
-const insuranceCompanies = [
-  InsuranceCompany(name: 'AIA Philippines'),
-  InsuranceCompany(name: 'AXA'),
-  InsuranceCompany(name: 'Insular Life'),
-  InsuranceCompany(name: 'Insular Life'),
-  InsuranceCompany(name: 'Manulife'),
-  InsuranceCompany(name: 'PruLife UK'),
-  InsuranceCompany(name: 'SunLife Philippines'),
-];

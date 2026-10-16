@@ -11,6 +11,7 @@ import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/enums/section_trailing_type_enum.dart';
 import 'package:getx_drift_app/domain/enums/app_snack_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/binding/insurance_company_binding.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/models/insurance_company_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/select_insurance_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/insurance_policy_controller.dart';
@@ -50,9 +51,11 @@ class InsurancePolicyForm extends GetView<InsurancePolicyController> {
                   Obx(
                     () => AppDropdownField(
                       label: 'Insurer',
-                      value: controller.selectedInsurer.value?.name ?? '',
+                      value: controller.selectedInsurer.value?.shortName ?? '',
                       hint: 'Select insurer',
                       onTap: () async {
+                        final binding = InsuranceCompanyBinding();
+                        binding.dependencies();
                         final insurer = await Get.bottomSheet<InsuranceCompany>(
                           const SelectInsurerSheet(),
                           isScrollControlled: true,
@@ -85,22 +88,22 @@ class InsurancePolicyForm extends GetView<InsurancePolicyController> {
                           return;
                         }
 
-                        final hasProducts = insuranceProducts.any(
-                          (product) => product.company.name == insurer.name,
-                        );
+                        // final hasProducts = insuranceProducts.any(
+                        //   (product) => product.company.name == insurer.name,
+                        // );
 
-                        if (!hasProducts) {
-                          AppSnackbar.show(
-                            title: 'No policies available',
-                            message:
-                                'There are no insurance products listed for ${insurer.name} yet.',
-                            type: AppSnackType.warning,
-                          );
-                          return;
-                        }
+                        // if (!hasProducts) {
+                        //   AppSnackbar.show(
+                        //     title: 'No policies available',
+                        //     message:
+                        //         'There are no insurance products listed for ${insurer.name} yet.',
+                        //     type: AppSnackType.warning,
+                        //   );
+                        //   return;
+                        // }
 
                         final product = await Get.bottomSheet<InsuranceProduct>(
-                          SelectInsurancePolicySheet(insurer: insurer.name),
+                          SelectInsurancePolicySheet(insurer: insurer),
                           isScrollControlled: true,
                         );
 
@@ -122,6 +125,7 @@ class InsurancePolicyForm extends GetView<InsurancePolicyController> {
                           : DateFormat('MMMM d, yyyy').format(date),
                       hint: 'Select date',
                       onTap: () {
+                        controller.issueDate.value = DateTime.now();
                         AppDatePicker.show(
                           context: context,
                           initialDate: date ?? DateTime.now(),
@@ -180,6 +184,7 @@ class InsurancePolicyForm extends GetView<InsurancePolicyController> {
                           : DateFormat('MMMM d, yyyy').format(date),
                       hint: 'Select date',
                       onTap: () {
+                        controller.nextPaymentDate.value = DateTime.now();
                         AppDatePicker.show(
                           context: context,
                           initialDate: date ?? DateTime.now(),
@@ -228,7 +233,18 @@ class InsurancePolicyForm extends GetView<InsurancePolicyController> {
               child: Column(
                 spacing: 8,
                 children: [
-                  AppButton(text: 'Save policy information', onTap: () {}),
+                  AppButton(
+                    text: 'Save policy information',
+                    onTap: () {
+                      Get.back();
+                      AppSnackbar.show(
+                        title: 'Insurance policy has been saved',
+                        message:
+                            'AIA Health Invest Plus has been saved. A bill has also been created for this policy.',
+                        type: AppSnackType.success,
+                      );
+                    },
+                  ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     spacing: 4,
@@ -239,7 +255,7 @@ class InsurancePolicyForm extends GetView<InsurancePolicyController> {
                         color: colorScheme.appTextMuted,
                       ),
                       Text(
-                        'Saving this policy creates the bill for this policy',
+                        'Saving this creates a bill for this policy',
                         style: AppTextStyle.labelM.copyWith(
                           color: colorScheme.appTextMuted,
                         ),

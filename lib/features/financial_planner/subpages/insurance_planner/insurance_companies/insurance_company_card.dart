@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/models/insurance_company_model.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 
@@ -11,11 +12,24 @@ class InsuranceCompanyCard extends StatelessWidget {
   final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colors;
     return AppCard(
       onTap: () {
         Get.back(result: company);
       },
-      child: Row(children: [Text(company.name, style: AppTextStyle.titleL)]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            company.name,
+            style: AppTextStyle.labelM.copyWith(
+              color: colorScheme.appTextMuted,
+            ),
+          ),
+
+          Text(company.shortName, style: AppTextStyle.titleL.copyWith()),
+        ],
+      ),
     );
   }
 }
