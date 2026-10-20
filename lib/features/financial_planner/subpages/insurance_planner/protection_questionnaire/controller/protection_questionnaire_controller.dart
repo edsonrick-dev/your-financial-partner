@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
+import 'package:getx_drift_app/domain/enums/app_snack_type.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
@@ -12,8 +13,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/2_financial_dependency_questionnaire/financial_dependency_question.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/models/protection_horizon_answers.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_need/protection_need_type.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/protection_need/protection_need_type.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/protection_types.dart';
 
 class ProtectionQuestionnaireController extends GetxController {
   final editingExpenseContinuity = <ProtectionType, bool>{}.obs;
@@ -161,8 +162,10 @@ class ProtectionQuestionnaireController extends GetxController {
       insuranceController.refreshProtectionNeeds();
 
       AppSnackbar.show(
+        type: AppSnackType.success,
         title: 'Plan computed',
-        message: 'Your expense continuity fund has been calculated.',
+        message:
+            'Your ${protectionType.shortLabel.toLowerCase()} expense continuity fund has been calculated.',
       );
       return true;
     } catch (error, stackTrace) {

@@ -23,7 +23,24 @@ class SelectInsurerSheet extends StatelessWidget {
         padding: EdgeInsets.only(bottom: context.bottomPaddingSub),
         child: AppSection(
           child: Obx(() {
+            if (controller.companies.isNotEmpty) {
+              final companies = controller.companies.toList()
+                ..sort(
+                  (a, b) => a.displayName.toLowerCase().compareTo(
+                    b.displayName.toLowerCase(),
+                  ),
+                );
+
+              return Column(
+                spacing: 12,
+                children: companies
+                    .map((company) => InsuranceCompanyCard(company: company))
+                    .toList(),
+              );
+            }
+
             if (controller.isLoading.value) {
+              //Skeleton
               return const Center(child: CircularProgressIndicator());
             }
 
@@ -34,36 +51,15 @@ class SelectInsurerSheet extends StatelessWidget {
                   Text(controller.errorMessage.value!),
                   AppButton(
                     text: 'Retry',
-                    onTap: controller.loadCompanies,
+                    onTap: controller.refreshCatalogInBackground,
                     type: ButtonType.outline,
                   ),
                 ],
               );
             }
 
-            if (controller.companies.isEmpty) {
-              return const Center(
-                child: Text('No insurance companies available.'),
-              );
-            }
-
-            return Column(
-              spacing: 20,
-              children: [
-                Column(
-                  spacing: 12,
-                  children:
-                      (controller.companies.toList()..sort(
-                            (a, b) => (a.shortName).toLowerCase().compareTo(
-                              (b.shortName).toLowerCase(),
-                            ),
-                          ))
-                          .map(
-                            (company) => InsuranceCompanyCard(company: company),
-                          )
-                          .toList(),
-                ),
-              ],
+            return const Center(
+              child: Text('No insurance companies available.'),
             );
           }),
         ),

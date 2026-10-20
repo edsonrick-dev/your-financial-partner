@@ -14,7 +14,7 @@ class InsuranceCompanyRepository {
     try {
       final response = await _client
           .from('entities')
-          .select('id, name, short_name')
+          .select('id, name, display_name')
           .eq('entity_type', 'organization')
           .eq('organization_type', 'insuranceCompany')
           .eq('is_system', true)

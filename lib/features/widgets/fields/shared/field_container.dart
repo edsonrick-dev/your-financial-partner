@@ -25,6 +25,7 @@ class AppFieldContainer extends StatelessWidget {
     this.value,
     this.fixedHeight = true,
     this.fixedWidth = false,
+
     this.width = 60,
   });
 

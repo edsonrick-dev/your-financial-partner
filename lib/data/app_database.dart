@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:getx_drift_app/data/default_data/default_accounts.dart';
 import 'package:getx_drift_app/data/default_data/default_categories.dart';
 import 'package:getx_drift_app/data/enums/entity_type_enum.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/premium_payment_type.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
@@ -35,8 +36,12 @@ import 'tables/expense_continuity_table.dart';
 import 'tables/protection_needs_table.dart';
 import 'tables/protection_plan_continuity_shares_table.dart';
 import 'tables/protection_plans_table.dart';
-
 import 'tables/loan_table.dart';
+import 'tables/insurance_products_table.dart';
+import 'tables/insurance_benefits_table.dart';
+import 'tables/insurance_product_payment_terms_table.dart';
+import 'tables/payment_terms_table.dart';
+
 // import 'tables/cashflow_plans_table.dart';
 
 import 'package:getx_drift_app/data/database/daos/transactions_dao/transactions_dao.dart';
@@ -53,6 +58,9 @@ import 'package:getx_drift_app/data/database/daos/goal_reservations_dao/goal_res
 import 'package:getx_drift_app/data/database/daos/user_profile_dao/user_profile_dao.dart';
 import 'package:getx_drift_app/data/database/daos/retirement_goal_dao/retirement_goal_dao.dart';
 import 'package:getx_drift_app/data/database/daos/protection_dao/protection_dao.dart';
+import 'package:getx_drift_app/data/database/daos/insurance_policies_dao/insurance_policies_dao.dart';
+import 'package:getx_drift_app/data/database/daos/payment_terms_dao/payment_terms_dao.dart';
+import 'package:getx_drift_app/data/database/daos/insurance_product_payment_terms_dao/insurance_product_payment_terms_dao.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
@@ -86,6 +94,12 @@ part 'app_database.g.dart';
     ProtectionNeedsTable,
     ProtectionPlanContinuitySharesTable,
     ProtectionPlansTable,
+
+    InsuranceProductsTable,
+    InsuranceBenefitsTable,
+
+    PaymentTermsTable,
+    InsuranceProductPaymentTermsTable,
   ],
   daos: [
     TransactionsDao,
@@ -102,6 +116,9 @@ part 'app_database.g.dart';
     UserProfileDao,
     RetirementGoalDao,
     ProtectionDao,
+    InsurancePoliciesDao,
+    PaymentTermsDao,
+    InsuranceProductPaymentTermsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -136,6 +153,12 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(protectionDependencyTable);
       }
 
+      if (from < 9) {
+        await m.addColumn(entitiesTable, entitiesTable.supabaseId);
+      }
+      if (from < 11) {
+        await m.createTable(insuranceProductsTable);
+      }
       // if (from < 6) {
       //   await m.deleteTable('financial_obligations_table');
       //   await m.deleteTable('transaction_participants_table');
@@ -149,7 +172,7 @@ class AppDatabase extends _$AppDatabase {
     },
   );
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 12;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();

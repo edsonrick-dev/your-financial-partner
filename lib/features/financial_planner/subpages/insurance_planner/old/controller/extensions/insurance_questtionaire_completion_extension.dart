@@ -1,6 +1,6 @@
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_types/protection_types.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/protection_types.dart';
 
 extension InsuranceEmptyScreenValidator on InsurancePlannerController {
   Future<void> checkInsuranceQuestionnaireCompletion() async {

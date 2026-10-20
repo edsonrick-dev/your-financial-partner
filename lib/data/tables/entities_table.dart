@@ -3,6 +3,8 @@ import 'package:drift/drift.dart';
 class EntitiesTable extends Table {
   IntColumn get id => integer().autoIncrement()();
 
+  IntColumn get supabaseId => integer().nullable().unique()();
+
   TextColumn get name => text()();
 
   TextColumn get displayName => text().nullable()();

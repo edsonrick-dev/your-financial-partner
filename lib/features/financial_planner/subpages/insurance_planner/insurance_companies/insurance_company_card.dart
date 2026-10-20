@@ -27,7 +27,7 @@ class InsuranceCompanyCard extends StatelessWidget {
             ),
           ),
 
-          Text(company.shortName, style: AppTextStyle.titleL.copyWith()),
+          Text(company.displayName, style: AppTextStyle.titleL.copyWith()),
         ],
       ),
     );
