@@ -13,6 +13,8 @@ class AppAmountField extends StatelessWidget {
   final bool optional;
   final String prefixText;
   final ValueChanged<double>? onChanged;
+  final bool formatAsInt;
+  final String? calculatorTitle;
 
   const AppAmountField({
     super.key,
@@ -22,6 +24,8 @@ class AppAmountField extends StatelessWidget {
     this.optional = false,
     this.prefixText = '₱',
     this.onChanged,
+    this.formatAsInt = false,
+    this.calculatorTitle,
   });
 
   Future<void> _openCalculator(BuildContext context) async {
@@ -29,7 +33,7 @@ class AppAmountField extends StatelessWidget {
     calculatorController.initialize(amount);
 
     final result = await Get.bottomSheet<double>(
-      const AppCalculator(),
+      AppCalculator(title: calculatorTitle),
       isScrollControlled: true,
     );
 
@@ -59,7 +63,11 @@ class AppAmountField extends StatelessWidget {
               Text(prefixText, style: AppTextStyle.amountM),
               const SizedBox(width: 4),
               Text(
-                amount == 0 ? hintText : amount.toCurrency(symbol: ''),
+                amount == 0
+                    ? hintText
+                    : formatAsInt
+                    ? amount.toStringAsFixed(0)
+                    : amount.toCurrency(symbol: ''),
                 style: AppTextStyle.amountL,
               ),
             ],

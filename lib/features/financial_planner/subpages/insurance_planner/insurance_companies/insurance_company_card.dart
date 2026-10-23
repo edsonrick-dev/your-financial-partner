@@ -6,14 +6,21 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 
 class InsuranceCompanyCard extends StatelessWidget {
-  const InsuranceCompanyCard({super.key, required this.company, this.onTap});
+  const InsuranceCompanyCard({
+    super.key,
+    required this.company,
+    this.onTap,
+    this.isSelected = false,
+  });
 
   final InsuranceCompany company;
   final VoidCallback? onTap;
+  final bool isSelected;
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     return AppCard(
+      borderColor: isSelected ? colorScheme.appText : colorScheme.appBorder,
       onTap: () {
         Get.back(result: company);
       },

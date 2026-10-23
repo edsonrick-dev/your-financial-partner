@@ -1,5 +1,7 @@
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/benefit_type.dart';
 
+const _unset = Object();
+
 class PolicyBenefitDraft {
   final int? insuranceBenefitId;
   final BenefitType benefitType;
@@ -16,13 +18,13 @@ class PolicyBenefitDraft {
   PolicyBenefitDraft copyWith({
     int? insuranceBenefitId,
     BenefitType? benefitType,
-    String? name,
+    Object? name = _unset,
     double? coverageAmount,
   }) {
     return PolicyBenefitDraft(
       insuranceBenefitId: insuranceBenefitId ?? this.insuranceBenefitId,
       benefitType: benefitType ?? this.benefitType,
-      name: name ?? this.name,
+      name: identical(name, _unset) ? this.name : name as String?,
       coverageAmount: coverageAmount ?? this.coverageAmount,
     );
   }

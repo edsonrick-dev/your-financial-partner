@@ -17,7 +17,25 @@ import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+enum AddPolicyStep { selectProduct, fillPolicyDetails }
+
 class InsurancePolicyController extends GetxController {
+  final currentPolicyStep = AddPolicyStep.selectProduct.obs;
+
+  void goToPolicyDetails() {
+    if (selectedProduct.value == null) return;
+
+    currentPolicyStep.value = AddPolicyStep.fillPolicyDetails;
+  }
+
+  void changeProduct() {
+    selectedProduct.value = null;
+    currentPolicyStep.value = AddPolicyStep.selectProduct;
+  }
+
+  final premiumPaymentController = TextEditingController();
+  final premiumPaymentFocusNode = FocusNode();
+  final paymentTerm = 0.0.obs;
   InsurancePolicyController(
     this._policiesRepository,
     this._paymentTermsSyncService,
@@ -118,6 +136,7 @@ class InsurancePolicyController extends GetxController {
     benefitDrafts.assignAll(
       benefits.map(
         (benefit) => PolicyBenefitDraft(
+          insuranceBenefitId: benefit.id, // Preserve local Drift ID
           benefitType: benefit.benefitType,
           name: benefit.name ?? '',
           coverageAmount: 0,
@@ -537,10 +556,92 @@ class InsurancePolicyController extends GetxController {
         );
   }
 
-  static const List<BillsFrequency> mvpBillFrequencies = [
+  static const List<BillsFrequency> paymentSchedule = [
     BillsFrequency.monthly,
     BillsFrequency.quarterly,
     BillsFrequency.semiAnnual,
     BillsFrequency.annual,
   ];
+}
+
+extension SavePolicyControllerX on InsurancePolicyController {
+  String? validateBenefits() {
+    final missingBenefits = <String>[];
+
+    for (final benefit in productBenefits) {
+      if (!benefit.isRequired) continue;
+
+      final draft = benefitDrafts.firstWhereOrNull(
+        (item) => item.insuranceBenefitId == benefit.id,
+      );
+
+      if (draft == null || draft.coverageAmount <= 0) {
+        final benefitName = benefit.name?.trim().isNotEmpty == true
+            ? benefit.name!.trim()
+            : benefit.benefitType.label;
+
+        missingBenefits.add(benefitName);
+      }
+    }
+
+    if (missingBenefits.isNotEmpty) {
+      return 'Please enter a coverage amount for these required beneits: '
+          '${missingBenefits.join(', ')}.';
+    }
+
+    return null;
+  }
+
+  String? validatePolicyForm() {
+    debugPrint("Selected Insurer: ${selectedInsurer.value!.displayName}");
+    debugPrint("Selected Product:${selectedProduct.value!.displayName}");
+    debugPrint("Selected :${validateBenefits()}");
+    debugPrint(
+      "Selected Policy Number:${policyNumberTextController.text.trim()}",
+    );
+    debugPrint("Selected Date:${issueDate.value}");
+    debugPrint("Selected :");
+    if (selectedInsurer.value == null) {
+      return 'Please select an insurance company.';
+    }
+
+    if (selectedProduct.value == null) {
+      return 'Please select an insurance product.';
+    }
+    final benefitError = validateBenefits();
+    if (benefitError != null) {
+      return benefitError;
+    }
+    if (policyNumberTextController.text.trim().isEmpty) {
+      return 'Please enter the policy number.';
+    }
+    if (issueDate.value == null) {
+      return 'Please select the policy issue date.';
+    }
+
+    // if (!paymentSchedule.contains(selectedFrequency.value)) {
+    //   return 'Please select a valid payment frequency.';
+    // }
+
+    if (!premiumAmount.value.isFinite || premiumAmount.value <= 0) {
+      return 'Please enter a premium amount greater than zero.';
+    }
+
+    if (nextPaymentDate.value == null) {
+      return 'Please select the next payment date.';
+    }
+
+    return null;
+  }
+
+  Future<void> savePolicy() async {
+    final validationError = validatePolicyForm();
+
+    if (validationError != null) {
+      AppSnackbar.show(title: 'Check policy details', message: validationError);
+      return;
+    }
+
+    // Persistence comes next.
+  }
 }

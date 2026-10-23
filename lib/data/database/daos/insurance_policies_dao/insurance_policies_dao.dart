@@ -175,6 +175,14 @@ class InsurancePoliciesDao extends DatabaseAccessor<AppDatabase>
       insuranceBenefitsTable,
     )..where((b) => b.productId.equals(productId))).get();
 
+    for (final row in rows) {
+      debugPrint(
+        'Benefit: ${row.benefitType}, '
+        'required: ${row.isRequired}, '
+        'productId: ${row.productId}',
+      );
+    }
+
     return rows.map((row) {
       return InsuranceBenefit(
         id: row.id,

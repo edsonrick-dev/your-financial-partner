@@ -4,11 +4,12 @@ import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/insurance_policy_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/controller/insurance_policy_controller.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class AddInsuranceProductButton extends GetView<InsurancePolicyController> {
-  const AddInsuranceProductButton({super.key});
+class CreateInsuranceProductButton extends GetView<InsurancePolicyController> {
+  const CreateInsuranceProductButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,8 @@ class AddInsuranceProductButton extends GetView<InsurancePolicyController> {
         );
       }
       return AppButton(
+        leadingIcon: PhosphorIconsRegular.plus,
+        type: ButtonType.outline,
         text: 'Create insurance product',
         onTap: () {
           controller.createProductButtonState.value = AddButtonState.expanded;

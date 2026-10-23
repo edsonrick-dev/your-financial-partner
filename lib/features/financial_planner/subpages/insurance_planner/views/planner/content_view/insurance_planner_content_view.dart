@@ -81,95 +81,23 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
             ),
           ),
 
-          // AppSection(
-          //   sectionTitle: 'Protection Breakdown',
-          //   child: Column(
-          //     spacing: 16,
-          //     children: ProtectionType.values.map((type) {
-          //       return Obx(() {
-          //         final isCompleted =
-          //             controller.protectionGapCompletion[type] ?? false;
-
-          //         final amountCovered = switch (type) {
-          //           ProtectionType.death =>
-          //             controller.deathBenefitCovered.value,
-          //           ProtectionType.criticalIllness =>
-          //             controller.criticalIllnessCovered.value,
-          //           ProtectionType.disability =>
-          //             controller.disabilityCovered.value,
-          //         };
-
-          //         final amountNeed = switch (type) {
-          //           ProtectionType.death => controller.deathBenefitNeed.value,
-          //           ProtectionType.criticalIllness =>
-          //             controller.criticalIllnessNeed.value,
-          //           ProtectionType.disability =>
-          //             controller.disabilityNeed.value,
-          //         };
-
-          //         return ProtectionGapCard(
-          //           icon: type.icon,
-          //           gapTitle: '${type.label} Gap',
-          //           amountCovered: amountCovered,
-          //           amountNeed: amountNeed,
-          //           isCompleted: isCompleted,
-          //           onTap: () => Get.toNamed(type.gapRoute),
-          //         );
-          //       });
-          //     }).toList(),
-          //   ),
-          // ),
-          // AppSection(
-          //   sectionTitle: 'Protection Breakdown',
-          //   child: Column(
-          //     spacing: 16,
-          //     children: [
-          //       Obx(
-          //         () => ProtectionGapCard(
-          //           icon: PhosphorIconsRegular.ambulance,
-          //           gapTitle: 'Death Benefit Gap',
-          //           amountCovered: controller.deathBenefitCovered.value,
-          //           amountNeed: controller.deathBenefitNeed.value,
-          //           onTap: () {
-          //             Get.toNamed(Routes.DEATHBENEFITGAP);
-          //           },
-          //         ),
-          //       ),
-          //       ProtectionGapCard(
-          //         icon: PhosphorIconsRegular.hospital,
-          //         gapTitle: 'Critical Illness Benefit Gap',
-
-          //         amountCovered: controller.criticalIllnessCovered.value,
-          //         amountNeed: controller.criticalIllnessNeed.value,
-          //         onTap: () {
-          //           Get.toNamed(Routes.CRITICALILLNESSBENEFITGAP);
-          //         },
-          //       ),
-          //       ProtectionGapCard(
-          //         icon: PhosphorIconsRegular.wheelchair,
-          //         gapTitle: 'Disability Benefit Gap',
-
-          //         amountCovered: controller.disabilityCovered.value,
-          //         amountNeed: controller.disabilityNeed.value,
-          //         onTap: () {
-          //           Get.toNamed(Routes.DISABILITYBENEFITGAP);
-          //         },
-          //       ),
-          //     ],
-          //   ),
-          // ),
           SizedBox(height: 20),
           AppSection(
             sectionTitle: 'Recommended Policies',
             isHorizontalScrolling: true,
             child: Row(
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               spacing: 12,
-              children: dummyInsurancePolicyRecommendations
-                  .map((policy) => RecommendedPolicyCard(policy: policy))
-                  .toList(),
+              children: [
+                Row(
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 12,
+                  children: dummyInsurancePolicyRecommendations
+                      .map((policy) => RecommendedPolicyCard(policy: policy))
+                      .toList(),
+                ),
+              ],
             ),
           ),
           SizedBox(height: 20),
@@ -203,48 +131,6 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
               ],
             ),
           ),
-          // SizedBox(height: 24),
-          // AppSection(
-          //   sectionTitle: 'Bills',
-          //   trailingType: SectionTrailingType.textButton,
-          //   trailingText: 'View all',
-          //   onTrailingPressed: () {
-          //     Get.toNamed(Routes.TRANSACTION);
-          //   },
-          //   // showTrailing: true,
-          //   child: Column(
-          //     spacing: 12,
-          //     children: [
-          //       BillsCard(
-          //         iconKey: 'internet',
-          //         billName: 'Internet Home Fiber',
-          //         billType: 'Internet Bill',
-          //         dueDate: DateTime(2026, 6, 4),
-          //         amountDue: 6000,
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
-          // ListView.builder(
-          //   shrinkWrap: true,
-          //   physics: const NeverScrollableScrollPhysics(),
-          //   itemCount: controller.projections.length,
-          //   itemBuilder: (_, index) {
-          //     final item = controller.projections[index];
-
-          //     return Card(
-          //       child: ListTile(
-          //         title: Text(item.month.fullName),
-          //         subtitle: Text(
-          //           'Income: ${item.income}'
-          //           '\nAllocated: ${item.allocated}'
-          //           '\nSurplus: ${item.surplus}',
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // ),
         ],
       ),
     );

@@ -5,6 +5,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:getx_drift_app/data/default_data/default_accounts.dart';
 import 'package:getx_drift_app/data/default_data/default_categories.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/enums/entity_type_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/premium_payment_type.dart';
 import 'package:path_provider/path_provider.dart';
@@ -41,6 +42,10 @@ import 'tables/insurance_products_table.dart';
 import 'tables/insurance_benefits_table.dart';
 import 'tables/insurance_product_payment_terms_table.dart';
 import 'tables/payment_terms_table.dart';
+import 'tables/user_insurance_policy_table.dart';
+import 'tables/premium_detail_table.dart';
+import 'tables/user_insurance_benefits_table.dart';
+import 'tables/insurance_premium_bills_table.dart';
 
 // import 'tables/cashflow_plans_table.dart';
 
@@ -61,6 +66,8 @@ import 'package:getx_drift_app/data/database/daos/protection_dao/protection_dao.
 import 'package:getx_drift_app/data/database/daos/insurance_policies_dao/insurance_policies_dao.dart';
 import 'package:getx_drift_app/data/database/daos/payment_terms_dao/payment_terms_dao.dart';
 import 'package:getx_drift_app/data/database/daos/insurance_product_payment_terms_dao/insurance_product_payment_terms_dao.dart';
+import 'package:getx_drift_app/data/database/daos/user_insurance_policy_dao/user_insurance_policy_dao.dart';
+import 'package:getx_drift_app/data/database/daos/insurance_premium_bills_dao/insurance_premium_bills_dao.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
@@ -100,6 +107,10 @@ part 'app_database.g.dart';
 
     PaymentTermsTable,
     InsuranceProductPaymentTermsTable,
+    PremiumDetailsTable,
+    UserInsurancePolicyTable,
+    UserInsuranceBenefitsTable,
+    InsurancePremiumBillsTable,
   ],
   daos: [
     TransactionsDao,
@@ -119,6 +130,8 @@ part 'app_database.g.dart';
     InsurancePoliciesDao,
     PaymentTermsDao,
     InsuranceProductPaymentTermsDao,
+    UserInsurancePolicyDao,
+    InsurancePremiumBillsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -234,82 +247,6 @@ class AppDatabase extends _$AppDatabase {
         entityType: EntityType.person,
         organizationType: null,
       ),
-
-      // Banks
-      // (
-      //   name: 'BPI',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-      // (
-      //   name: 'BDO',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-      // (
-      //   name: 'Metrobank',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-      // (
-      //   name: 'UnionBank',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-      // (
-      //   name: 'Security Bank',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-      // (
-      //   name: 'RCBC',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-      // (
-      //   name: 'PNB',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-      // (
-      //   name: 'LandBank',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-
-      // // Digital banks
-      // (
-      //   name: 'CIMB Bank',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-      // (
-      //   name: 'GoTyme Bank',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-      // (
-      //   name: 'Tonik Bank',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-      // (
-      //   name: 'Maya Bank',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.bank,
-      // ),
-
-      // // E-wallets
-      // (
-      //   name: 'GCash',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.eWallet,
-      // ),
-      // (
-      //   name: 'Maya',
-      //   entityType: EntityType.organization,
-      //   organizationType: OrganizationType.eWallet,
-      // ),
     ];
 
     final existing = await select(entitiesTable).get();

@@ -51,21 +51,8 @@ class InsurancePolicyDetailSheet extends StatelessWidget {
               final tabIndex = selectedIndex.value;
               return AppDetailsPageActionSection(
                 selectedIndex: selectedIndex,
-                actions: const [
-                  'Benefits',
-                  'Beneficiaries',
-                  'Advisor',
-                  'Payment History',
-                ],
+                actions: const ['Benefits', 'Beneficiaries', 'Payment History'],
                 icon: PhosphorIconsRegular.phone,
-                onAdd: tabIndex == 2
-                    ? () {
-                        Get.bottomSheet(
-                          AdvisorOnAction(),
-                          isScrollControlled: true,
-                        );
-                      }
-                    : null,
               );
             }),
             Expanded(
@@ -75,7 +62,7 @@ class InsurancePolicyDetailSheet extends StatelessWidget {
                   children: [
                     BenefitSlide(),
                     BeneficiarySlide(faceValue: faceValue),
-                    AdvisorSlide(),
+
                     Text('Payment History'),
                   ],
                 ),

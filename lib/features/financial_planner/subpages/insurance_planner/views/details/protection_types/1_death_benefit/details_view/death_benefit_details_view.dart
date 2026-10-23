@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/binding/insurance_policy_binding.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/add_policy/add_policy_sheet/sections/select_insurance_product_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/select_product/select_product_details_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/widgets/protection_gap_details_header.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/1_death_benefit/details_view/slides/death_needs_slide.dart';
@@ -38,7 +41,16 @@ class DeathBenefitDetailsView extends GetView<InsurancePlannerController> {
             return AppDetailsPageActionSection(
               selectedIndex: controller.selectedDeathDetailsIndex,
               actions: ['Needs', 'Sources'],
-              onAdd: selectedTab == 1 ? () {} : null,
+              onAdd: selectedTab == 1
+                  ? () {
+                      final binding = InsurancePolicyBinding();
+                      binding.dependencies();
+                      Get.bottomSheet(
+                        SelectProductDetailsSheet(),
+                        isScrollControlled: true,
+                      );
+                    }
+                  : null,
             );
           }),
           Expanded(

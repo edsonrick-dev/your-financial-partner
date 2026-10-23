@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/binding/insurance_policy_binding.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/insurance_policy_form.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/add_policy/add_policy_sheet/add_policy_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/widgets/protection_gap_details_header.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/2_critical_illness_benefit/details_view/slides/critical_illness_needs_slide.dart';
@@ -41,7 +41,8 @@ class CriticalIllnessDetailsView extends GetView<InsurancePlannerController> {
                       final binding = InsurancePolicyBinding();
                       binding.dependencies();
                       Get.bottomSheet(
-                        InsurancePolicyForm(),
+                        AddPolicySheet(),
+
                         isScrollControlled: true,
                       );
                     }

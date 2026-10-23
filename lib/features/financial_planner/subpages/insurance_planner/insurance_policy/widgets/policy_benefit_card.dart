@@ -15,6 +15,7 @@ class PolicyBenefitCard extends StatelessWidget {
     this.name,
     this.onAmountChanged,
     this.onTap,
+    this.isRequired = false,
   });
 
   final String? name;
@@ -22,6 +23,7 @@ class PolicyBenefitCard extends StatelessWidget {
   final double amount;
   final ValueChanged<double>? onAmountChanged;
   final VoidCallback? onTap;
+  final bool isRequired;
 
   Future<void> _openCalculator(BuildContext context) async {
     FocusManager.instance.primaryFocus?.unfocus();
@@ -39,16 +41,36 @@ class PolicyBenefitCard extends StatelessWidget {
     }
   }
 
+  String get _amountLabel {
+    if (amount == 0) return 'Not set';
+
+    return amount.toCompactCurrency(kThreshold: 1000000);
+  }
+
+  TextStyle get _amountStyle {
+    if (amount == 0) return AppTextStyle.titleL;
+
+    return AppTextStyle.amountL;
+  }
+
+  Color _borderColor(BuildContext context) {
+    final colorScheme = context.colors;
+    if (amount == 0) return colorScheme.appBorder;
+    return colorScheme.appText;
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
 
     return AppCard(
+      borderColor: _borderColor(context),
       onTap: onTap ?? () => _openCalculator(context),
       padding: 16,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (isRequired) Text("Required to tanga!"),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -59,10 +81,7 @@ class PolicyBenefitCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              Text(
-                amount.toCompactCurrency(kThreshold: 1000000),
-                style: AppTextStyle.amountL,
-              ),
+              Text(_amountLabel, style: _amountStyle),
             ],
           ),
           if (name?.isNotEmpty == true) ...[

@@ -7,7 +7,7 @@ abstract final class PostHogInitializer {
     const token = AppEnvironment.posthogProjectToken;
 
     if (token.isEmpty) {
-      return;
+      // return;
       // TODO: Remove return; and uncomment the throw on production
       // throw StateError('POSTHOG_PROJECT_TOKEN is not configured.');
     }

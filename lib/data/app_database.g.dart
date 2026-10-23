@@ -14941,6 +14941,1902 @@ class InsuranceProductPaymentTermsTableCompanion
   }
 }
 
+class $UserInsurancePolicyTableTable extends UserInsurancePolicyTable
+    with TableInfo<$UserInsurancePolicyTableTable, UserInsurancePolicy> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserInsurancePolicyTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _productIdMeta = const VerificationMeta(
+    'productId',
+  );
+  @override
+  late final GeneratedColumn<int> productId = GeneratedColumn<int>(
+    'product_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _policyNumberMeta = const VerificationMeta(
+    'policyNumber',
+  );
+  @override
+  late final GeneratedColumn<String> policyNumber = GeneratedColumn<String>(
+    'policy_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _advisorIdMeta = const VerificationMeta(
+    'advisorId',
+  );
+  @override
+  late final GeneratedColumn<int> advisorId = GeneratedColumn<int>(
+    'advisor_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateIssuedMeta = const VerificationMeta(
+    'dateIssued',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dateIssued = GeneratedColumn<DateTime>(
+    'date_issued',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _productVariantIdMeta = const VerificationMeta(
+    'productVariantId',
+  );
+  @override
+  late final GeneratedColumn<int> productVariantId = GeneratedColumn<int>(
+    'product_variant_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<BillsFrequency, int>
+  paymentSchedule =
+      GeneratedColumn<int>(
+        'payment_schedule',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<BillsFrequency>(
+        $UserInsurancePolicyTableTable.$converterpaymentSchedule,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    productId,
+    policyNumber,
+    createdAt,
+    advisorId,
+    dateIssued,
+    userId,
+    productVariantId,
+    paymentSchedule,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_insurance_policy';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<UserInsurancePolicy> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('product_id')) {
+      context.handle(
+        _productIdMeta,
+        productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_productIdMeta);
+    }
+    if (data.containsKey('policy_number')) {
+      context.handle(
+        _policyNumberMeta,
+        policyNumber.isAcceptableOrUnknown(
+          data['policy_number']!,
+          _policyNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('advisor_id')) {
+      context.handle(
+        _advisorIdMeta,
+        advisorId.isAcceptableOrUnknown(data['advisor_id']!, _advisorIdMeta),
+      );
+    }
+    if (data.containsKey('date_issued')) {
+      context.handle(
+        _dateIssuedMeta,
+        dateIssued.isAcceptableOrUnknown(data['date_issued']!, _dateIssuedMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('product_variant_id')) {
+      context.handle(
+        _productVariantIdMeta,
+        productVariantId.isAcceptableOrUnknown(
+          data['product_variant_id']!,
+          _productVariantIdMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  UserInsurancePolicy map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserInsurancePolicy(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      productId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}product_id'],
+      )!,
+      policyNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}policy_number'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      advisorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}advisor_id'],
+      ),
+      dateIssued: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date_issued'],
+      ),
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}user_id'],
+      )!,
+      productVariantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}product_variant_id'],
+      ),
+      paymentSchedule: $UserInsurancePolicyTableTable.$converterpaymentSchedule
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.int,
+              data['${effectivePrefix}payment_schedule'],
+            )!,
+          ),
+    );
+  }
+
+  @override
+  $UserInsurancePolicyTableTable createAlias(String alias) {
+    return $UserInsurancePolicyTableTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<BillsFrequency, int, int>
+  $converterpaymentSchedule = const EnumIndexConverter<BillsFrequency>(
+    BillsFrequency.values,
+  );
+}
+
+class UserInsurancePolicy extends DataClass
+    implements Insertable<UserInsurancePolicy> {
+  final int id;
+  final int productId;
+  final String? policyNumber;
+  final DateTime createdAt;
+  final int? advisorId;
+  final DateTime? dateIssued;
+  final int userId;
+  final int? productVariantId;
+  final BillsFrequency paymentSchedule;
+  const UserInsurancePolicy({
+    required this.id,
+    required this.productId,
+    this.policyNumber,
+    required this.createdAt,
+    this.advisorId,
+    this.dateIssued,
+    required this.userId,
+    this.productVariantId,
+    required this.paymentSchedule,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['product_id'] = Variable<int>(productId);
+    if (!nullToAbsent || policyNumber != null) {
+      map['policy_number'] = Variable<String>(policyNumber);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || advisorId != null) {
+      map['advisor_id'] = Variable<int>(advisorId);
+    }
+    if (!nullToAbsent || dateIssued != null) {
+      map['date_issued'] = Variable<DateTime>(dateIssued);
+    }
+    map['user_id'] = Variable<int>(userId);
+    if (!nullToAbsent || productVariantId != null) {
+      map['product_variant_id'] = Variable<int>(productVariantId);
+    }
+    {
+      map['payment_schedule'] = Variable<int>(
+        $UserInsurancePolicyTableTable.$converterpaymentSchedule.toSql(
+          paymentSchedule,
+        ),
+      );
+    }
+    return map;
+  }
+
+  UserInsurancePolicyTableCompanion toCompanion(bool nullToAbsent) {
+    return UserInsurancePolicyTableCompanion(
+      id: Value(id),
+      productId: Value(productId),
+      policyNumber: policyNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(policyNumber),
+      createdAt: Value(createdAt),
+      advisorId: advisorId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(advisorId),
+      dateIssued: dateIssued == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateIssued),
+      userId: Value(userId),
+      productVariantId: productVariantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(productVariantId),
+      paymentSchedule: Value(paymentSchedule),
+    );
+  }
+
+  factory UserInsurancePolicy.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserInsurancePolicy(
+      id: serializer.fromJson<int>(json['id']),
+      productId: serializer.fromJson<int>(json['productId']),
+      policyNumber: serializer.fromJson<String?>(json['policyNumber']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      advisorId: serializer.fromJson<int?>(json['advisorId']),
+      dateIssued: serializer.fromJson<DateTime?>(json['dateIssued']),
+      userId: serializer.fromJson<int>(json['userId']),
+      productVariantId: serializer.fromJson<int?>(json['productVariantId']),
+      paymentSchedule: $UserInsurancePolicyTableTable.$converterpaymentSchedule
+          .fromJson(serializer.fromJson<int>(json['paymentSchedule'])),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'productId': serializer.toJson<int>(productId),
+      'policyNumber': serializer.toJson<String?>(policyNumber),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'advisorId': serializer.toJson<int?>(advisorId),
+      'dateIssued': serializer.toJson<DateTime?>(dateIssued),
+      'userId': serializer.toJson<int>(userId),
+      'productVariantId': serializer.toJson<int?>(productVariantId),
+      'paymentSchedule': serializer.toJson<int>(
+        $UserInsurancePolicyTableTable.$converterpaymentSchedule.toJson(
+          paymentSchedule,
+        ),
+      ),
+    };
+  }
+
+  UserInsurancePolicy copyWith({
+    int? id,
+    int? productId,
+    Value<String?> policyNumber = const Value.absent(),
+    DateTime? createdAt,
+    Value<int?> advisorId = const Value.absent(),
+    Value<DateTime?> dateIssued = const Value.absent(),
+    int? userId,
+    Value<int?> productVariantId = const Value.absent(),
+    BillsFrequency? paymentSchedule,
+  }) => UserInsurancePolicy(
+    id: id ?? this.id,
+    productId: productId ?? this.productId,
+    policyNumber: policyNumber.present ? policyNumber.value : this.policyNumber,
+    createdAt: createdAt ?? this.createdAt,
+    advisorId: advisorId.present ? advisorId.value : this.advisorId,
+    dateIssued: dateIssued.present ? dateIssued.value : this.dateIssued,
+    userId: userId ?? this.userId,
+    productVariantId: productVariantId.present
+        ? productVariantId.value
+        : this.productVariantId,
+    paymentSchedule: paymentSchedule ?? this.paymentSchedule,
+  );
+  UserInsurancePolicy copyWithCompanion(
+    UserInsurancePolicyTableCompanion data,
+  ) {
+    return UserInsurancePolicy(
+      id: data.id.present ? data.id.value : this.id,
+      productId: data.productId.present ? data.productId.value : this.productId,
+      policyNumber: data.policyNumber.present
+          ? data.policyNumber.value
+          : this.policyNumber,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      advisorId: data.advisorId.present ? data.advisorId.value : this.advisorId,
+      dateIssued: data.dateIssued.present
+          ? data.dateIssued.value
+          : this.dateIssued,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      productVariantId: data.productVariantId.present
+          ? data.productVariantId.value
+          : this.productVariantId,
+      paymentSchedule: data.paymentSchedule.present
+          ? data.paymentSchedule.value
+          : this.paymentSchedule,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserInsurancePolicy(')
+          ..write('id: $id, ')
+          ..write('productId: $productId, ')
+          ..write('policyNumber: $policyNumber, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('advisorId: $advisorId, ')
+          ..write('dateIssued: $dateIssued, ')
+          ..write('userId: $userId, ')
+          ..write('productVariantId: $productVariantId, ')
+          ..write('paymentSchedule: $paymentSchedule')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    productId,
+    policyNumber,
+    createdAt,
+    advisorId,
+    dateIssued,
+    userId,
+    productVariantId,
+    paymentSchedule,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserInsurancePolicy &&
+          other.id == this.id &&
+          other.productId == this.productId &&
+          other.policyNumber == this.policyNumber &&
+          other.createdAt == this.createdAt &&
+          other.advisorId == this.advisorId &&
+          other.dateIssued == this.dateIssued &&
+          other.userId == this.userId &&
+          other.productVariantId == this.productVariantId &&
+          other.paymentSchedule == this.paymentSchedule);
+}
+
+class UserInsurancePolicyTableCompanion
+    extends UpdateCompanion<UserInsurancePolicy> {
+  final Value<int> id;
+  final Value<int> productId;
+  final Value<String?> policyNumber;
+  final Value<DateTime> createdAt;
+  final Value<int?> advisorId;
+  final Value<DateTime?> dateIssued;
+  final Value<int> userId;
+  final Value<int?> productVariantId;
+  final Value<BillsFrequency> paymentSchedule;
+  const UserInsurancePolicyTableCompanion({
+    this.id = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.policyNumber = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.advisorId = const Value.absent(),
+    this.dateIssued = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.productVariantId = const Value.absent(),
+    this.paymentSchedule = const Value.absent(),
+  });
+  UserInsurancePolicyTableCompanion.insert({
+    this.id = const Value.absent(),
+    required int productId,
+    this.policyNumber = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.advisorId = const Value.absent(),
+    this.dateIssued = const Value.absent(),
+    required int userId,
+    this.productVariantId = const Value.absent(),
+    required BillsFrequency paymentSchedule,
+  }) : productId = Value(productId),
+       userId = Value(userId),
+       paymentSchedule = Value(paymentSchedule);
+  static Insertable<UserInsurancePolicy> custom({
+    Expression<int>? id,
+    Expression<int>? productId,
+    Expression<String>? policyNumber,
+    Expression<DateTime>? createdAt,
+    Expression<int>? advisorId,
+    Expression<DateTime>? dateIssued,
+    Expression<int>? userId,
+    Expression<int>? productVariantId,
+    Expression<int>? paymentSchedule,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (productId != null) 'product_id': productId,
+      if (policyNumber != null) 'policy_number': policyNumber,
+      if (createdAt != null) 'created_at': createdAt,
+      if (advisorId != null) 'advisor_id': advisorId,
+      if (dateIssued != null) 'date_issued': dateIssued,
+      if (userId != null) 'user_id': userId,
+      if (productVariantId != null) 'product_variant_id': productVariantId,
+      if (paymentSchedule != null) 'payment_schedule': paymentSchedule,
+    });
+  }
+
+  UserInsurancePolicyTableCompanion copyWith({
+    Value<int>? id,
+    Value<int>? productId,
+    Value<String?>? policyNumber,
+    Value<DateTime>? createdAt,
+    Value<int?>? advisorId,
+    Value<DateTime?>? dateIssued,
+    Value<int>? userId,
+    Value<int?>? productVariantId,
+    Value<BillsFrequency>? paymentSchedule,
+  }) {
+    return UserInsurancePolicyTableCompanion(
+      id: id ?? this.id,
+      productId: productId ?? this.productId,
+      policyNumber: policyNumber ?? this.policyNumber,
+      createdAt: createdAt ?? this.createdAt,
+      advisorId: advisorId ?? this.advisorId,
+      dateIssued: dateIssued ?? this.dateIssued,
+      userId: userId ?? this.userId,
+      productVariantId: productVariantId ?? this.productVariantId,
+      paymentSchedule: paymentSchedule ?? this.paymentSchedule,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (productId.present) {
+      map['product_id'] = Variable<int>(productId.value);
+    }
+    if (policyNumber.present) {
+      map['policy_number'] = Variable<String>(policyNumber.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (advisorId.present) {
+      map['advisor_id'] = Variable<int>(advisorId.value);
+    }
+    if (dateIssued.present) {
+      map['date_issued'] = Variable<DateTime>(dateIssued.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (productVariantId.present) {
+      map['product_variant_id'] = Variable<int>(productVariantId.value);
+    }
+    if (paymentSchedule.present) {
+      map['payment_schedule'] = Variable<int>(
+        $UserInsurancePolicyTableTable.$converterpaymentSchedule.toSql(
+          paymentSchedule.value,
+        ),
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserInsurancePolicyTableCompanion(')
+          ..write('id: $id, ')
+          ..write('productId: $productId, ')
+          ..write('policyNumber: $policyNumber, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('advisorId: $advisorId, ')
+          ..write('dateIssued: $dateIssued, ')
+          ..write('userId: $userId, ')
+          ..write('productVariantId: $productVariantId, ')
+          ..write('paymentSchedule: $paymentSchedule')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PremiumDetailsTableTable extends PremiumDetailsTable
+    with TableInfo<$PremiumDetailsTableTable, PremiumDetail> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PremiumDetailsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _userPolicyIdMeta = const VerificationMeta(
+    'userPolicyId',
+  );
+  @override
+  late final GeneratedColumn<int> userPolicyId = GeneratedColumn<int>(
+    'user_policy_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES user_insurance_policy (id)',
+    ),
+  );
+  static const VerificationMeta _offerPolicyIdMeta = const VerificationMeta(
+    'offerPolicyId',
+  );
+  @override
+  late final GeneratedColumn<int> offerPolicyId = GeneratedColumn<int>(
+    'offer_policy_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _monthlyMeta = const VerificationMeta(
+    'monthly',
+  );
+  @override
+  late final GeneratedColumn<double> monthly = GeneratedColumn<double>(
+    'monthly',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _quarterlyMeta = const VerificationMeta(
+    'quarterly',
+  );
+  @override
+  late final GeneratedColumn<double> quarterly = GeneratedColumn<double>(
+    'quarterly',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _semiAnnualMeta = const VerificationMeta(
+    'semiAnnual',
+  );
+  @override
+  late final GeneratedColumn<double> semiAnnual = GeneratedColumn<double>(
+    'semi_annual',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _annualMeta = const VerificationMeta('annual');
+  @override
+  late final GeneratedColumn<double> annual = GeneratedColumn<double>(
+    'annual',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userPolicyId,
+    offerPolicyId,
+    createdAt,
+    monthly,
+    quarterly,
+    semiAnnual,
+    annual,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'premium_details';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PremiumDetail> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_policy_id')) {
+      context.handle(
+        _userPolicyIdMeta,
+        userPolicyId.isAcceptableOrUnknown(
+          data['user_policy_id']!,
+          _userPolicyIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('offer_policy_id')) {
+      context.handle(
+        _offerPolicyIdMeta,
+        offerPolicyId.isAcceptableOrUnknown(
+          data['offer_policy_id']!,
+          _offerPolicyIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('monthly')) {
+      context.handle(
+        _monthlyMeta,
+        monthly.isAcceptableOrUnknown(data['monthly']!, _monthlyMeta),
+      );
+    }
+    if (data.containsKey('quarterly')) {
+      context.handle(
+        _quarterlyMeta,
+        quarterly.isAcceptableOrUnknown(data['quarterly']!, _quarterlyMeta),
+      );
+    }
+    if (data.containsKey('semi_annual')) {
+      context.handle(
+        _semiAnnualMeta,
+        semiAnnual.isAcceptableOrUnknown(data['semi_annual']!, _semiAnnualMeta),
+      );
+    }
+    if (data.containsKey('annual')) {
+      context.handle(
+        _annualMeta,
+        annual.isAcceptableOrUnknown(data['annual']!, _annualMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PremiumDetail map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PremiumDetail(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      userPolicyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}user_policy_id'],
+      ),
+      offerPolicyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}offer_policy_id'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      monthly: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}monthly'],
+      ),
+      quarterly: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}quarterly'],
+      ),
+      semiAnnual: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}semi_annual'],
+      ),
+      annual: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}annual'],
+      ),
+    );
+  }
+
+  @override
+  $PremiumDetailsTableTable createAlias(String alias) {
+    return $PremiumDetailsTableTable(attachedDatabase, alias);
+  }
+}
+
+class PremiumDetail extends DataClass implements Insertable<PremiumDetail> {
+  final int id;
+  final int? userPolicyId;
+  final int? offerPolicyId;
+  final DateTime createdAt;
+  final double? monthly;
+  final double? quarterly;
+  final double? semiAnnual;
+  final double? annual;
+  const PremiumDetail({
+    required this.id,
+    this.userPolicyId,
+    this.offerPolicyId,
+    required this.createdAt,
+    this.monthly,
+    this.quarterly,
+    this.semiAnnual,
+    this.annual,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || userPolicyId != null) {
+      map['user_policy_id'] = Variable<int>(userPolicyId);
+    }
+    if (!nullToAbsent || offerPolicyId != null) {
+      map['offer_policy_id'] = Variable<int>(offerPolicyId);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || monthly != null) {
+      map['monthly'] = Variable<double>(monthly);
+    }
+    if (!nullToAbsent || quarterly != null) {
+      map['quarterly'] = Variable<double>(quarterly);
+    }
+    if (!nullToAbsent || semiAnnual != null) {
+      map['semi_annual'] = Variable<double>(semiAnnual);
+    }
+    if (!nullToAbsent || annual != null) {
+      map['annual'] = Variable<double>(annual);
+    }
+    return map;
+  }
+
+  PremiumDetailsTableCompanion toCompanion(bool nullToAbsent) {
+    return PremiumDetailsTableCompanion(
+      id: Value(id),
+      userPolicyId: userPolicyId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userPolicyId),
+      offerPolicyId: offerPolicyId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(offerPolicyId),
+      createdAt: Value(createdAt),
+      monthly: monthly == null && nullToAbsent
+          ? const Value.absent()
+          : Value(monthly),
+      quarterly: quarterly == null && nullToAbsent
+          ? const Value.absent()
+          : Value(quarterly),
+      semiAnnual: semiAnnual == null && nullToAbsent
+          ? const Value.absent()
+          : Value(semiAnnual),
+      annual: annual == null && nullToAbsent
+          ? const Value.absent()
+          : Value(annual),
+    );
+  }
+
+  factory PremiumDetail.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PremiumDetail(
+      id: serializer.fromJson<int>(json['id']),
+      userPolicyId: serializer.fromJson<int?>(json['userPolicyId']),
+      offerPolicyId: serializer.fromJson<int?>(json['offerPolicyId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      monthly: serializer.fromJson<double?>(json['monthly']),
+      quarterly: serializer.fromJson<double?>(json['quarterly']),
+      semiAnnual: serializer.fromJson<double?>(json['semiAnnual']),
+      annual: serializer.fromJson<double?>(json['annual']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userPolicyId': serializer.toJson<int?>(userPolicyId),
+      'offerPolicyId': serializer.toJson<int?>(offerPolicyId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'monthly': serializer.toJson<double?>(monthly),
+      'quarterly': serializer.toJson<double?>(quarterly),
+      'semiAnnual': serializer.toJson<double?>(semiAnnual),
+      'annual': serializer.toJson<double?>(annual),
+    };
+  }
+
+  PremiumDetail copyWith({
+    int? id,
+    Value<int?> userPolicyId = const Value.absent(),
+    Value<int?> offerPolicyId = const Value.absent(),
+    DateTime? createdAt,
+    Value<double?> monthly = const Value.absent(),
+    Value<double?> quarterly = const Value.absent(),
+    Value<double?> semiAnnual = const Value.absent(),
+    Value<double?> annual = const Value.absent(),
+  }) => PremiumDetail(
+    id: id ?? this.id,
+    userPolicyId: userPolicyId.present ? userPolicyId.value : this.userPolicyId,
+    offerPolicyId: offerPolicyId.present
+        ? offerPolicyId.value
+        : this.offerPolicyId,
+    createdAt: createdAt ?? this.createdAt,
+    monthly: monthly.present ? monthly.value : this.monthly,
+    quarterly: quarterly.present ? quarterly.value : this.quarterly,
+    semiAnnual: semiAnnual.present ? semiAnnual.value : this.semiAnnual,
+    annual: annual.present ? annual.value : this.annual,
+  );
+  PremiumDetail copyWithCompanion(PremiumDetailsTableCompanion data) {
+    return PremiumDetail(
+      id: data.id.present ? data.id.value : this.id,
+      userPolicyId: data.userPolicyId.present
+          ? data.userPolicyId.value
+          : this.userPolicyId,
+      offerPolicyId: data.offerPolicyId.present
+          ? data.offerPolicyId.value
+          : this.offerPolicyId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      monthly: data.monthly.present ? data.monthly.value : this.monthly,
+      quarterly: data.quarterly.present ? data.quarterly.value : this.quarterly,
+      semiAnnual: data.semiAnnual.present
+          ? data.semiAnnual.value
+          : this.semiAnnual,
+      annual: data.annual.present ? data.annual.value : this.annual,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PremiumDetail(')
+          ..write('id: $id, ')
+          ..write('userPolicyId: $userPolicyId, ')
+          ..write('offerPolicyId: $offerPolicyId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('monthly: $monthly, ')
+          ..write('quarterly: $quarterly, ')
+          ..write('semiAnnual: $semiAnnual, ')
+          ..write('annual: $annual')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userPolicyId,
+    offerPolicyId,
+    createdAt,
+    monthly,
+    quarterly,
+    semiAnnual,
+    annual,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PremiumDetail &&
+          other.id == this.id &&
+          other.userPolicyId == this.userPolicyId &&
+          other.offerPolicyId == this.offerPolicyId &&
+          other.createdAt == this.createdAt &&
+          other.monthly == this.monthly &&
+          other.quarterly == this.quarterly &&
+          other.semiAnnual == this.semiAnnual &&
+          other.annual == this.annual);
+}
+
+class PremiumDetailsTableCompanion extends UpdateCompanion<PremiumDetail> {
+  final Value<int> id;
+  final Value<int?> userPolicyId;
+  final Value<int?> offerPolicyId;
+  final Value<DateTime> createdAt;
+  final Value<double?> monthly;
+  final Value<double?> quarterly;
+  final Value<double?> semiAnnual;
+  final Value<double?> annual;
+  const PremiumDetailsTableCompanion({
+    this.id = const Value.absent(),
+    this.userPolicyId = const Value.absent(),
+    this.offerPolicyId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.monthly = const Value.absent(),
+    this.quarterly = const Value.absent(),
+    this.semiAnnual = const Value.absent(),
+    this.annual = const Value.absent(),
+  });
+  PremiumDetailsTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.userPolicyId = const Value.absent(),
+    this.offerPolicyId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.monthly = const Value.absent(),
+    this.quarterly = const Value.absent(),
+    this.semiAnnual = const Value.absent(),
+    this.annual = const Value.absent(),
+  });
+  static Insertable<PremiumDetail> custom({
+    Expression<int>? id,
+    Expression<int>? userPolicyId,
+    Expression<int>? offerPolicyId,
+    Expression<DateTime>? createdAt,
+    Expression<double>? monthly,
+    Expression<double>? quarterly,
+    Expression<double>? semiAnnual,
+    Expression<double>? annual,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userPolicyId != null) 'user_policy_id': userPolicyId,
+      if (offerPolicyId != null) 'offer_policy_id': offerPolicyId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (monthly != null) 'monthly': monthly,
+      if (quarterly != null) 'quarterly': quarterly,
+      if (semiAnnual != null) 'semi_annual': semiAnnual,
+      if (annual != null) 'annual': annual,
+    });
+  }
+
+  PremiumDetailsTableCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? userPolicyId,
+    Value<int?>? offerPolicyId,
+    Value<DateTime>? createdAt,
+    Value<double?>? monthly,
+    Value<double?>? quarterly,
+    Value<double?>? semiAnnual,
+    Value<double?>? annual,
+  }) {
+    return PremiumDetailsTableCompanion(
+      id: id ?? this.id,
+      userPolicyId: userPolicyId ?? this.userPolicyId,
+      offerPolicyId: offerPolicyId ?? this.offerPolicyId,
+      createdAt: createdAt ?? this.createdAt,
+      monthly: monthly ?? this.monthly,
+      quarterly: quarterly ?? this.quarterly,
+      semiAnnual: semiAnnual ?? this.semiAnnual,
+      annual: annual ?? this.annual,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userPolicyId.present) {
+      map['user_policy_id'] = Variable<int>(userPolicyId.value);
+    }
+    if (offerPolicyId.present) {
+      map['offer_policy_id'] = Variable<int>(offerPolicyId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (monthly.present) {
+      map['monthly'] = Variable<double>(monthly.value);
+    }
+    if (quarterly.present) {
+      map['quarterly'] = Variable<double>(quarterly.value);
+    }
+    if (semiAnnual.present) {
+      map['semi_annual'] = Variable<double>(semiAnnual.value);
+    }
+    if (annual.present) {
+      map['annual'] = Variable<double>(annual.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PremiumDetailsTableCompanion(')
+          ..write('id: $id, ')
+          ..write('userPolicyId: $userPolicyId, ')
+          ..write('offerPolicyId: $offerPolicyId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('monthly: $monthly, ')
+          ..write('quarterly: $quarterly, ')
+          ..write('semiAnnual: $semiAnnual, ')
+          ..write('annual: $annual')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $UserInsuranceBenefitsTableTable extends UserInsuranceBenefitsTable
+    with TableInfo<$UserInsuranceBenefitsTableTable, UserInsuranceBenefit> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserInsuranceBenefitsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _supabaseIdMeta = const VerificationMeta(
+    'supabaseId',
+  );
+  @override
+  late final GeneratedColumn<int> supabaseId = GeneratedColumn<int>(
+    'supabase_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _benefitIdMeta = const VerificationMeta(
+    'benefitId',
+  );
+  @override
+  late final GeneratedColumn<int> benefitId = GeneratedColumn<int>(
+    'benefit_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES insurance_benefits_table (id)',
+    ),
+  );
+  static const VerificationMeta _userPolicyIdMeta = const VerificationMeta(
+    'userPolicyId',
+  );
+  @override
+  late final GeneratedColumn<int> userPolicyId = GeneratedColumn<int>(
+    'user_policy_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES user_insurance_policy (id)',
+    ),
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    supabaseId,
+    benefitId,
+    userPolicyId,
+    amount,
+    createdAt,
+    isSynced,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_insurance_benefits';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<UserInsuranceBenefit> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('supabase_id')) {
+      context.handle(
+        _supabaseIdMeta,
+        supabaseId.isAcceptableOrUnknown(data['supabase_id']!, _supabaseIdMeta),
+      );
+    }
+    if (data.containsKey('benefit_id')) {
+      context.handle(
+        _benefitIdMeta,
+        benefitId.isAcceptableOrUnknown(data['benefit_id']!, _benefitIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_benefitIdMeta);
+    }
+    if (data.containsKey('user_policy_id')) {
+      context.handle(
+        _userPolicyIdMeta,
+        userPolicyId.isAcceptableOrUnknown(
+          data['user_policy_id']!,
+          _userPolicyIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_userPolicyIdMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  UserInsuranceBenefit map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserInsuranceBenefit(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      supabaseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}supabase_id'],
+      ),
+      benefitId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}benefit_id'],
+      )!,
+      userPolicyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}user_policy_id'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+    );
+  }
+
+  @override
+  $UserInsuranceBenefitsTableTable createAlias(String alias) {
+    return $UserInsuranceBenefitsTableTable(attachedDatabase, alias);
+  }
+}
+
+class UserInsuranceBenefit extends DataClass
+    implements Insertable<UserInsuranceBenefit> {
+  final int id;
+  final int? supabaseId;
+  final int benefitId;
+  final int userPolicyId;
+  final double amount;
+  final DateTime createdAt;
+  final bool isSynced;
+  const UserInsuranceBenefit({
+    required this.id,
+    this.supabaseId,
+    required this.benefitId,
+    required this.userPolicyId,
+    required this.amount,
+    required this.createdAt,
+    required this.isSynced,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || supabaseId != null) {
+      map['supabase_id'] = Variable<int>(supabaseId);
+    }
+    map['benefit_id'] = Variable<int>(benefitId);
+    map['user_policy_id'] = Variable<int>(userPolicyId);
+    map['amount'] = Variable<double>(amount);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['is_synced'] = Variable<bool>(isSynced);
+    return map;
+  }
+
+  UserInsuranceBenefitsTableCompanion toCompanion(bool nullToAbsent) {
+    return UserInsuranceBenefitsTableCompanion(
+      id: Value(id),
+      supabaseId: supabaseId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(supabaseId),
+      benefitId: Value(benefitId),
+      userPolicyId: Value(userPolicyId),
+      amount: Value(amount),
+      createdAt: Value(createdAt),
+      isSynced: Value(isSynced),
+    );
+  }
+
+  factory UserInsuranceBenefit.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserInsuranceBenefit(
+      id: serializer.fromJson<int>(json['id']),
+      supabaseId: serializer.fromJson<int?>(json['supabaseId']),
+      benefitId: serializer.fromJson<int>(json['benefitId']),
+      userPolicyId: serializer.fromJson<int>(json['userPolicyId']),
+      amount: serializer.fromJson<double>(json['amount']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'supabaseId': serializer.toJson<int?>(supabaseId),
+      'benefitId': serializer.toJson<int>(benefitId),
+      'userPolicyId': serializer.toJson<int>(userPolicyId),
+      'amount': serializer.toJson<double>(amount),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'isSynced': serializer.toJson<bool>(isSynced),
+    };
+  }
+
+  UserInsuranceBenefit copyWith({
+    int? id,
+    Value<int?> supabaseId = const Value.absent(),
+    int? benefitId,
+    int? userPolicyId,
+    double? amount,
+    DateTime? createdAt,
+    bool? isSynced,
+  }) => UserInsuranceBenefit(
+    id: id ?? this.id,
+    supabaseId: supabaseId.present ? supabaseId.value : this.supabaseId,
+    benefitId: benefitId ?? this.benefitId,
+    userPolicyId: userPolicyId ?? this.userPolicyId,
+    amount: amount ?? this.amount,
+    createdAt: createdAt ?? this.createdAt,
+    isSynced: isSynced ?? this.isSynced,
+  );
+  UserInsuranceBenefit copyWithCompanion(
+    UserInsuranceBenefitsTableCompanion data,
+  ) {
+    return UserInsuranceBenefit(
+      id: data.id.present ? data.id.value : this.id,
+      supabaseId: data.supabaseId.present
+          ? data.supabaseId.value
+          : this.supabaseId,
+      benefitId: data.benefitId.present ? data.benefitId.value : this.benefitId,
+      userPolicyId: data.userPolicyId.present
+          ? data.userPolicyId.value
+          : this.userPolicyId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserInsuranceBenefit(')
+          ..write('id: $id, ')
+          ..write('supabaseId: $supabaseId, ')
+          ..write('benefitId: $benefitId, ')
+          ..write('userPolicyId: $userPolicyId, ')
+          ..write('amount: $amount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('isSynced: $isSynced')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    supabaseId,
+    benefitId,
+    userPolicyId,
+    amount,
+    createdAt,
+    isSynced,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserInsuranceBenefit &&
+          other.id == this.id &&
+          other.supabaseId == this.supabaseId &&
+          other.benefitId == this.benefitId &&
+          other.userPolicyId == this.userPolicyId &&
+          other.amount == this.amount &&
+          other.createdAt == this.createdAt &&
+          other.isSynced == this.isSynced);
+}
+
+class UserInsuranceBenefitsTableCompanion
+    extends UpdateCompanion<UserInsuranceBenefit> {
+  final Value<int> id;
+  final Value<int?> supabaseId;
+  final Value<int> benefitId;
+  final Value<int> userPolicyId;
+  final Value<double> amount;
+  final Value<DateTime> createdAt;
+  final Value<bool> isSynced;
+  const UserInsuranceBenefitsTableCompanion({
+    this.id = const Value.absent(),
+    this.supabaseId = const Value.absent(),
+    this.benefitId = const Value.absent(),
+    this.userPolicyId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.isSynced = const Value.absent(),
+  });
+  UserInsuranceBenefitsTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.supabaseId = const Value.absent(),
+    required int benefitId,
+    required int userPolicyId,
+    required double amount,
+    this.createdAt = const Value.absent(),
+    this.isSynced = const Value.absent(),
+  }) : benefitId = Value(benefitId),
+       userPolicyId = Value(userPolicyId),
+       amount = Value(amount);
+  static Insertable<UserInsuranceBenefit> custom({
+    Expression<int>? id,
+    Expression<int>? supabaseId,
+    Expression<int>? benefitId,
+    Expression<int>? userPolicyId,
+    Expression<double>? amount,
+    Expression<DateTime>? createdAt,
+    Expression<bool>? isSynced,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (supabaseId != null) 'supabase_id': supabaseId,
+      if (benefitId != null) 'benefit_id': benefitId,
+      if (userPolicyId != null) 'user_policy_id': userPolicyId,
+      if (amount != null) 'amount': amount,
+      if (createdAt != null) 'created_at': createdAt,
+      if (isSynced != null) 'is_synced': isSynced,
+    });
+  }
+
+  UserInsuranceBenefitsTableCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? supabaseId,
+    Value<int>? benefitId,
+    Value<int>? userPolicyId,
+    Value<double>? amount,
+    Value<DateTime>? createdAt,
+    Value<bool>? isSynced,
+  }) {
+    return UserInsuranceBenefitsTableCompanion(
+      id: id ?? this.id,
+      supabaseId: supabaseId ?? this.supabaseId,
+      benefitId: benefitId ?? this.benefitId,
+      userPolicyId: userPolicyId ?? this.userPolicyId,
+      amount: amount ?? this.amount,
+      createdAt: createdAt ?? this.createdAt,
+      isSynced: isSynced ?? this.isSynced,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (supabaseId.present) {
+      map['supabase_id'] = Variable<int>(supabaseId.value);
+    }
+    if (benefitId.present) {
+      map['benefit_id'] = Variable<int>(benefitId.value);
+    }
+    if (userPolicyId.present) {
+      map['user_policy_id'] = Variable<int>(userPolicyId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserInsuranceBenefitsTableCompanion(')
+          ..write('id: $id, ')
+          ..write('supabaseId: $supabaseId, ')
+          ..write('benefitId: $benefitId, ')
+          ..write('userPolicyId: $userPolicyId, ')
+          ..write('amount: $amount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('isSynced: $isSynced')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $InsurancePremiumBillsTableTable extends InsurancePremiumBillsTable
+    with
+        TableInfo<
+          $InsurancePremiumBillsTableTable,
+          InsurancePremiumBillsTableData
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InsurancePremiumBillsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _userPolicyIdMeta = const VerificationMeta(
+    'userPolicyId',
+  );
+  @override
+  late final GeneratedColumn<int> userPolicyId = GeneratedColumn<int>(
+    'user_policy_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'UNIQUE REFERENCES user_insurance_policy (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _billIdMeta = const VerificationMeta('billId');
+  @override
+  late final GeneratedColumn<int> billId = GeneratedColumn<int>(
+    'bill_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'UNIQUE REFERENCES bills_table (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, userPolicyId, billId, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'insurance_premium_bills';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InsurancePremiumBillsTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_policy_id')) {
+      context.handle(
+        _userPolicyIdMeta,
+        userPolicyId.isAcceptableOrUnknown(
+          data['user_policy_id']!,
+          _userPolicyIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_userPolicyIdMeta);
+    }
+    if (data.containsKey('bill_id')) {
+      context.handle(
+        _billIdMeta,
+        billId.isAcceptableOrUnknown(data['bill_id']!, _billIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_billIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InsurancePremiumBillsTableData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InsurancePremiumBillsTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      userPolicyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}user_policy_id'],
+      )!,
+      billId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}bill_id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $InsurancePremiumBillsTableTable createAlias(String alias) {
+    return $InsurancePremiumBillsTableTable(attachedDatabase, alias);
+  }
+}
+
+class InsurancePremiumBillsTableData extends DataClass
+    implements Insertable<InsurancePremiumBillsTableData> {
+  final int id;
+  final int userPolicyId;
+  final int billId;
+  final DateTime createdAt;
+  const InsurancePremiumBillsTableData({
+    required this.id,
+    required this.userPolicyId,
+    required this.billId,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_policy_id'] = Variable<int>(userPolicyId);
+    map['bill_id'] = Variable<int>(billId);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  InsurancePremiumBillsTableCompanion toCompanion(bool nullToAbsent) {
+    return InsurancePremiumBillsTableCompanion(
+      id: Value(id),
+      userPolicyId: Value(userPolicyId),
+      billId: Value(billId),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory InsurancePremiumBillsTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InsurancePremiumBillsTableData(
+      id: serializer.fromJson<int>(json['id']),
+      userPolicyId: serializer.fromJson<int>(json['userPolicyId']),
+      billId: serializer.fromJson<int>(json['billId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userPolicyId': serializer.toJson<int>(userPolicyId),
+      'billId': serializer.toJson<int>(billId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  InsurancePremiumBillsTableData copyWith({
+    int? id,
+    int? userPolicyId,
+    int? billId,
+    DateTime? createdAt,
+  }) => InsurancePremiumBillsTableData(
+    id: id ?? this.id,
+    userPolicyId: userPolicyId ?? this.userPolicyId,
+    billId: billId ?? this.billId,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  InsurancePremiumBillsTableData copyWithCompanion(
+    InsurancePremiumBillsTableCompanion data,
+  ) {
+    return InsurancePremiumBillsTableData(
+      id: data.id.present ? data.id.value : this.id,
+      userPolicyId: data.userPolicyId.present
+          ? data.userPolicyId.value
+          : this.userPolicyId,
+      billId: data.billId.present ? data.billId.value : this.billId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InsurancePremiumBillsTableData(')
+          ..write('id: $id, ')
+          ..write('userPolicyId: $userPolicyId, ')
+          ..write('billId: $billId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, userPolicyId, billId, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InsurancePremiumBillsTableData &&
+          other.id == this.id &&
+          other.userPolicyId == this.userPolicyId &&
+          other.billId == this.billId &&
+          other.createdAt == this.createdAt);
+}
+
+class InsurancePremiumBillsTableCompanion
+    extends UpdateCompanion<InsurancePremiumBillsTableData> {
+  final Value<int> id;
+  final Value<int> userPolicyId;
+  final Value<int> billId;
+  final Value<DateTime> createdAt;
+  const InsurancePremiumBillsTableCompanion({
+    this.id = const Value.absent(),
+    this.userPolicyId = const Value.absent(),
+    this.billId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  InsurancePremiumBillsTableCompanion.insert({
+    this.id = const Value.absent(),
+    required int userPolicyId,
+    required int billId,
+    this.createdAt = const Value.absent(),
+  }) : userPolicyId = Value(userPolicyId),
+       billId = Value(billId);
+  static Insertable<InsurancePremiumBillsTableData> custom({
+    Expression<int>? id,
+    Expression<int>? userPolicyId,
+    Expression<int>? billId,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userPolicyId != null) 'user_policy_id': userPolicyId,
+      if (billId != null) 'bill_id': billId,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  InsurancePremiumBillsTableCompanion copyWith({
+    Value<int>? id,
+    Value<int>? userPolicyId,
+    Value<int>? billId,
+    Value<DateTime>? createdAt,
+  }) {
+    return InsurancePremiumBillsTableCompanion(
+      id: id ?? this.id,
+      userPolicyId: userPolicyId ?? this.userPolicyId,
+      billId: billId ?? this.billId,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userPolicyId.present) {
+      map['user_policy_id'] = Variable<int>(userPolicyId.value);
+    }
+    if (billId.present) {
+      map['bill_id'] = Variable<int>(billId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InsurancePremiumBillsTableCompanion(')
+          ..write('id: $id, ')
+          ..write('userPolicyId: $userPolicyId, ')
+          ..write('billId: $billId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -15004,6 +16900,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   insuranceProductPaymentTermsTable = $InsuranceProductPaymentTermsTableTable(
     this,
   );
+  late final $UserInsurancePolicyTableTable userInsurancePolicyTable =
+      $UserInsurancePolicyTableTable(this);
+  late final $PremiumDetailsTableTable premiumDetailsTable =
+      $PremiumDetailsTableTable(this);
+  late final $UserInsuranceBenefitsTableTable userInsuranceBenefitsTable =
+      $UserInsuranceBenefitsTableTable(this);
+  late final $InsurancePremiumBillsTableTable insurancePremiumBillsTable =
+      $InsurancePremiumBillsTableTable(this);
   late final TransactionsDao transactionsDao = TransactionsDao(
     this as AppDatabase,
   );
@@ -15040,6 +16944,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final InsuranceProductPaymentTermsDao insuranceProductPaymentTermsDao =
       InsuranceProductPaymentTermsDao(this as AppDatabase);
+  late final UserInsurancePolicyDao userInsurancePolicyDao =
+      UserInsurancePolicyDao(this as AppDatabase);
+  late final InsurancePremiumBillsDao insurancePremiumBillsDao =
+      InsurancePremiumBillsDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -15076,6 +16984,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     insuranceBenefitsTable,
     paymentTermsTable,
     insuranceProductPaymentTermsTable,
+    userInsurancePolicyTable,
+    premiumDetailsTable,
+    userInsuranceBenefitsTable,
+    insurancePremiumBillsTable,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -15234,6 +17146,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
           kind: UpdateKind.delete,
         ),
       ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'user_insurance_policy',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('insurance_premium_bills', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'bills_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('insurance_premium_bills', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -21941,6 +23867,31 @@ final class $$BillsTableTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<
+    $InsurancePremiumBillsTableTable,
+    List<InsurancePremiumBillsTableData>
+  >
+  _insurancePremiumBillsTableRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.insurancePremiumBillsTable,
+        aliasName: 'bills_table__id__insurance_premium_bills__bill_id',
+      );
+
+  $$InsurancePremiumBillsTableTableProcessedTableManager
+  get insurancePremiumBillsTableRefs {
+    final manager = $$InsurancePremiumBillsTableTableTableManager(
+      $_db,
+      $_db.insurancePremiumBillsTable,
+    ).filter((f) => f.billId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _insurancePremiumBillsTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$BillsTableTableFilterComposer
@@ -22095,6 +24046,33 @@ class $$BillsTableTableFilterComposer
                 $removeJoinBuilderFromRootComposer,
           ),
     );
+    return f(composer);
+  }
+
+  Expression<bool> insurancePremiumBillsTableRefs(
+    Expression<bool> Function($$InsurancePremiumBillsTableTableFilterComposer f)
+    f,
+  ) {
+    final $$InsurancePremiumBillsTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.insurancePremiumBillsTable,
+          getReferencedColumn: (t) => t.billId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InsurancePremiumBillsTableTableFilterComposer(
+                $db: $db,
+                $table: $db.insurancePremiumBillsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
@@ -22373,6 +24351,35 @@ class $$BillsTableTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> insurancePremiumBillsTableRefs<T extends Object>(
+    Expression<T> Function(
+      $$InsurancePremiumBillsTableTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$InsurancePremiumBillsTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.insurancePremiumBillsTable,
+          getReferencedColumn: (t) => t.billId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InsurancePremiumBillsTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.insurancePremiumBillsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$BillsTableTableTableManager
@@ -22393,6 +24400,7 @@ class $$BillsTableTableTableManager
             bool accountId,
             bool statementId,
             bool billOccurrencesTableRefs,
+            bool insurancePremiumBillsTableRefs,
           })
         > {
   $$BillsTableTableTableManager(_$AppDatabase db, $BillsTableTable table)
@@ -22480,11 +24488,14 @@ class $$BillsTableTableTableManager
                 accountId = false,
                 statementId = false,
                 billOccurrencesTableRefs = false,
+                insurancePremiumBillsTableRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (billOccurrencesTableRefs) db.billOccurrencesTable,
+                    if (insurancePremiumBillsTableRefs)
+                      db.insurancePremiumBillsTable,
                   ],
                   addJoins:
                       <
@@ -22570,6 +24581,27 @@ class $$BillsTableTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (insurancePremiumBillsTableRefs)
+                        await $_getPrefetchedData<
+                          BillsTableData,
+                          $BillsTableTable,
+                          InsurancePremiumBillsTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$BillsTableTableReferences
+                              ._insurancePremiumBillsTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$BillsTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).insurancePremiumBillsTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.billId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -22595,6 +24627,7 @@ typedef $$BillsTableTableProcessedTableManager =
         bool accountId,
         bool statementId,
         bool billOccurrencesTableRefs,
+        bool insurancePremiumBillsTableRefs,
       })
     >;
 typedef $$BillOccurrencesTableTableCreateCompanionBuilder =
@@ -28550,6 +30583,32 @@ final class $$InsuranceBenefitsTableTableReferences
       manager.$state.copyWith(prefetchedData: [item]),
     );
   }
+
+  static MultiTypedResultKey<
+    $UserInsuranceBenefitsTableTable,
+    List<UserInsuranceBenefit>
+  >
+  _userInsuranceBenefitsTableRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.userInsuranceBenefitsTable,
+        aliasName:
+            'insurance_benefits_table__id__user_insurance_benefits__benefit_id',
+      );
+
+  $$UserInsuranceBenefitsTableTableProcessedTableManager
+  get userInsuranceBenefitsTableRefs {
+    final manager = $$UserInsuranceBenefitsTableTableTableManager(
+      $_db,
+      $_db.userInsuranceBenefitsTable,
+    ).filter((f) => f.benefitId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _userInsuranceBenefitsTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$InsuranceBenefitsTableTableFilterComposer
@@ -28623,6 +30682,33 @@ class $$InsuranceBenefitsTableTableFilterComposer
               ),
         );
     return composer;
+  }
+
+  Expression<bool> userInsuranceBenefitsTableRefs(
+    Expression<bool> Function($$UserInsuranceBenefitsTableTableFilterComposer f)
+    f,
+  ) {
+    final $$UserInsuranceBenefitsTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.userInsuranceBenefitsTable,
+          getReferencedColumn: (t) => t.benefitId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsuranceBenefitsTableTableFilterComposer(
+                $db: $db,
+                $table: $db.userInsuranceBenefitsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
   }
 }
 
@@ -28764,6 +30850,35 @@ class $$InsuranceBenefitsTableTableAnnotationComposer
         );
     return composer;
   }
+
+  Expression<T> userInsuranceBenefitsTableRefs<T extends Object>(
+    Expression<T> Function(
+      $$UserInsuranceBenefitsTableTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$UserInsuranceBenefitsTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.userInsuranceBenefitsTable,
+          getReferencedColumn: (t) => t.benefitId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsuranceBenefitsTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.userInsuranceBenefitsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$InsuranceBenefitsTableTableTableManager
@@ -28779,7 +30894,10 @@ class $$InsuranceBenefitsTableTableTableManager
           $$InsuranceBenefitsTableTableUpdateCompanionBuilder,
           (InsuranceBenefitsTableData, $$InsuranceBenefitsTableTableReferences),
           InsuranceBenefitsTableData,
-          PrefetchHooks Function({bool productId})
+          PrefetchHooks Function({
+            bool productId,
+            bool userInsuranceBenefitsTableRefs,
+          })
         > {
   $$InsuranceBenefitsTableTableTableManager(
     _$AppDatabase db,
@@ -28855,49 +30973,76 @@ class $$InsuranceBenefitsTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({productId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (productId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.productId,
-                                referencedTable:
-                                    $$InsuranceBenefitsTableTableReferences
-                                        ._productIdTable(db),
-                                referencedColumn:
-                                    $$InsuranceBenefitsTableTableReferences
-                                        ._productIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
+          prefetchHooksCallback:
+              ({productId = false, userInsuranceBenefitsTableRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (userInsuranceBenefitsTableRefs)
+                      db.userInsuranceBenefitsTable,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (productId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.productId,
+                                    referencedTable:
+                                        $$InsuranceBenefitsTableTableReferences
+                                            ._productIdTable(db),
+                                    referencedColumn:
+                                        $$InsuranceBenefitsTableTableReferences
+                                            ._productIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
 
-                    return state;
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (userInsuranceBenefitsTableRefs)
+                        await $_getPrefetchedData<
+                          InsuranceBenefitsTableData,
+                          $InsuranceBenefitsTableTable,
+                          UserInsuranceBenefit
+                        >(
+                          currentTable: table,
+                          referencedTable:
+                              $$InsuranceBenefitsTableTableReferences
+                                  ._userInsuranceBenefitsTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InsuranceBenefitsTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).userInsuranceBenefitsTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.benefitId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
                   },
-              getPrefetchedDataCallback: (items) async {
-                return [];
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -28914,7 +31059,10 @@ typedef $$InsuranceBenefitsTableTableProcessedTableManager =
       $$InsuranceBenefitsTableTableUpdateCompanionBuilder,
       (InsuranceBenefitsTableData, $$InsuranceBenefitsTableTableReferences),
       InsuranceBenefitsTableData,
-      PrefetchHooks Function({bool productId})
+      PrefetchHooks Function({
+        bool productId,
+        bool userInsuranceBenefitsTableRefs,
+      })
     >;
 typedef $$PaymentTermsTableTableCreateCompanionBuilder =
     PaymentTermsTableCompanion Function({
@@ -29775,6 +31923,1923 @@ typedef $$InsuranceProductPaymentTermsTableTableProcessedTableManager =
       InsuranceProductPaymentTermRow,
       PrefetchHooks Function({bool productId, bool paymentTermId})
     >;
+typedef $$UserInsurancePolicyTableTableCreateCompanionBuilder =
+    UserInsurancePolicyTableCompanion Function({
+      Value<int> id,
+      required int productId,
+      Value<String?> policyNumber,
+      Value<DateTime> createdAt,
+      Value<int?> advisorId,
+      Value<DateTime?> dateIssued,
+      required int userId,
+      Value<int?> productVariantId,
+      required BillsFrequency paymentSchedule,
+    });
+typedef $$UserInsurancePolicyTableTableUpdateCompanionBuilder =
+    UserInsurancePolicyTableCompanion Function({
+      Value<int> id,
+      Value<int> productId,
+      Value<String?> policyNumber,
+      Value<DateTime> createdAt,
+      Value<int?> advisorId,
+      Value<DateTime?> dateIssued,
+      Value<int> userId,
+      Value<int?> productVariantId,
+      Value<BillsFrequency> paymentSchedule,
+    });
+
+final class $$UserInsurancePolicyTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $UserInsurancePolicyTableTable,
+          UserInsurancePolicy
+        > {
+  $$UserInsurancePolicyTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$PremiumDetailsTableTable, List<PremiumDetail>>
+  _premiumDetailsTableRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.premiumDetailsTable,
+        aliasName: 'user_insurance_policy__id__premium_details__user_policy_id',
+      );
+
+  $$PremiumDetailsTableTableProcessedTableManager get premiumDetailsTableRefs {
+    final manager = $$PremiumDetailsTableTableTableManager(
+      $_db,
+      $_db.premiumDetailsTable,
+    ).filter((f) => f.userPolicyId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _premiumDetailsTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $UserInsuranceBenefitsTableTable,
+    List<UserInsuranceBenefit>
+  >
+  _userInsuranceBenefitsTableRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.userInsuranceBenefitsTable,
+    aliasName:
+        'user_insurance_policy__id__user_insurance_benefits__user_policy_id',
+  );
+
+  $$UserInsuranceBenefitsTableTableProcessedTableManager
+  get userInsuranceBenefitsTableRefs {
+    final manager = $$UserInsuranceBenefitsTableTableTableManager(
+      $_db,
+      $_db.userInsuranceBenefitsTable,
+    ).filter((f) => f.userPolicyId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _userInsuranceBenefitsTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $InsurancePremiumBillsTableTable,
+    List<InsurancePremiumBillsTableData>
+  >
+  _insurancePremiumBillsTableRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.insurancePremiumBillsTable,
+    aliasName:
+        'user_insurance_policy__id__insurance_premium_bills__user_policy_id',
+  );
+
+  $$InsurancePremiumBillsTableTableProcessedTableManager
+  get insurancePremiumBillsTableRefs {
+    final manager = $$InsurancePremiumBillsTableTableTableManager(
+      $_db,
+      $_db.insurancePremiumBillsTable,
+    ).filter((f) => f.userPolicyId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _insurancePremiumBillsTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$UserInsurancePolicyTableTableFilterComposer
+    extends Composer<_$AppDatabase, $UserInsurancePolicyTableTable> {
+  $$UserInsurancePolicyTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get productId => $composableBuilder(
+    column: $table.productId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get policyNumber => $composableBuilder(
+    column: $table.policyNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get advisorId => $composableBuilder(
+    column: $table.advisorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dateIssued => $composableBuilder(
+    column: $table.dateIssued,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get productVariantId => $composableBuilder(
+    column: $table.productVariantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<BillsFrequency, BillsFrequency, int>
+  get paymentSchedule => $composableBuilder(
+    column: $table.paymentSchedule,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  Expression<bool> premiumDetailsTableRefs(
+    Expression<bool> Function($$PremiumDetailsTableTableFilterComposer f) f,
+  ) {
+    final $$PremiumDetailsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.premiumDetailsTable,
+      getReferencedColumn: (t) => t.userPolicyId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PremiumDetailsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.premiumDetailsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> userInsuranceBenefitsTableRefs(
+    Expression<bool> Function($$UserInsuranceBenefitsTableTableFilterComposer f)
+    f,
+  ) {
+    final $$UserInsuranceBenefitsTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.userInsuranceBenefitsTable,
+          getReferencedColumn: (t) => t.userPolicyId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsuranceBenefitsTableTableFilterComposer(
+                $db: $db,
+                $table: $db.userInsuranceBenefitsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> insurancePremiumBillsTableRefs(
+    Expression<bool> Function($$InsurancePremiumBillsTableTableFilterComposer f)
+    f,
+  ) {
+    final $$InsurancePremiumBillsTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.insurancePremiumBillsTable,
+          getReferencedColumn: (t) => t.userPolicyId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InsurancePremiumBillsTableTableFilterComposer(
+                $db: $db,
+                $table: $db.insurancePremiumBillsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$UserInsurancePolicyTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserInsurancePolicyTableTable> {
+  $$UserInsurancePolicyTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get productId => $composableBuilder(
+    column: $table.productId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get policyNumber => $composableBuilder(
+    column: $table.policyNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get advisorId => $composableBuilder(
+    column: $table.advisorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dateIssued => $composableBuilder(
+    column: $table.dateIssued,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get productVariantId => $composableBuilder(
+    column: $table.productVariantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get paymentSchedule => $composableBuilder(
+    column: $table.paymentSchedule,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UserInsurancePolicyTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserInsurancePolicyTableTable> {
+  $$UserInsurancePolicyTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get productId =>
+      $composableBuilder(column: $table.productId, builder: (column) => column);
+
+  GeneratedColumn<String> get policyNumber => $composableBuilder(
+    column: $table.policyNumber,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<int> get advisorId =>
+      $composableBuilder(column: $table.advisorId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateIssued => $composableBuilder(
+    column: $table.dateIssued,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<int> get productVariantId => $composableBuilder(
+    column: $table.productVariantId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<BillsFrequency, int> get paymentSchedule =>
+      $composableBuilder(
+        column: $table.paymentSchedule,
+        builder: (column) => column,
+      );
+
+  Expression<T> premiumDetailsTableRefs<T extends Object>(
+    Expression<T> Function($$PremiumDetailsTableTableAnnotationComposer a) f,
+  ) {
+    final $$PremiumDetailsTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.premiumDetailsTable,
+          getReferencedColumn: (t) => t.userPolicyId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PremiumDetailsTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.premiumDetailsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> userInsuranceBenefitsTableRefs<T extends Object>(
+    Expression<T> Function(
+      $$UserInsuranceBenefitsTableTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$UserInsuranceBenefitsTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.userInsuranceBenefitsTable,
+          getReferencedColumn: (t) => t.userPolicyId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsuranceBenefitsTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.userInsuranceBenefitsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> insurancePremiumBillsTableRefs<T extends Object>(
+    Expression<T> Function(
+      $$InsurancePremiumBillsTableTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$InsurancePremiumBillsTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.insurancePremiumBillsTable,
+          getReferencedColumn: (t) => t.userPolicyId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InsurancePremiumBillsTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.insurancePremiumBillsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$UserInsurancePolicyTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UserInsurancePolicyTableTable,
+          UserInsurancePolicy,
+          $$UserInsurancePolicyTableTableFilterComposer,
+          $$UserInsurancePolicyTableTableOrderingComposer,
+          $$UserInsurancePolicyTableTableAnnotationComposer,
+          $$UserInsurancePolicyTableTableCreateCompanionBuilder,
+          $$UserInsurancePolicyTableTableUpdateCompanionBuilder,
+          (UserInsurancePolicy, $$UserInsurancePolicyTableTableReferences),
+          UserInsurancePolicy,
+          PrefetchHooks Function({
+            bool premiumDetailsTableRefs,
+            bool userInsuranceBenefitsTableRefs,
+            bool insurancePremiumBillsTableRefs,
+          })
+        > {
+  $$UserInsurancePolicyTableTableTableManager(
+    _$AppDatabase db,
+    $UserInsurancePolicyTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UserInsurancePolicyTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$UserInsurancePolicyTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$UserInsurancePolicyTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> productId = const Value.absent(),
+                Value<String?> policyNumber = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int?> advisorId = const Value.absent(),
+                Value<DateTime?> dateIssued = const Value.absent(),
+                Value<int> userId = const Value.absent(),
+                Value<int?> productVariantId = const Value.absent(),
+                Value<BillsFrequency> paymentSchedule = const Value.absent(),
+              }) => UserInsurancePolicyTableCompanion(
+                id: id,
+                productId: productId,
+                policyNumber: policyNumber,
+                createdAt: createdAt,
+                advisorId: advisorId,
+                dateIssued: dateIssued,
+                userId: userId,
+                productVariantId: productVariantId,
+                paymentSchedule: paymentSchedule,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int productId,
+                Value<String?> policyNumber = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int?> advisorId = const Value.absent(),
+                Value<DateTime?> dateIssued = const Value.absent(),
+                required int userId,
+                Value<int?> productVariantId = const Value.absent(),
+                required BillsFrequency paymentSchedule,
+              }) => UserInsurancePolicyTableCompanion.insert(
+                id: id,
+                productId: productId,
+                policyNumber: policyNumber,
+                createdAt: createdAt,
+                advisorId: advisorId,
+                dateIssued: dateIssued,
+                userId: userId,
+                productVariantId: productVariantId,
+                paymentSchedule: paymentSchedule,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$UserInsurancePolicyTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                premiumDetailsTableRefs = false,
+                userInsuranceBenefitsTableRefs = false,
+                insurancePremiumBillsTableRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (premiumDetailsTableRefs) db.premiumDetailsTable,
+                    if (userInsuranceBenefitsTableRefs)
+                      db.userInsuranceBenefitsTable,
+                    if (insurancePremiumBillsTableRefs)
+                      db.insurancePremiumBillsTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (premiumDetailsTableRefs)
+                        await $_getPrefetchedData<
+                          UserInsurancePolicy,
+                          $UserInsurancePolicyTableTable,
+                          PremiumDetail
+                        >(
+                          currentTable: table,
+                          referencedTable:
+                              $$UserInsurancePolicyTableTableReferences
+                                  ._premiumDetailsTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$UserInsurancePolicyTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).premiumDetailsTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userPolicyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (userInsuranceBenefitsTableRefs)
+                        await $_getPrefetchedData<
+                          UserInsurancePolicy,
+                          $UserInsurancePolicyTableTable,
+                          UserInsuranceBenefit
+                        >(
+                          currentTable: table,
+                          referencedTable:
+                              $$UserInsurancePolicyTableTableReferences
+                                  ._userInsuranceBenefitsTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$UserInsurancePolicyTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).userInsuranceBenefitsTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userPolicyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (insurancePremiumBillsTableRefs)
+                        await $_getPrefetchedData<
+                          UserInsurancePolicy,
+                          $UserInsurancePolicyTableTable,
+                          InsurancePremiumBillsTableData
+                        >(
+                          currentTable: table,
+                          referencedTable:
+                              $$UserInsurancePolicyTableTableReferences
+                                  ._insurancePremiumBillsTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$UserInsurancePolicyTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).insurancePremiumBillsTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userPolicyId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$UserInsurancePolicyTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UserInsurancePolicyTableTable,
+      UserInsurancePolicy,
+      $$UserInsurancePolicyTableTableFilterComposer,
+      $$UserInsurancePolicyTableTableOrderingComposer,
+      $$UserInsurancePolicyTableTableAnnotationComposer,
+      $$UserInsurancePolicyTableTableCreateCompanionBuilder,
+      $$UserInsurancePolicyTableTableUpdateCompanionBuilder,
+      (UserInsurancePolicy, $$UserInsurancePolicyTableTableReferences),
+      UserInsurancePolicy,
+      PrefetchHooks Function({
+        bool premiumDetailsTableRefs,
+        bool userInsuranceBenefitsTableRefs,
+        bool insurancePremiumBillsTableRefs,
+      })
+    >;
+typedef $$PremiumDetailsTableTableCreateCompanionBuilder =
+    PremiumDetailsTableCompanion Function({
+      Value<int> id,
+      Value<int?> userPolicyId,
+      Value<int?> offerPolicyId,
+      Value<DateTime> createdAt,
+      Value<double?> monthly,
+      Value<double?> quarterly,
+      Value<double?> semiAnnual,
+      Value<double?> annual,
+    });
+typedef $$PremiumDetailsTableTableUpdateCompanionBuilder =
+    PremiumDetailsTableCompanion Function({
+      Value<int> id,
+      Value<int?> userPolicyId,
+      Value<int?> offerPolicyId,
+      Value<DateTime> createdAt,
+      Value<double?> monthly,
+      Value<double?> quarterly,
+      Value<double?> semiAnnual,
+      Value<double?> annual,
+    });
+
+final class $$PremiumDetailsTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $PremiumDetailsTableTable,
+          PremiumDetail
+        > {
+  $$PremiumDetailsTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $UserInsurancePolicyTableTable _userPolicyIdTable(_$AppDatabase db) =>
+      db.userInsurancePolicyTable.createAlias(
+        'premium_details__user_policy_id__user_insurance_policy__id',
+      );
+
+  $$UserInsurancePolicyTableTableProcessedTableManager? get userPolicyId {
+    final $_column = $_itemColumn<int>('user_policy_id');
+    if ($_column == null) return null;
+    final manager = $$UserInsurancePolicyTableTableTableManager(
+      $_db,
+      $_db.userInsurancePolicyTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userPolicyIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PremiumDetailsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $PremiumDetailsTableTable> {
+  $$PremiumDetailsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get offerPolicyId => $composableBuilder(
+    column: $table.offerPolicyId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get monthly => $composableBuilder(
+    column: $table.monthly,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get quarterly => $composableBuilder(
+    column: $table.quarterly,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get semiAnnual => $composableBuilder(
+    column: $table.semiAnnual,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get annual => $composableBuilder(
+    column: $table.annual,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$UserInsurancePolicyTableTableFilterComposer get userPolicyId {
+    final $$UserInsurancePolicyTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.userPolicyId,
+          referencedTable: $db.userInsurancePolicyTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsurancePolicyTableTableFilterComposer(
+                $db: $db,
+                $table: $db.userInsurancePolicyTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$PremiumDetailsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $PremiumDetailsTableTable> {
+  $$PremiumDetailsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get offerPolicyId => $composableBuilder(
+    column: $table.offerPolicyId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get monthly => $composableBuilder(
+    column: $table.monthly,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get quarterly => $composableBuilder(
+    column: $table.quarterly,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get semiAnnual => $composableBuilder(
+    column: $table.semiAnnual,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get annual => $composableBuilder(
+    column: $table.annual,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$UserInsurancePolicyTableTableOrderingComposer get userPolicyId {
+    final $$UserInsurancePolicyTableTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.userPolicyId,
+          referencedTable: $db.userInsurancePolicyTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsurancePolicyTableTableOrderingComposer(
+                $db: $db,
+                $table: $db.userInsurancePolicyTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$PremiumDetailsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PremiumDetailsTableTable> {
+  $$PremiumDetailsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get offerPolicyId => $composableBuilder(
+    column: $table.offerPolicyId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<double> get monthly =>
+      $composableBuilder(column: $table.monthly, builder: (column) => column);
+
+  GeneratedColumn<double> get quarterly =>
+      $composableBuilder(column: $table.quarterly, builder: (column) => column);
+
+  GeneratedColumn<double> get semiAnnual => $composableBuilder(
+    column: $table.semiAnnual,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get annual =>
+      $composableBuilder(column: $table.annual, builder: (column) => column);
+
+  $$UserInsurancePolicyTableTableAnnotationComposer get userPolicyId {
+    final $$UserInsurancePolicyTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.userPolicyId,
+          referencedTable: $db.userInsurancePolicyTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsurancePolicyTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.userInsurancePolicyTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$PremiumDetailsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PremiumDetailsTableTable,
+          PremiumDetail,
+          $$PremiumDetailsTableTableFilterComposer,
+          $$PremiumDetailsTableTableOrderingComposer,
+          $$PremiumDetailsTableTableAnnotationComposer,
+          $$PremiumDetailsTableTableCreateCompanionBuilder,
+          $$PremiumDetailsTableTableUpdateCompanionBuilder,
+          (PremiumDetail, $$PremiumDetailsTableTableReferences),
+          PremiumDetail,
+          PrefetchHooks Function({bool userPolicyId})
+        > {
+  $$PremiumDetailsTableTableTableManager(
+    _$AppDatabase db,
+    $PremiumDetailsTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PremiumDetailsTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PremiumDetailsTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$PremiumDetailsTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> userPolicyId = const Value.absent(),
+                Value<int?> offerPolicyId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<double?> monthly = const Value.absent(),
+                Value<double?> quarterly = const Value.absent(),
+                Value<double?> semiAnnual = const Value.absent(),
+                Value<double?> annual = const Value.absent(),
+              }) => PremiumDetailsTableCompanion(
+                id: id,
+                userPolicyId: userPolicyId,
+                offerPolicyId: offerPolicyId,
+                createdAt: createdAt,
+                monthly: monthly,
+                quarterly: quarterly,
+                semiAnnual: semiAnnual,
+                annual: annual,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> userPolicyId = const Value.absent(),
+                Value<int?> offerPolicyId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<double?> monthly = const Value.absent(),
+                Value<double?> quarterly = const Value.absent(),
+                Value<double?> semiAnnual = const Value.absent(),
+                Value<double?> annual = const Value.absent(),
+              }) => PremiumDetailsTableCompanion.insert(
+                id: id,
+                userPolicyId: userPolicyId,
+                offerPolicyId: offerPolicyId,
+                createdAt: createdAt,
+                monthly: monthly,
+                quarterly: quarterly,
+                semiAnnual: semiAnnual,
+                annual: annual,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PremiumDetailsTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({userPolicyId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (userPolicyId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.userPolicyId,
+                                referencedTable:
+                                    $$PremiumDetailsTableTableReferences
+                                        ._userPolicyIdTable(db),
+                                referencedColumn:
+                                    $$PremiumDetailsTableTableReferences
+                                        ._userPolicyIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PremiumDetailsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PremiumDetailsTableTable,
+      PremiumDetail,
+      $$PremiumDetailsTableTableFilterComposer,
+      $$PremiumDetailsTableTableOrderingComposer,
+      $$PremiumDetailsTableTableAnnotationComposer,
+      $$PremiumDetailsTableTableCreateCompanionBuilder,
+      $$PremiumDetailsTableTableUpdateCompanionBuilder,
+      (PremiumDetail, $$PremiumDetailsTableTableReferences),
+      PremiumDetail,
+      PrefetchHooks Function({bool userPolicyId})
+    >;
+typedef $$UserInsuranceBenefitsTableTableCreateCompanionBuilder =
+    UserInsuranceBenefitsTableCompanion Function({
+      Value<int> id,
+      Value<int?> supabaseId,
+      required int benefitId,
+      required int userPolicyId,
+      required double amount,
+      Value<DateTime> createdAt,
+      Value<bool> isSynced,
+    });
+typedef $$UserInsuranceBenefitsTableTableUpdateCompanionBuilder =
+    UserInsuranceBenefitsTableCompanion Function({
+      Value<int> id,
+      Value<int?> supabaseId,
+      Value<int> benefitId,
+      Value<int> userPolicyId,
+      Value<double> amount,
+      Value<DateTime> createdAt,
+      Value<bool> isSynced,
+    });
+
+final class $$UserInsuranceBenefitsTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $UserInsuranceBenefitsTableTable,
+          UserInsuranceBenefit
+        > {
+  $$UserInsuranceBenefitsTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $InsuranceBenefitsTableTable _benefitIdTable(_$AppDatabase db) =>
+      db.insuranceBenefitsTable.createAlias(
+        'user_insurance_benefits__benefit_id__insurance_benefits_table__id',
+      );
+
+  $$InsuranceBenefitsTableTableProcessedTableManager get benefitId {
+    final $_column = $_itemColumn<int>('benefit_id')!;
+
+    final manager = $$InsuranceBenefitsTableTableTableManager(
+      $_db,
+      $_db.insuranceBenefitsTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_benefitIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $UserInsurancePolicyTableTable _userPolicyIdTable(_$AppDatabase db) =>
+      db.userInsurancePolicyTable.createAlias(
+        'user_insurance_benefits__user_policy_id__user_insurance_policy__id',
+      );
+
+  $$UserInsurancePolicyTableTableProcessedTableManager get userPolicyId {
+    final $_column = $_itemColumn<int>('user_policy_id')!;
+
+    final manager = $$UserInsurancePolicyTableTableTableManager(
+      $_db,
+      $_db.userInsurancePolicyTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userPolicyIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$UserInsuranceBenefitsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $UserInsuranceBenefitsTableTable> {
+  $$UserInsuranceBenefitsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get supabaseId => $composableBuilder(
+    column: $table.supabaseId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$InsuranceBenefitsTableTableFilterComposer get benefitId {
+    final $$InsuranceBenefitsTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.benefitId,
+          referencedTable: $db.insuranceBenefitsTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InsuranceBenefitsTableTableFilterComposer(
+                $db: $db,
+                $table: $db.insuranceBenefitsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$UserInsurancePolicyTableTableFilterComposer get userPolicyId {
+    final $$UserInsurancePolicyTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.userPolicyId,
+          referencedTable: $db.userInsurancePolicyTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsurancePolicyTableTableFilterComposer(
+                $db: $db,
+                $table: $db.userInsurancePolicyTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$UserInsuranceBenefitsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserInsuranceBenefitsTableTable> {
+  $$UserInsuranceBenefitsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get supabaseId => $composableBuilder(
+    column: $table.supabaseId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$InsuranceBenefitsTableTableOrderingComposer get benefitId {
+    final $$InsuranceBenefitsTableTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.benefitId,
+          referencedTable: $db.insuranceBenefitsTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InsuranceBenefitsTableTableOrderingComposer(
+                $db: $db,
+                $table: $db.insuranceBenefitsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$UserInsurancePolicyTableTableOrderingComposer get userPolicyId {
+    final $$UserInsurancePolicyTableTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.userPolicyId,
+          referencedTable: $db.userInsurancePolicyTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsurancePolicyTableTableOrderingComposer(
+                $db: $db,
+                $table: $db.userInsurancePolicyTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$UserInsuranceBenefitsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserInsuranceBenefitsTableTable> {
+  $$UserInsuranceBenefitsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get supabaseId => $composableBuilder(
+    column: $table.supabaseId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  $$InsuranceBenefitsTableTableAnnotationComposer get benefitId {
+    final $$InsuranceBenefitsTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.benefitId,
+          referencedTable: $db.insuranceBenefitsTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InsuranceBenefitsTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.insuranceBenefitsTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$UserInsurancePolicyTableTableAnnotationComposer get userPolicyId {
+    final $$UserInsurancePolicyTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.userPolicyId,
+          referencedTable: $db.userInsurancePolicyTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsurancePolicyTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.userInsurancePolicyTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$UserInsuranceBenefitsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UserInsuranceBenefitsTableTable,
+          UserInsuranceBenefit,
+          $$UserInsuranceBenefitsTableTableFilterComposer,
+          $$UserInsuranceBenefitsTableTableOrderingComposer,
+          $$UserInsuranceBenefitsTableTableAnnotationComposer,
+          $$UserInsuranceBenefitsTableTableCreateCompanionBuilder,
+          $$UserInsuranceBenefitsTableTableUpdateCompanionBuilder,
+          (UserInsuranceBenefit, $$UserInsuranceBenefitsTableTableReferences),
+          UserInsuranceBenefit,
+          PrefetchHooks Function({bool benefitId, bool userPolicyId})
+        > {
+  $$UserInsuranceBenefitsTableTableTableManager(
+    _$AppDatabase db,
+    $UserInsuranceBenefitsTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UserInsuranceBenefitsTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$UserInsuranceBenefitsTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$UserInsuranceBenefitsTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> supabaseId = const Value.absent(),
+                Value<int> benefitId = const Value.absent(),
+                Value<int> userPolicyId = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+              }) => UserInsuranceBenefitsTableCompanion(
+                id: id,
+                supabaseId: supabaseId,
+                benefitId: benefitId,
+                userPolicyId: userPolicyId,
+                amount: amount,
+                createdAt: createdAt,
+                isSynced: isSynced,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> supabaseId = const Value.absent(),
+                required int benefitId,
+                required int userPolicyId,
+                required double amount,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+              }) => UserInsuranceBenefitsTableCompanion.insert(
+                id: id,
+                supabaseId: supabaseId,
+                benefitId: benefitId,
+                userPolicyId: userPolicyId,
+                amount: amount,
+                createdAt: createdAt,
+                isSynced: isSynced,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$UserInsuranceBenefitsTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({benefitId = false, userPolicyId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (benefitId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.benefitId,
+                                referencedTable:
+                                    $$UserInsuranceBenefitsTableTableReferences
+                                        ._benefitIdTable(db),
+                                referencedColumn:
+                                    $$UserInsuranceBenefitsTableTableReferences
+                                        ._benefitIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (userPolicyId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.userPolicyId,
+                                referencedTable:
+                                    $$UserInsuranceBenefitsTableTableReferences
+                                        ._userPolicyIdTable(db),
+                                referencedColumn:
+                                    $$UserInsuranceBenefitsTableTableReferences
+                                        ._userPolicyIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$UserInsuranceBenefitsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UserInsuranceBenefitsTableTable,
+      UserInsuranceBenefit,
+      $$UserInsuranceBenefitsTableTableFilterComposer,
+      $$UserInsuranceBenefitsTableTableOrderingComposer,
+      $$UserInsuranceBenefitsTableTableAnnotationComposer,
+      $$UserInsuranceBenefitsTableTableCreateCompanionBuilder,
+      $$UserInsuranceBenefitsTableTableUpdateCompanionBuilder,
+      (UserInsuranceBenefit, $$UserInsuranceBenefitsTableTableReferences),
+      UserInsuranceBenefit,
+      PrefetchHooks Function({bool benefitId, bool userPolicyId})
+    >;
+typedef $$InsurancePremiumBillsTableTableCreateCompanionBuilder =
+    InsurancePremiumBillsTableCompanion Function({
+      Value<int> id,
+      required int userPolicyId,
+      required int billId,
+      Value<DateTime> createdAt,
+    });
+typedef $$InsurancePremiumBillsTableTableUpdateCompanionBuilder =
+    InsurancePremiumBillsTableCompanion Function({
+      Value<int> id,
+      Value<int> userPolicyId,
+      Value<int> billId,
+      Value<DateTime> createdAt,
+    });
+
+final class $$InsurancePremiumBillsTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $InsurancePremiumBillsTableTable,
+          InsurancePremiumBillsTableData
+        > {
+  $$InsurancePremiumBillsTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $UserInsurancePolicyTableTable _userPolicyIdTable(_$AppDatabase db) =>
+      db.userInsurancePolicyTable.createAlias(
+        'insurance_premium_bills__user_policy_id__user_insurance_policy__id',
+      );
+
+  $$UserInsurancePolicyTableTableProcessedTableManager get userPolicyId {
+    final $_column = $_itemColumn<int>('user_policy_id')!;
+
+    final manager = $$UserInsurancePolicyTableTableTableManager(
+      $_db,
+      $_db.userInsurancePolicyTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userPolicyIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $BillsTableTable _billIdTable(_$AppDatabase db) => db.billsTable
+      .createAlias('insurance_premium_bills__bill_id__bills_table__id');
+
+  $$BillsTableTableProcessedTableManager get billId {
+    final $_column = $_itemColumn<int>('bill_id')!;
+
+    final manager = $$BillsTableTableTableManager(
+      $_db,
+      $_db.billsTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_billIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$InsurancePremiumBillsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $InsurancePremiumBillsTableTable> {
+  $$InsurancePremiumBillsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$UserInsurancePolicyTableTableFilterComposer get userPolicyId {
+    final $$UserInsurancePolicyTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.userPolicyId,
+          referencedTable: $db.userInsurancePolicyTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsurancePolicyTableTableFilterComposer(
+                $db: $db,
+                $table: $db.userInsurancePolicyTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$BillsTableTableFilterComposer get billId {
+    final $$BillsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.billId,
+      referencedTable: $db.billsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BillsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.billsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InsurancePremiumBillsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $InsurancePremiumBillsTableTable> {
+  $$InsurancePremiumBillsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$UserInsurancePolicyTableTableOrderingComposer get userPolicyId {
+    final $$UserInsurancePolicyTableTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.userPolicyId,
+          referencedTable: $db.userInsurancePolicyTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsurancePolicyTableTableOrderingComposer(
+                $db: $db,
+                $table: $db.userInsurancePolicyTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$BillsTableTableOrderingComposer get billId {
+    final $$BillsTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.billId,
+      referencedTable: $db.billsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BillsTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.billsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InsurancePremiumBillsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $InsurancePremiumBillsTableTable> {
+  $$InsurancePremiumBillsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$UserInsurancePolicyTableTableAnnotationComposer get userPolicyId {
+    final $$UserInsurancePolicyTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.userPolicyId,
+          referencedTable: $db.userInsurancePolicyTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UserInsurancePolicyTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.userInsurancePolicyTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$BillsTableTableAnnotationComposer get billId {
+    final $$BillsTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.billId,
+      referencedTable: $db.billsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BillsTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.billsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InsurancePremiumBillsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $InsurancePremiumBillsTableTable,
+          InsurancePremiumBillsTableData,
+          $$InsurancePremiumBillsTableTableFilterComposer,
+          $$InsurancePremiumBillsTableTableOrderingComposer,
+          $$InsurancePremiumBillsTableTableAnnotationComposer,
+          $$InsurancePremiumBillsTableTableCreateCompanionBuilder,
+          $$InsurancePremiumBillsTableTableUpdateCompanionBuilder,
+          (
+            InsurancePremiumBillsTableData,
+            $$InsurancePremiumBillsTableTableReferences,
+          ),
+          InsurancePremiumBillsTableData,
+          PrefetchHooks Function({bool userPolicyId, bool billId})
+        > {
+  $$InsurancePremiumBillsTableTableTableManager(
+    _$AppDatabase db,
+    $InsurancePremiumBillsTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InsurancePremiumBillsTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$InsurancePremiumBillsTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$InsurancePremiumBillsTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> userPolicyId = const Value.absent(),
+                Value<int> billId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => InsurancePremiumBillsTableCompanion(
+                id: id,
+                userPolicyId: userPolicyId,
+                billId: billId,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int userPolicyId,
+                required int billId,
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => InsurancePremiumBillsTableCompanion.insert(
+                id: id,
+                userPolicyId: userPolicyId,
+                billId: billId,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$InsurancePremiumBillsTableTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({userPolicyId = false, billId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (userPolicyId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.userPolicyId,
+                                referencedTable:
+                                    $$InsurancePremiumBillsTableTableReferences
+                                        ._userPolicyIdTable(db),
+                                referencedColumn:
+                                    $$InsurancePremiumBillsTableTableReferences
+                                        ._userPolicyIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (billId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.billId,
+                                referencedTable:
+                                    $$InsurancePremiumBillsTableTableReferences
+                                        ._billIdTable(db),
+                                referencedColumn:
+                                    $$InsurancePremiumBillsTableTableReferences
+                                        ._billIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$InsurancePremiumBillsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $InsurancePremiumBillsTableTable,
+      InsurancePremiumBillsTableData,
+      $$InsurancePremiumBillsTableTableFilterComposer,
+      $$InsurancePremiumBillsTableTableOrderingComposer,
+      $$InsurancePremiumBillsTableTableAnnotationComposer,
+      $$InsurancePremiumBillsTableTableCreateCompanionBuilder,
+      $$InsurancePremiumBillsTableTableUpdateCompanionBuilder,
+      (
+        InsurancePremiumBillsTableData,
+        $$InsurancePremiumBillsTableTableReferences,
+      ),
+      InsurancePremiumBillsTableData,
+      PrefetchHooks Function({bool userPolicyId, bool billId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -29890,5 +33955,24 @@ class $AppDatabaseManager {
       $$InsuranceProductPaymentTermsTableTableTableManager(
         _db,
         _db.insuranceProductPaymentTermsTable,
+      );
+  $$UserInsurancePolicyTableTableTableManager get userInsurancePolicyTable =>
+      $$UserInsurancePolicyTableTableTableManager(
+        _db,
+        _db.userInsurancePolicyTable,
+      );
+  $$PremiumDetailsTableTableTableManager get premiumDetailsTable =>
+      $$PremiumDetailsTableTableTableManager(_db, _db.premiumDetailsTable);
+  $$UserInsuranceBenefitsTableTableTableManager
+  get userInsuranceBenefitsTable =>
+      $$UserInsuranceBenefitsTableTableTableManager(
+        _db,
+        _db.userInsuranceBenefitsTable,
+      );
+  $$InsurancePremiumBillsTableTableTableManager
+  get insurancePremiumBillsTable =>
+      $$InsurancePremiumBillsTableTableTableManager(
+        _db,
+        _db.insurancePremiumBillsTable,
       );
 }

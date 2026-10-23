@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_benefit/views/sheets/select_benefit_type_sheet.dart';
@@ -82,22 +83,31 @@ class _AddPolicyBenefitFormState extends State<AddPolicyBenefitForm> {
     final type = selectedType;
 
     if (type == null) {
-      Get.snackbar('Missing benefit type', 'Select a benefit type.');
+      AppSnackbar.show(
+        title: 'Missing benefit type',
+        message: 'Select a benefit type.',
+      );
+
       return;
     }
 
     final name = nameController.text.trim();
 
     if (type == BenefitType.others && name.isEmpty) {
-      Get.snackbar('Missing benefit name', 'Enter a benefit name.');
+      AppSnackbar.show(
+        title: 'Missing benefit name',
+        message: 'Select a benefit name.',
+      );
+
       return;
     }
 
     if (amount <= 0) {
-      Get.snackbar(
-        'Invalid coverage amount',
-        'Enter an amount greater than zero.',
+      AppSnackbar.show(
+        title: 'Invalid coverage amount',
+        message: 'Enter an amount greater than zero.',
       );
+
       return;
     }
 
@@ -134,14 +144,6 @@ class _AddPolicyBenefitFormState extends State<AddPolicyBenefitForm> {
             },
           ),
 
-          AppTextField(
-            optional: selectedType != BenefitType.others,
-            label: 'Benefit Name',
-            hintText: 'Type benefit name',
-            controller: nameController,
-            focusNode: nameFocusNode,
-          ),
-
           // Wire amount changes using AppAmountField's actual API.
           AppAmountField(
             label: 'Amount Covered',
@@ -149,6 +151,13 @@ class _AddPolicyBenefitFormState extends State<AddPolicyBenefitForm> {
             onChanged: (value) {
               setState(() => amount = value);
             },
+          ),
+          AppTextField(
+            optional: selectedType != BenefitType.others,
+            label: 'Benefit Name',
+            hintText: 'Type benefit name',
+            controller: nameController,
+            focusNode: nameFocusNode,
           ),
 
           Row(

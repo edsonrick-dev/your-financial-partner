@@ -14,6 +14,7 @@ class RecommendedPolicyCard extends StatelessWidget {
     final colorScheme = context.colors;
     return AppCard(
       width: 300,
+      maxHeight: 122,
       child: Column(
         children: [
           Row(

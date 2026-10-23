@@ -11,15 +11,20 @@ class InsuranceProductCard extends StatelessWidget {
     super.key,
     required this.product,
     required this.company,
+    this.isSelected = false,
+    required this.onTap,
   });
 
   final InsuranceProduct product;
   final InsuranceCompany company;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
     return AppCard(
+      borderColor: isSelected ? colorScheme.appText : colorScheme.appBorder,
       onTap: () {
         Get.back(result: product);
       },
