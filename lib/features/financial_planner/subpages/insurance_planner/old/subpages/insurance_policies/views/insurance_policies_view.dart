@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/add_policy/show_add_policy_form.dart';
 import 'package:getx_drift_app/features/widgets/fields/shared/field_container.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -35,66 +36,9 @@ class _AddPolicyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AdaptivePressable(
       onTap: () {
-        Get.bottomSheet(_ChooseProductSheet(), isScrollControlled: true);
+        showAddPolicyForm();
       },
       child: Icon(PhosphorIconsRegular.plus),
-    );
-  }
-}
-
-class _ChooseProductSheet extends StatelessWidget {
-  const _ChooseProductSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return AppSheet(
-      title: 'Choose Product',
-      child: AppSection(
-        child: Column(
-          children: [
-            AppFieldContainer(
-              onTap: () {},
-              fixedHeight: false,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      textCapitalization: TextCapitalization.sentences,
-                      controller: TextEditingController(),
-                      focusNode: FocusNode(),
-                      keyboardType: TextInputType.text,
-                      maxLength: 250,
-                      textInputAction: TextInputAction.done,
-                      style: AppTextStyle.bodyL,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                        border: InputBorder.none,
-                        hintText: 'Search',
-                        hintStyle: AppTextStyle.titleL.copyWith(
-                          color: colorScheme.appTextMuted,
-                        ),
-                      ),
-                      buildCounter:
-                          (
-                            context, {
-                            required currentLength,
-                            required isFocused,
-                            required maxLength,
-                          }) => null,
-                    ),
-                  ),
-
-                  SizedBox(width: 16),
-                  Icon(PhosphorIconsRegular.magnifyingGlass, size: 20),
-                  SizedBox(width: 8),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -15021,9 +15021,9 @@ class $UserInsurancePolicyTableTable extends UserInsurancePolicyTable
   late final GeneratedColumn<int> userId = GeneratedColumn<int>(
     'user_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _productVariantIdMeta = const VerificationMeta(
     'productVariantId',
@@ -15115,8 +15115,6 @@ class $UserInsurancePolicyTableTable extends UserInsurancePolicyTable
         _userIdMeta,
         userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_userIdMeta);
     }
     if (data.containsKey('product_variant_id')) {
       context.handle(
@@ -15163,7 +15161,7 @@ class $UserInsurancePolicyTableTable extends UserInsurancePolicyTable
       userId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}user_id'],
-      )!,
+      ),
       productVariantId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}product_variant_id'],
@@ -15197,7 +15195,7 @@ class UserInsurancePolicy extends DataClass
   final DateTime createdAt;
   final int? advisorId;
   final DateTime? dateIssued;
-  final int userId;
+  final int? userId;
   final int? productVariantId;
   final BillsFrequency paymentSchedule;
   const UserInsurancePolicy({
@@ -15207,7 +15205,7 @@ class UserInsurancePolicy extends DataClass
     required this.createdAt,
     this.advisorId,
     this.dateIssued,
-    required this.userId,
+    this.userId,
     this.productVariantId,
     required this.paymentSchedule,
   });
@@ -15226,7 +15224,9 @@ class UserInsurancePolicy extends DataClass
     if (!nullToAbsent || dateIssued != null) {
       map['date_issued'] = Variable<DateTime>(dateIssued);
     }
-    map['user_id'] = Variable<int>(userId);
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<int>(userId);
+    }
     if (!nullToAbsent || productVariantId != null) {
       map['product_variant_id'] = Variable<int>(productVariantId);
     }
@@ -15254,7 +15254,9 @@ class UserInsurancePolicy extends DataClass
       dateIssued: dateIssued == null && nullToAbsent
           ? const Value.absent()
           : Value(dateIssued),
-      userId: Value(userId),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
       productVariantId: productVariantId == null && nullToAbsent
           ? const Value.absent()
           : Value(productVariantId),
@@ -15274,7 +15276,7 @@ class UserInsurancePolicy extends DataClass
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       advisorId: serializer.fromJson<int?>(json['advisorId']),
       dateIssued: serializer.fromJson<DateTime?>(json['dateIssued']),
-      userId: serializer.fromJson<int>(json['userId']),
+      userId: serializer.fromJson<int?>(json['userId']),
       productVariantId: serializer.fromJson<int?>(json['productVariantId']),
       paymentSchedule: $UserInsurancePolicyTableTable.$converterpaymentSchedule
           .fromJson(serializer.fromJson<int>(json['paymentSchedule'])),
@@ -15290,7 +15292,7 @@ class UserInsurancePolicy extends DataClass
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'advisorId': serializer.toJson<int?>(advisorId),
       'dateIssued': serializer.toJson<DateTime?>(dateIssued),
-      'userId': serializer.toJson<int>(userId),
+      'userId': serializer.toJson<int?>(userId),
       'productVariantId': serializer.toJson<int?>(productVariantId),
       'paymentSchedule': serializer.toJson<int>(
         $UserInsurancePolicyTableTable.$converterpaymentSchedule.toJson(
@@ -15307,7 +15309,7 @@ class UserInsurancePolicy extends DataClass
     DateTime? createdAt,
     Value<int?> advisorId = const Value.absent(),
     Value<DateTime?> dateIssued = const Value.absent(),
-    int? userId,
+    Value<int?> userId = const Value.absent(),
     Value<int?> productVariantId = const Value.absent(),
     BillsFrequency? paymentSchedule,
   }) => UserInsurancePolicy(
@@ -15317,7 +15319,7 @@ class UserInsurancePolicy extends DataClass
     createdAt: createdAt ?? this.createdAt,
     advisorId: advisorId.present ? advisorId.value : this.advisorId,
     dateIssued: dateIssued.present ? dateIssued.value : this.dateIssued,
-    userId: userId ?? this.userId,
+    userId: userId.present ? userId.value : this.userId,
     productVariantId: productVariantId.present
         ? productVariantId.value
         : this.productVariantId,
@@ -15398,7 +15400,7 @@ class UserInsurancePolicyTableCompanion
   final Value<DateTime> createdAt;
   final Value<int?> advisorId;
   final Value<DateTime?> dateIssued;
-  final Value<int> userId;
+  final Value<int?> userId;
   final Value<int?> productVariantId;
   final Value<BillsFrequency> paymentSchedule;
   const UserInsurancePolicyTableCompanion({
@@ -15419,11 +15421,10 @@ class UserInsurancePolicyTableCompanion
     this.createdAt = const Value.absent(),
     this.advisorId = const Value.absent(),
     this.dateIssued = const Value.absent(),
-    required int userId,
+    this.userId = const Value.absent(),
     this.productVariantId = const Value.absent(),
     required BillsFrequency paymentSchedule,
   }) : productId = Value(productId),
-       userId = Value(userId),
        paymentSchedule = Value(paymentSchedule);
   static Insertable<UserInsurancePolicy> custom({
     Expression<int>? id,
@@ -15456,7 +15457,7 @@ class UserInsurancePolicyTableCompanion
     Value<DateTime>? createdAt,
     Value<int?>? advisorId,
     Value<DateTime?>? dateIssued,
-    Value<int>? userId,
+    Value<int?>? userId,
     Value<int?>? productVariantId,
     Value<BillsFrequency>? paymentSchedule,
   }) {
@@ -31931,7 +31932,7 @@ typedef $$UserInsurancePolicyTableTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<int?> advisorId,
       Value<DateTime?> dateIssued,
-      required int userId,
+      Value<int?> userId,
       Value<int?> productVariantId,
       required BillsFrequency paymentSchedule,
     });
@@ -31943,7 +31944,7 @@ typedef $$UserInsurancePolicyTableTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<int?> advisorId,
       Value<DateTime?> dateIssued,
-      Value<int> userId,
+      Value<int?> userId,
       Value<int?> productVariantId,
       Value<BillsFrequency> paymentSchedule,
     });
@@ -32406,7 +32407,7 @@ class $$UserInsurancePolicyTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int?> advisorId = const Value.absent(),
                 Value<DateTime?> dateIssued = const Value.absent(),
-                Value<int> userId = const Value.absent(),
+                Value<int?> userId = const Value.absent(),
                 Value<int?> productVariantId = const Value.absent(),
                 Value<BillsFrequency> paymentSchedule = const Value.absent(),
               }) => UserInsurancePolicyTableCompanion(
@@ -32428,7 +32429,7 @@ class $$UserInsurancePolicyTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int?> advisorId = const Value.absent(),
                 Value<DateTime?> dateIssued = const Value.absent(),
-                required int userId,
+                Value<int?> userId = const Value.absent(),
                 Value<int?> productVariantId = const Value.absent(),
                 required BillsFrequency paymentSchedule,
               }) => UserInsurancePolicyTableCompanion.insert(

@@ -2,6 +2,11 @@ import 'package:drift/drift.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 
 @DataClassName('UserInsurancePolicy')
+@TableIndex(
+  name: 'unique_product_policy_number',
+  columns: {#productId, #policyNumber},
+  unique: true,
+)
 class UserInsurancePolicyTable extends Table {
   IntColumn get id => integer().autoIncrement()();
 
@@ -15,7 +20,7 @@ class UserInsurancePolicyTable extends Table {
 
   DateTimeColumn get dateIssued => dateTime().nullable()();
 
-  IntColumn get userId => integer()();
+  IntColumn get userId => integer().nullable()();
 
   IntColumn get productVariantId => integer().nullable()();
 

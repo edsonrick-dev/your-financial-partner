@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/details_sheet/controller/insurance_policy_detail_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/details_sheet/insurance_policy_details_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
@@ -14,22 +15,33 @@ class InsuranceSourceCard extends StatelessWidget {
     required this.amount,
     required this.issuer,
     required this.name,
+    required this.policyNumber,
+    required this.policyId,
   });
 
   final ProtectionType type;
   final String name;
   final String issuer;
   final double amount;
+  final String policyNumber;
+  final int policyId;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+
     return AppCard(
       onTap: () {
+        Get.put(InsurancePolicyDetailController(policyId: policyId));
+
         Get.bottomSheet(
-          InsurancePolicyDetailSheet(name: name, issuer: issuer),
+          InsurancePolicyDetailSheet(policyId: policyId),
           isScrollControlled: true,
-        );
+        ).whenComplete(() {
+          if (Get.isRegistered<InsurancePolicyDetailController>()) {
+            Get.delete<InsurancePolicyDetailController>();
+          }
+        });
       },
       padding: 16,
       child: Column(
@@ -39,7 +51,7 @@ class InsuranceSourceCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  issuer,
+                  policyNumber.isEmpty ? 'No policy number' : policyNumber,
                   style: AppTextStyle.bodyS.copyWith(
                     color: colorScheme.appTextMuted,
                   ),
@@ -65,4 +77,20 @@ class InsuranceSourceCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class InsuranceSource {
+  final int policyId;
+  final double amount;
+  final String issuer;
+  final String name;
+  final String policyNumber;
+
+  const InsuranceSource({
+    required this.policyId,
+    required this.amount,
+    required this.issuer,
+    required this.name,
+    required this.policyNumber,
+  });
 }

@@ -20,6 +20,182 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 enum AddPolicyStep { selectProduct, fillPolicyDetails }
 
 class InsurancePolicyController extends GetxController {
+  void resetCreateProductForm() {
+    productNameTextController.clear();
+
+    benefitDrafts.clear();
+    isAddingBenefit.value = false;
+    editingBenefitIndex.value = null;
+
+    selectedType.value = null;
+    nameController.clear();
+    amountController.clear();
+
+    collapseButton();
+  }
+  // Future<void> saveInsuranceProduct() async {
+  //   final name = productNameTextController.text.trim();
+  //   final insurer = selectedInsurer.value;
+
+  //   if (insurer == null) {
+  //     AppSnackbar.show(
+  //       title: 'Select an insurer',
+  //       message: 'Please select an insurance company.',
+  //     );
+  //     return;
+  //   }
+
+  //   if (name.isEmpty) {
+  //     AppSnackbar.show(
+  //       title: 'Missing product name',
+  //       message: 'Please enter a product name.',
+  //     );
+  //     return;
+  //   }
+
+  //   try {
+  //     final id = await database.insurancePoliciesDao.createInsuranceProduct(
+  //       insurerId: insurer.id,
+  //       name: name,
+  //     );
+
+  //     final product = InsuranceProduct(
+  //       id: id,
+  //       companyId: insurer.id,
+  //       name: name,
+  //       isUserGenerated: true,
+  //     );
+
+  //     _localProducts.add(product);
+  //     _updateAvailableProducts();
+  //     selectedProduct.value = product;
+
+  //     productNameTextController.clear();
+  //     collapseButton();
+
+  //     Get.back<InsuranceProduct>(result: product);
+
+  //     AppSnackbar.show(
+  //       title: 'Success',
+  //       message: 'Insurance product saved.',
+  //       type: AppSnackType.success,
+  //     );
+  //   } catch (error) {
+  //     debugPrint('Failed to save insurance product: $error');
+
+  //     AppSnackbar.show(
+  //       title: 'Error',
+  //       message: 'Unable to save insurance product.',
+  //       type: AppSnackType.error,
+  //     );
+  //   }
+  // }
+
+  Future<void> saveInsuranceProduct() async {
+    final name = productNameTextController.text.trim();
+    final insurer = selectedInsurer.value;
+
+    if (insurer == null) {
+      AppSnackbar.show(
+        title: 'Select an insurer',
+        message: 'Please select an insurance company.',
+      );
+      return;
+    }
+
+    if (name.isEmpty) {
+      AppSnackbar.show(
+        title: 'Missing product name',
+        message: 'Please enter a product name.',
+      );
+      return;
+    }
+
+    // Preserve the user's benefit definitions and coverage amounts
+    // before retrieving the newly created benefits from Drift.
+    final originalDrafts = List<PolicyBenefitDraft>.of(benefitDrafts);
+
+    try {
+      final productId = await database.insurancePoliciesDao
+          .createCustomProductWithBenefits(
+            insurerId: insurer.id,
+            name: name,
+            benefits: originalDrafts,
+          );
+
+      // Read the saved benefit definitions, which now have local IDs.
+      final savedBenefits = await database.insurancePoliciesDao
+          .getBenefitsByProductId(productId);
+
+      // Match saved definitions to the original drafts.
+      // Queues handle duplicate benefit types/names without losing amounts.
+      String key(BenefitType type, String? benefitName) =>
+          '${type.name}\u0000${benefitName?.trim() ?? ''}';
+
+      final draftsByKey = <String, List<PolicyBenefitDraft>>{};
+
+      for (final draft in originalDrafts) {
+        draftsByKey
+            .putIfAbsent(key(draft.benefitType, draft.name), () => [])
+            .add(draft);
+      }
+
+      final policyDrafts = savedBenefits.map((savedBenefit) {
+        final matchingDrafts =
+            draftsByKey[key(savedBenefit.benefitType, savedBenefit.name)];
+
+        final originalDraft =
+            matchingDrafts != null && matchingDrafts.isNotEmpty
+            ? matchingDrafts.removeAt(0)
+            : null;
+
+        return PolicyBenefitDraft(
+          insuranceBenefitId: savedBenefit.id,
+          benefitType: savedBenefit.benefitType,
+          name: savedBenefit.name ?? '',
+          coverageAmount: originalDraft?.coverageAmount ?? 0,
+        );
+      }).toList();
+
+      // Preserve the policy-specific coverage amounts for the next form.
+      productBenefits.assignAll(savedBenefits);
+      benefitDrafts.assignAll(policyDrafts);
+
+      final product = InsuranceProduct(
+        id: productId,
+        companyId: insurer.id,
+        name: name,
+        isUserGenerated: true,
+      );
+
+      // Keep the local catalog updated.
+      _localProducts.add(product);
+      _updateAvailableProducts();
+
+      productNameTextController.clear();
+      collapseButton();
+
+      // Return the product to the sheet that opened this form.
+      Get.back<InsuranceProduct>(result: product);
+
+      AppSnackbar.show(
+        title: 'Success',
+        message: 'Insurance product saved.',
+        type: AppSnackType.success,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Failed to save insurance product: $error');
+      debugPrintStack(stackTrace: stackTrace);
+
+      AppSnackbar.show(
+        title: 'Error',
+        message: 'Unable to save insurance product.',
+        type: AppSnackType.error,
+      );
+    }
+  }
+
+  final isSavingPolicy = false.obs;
   final currentPolicyStep = AddPolicyStep.selectProduct.obs;
 
   void goToPolicyDetails() {
@@ -133,13 +309,19 @@ class InsurancePolicyController extends GetxController {
   final policyNumberTextController = TextEditingController();
   final policyNumberFocusNode = FocusNode();
   void initializeBenefitDrafts(List<InsuranceBenefit> benefits) {
+    final existingAmounts = <int, double>{
+      for (final draft in benefitDrafts)
+        if (draft.insuranceBenefitId != null)
+          draft.insuranceBenefitId!: draft.coverageAmount,
+    };
+
     benefitDrafts.assignAll(
       benefits.map(
         (benefit) => PolicyBenefitDraft(
-          insuranceBenefitId: benefit.id, // Preserve local Drift ID
+          insuranceBenefitId: benefit.id,
           benefitType: benefit.benefitType,
           name: benefit.name ?? '',
-          coverageAmount: 0,
+          coverageAmount: existingAmounts[benefit.id] ?? 0,
         ),
       ),
     );
@@ -266,64 +448,6 @@ class InsurancePolicyController extends GetxController {
 
   void collapseButton() {
     createProductButtonState.value = AddButtonState.collapsed;
-  }
-
-  Future<void> saveInsuranceProduct() async {
-    final name = productNameTextController.text.trim();
-    final insurer = selectedInsurer.value;
-
-    if (insurer == null) {
-      AppSnackbar.show(
-        title: 'Select an insurer',
-        message: 'Please select an insurance company.',
-      );
-      return;
-    }
-
-    if (name.isEmpty) {
-      AppSnackbar.show(
-        title: 'Missing product name',
-        message: 'Please enter a product name.',
-      );
-      return;
-    }
-
-    try {
-      final id = await database.insurancePoliciesDao.createInsuranceProduct(
-        insurerId: insurer.id,
-        name: name,
-      );
-
-      final product = InsuranceProduct(
-        id: id,
-        companyId: insurer.id,
-        name: name,
-        isUserGenerated: true,
-      );
-
-      _localProducts.add(product);
-      _updateAvailableProducts();
-      selectedProduct.value = product;
-
-      productNameTextController.clear();
-      collapseButton();
-
-      Get.back<InsuranceProduct>(result: product);
-
-      AppSnackbar.show(
-        title: 'Success',
-        message: 'Insurance product saved.',
-        type: AppSnackType.success,
-      );
-    } catch (error) {
-      debugPrint('Failed to save insurance product: $error');
-
-      AppSnackbar.show(
-        title: 'Error',
-        message: 'Unable to save insurance product.',
-        type: AppSnackType.error,
-      );
-    }
   }
 
   @override
@@ -562,86 +686,4 @@ class InsurancePolicyController extends GetxController {
     BillsFrequency.semiAnnual,
     BillsFrequency.annual,
   ];
-}
-
-extension SavePolicyControllerX on InsurancePolicyController {
-  String? validateBenefits() {
-    final missingBenefits = <String>[];
-
-    for (final benefit in productBenefits) {
-      if (!benefit.isRequired) continue;
-
-      final draft = benefitDrafts.firstWhereOrNull(
-        (item) => item.insuranceBenefitId == benefit.id,
-      );
-
-      if (draft == null || draft.coverageAmount <= 0) {
-        final benefitName = benefit.name?.trim().isNotEmpty == true
-            ? benefit.name!.trim()
-            : benefit.benefitType.label;
-
-        missingBenefits.add(benefitName);
-      }
-    }
-
-    if (missingBenefits.isNotEmpty) {
-      return 'Please enter a coverage amount for these required beneits: '
-          '${missingBenefits.join(', ')}.';
-    }
-
-    return null;
-  }
-
-  String? validatePolicyForm() {
-    debugPrint("Selected Insurer: ${selectedInsurer.value!.displayName}");
-    debugPrint("Selected Product:${selectedProduct.value!.displayName}");
-    debugPrint("Selected :${validateBenefits()}");
-    debugPrint(
-      "Selected Policy Number:${policyNumberTextController.text.trim()}",
-    );
-    debugPrint("Selected Date:${issueDate.value}");
-    debugPrint("Selected :");
-    if (selectedInsurer.value == null) {
-      return 'Please select an insurance company.';
-    }
-
-    if (selectedProduct.value == null) {
-      return 'Please select an insurance product.';
-    }
-    final benefitError = validateBenefits();
-    if (benefitError != null) {
-      return benefitError;
-    }
-    if (policyNumberTextController.text.trim().isEmpty) {
-      return 'Please enter the policy number.';
-    }
-    if (issueDate.value == null) {
-      return 'Please select the policy issue date.';
-    }
-
-    // if (!paymentSchedule.contains(selectedFrequency.value)) {
-    //   return 'Please select a valid payment frequency.';
-    // }
-
-    if (!premiumAmount.value.isFinite || premiumAmount.value <= 0) {
-      return 'Please enter a premium amount greater than zero.';
-    }
-
-    if (nextPaymentDate.value == null) {
-      return 'Please select the next payment date.';
-    }
-
-    return null;
-  }
-
-  Future<void> savePolicy() async {
-    final validationError = validatePolicyForm();
-
-    if (validationError != null) {
-      AppSnackbar.show(title: 'Check policy details', message: validationError);
-      return;
-    }
-
-    // Persistence comes next.
-  }
 }

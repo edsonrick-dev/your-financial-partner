@@ -14,22 +14,23 @@ class BenefitsDetailsSection extends GetView<InsurancePolicyController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final isPolicyUserGenerated =
-          controller.selectedProduct.value?.isUserGenerated ?? false;
-
+      final product = controller.selectedProduct.value;
+      final isUserGenerated = product?.isUserGenerated ?? false;
       final editingIndex = controller.editingBenefitIndex.value;
 
       return AppSection(
         sectionTitle: 'Benefits',
         subtitle: 'Review the coverage amount for each benefit.',
-        trailingWidget: SizedBox(
-          height: 44,
-          child: AdaptivePressable(
-            onTap: controller.startAddingBenefit,
-            child: const Center(child: Text('Add Benefit')),
-          ),
-        ),
-        trailingType: isPolicyUserGenerated ? SectionTrailingType.custom : null,
+        trailingType: isUserGenerated ? SectionTrailingType.custom : null,
+        trailingWidget: isUserGenerated
+            ? SizedBox(
+                height: 44,
+                child: AdaptivePressable(
+                  onTap: controller.startAddingBenefit,
+                  child: const Center(child: Text('Add Benefit')),
+                ),
+              )
+            : null,
         child: Column(
           spacing: 20,
           children: [
@@ -45,18 +46,14 @@ class BenefitsDetailsSection extends GetView<InsurancePolicyController> {
                 children: controller.benefitDrafts.asMap().entries.map((entry) {
                   final index = entry.key;
                   final benefit = entry.value;
+
                   final benefitDefinition = controller.productBenefits
                       .firstWhereOrNull(
                         (item) => item.id == benefit.insuranceBenefitId,
                       );
 
                   final isRequired = benefitDefinition?.isRequired ?? false;
-                  debugPrint(
-                    'Draft type: ${benefit.benefitType}, '
-                    'benefit ID: ${benefit.insuranceBenefitId}, '
-                    'matched required: ${benefitDefinition?.isRequired}',
-                  );
-                  // Edit mode: replace the selected card with the form.
+
                   return _buildAnimatedBenefit(
                     key:
                         'benefit-$index-${editingIndex == index ? 'editing' : 'view'}',
@@ -87,7 +84,7 @@ class BenefitsDetailsSection extends GetView<InsurancePolicyController> {
                             name: benefit.name,
                             amount: benefit.coverageAmount,
                             isRequired: isRequired,
-                            onTap: isPolicyUserGenerated
+                            onTap: isUserGenerated
                                 ? () => controller.startEditingBenefit(index)
                                 : null,
                             onAmountChanged: (amount) {
@@ -95,24 +92,10 @@ class BenefitsDetailsSection extends GetView<InsurancePolicyController> {
                             },
                           ),
                   );
-
-                  // View mode: show the benefit card.
-                  // return PolicyBenefitCard(
-                  //   type: benefit.benefitType,
-                  //   name: benefit.name,
-                  //   amount: benefit.coverageAmount,
-                  //   onTap: isPolicyUserGenerated
-                  //       ? () => controller.startEditingBenefit(index)
-                  //       : null,
-                  //   onAmountChanged: (amount) {
-                  //     controller.updateBenefitAmount(index, amount);
-                  //   },
-                  // );
                 }).toList(),
               ),
 
-            // Add mode: show a blank form for user-generated products.
-            if (isPolicyUserGenerated && controller.isAddingBenefit.value)
+            if (isUserGenerated && controller.isAddingBenefit.value)
               AddPolicyBenefitForm(
                 key: const ValueKey('add-benefit'),
                 onCancel: controller.cancelAddingBenefit,

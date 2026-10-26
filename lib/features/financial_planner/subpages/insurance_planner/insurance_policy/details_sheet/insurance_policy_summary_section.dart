@@ -4,6 +4,7 @@ import 'package:getx_drift_app/core/design_system/app_gradient_card.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
+import 'package:getx_drift_app/domain/enums/app_month.dart';
 
 class InsurancePolicySummarySection extends StatelessWidget {
   const InsurancePolicySummarySection({
@@ -11,15 +12,26 @@ class InsurancePolicySummarySection extends StatelessWidget {
     required this.issuer,
     required this.name,
     required this.faceValue,
+    required this.paymentTerm,
+    required this.nextDueDate,
   });
 
   final String issuer;
   final String name;
   final double faceValue;
+  final String paymentTerm;
+  final DateTime? nextDueDate;
+  String get formattedNextDueDate {
+    final date = nextDueDate;
+    if (date == null) return 'No upcoming payment';
+
+    return '${date.appMonth.fullName} ${date.day}, ${date.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+
     return AppGradientCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +49,6 @@ class InsurancePolicySummarySection extends StatelessWidget {
               const SizedBox(width: 16),
               AdaptivePressable(
                 child: SizedBox(
-                  // height: 44,
                   width: 44,
                   child: Icon(
                     Icons.more_horiz,
@@ -59,7 +70,7 @@ class InsurancePolicySummarySection extends StatelessWidget {
               color: colorScheme.appInversedtextMuted,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             spacing: 16,
             children: [
@@ -74,9 +85,8 @@ class InsurancePolicySummarySection extends StatelessWidget {
                         color: colorScheme.appInversedtext,
                       ),
                     ),
-
                     Text(
-                      '20-Year Pay',
+                      paymentTerm,
                       style: AppTextStyle.bodyS.copyWith(
                         color: colorScheme.appInversedtext,
                       ),
@@ -95,9 +105,8 @@ class InsurancePolicySummarySection extends StatelessWidget {
                         color: colorScheme.appInversedtext,
                       ),
                     ),
-
                     Text(
-                      'December 6, 1997',
+                      formattedNextDueDate,
                       style: AppTextStyle.bodyS.copyWith(
                         color: colorScheme.appInversedtext,
                       ),

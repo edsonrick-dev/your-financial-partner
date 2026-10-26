@@ -126,7 +126,9 @@ class ProtectionGapCard extends StatelessWidget {
                       value: coveragePercentage / 100,
                       minHeight: 8,
                       backgroundColor: colorScheme.bgDark,
-                      valueColor: AlwaysStoppedAnimation(severityColor),
+                      valueColor: AlwaysStoppedAnimation(
+                        severityColor(context),
+                      ),
                     ),
                   ),
                 ),
@@ -138,7 +140,9 @@ class ProtectionGapCard extends StatelessWidget {
                   child: Text(
                     '${coveragePercentage.toStringAsFixed(0)}%',
                     textAlign: TextAlign.right,
-                    style: AppTextStyle.amountS.copyWith(color: severityColor),
+                    style: AppTextStyle.amountS.copyWith(
+                      color: severityColor(context),
+                    ),
                   ),
                 ),
               ],

@@ -1,30 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/widgets/cards/insurance_policy_card.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/insurance_policies_list.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/protection_types.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
-class CriticalIllnessSourcesSlide extends StatelessWidget {
+class CriticalIllnessSourcesSlide extends GetView<InsurancePlannerController> {
   const CriticalIllnessSourcesSlide({super.key, required this.type});
+
   final ProtectionType type;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: EdgeInsets.only(bottom: context.bottomPaddingSub),
-      child: AppSection(
-        sectionTitle: 'Insurance Sources',
-        child: Column(
-          children: [
-            Text('You have no policy that covers this app'),
-            InsuranceSourceCard(
-              type: type,
-              amount: 1000000,
-              issuer: 'AIA Philippines',
-              name: 'AIA Critical Protect 100',
-            ),
-          ],
-        ),
-      ),
+      child: AppSection(child: InsuranceSourcesList(type: type)),
     );
   }
 }

@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/models/saved_cashflow_plan_data.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/widgets/cards/insurance_policy_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/expense_continuity_result.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_gap_severity_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_profile_enum.dart';
@@ -26,6 +28,36 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 /// extensions, such as `calculateDeathBenefit`, so this controller can stay
 /// focused on shared state and UI coordination.
 class InsurancePlannerController extends GetxController {
+  final Map<ProtectionType, StreamSubscription<List<InsuranceSource>>>
+  _coverageSubscriptions = {};
+
+  void watchProtectionCoverage() {
+    for (final type in ProtectionType.values) {
+      _coverageSubscriptions[type]?.cancel();
+
+      _coverageSubscriptions[type] = database.userInsurancePolicyDao
+          .watchInsuranceSourcesByType(type.benefitType)
+          .listen((sources) {
+            final totalCoverage = sources.fold<double>(
+              0,
+              (total, source) => total + source.amount,
+            );
+
+            switch (type) {
+              case ProtectionType.death:
+                deathBenefitCovered.value = totalCoverage;
+                break;
+              case ProtectionType.criticalIllness:
+                criticalIllnessCovered.value = totalCoverage;
+                break;
+              case ProtectionType.disability:
+                disabilityCovered.value = totalCoverage;
+                break;
+            }
+          });
+    }
+  }
+
   final protectionNeedRefreshVersion = 0.obs;
 
   void refreshProtectionNeeds() {
@@ -252,6 +284,7 @@ class InsurancePlannerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    watchProtectionCoverage();
 
     _protectionSubscription = database.protectionDao
         .watchProtectionScenarios()
@@ -293,6 +326,9 @@ class InsurancePlannerController extends GetxController {
 
   @override
   void onClose() async {
+    for (final subscription in _coverageSubscriptions.values) {
+      subscription.cancel();
+    }
     _protectionSubscription?.cancel();
     _financialDependencySubscription?.cancel();
     super.onClose();
@@ -359,10 +395,17 @@ class InsurancePlannerController extends GetxController {
   );
 
   /// Severity of the critical illness protection gap.
-  ProtectionGapSeverity get criticalIllnessSeverity => getProtectionGapSeverity(
-    amountCovered: criticalIllnessCovered.value,
-    amountNeed: criticalIllnessNeed.value,
-  );
+  ProtectionGapSeverity get criticalIllnessSeverity {
+    debugPrint(
+      'CI Need: ${criticalIllnessNeed.value}, '
+      'CI Covered: ${criticalIllnessCovered.value}',
+    );
+
+    return getProtectionGapSeverity(
+      amountCovered: criticalIllnessCovered.value,
+      amountNeed: criticalIllnessNeed.value,
+    );
+  }
 
   /// Severity of the disability protection gap.
   ProtectionGapSeverity get disabilitySeverity => getProtectionGapSeverity(

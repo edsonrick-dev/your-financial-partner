@@ -1,4 +1,5 @@
 import 'package:getx_drift_app/app/routes/app_routes.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/benefit_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/models/continuity_models/protection_continutity_type.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:flutter/material.dart';
@@ -105,6 +106,19 @@ extension ProtectionHorizonX on ProtectionType {
 
       case ProtectionType.disability:
         return 'How many years should your disability benefit provide financial support?';
+    }
+  }
+
+  BenefitType get benefitType {
+    switch (this) {
+      case ProtectionType.death:
+        return BenefitType.death;
+
+      case ProtectionType.criticalIllness:
+        return BenefitType.majorCI;
+
+      case ProtectionType.disability:
+        return BenefitType.disability;
     }
   }
 }

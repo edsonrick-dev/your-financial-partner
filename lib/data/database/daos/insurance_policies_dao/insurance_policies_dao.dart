@@ -1,15 +1,25 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/widgets.dart';
 import 'package:getx_drift_app/data/app_database.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/tables/insurance_products_table.dart';
 import 'package:getx_drift_app/data/tables/insurance_benefits_table.dart';
+import 'package:getx_drift_app/data/tables/user_insurance_benefits_table.dart';
+import 'package:getx_drift_app/data/tables/user_insurance_policy_table.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_benefit/models/insurance_benefit.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/benefit_draft.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/benefit_type.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_products/models/insurance_product.dart';
 
 part 'insurance_policies_dao.g.dart';
 
-@DriftAccessor(tables: [InsuranceProductsTable, InsuranceBenefitsTable])
+@DriftAccessor(
+  tables: [
+    InsuranceProductsTable,
+    InsuranceBenefitsTable,
+    UserInsurancePolicyTable,
+    UserInsuranceBenefitsTable,
+  ],
+)
 class InsurancePoliciesDao extends DatabaseAccessor<AppDatabase>
     with _$InsurancePoliciesDaoMixin {
   InsurancePoliciesDao(super.db);
@@ -258,5 +268,38 @@ class InsurancePoliciesDao extends DatabaseAccessor<AppDatabase>
         target: [insuranceBenefitsTable.supabaseId],
       ),
     );
+  }
+
+  Future<int> createCustomProductWithBenefits({
+    required int insurerId,
+    required String name,
+    required List<PolicyBenefitDraft> benefits,
+  }) async {
+    return transaction(() async {
+      // 1. Save the product.
+      final productId = await into(insuranceProductsTable).insert(
+        InsuranceProductsTableCompanion.insert(
+          insurerId: insurerId,
+          name: name,
+          isUserGenerated: const Value(true),
+          isSynced: const Value(false),
+        ),
+      );
+
+      // 2. Save each benefit definition.
+      for (final benefit in benefits) {
+        await into(insuranceBenefitsTable).insert(
+          InsuranceBenefitsTableCompanion.insert(
+            productId: productId,
+            benefitType: benefit.benefitType.name,
+            name: Value(benefit.name),
+            isRequired: const Value(false),
+            isSynced: const Value(false),
+          ),
+        );
+      }
+
+      return productId;
+    });
   }
 }

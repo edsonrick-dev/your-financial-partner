@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/controller/insurance_policy_controller.dart';
@@ -13,6 +14,12 @@ extension AddPolicySheetControllerX on InsurancePolicyController {
   }
 
   Future<void> setInsuranceProduct(InsuranceProduct product) async {
+    debugPrint(
+      'Setting product: ${product.name}, '
+      'local ID: ${product.id}, '
+      'Supabase ID: ${product.supabaseId}',
+    );
+
     selectedProduct.value = product;
 
     benefitDrafts.clear();
@@ -35,12 +42,26 @@ extension AddPolicySheetControllerX on InsurancePolicyController {
     if (localProductId == null) {
       benefitLoadError.value =
           'Save the product locally before loading its benefits.';
+
+      debugPrint('Cannot load benefits: local product ID is null.');
       return;
     }
 
     await loadPaymentTermsForProduct(localProductId);
-
     await loadBenefitsForProduct(product, localProductId: localProductId);
+
+    debugPrint('Product benefits loaded for: ${product.name}');
+  }
+
+  void goToPolicyDetails() {
+    if (selectedProduct.value == null) {
+      debugPrint('Cannot navigate: no selected product.');
+      return;
+    }
+
+    currentPolicyStep.value = AddPolicyStep.fillPolicyDetails;
+
+    debugPrint('Current policy step: ${currentPolicyStep.value}');
   }
 
   void setFrequency(BillsFrequency frequency) {

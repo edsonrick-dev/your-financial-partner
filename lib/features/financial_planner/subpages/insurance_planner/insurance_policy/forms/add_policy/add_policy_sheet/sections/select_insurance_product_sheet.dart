@@ -2,18 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
-import 'package:getx_drift_app/core/design_system/app_gradient_card.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/add_button_state.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/models/insurance_company_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/controller/insurance_policy_controller.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/widgets/buttons/add_insurance_policy_button/create_insurance_product_button.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/add_product/create_insurance_product_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_products/insurance_product_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_products/models/insurance_product.dart';
-import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
@@ -98,7 +95,7 @@ class SelectInsuranceProductSheet extends GetView<InsurancePolicyController> {
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 24),
-                              CreateInsuranceProductButton(),
+                              // CreateInsuranceProductButton(),
                             ],
                           ),
                         ),
@@ -126,6 +123,7 @@ class SelectInsuranceProductSheet extends GetView<InsurancePolicyController> {
                 ),
               ),
             ),
+            SizedBox(height: 8),
             AppSection(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,12 +149,25 @@ class SelectInsuranceProductSheet extends GetView<InsurancePolicyController> {
                   ),
 
                   AdaptivePressable(
-                    onTap: () {
-                      Get.bottomSheet(
+                    onTap: () async {
+                      // Start with a clean product creation form.
+                      controller.resetCreateProductForm();
+
+                      final product = await Get.bottomSheet<InsuranceProduct>(
                         CreateInsuranceProductSheet(insurer: insurer),
                         isScrollControlled: true,
                       );
+
+                      if (product == null) {
+                        // User cancelled or dismissed the sheet.
+                        controller.resetCreateProductForm();
+                        return;
+                      }
+
+                      // Return the newly saved product to the selector's parent.
+                      Get.back<InsuranceProduct>(result: product);
                     },
+
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
@@ -174,75 +185,6 @@ class SelectInsuranceProductSheet extends GetView<InsurancePolicyController> {
           ],
         );
       }),
-    );
-  }
-}
-
-class CreateInsuranceProductSheet extends GetView<InsurancePolicyController> {
-  const CreateInsuranceProductSheet({super.key, required this.insurer});
-  final InsuranceCompany insurer;
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colors;
-    return AppSheet(
-      height: AppSheetHeight.full,
-      title: 'Create ${insurer.displayName} Product',
-      child: SingleChildScrollView(
-        child: Column(
-          spacing: 20,
-          children: [
-            AppSection(
-              child: AppGradientCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Prepare your policy details',
-                      style: AppTextStyle.titleL.copyWith(
-                        color: colorScheme.appInversedtext,
-                      ),
-                    ),
-                    Text(
-                      'Have your insurance policy document handy to quickly enter your policy number, benefits, coverage amounts, and premium details.',
-                      style: AppTextStyle.bodyM.copyWith(
-                        color: colorScheme.appInversedtext,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            AppSection(
-              child: Column(
-                spacing: 12,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AppTextField(
-                    label: 'Product Name',
-                    focusNode: controller.productNameFocusNode,
-                    controller: controller.productNameTextController,
-                  ),
-                ],
-              ),
-            ),
-            AppSection(
-              sectionTitle: 'Benefits',
-              child: Column(
-                spacing: 16,
-                children: [
-                  Text('No Benefit Yet'),
-                  AppButton(
-                    text: 'Add Benefit',
-                    onTap: () {},
-                    size: ButtonSize.medium,
-                    leadingIcon: PhosphorIconsRegular.plus,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

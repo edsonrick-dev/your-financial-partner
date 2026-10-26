@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/binding/insurance_policy_binding.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/add_policy/add_policy_sheet/add_policy_sheet.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/add_policy/show_add_policy_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/widgets/protection_gap_details_header.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/2_critical_illness_benefit/details_view/slides/critical_illness_needs_slide.dart';
@@ -22,13 +23,23 @@ class CriticalIllnessDetailsView extends GetView<InsurancePlannerController> {
         children: [
           AppDetailsHeader(
             title: 'Critical Illness Benefit Gap',
-            child: Obx(
-              () => ProtectionGapDetailsHeader(
-                severity: controller.criticalIllnessSeverity,
-                protectionNeed: controller.protectionNeedsTotals[type] ?? 0.0,
-                protectionSource: controller.criticalIllnessCovered.value,
-              ),
-            ),
+            child: Obx(() {
+              final protectionSource = controller.criticalIllnessCovered.value;
+              final severity = controller.criticalIllnessSeverity;
+              final protectionNeed =
+                  controller.protectionNeedsTotals[type] ?? 0.0;
+              final isCompleted =
+                  controller.protectionGapCompletion[type] ?? false;
+
+              return ProtectionGapDetailsHeader(
+                type: type,
+                severity: severity,
+                protectionNeed: protectionNeed,
+                protectionSource: protectionSource,
+                isCompleted: isCompleted,
+                hasSources: protectionSource > 0,
+              );
+            }),
           ),
           Obx(() {
             final detailsIndex =
@@ -38,13 +49,7 @@ class CriticalIllnessDetailsView extends GetView<InsurancePlannerController> {
               actions: const ['Needs', 'Sources'],
               onAdd: detailsIndex == 1
                   ? () {
-                      final binding = InsurancePolicyBinding();
-                      binding.dependencies();
-                      Get.bottomSheet(
-                        AddPolicySheet(),
-
-                        isScrollControlled: true,
-                      );
+                      showAddPolicyForm();
                     }
                   : null,
             );

@@ -1,4 +1,6 @@
 import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
 enum ProtectionGapSeverity { critical, partial, covered }
 
@@ -10,7 +12,12 @@ ProtectionGapSeverity getProtectionGapSeverity({
     return ProtectionGapSeverity.critical;
   }
 
-  final coverage = (amountCovered / amountNeed * 100).clamp(0, 100);
+  // Fully covered when coverage meets or exceeds the need.
+  if (amountCovered >= amountNeed) {
+    return ProtectionGapSeverity.covered;
+  }
+
+  final coverage = amountCovered / amountNeed * 100;
 
   if (coverage >= 95) {
     return ProtectionGapSeverity.covered;
@@ -24,21 +31,34 @@ ProtectionGapSeverity getProtectionGapSeverity({
 }
 
 extension ProtectionGapSeverityX on ProtectionGapSeverity {
-  Color get color {
+  Color color(BuildContext context) {
     switch (this) {
       case ProtectionGapSeverity.critical:
-        return const Color(0xFFDC2626);
+        return context.colors.appOutflow;
 
       case ProtectionGapSeverity.partial:
-        return const Color(0xFFEA580C);
+        return context.colors.appAccent;
 
       case ProtectionGapSeverity.covered:
-        return const Color(0xFF059669);
+        return context.colors.appInflow;
     }
   }
 
-  Color get softColor {
-    return color.withValues(alpha: 0.0);
+  Color inversedColor(BuildContext context) {
+    switch (this) {
+      case ProtectionGapSeverity.critical:
+        return context.colors.appOutflowInversed;
+
+      case ProtectionGapSeverity.partial:
+        return context.colors.appAccent;
+
+      case ProtectionGapSeverity.covered:
+        return context.colors.appInflowInverse;
+    }
+  }
+
+  Color softColor(BuildContext context) {
+    return color(context).withValues(alpha: 0.12);
   }
 
   String get label {

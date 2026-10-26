@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/binding/insurance_policy_binding.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/add_policy_form.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/add_policy/show_add_policy_form.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/insurance_under_construction_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/3_disability_benefit/slides/disability_sources_slide.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/widgets/protection_gap_details_header.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/3_disability_benefit/details_view/slides/disability_needs_slide.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/protection_types.dart';
@@ -24,13 +24,23 @@ class DisabilityDetailsView extends GetView<InsurancePlannerController> {
         children: [
           AppDetailsHeader(
             title: 'Disability Benefit Gap',
-            child: Obx(
-              () => ProtectionGapDetailsHeader(
-                severity: controller.disabilitySeverity,
-                protectionNeed: controller.protectionNeedsTotals[type] ?? 0.0,
-                protectionSource: controller.disabilityCovered.value,
-              ),
-            ),
+            child: Obx(() {
+              final protectionSource = controller.disabilityCovered.value;
+              final severity = controller.disabilitySeverity;
+              final protectionNeed =
+                  controller.protectionNeedsTotals[type] ?? 0.0;
+              final isCompleted =
+                  controller.protectionGapCompletion[type] ?? false;
+
+              return ProtectionGapDetailsHeader(
+                type: type,
+                severity: severity,
+                protectionNeed: protectionNeed,
+                protectionSource: protectionSource,
+                isCompleted: isCompleted,
+                hasSources: protectionSource > 0,
+              );
+            }),
           ),
 
           Obx(() {
@@ -41,13 +51,7 @@ class DisabilityDetailsView extends GetView<InsurancePlannerController> {
               actions: const ['Needs', 'Sources'],
               onAdd: selectedTab == 1
                   ? () {
-                      final binding = InsurancePolicyBinding();
-                      binding.dependencies();
-
-                      Get.bottomSheet(
-                        AddPolicyForm(),
-                        isScrollControlled: true,
-                      );
+                      showAddPolicyForm();
                     }
                   : null,
             );
@@ -57,27 +61,15 @@ class DisabilityDetailsView extends GetView<InsurancePlannerController> {
             child: Obx(
               () => IndexedStack(
                 index: controller.selectedDisabilityDetailsIndex.value,
-                children: const [
+                children: [
                   DisabilityNeedsSlide(),
-                  DisabilitySourcesSlide(),
+                  DisabilitySourcesSlide(type: type),
                 ],
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class DisabilitySourcesSlide extends StatelessWidget {
-  const DisabilitySourcesSlide({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const InsuranceUnderConstructionView(
-      title: 'Sources are coming soon',
-      description: 'We’re still building this part of your protection plan.',
     );
   }
 }

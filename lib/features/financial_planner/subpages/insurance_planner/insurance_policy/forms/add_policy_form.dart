@@ -13,6 +13,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/models/insurance_company_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/select_insurer_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/controller/add_policy_controller_extension.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/controller/save_policy_controller_extension.dart';
 // ignore: unused_import
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/add_policy/add_policy_sheet/add_policy_sheet.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/controller/insurance_policy_controller.dart';
@@ -36,12 +37,13 @@ class AddPolicyForm extends GetView<InsurancePolicyController> {
           controller.currentPolicyStep.value == AddPolicyStep.selectProduct;
 
       return AppSheet(
-        height: isSelectingProduct ? AppSheetHeight.half : AppSheetHeight.full,
-        adaptiveHeight: isSelectingProduct,
+        // height: isSelectingProduct ? AppSheetHeight.half : AppSheetHeight.full,
+        // adaptiveHeight: isSelectingProduct,
         title: isSelectingProduct
             ? 'Select Product Details'
             : 'Add Insurance Policy',
 
+        // child: const SelectProductStep(),
         child: isSelectingProduct
             ? const SelectProductStep()
             : const EnterPolicyDetailsStep(),
@@ -108,7 +110,7 @@ class SelectProductStep extends GetView<InsurancePolicyController> {
 
                   if (product == null) return;
 
-                  controller.setInsuranceProduct(product);
+                  await controller.setInsuranceProduct(product);
                   controller.goToPolicyDetails();
                 },
               ),
@@ -193,6 +195,43 @@ class EnterPolicyDetailsStep extends GetView<InsurancePolicyController> {
           BenefitsDetailsSection(),
           PolicyDetailsSection(),
           PremiumDetailsSection(),
+          AppSection(
+            child: Column(
+              spacing: 8,
+              children: [
+                AppButton(
+                  text: 'Save policy information',
+                  onTap: () {
+                    controller.savePolicy();
+                    // Get.back();
+                    // AppSnackbar.show(
+                    //   title: 'Insurance policy has been saved',
+                    //   message:
+                    //       'AIA Health Invest Plus has been saved. A bill has also been created for this policy.',
+                    //   type: AppSnackType.success,
+                    // );
+                  },
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 4,
+                  children: [
+                    Icon(
+                      PhosphorIconsRegular.floppyDisk,
+                      size: 16,
+                      color: colorScheme.appTextMuted,
+                    ),
+                    Text(
+                      'Saving this creates a bill for this policy',
+                      style: AppTextStyle.labelM.copyWith(
+                        color: colorScheme.appTextMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -9,6 +9,10 @@ mixin _$InsurancePoliciesDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.insuranceProductsTable;
   $InsuranceBenefitsTableTable get insuranceBenefitsTable =>
       attachedDatabase.insuranceBenefitsTable;
+  $UserInsurancePolicyTableTable get userInsurancePolicyTable =>
+      attachedDatabase.userInsurancePolicyTable;
+  $UserInsuranceBenefitsTableTable get userInsuranceBenefitsTable =>
+      attachedDatabase.userInsuranceBenefitsTable;
   InsurancePoliciesDaoManager get managers => InsurancePoliciesDaoManager(this);
 }
 
@@ -26,5 +30,16 @@ class InsurancePoliciesDaoManager {
       $$InsuranceBenefitsTableTableTableManager(
         _db.attachedDatabase,
         _db.insuranceBenefitsTable,
+      );
+  $$UserInsurancePolicyTableTableTableManager get userInsurancePolicyTable =>
+      $$UserInsurancePolicyTableTableTableManager(
+        _db.attachedDatabase,
+        _db.userInsurancePolicyTable,
+      );
+  $$UserInsuranceBenefitsTableTableTableManager
+  get userInsuranceBenefitsTable =>
+      $$UserInsuranceBenefitsTableTableTableManager(
+        _db.attachedDatabase,
+        _db.userInsuranceBenefitsTable,
       );
 }
