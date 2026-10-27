@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/widgets.dart';
 import 'package:getx_drift_app/data/app_database.dart';
-import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/data/tables/insurance_products_table.dart';
 import 'package:getx_drift_app/data/tables/insurance_benefits_table.dart';
 import 'package:getx_drift_app/data/tables/user_insurance_benefits_table.dart';

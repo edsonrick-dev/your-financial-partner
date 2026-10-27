@@ -20,6 +20,14 @@ extension AddPolicySheetControllerX on InsurancePolicyController {
       'Supabase ID: ${product.supabaseId}',
     );
 
+    // Product creation keeps policy-specific coverage amounts in drafts. Keep
+    // them while reloading the saved benefit rows (whose IDs are now local).
+    final coverageByBenefitId = <int, double>{
+      for (final draft in benefitDrafts)
+        if (draft.insuranceBenefitId != null)
+          draft.insuranceBenefitId!: draft.coverageAmount,
+    };
+
     selectedProduct.value = product;
 
     benefitDrafts.clear();
@@ -50,7 +58,21 @@ extension AddPolicySheetControllerX on InsurancePolicyController {
     await loadPaymentTermsForProduct(localProductId);
     await loadBenefitsForProduct(product, localProductId: localProductId);
 
-    debugPrint('Product benefits loaded for: ${product.name}');
+    if (product.isUserGenerated && coverageByBenefitId.isNotEmpty) {
+      for (var index = 0; index < benefitDrafts.length; index++) {
+        final draft = benefitDrafts[index];
+        final amount = coverageByBenefitId[draft.insuranceBenefitId];
+        if (amount != null) {
+          benefitDrafts[index] = draft.copyWith(coverageAmount: amount);
+        }
+      }
+    }
+
+    debugPrint(
+      'Product ready: ${product.name} (local ID: ${product.id}, '
+      '${productBenefits.length} benefits, '
+      '${availablePaymentTerms.length} payment terms)',
+    );
   }
 
   void goToPolicyDetails() {

@@ -32,6 +32,7 @@ class PolicyDetailsSection extends GetView<InsurancePolicyController> {
             onChanged: (value) {},
           ),
           Obx(() {
+            final today = DateUtils.dateOnly(DateTime.now());
             final date = controller.issueDate.value;
 
             return AppDropdownField(
@@ -42,11 +43,11 @@ class PolicyDetailsSection extends GetView<InsurancePolicyController> {
                   : DateFormat('MMMM d, yyyy').format(date),
               hint: 'Select date',
               onTap: () {
-                controller.issueDate.value = DateTime.now();
                 AppDatePicker.show(
                   context: context,
-                  initialDate: date ?? DateTime.now(),
+                  initialDate: date ?? today,
                   onChanged: controller.setIssueDate,
+                  maximumDate: today,
                 );
               },
             );

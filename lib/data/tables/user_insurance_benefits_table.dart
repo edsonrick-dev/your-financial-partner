@@ -15,18 +15,19 @@ class UserInsuranceBenefitsTable extends Table {
       integer().references(InsuranceBenefitsTable, #id)();
 
   // Local UserInsurancePolicyTable.id.
-  IntColumn get userPolicyId =>
-      integer().references(UserInsurancePolicyTable, #id)();
+  IntColumn get userPolicyId => integer().references(
+    UserInsurancePolicyTable,
+    #id,
+    onDelete: KeyAction.cascade,
+  )();
 
   // Coverage amount for this policy benefit.
   RealColumn get amount => real()();
 
-  DateTimeColumn get createdAt =>
-      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
   // Local sync status.
-  BoolColumn get isSynced =>
-      boolean().withDefault(const Constant(false))();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
 
   @override
   String get tableName => 'user_insurance_benefits';

@@ -5,6 +5,7 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 // import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
+import 'package:getx_drift_app/domain/enums/app_snack_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/controller/insurance_policy_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/benefit_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/premium_payment_type.dart';
@@ -138,6 +139,8 @@ extension SavePolicyControllerX on InsurancePolicyController {
             productId: localProductId,
             policyNumber: policyNumber.isEmpty ? null : policyNumber,
             dateIssued: dateIssued,
+            firstPaymentDate: nextPaymentDate.value ?? dateIssued,
+            billName: '${product.name} Premium',
             frequency: effectiveFrequency,
             amount: amount,
             benefits: benefitDrafts.toList(),
@@ -145,12 +148,35 @@ extension SavePolicyControllerX on InsurancePolicyController {
 
       debugPrint('Saved insurance policy ID: $policyId');
 
+      try {
+        final insuranceCategory = await database.categoryDao
+            .getOrCreateInsuranceCategory();
+        final annualPremiumTotal = await database.userInsurancePolicyDao
+            .getActiveInsurancePremiumAnnualTotal();
+
+        await database.cashflowPlanDao.syncInsurancePremiumBudget(
+          categoryId: insuranceCategory.id,
+          annualPremiumTotal: annualPremiumTotal,
+        );
+
+        debugPrint(
+          'Synced Insurances budget: category ${insuranceCategory.id}, '
+          'annual total $annualPremiumTotal',
+        );
+      } catch (error, stackTrace) {
+        // Policy and premium bill are already saved. Keep that successful save
+        // intact if budget synchronization encounters a separate issue.
+        debugPrint('Failed to sync insurance premium budget: $error');
+        debugPrintStack(stackTrace: stackTrace);
+      }
+
       // 4. Close the bottom sheet, then show the success message.
       Get.back();
 
       AppSnackbar.show(
         title: 'Policy saved',
         message: 'Your insurance policy has been saved successfully.',
+        type: AppSnackType.success,
       );
     } on StateError catch (e) {
       AppSnackbar.show(title: 'Unable to save policy', message: e.message);

@@ -165,6 +165,10 @@ class SelectInsuranceProductSheet extends GetView<InsurancePolicyController> {
                       }
 
                       // Return the newly saved product to the selector's parent.
+                      debugPrint(
+                        'Returning created product from selector: '
+                        'local ID ${product.id}, insurer ID ${product.companyId}',
+                      );
                       Get.back<InsuranceProduct>(result: product);
                     },
 

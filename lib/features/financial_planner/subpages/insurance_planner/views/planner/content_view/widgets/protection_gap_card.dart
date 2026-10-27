@@ -22,30 +22,24 @@ class ProtectionGapCard extends StatelessWidget {
     this.isCompleted = false,
     this.onTap,
   });
+  bool get hasNoNeed => amountNeed <= 0;
 
   double get gapAmount {
-    return (amountNeed - amountCovered).clamp(0, double.infinity);
+    if (hasNoNeed) return 0;
+    return (amountNeed - amountCovered).clamp(0.0, double.infinity);
   }
 
   double get coveragePercentage {
-    if (amountNeed <= 0) return 0;
-
-    return (amountCovered / amountNeed * 100).clamp(0, 100);
+    if (hasNoNeed) return 100;
+    return (amountCovered / amountNeed * 100).clamp(0.0, 100.0);
   }
 
-  ProtectionGapSeverity get severity {
-    final coverage = coveragePercentage;
+  ProtectionGapSeverity get severity => getProtectionGapSeverity(
+    amountCovered: amountCovered,
+    amountNeed: amountNeed,
+  );
 
-    if (coverage >= 95) {
-      return ProtectionGapSeverity.covered;
-    }
-
-    if (coverage >= 50) {
-      return ProtectionGapSeverity.partial;
-    }
-
-    return ProtectionGapSeverity.critical;
-  }
+  bool get isWellCovered => severity == ProtectionGapSeverity.covered;
 
   @override
   Widget build(BuildContext context) {
@@ -85,37 +79,63 @@ class ProtectionGapCard extends StatelessWidget {
 
               if (isCompleted) ...[
                 const SizedBox(width: 12),
-                Text(
-                  gapAmount.toCompactCurrency(kThreshold: 100000),
-                  style: AppTextStyle.amountL,
-                ),
+
+                if (hasNoNeed || isWellCovered)
+                  Text(
+                    '✓ Well Protected',
+                    style: AppTextStyle.titleM.copyWith(
+                      color: Colors.green.shade700,
+                    ),
+                  )
+                else
+                  Text(
+                    gapAmount.toCompactCurrency(kThreshold: 100000),
+                    style: AppTextStyle.amountL,
+                  ),
               ],
             ],
           ),
 
           if (isCompleted) ...[
             const SizedBox(height: 8),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: RichText(
-                text: TextSpan(
-                  style: AppTextStyle.amountM.copyWith(
-                    color: colorScheme.appTextMuted,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: amountCovered.toCurrency(),
-                      style: TextStyle(color: colorScheme.appText),
-                    ),
-                    TextSpan(
-                      text: ' covered out of ',
-                      style: AppTextStyle.bodyM,
-                    ),
-                    TextSpan(text: amountNeed.toCurrency()),
-                  ],
+            if (hasNoNeed) ...[
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'No protection need identified in your assessment.',
+                  style: AppTextStyle.bodyM,
                 ),
               ),
-            ),
+            ] else if (isWellCovered && amountCovered > amountNeed) ...[
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Insurance sources cover your insurance needs',
+                  style: AppTextStyle.bodyM.copyWith(),
+                ),
+              ),
+            ] else
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: RichText(
+                  text: TextSpan(
+                    style: AppTextStyle.amountM.copyWith(
+                      color: colorScheme.appTextMuted,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: amountCovered.toCurrency(),
+                        style: TextStyle(color: colorScheme.appText),
+                      ),
+                      TextSpan(
+                        text: ' covered out of ',
+                        style: AppTextStyle.bodyM,
+                      ),
+                      TextSpan(text: amountNeed.toCurrency()),
+                    ],
+                  ),
+                ),
+              ),
             const SizedBox(height: 6),
             Row(
               children: [
@@ -136,9 +156,9 @@ class ProtectionGapCard extends StatelessWidget {
                 const SizedBox(width: 8),
 
                 SizedBox(
-                  width: 40,
+                  width: 52,
                   child: Text(
-                    '${coveragePercentage.toStringAsFixed(0)}%',
+                    '${coveragePercentage.toStringAsFixed(1)}%',
                     textAlign: TextAlign.right,
                     style: AppTextStyle.amountS.copyWith(
                       color: severityColor(context),

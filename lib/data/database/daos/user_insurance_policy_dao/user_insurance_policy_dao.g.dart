@@ -15,6 +15,20 @@ mixin _$UserInsurancePolicyDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.insuranceBenefitsTable;
   $UserInsuranceBenefitsTableTable get userInsuranceBenefitsTable =>
       attachedDatabase.userInsuranceBenefitsTable;
+  $CashflowCategoriesTableTable get cashflowCategoriesTable =>
+      attachedDatabase.cashflowCategoriesTable;
+  $AccountsTableTable get accountsTable => attachedDatabase.accountsTable;
+  $CreditCardBillingPeriodsTableTable get creditCardBillingPeriodsTable =>
+      attachedDatabase.creditCardBillingPeriodsTable;
+  $CreditCardStatementsTableTable get creditCardStatementsTable =>
+      attachedDatabase.creditCardStatementsTable;
+  $BillsTableTable get billsTable => attachedDatabase.billsTable;
+  $TransactionsTableTable get transactionsTable =>
+      attachedDatabase.transactionsTable;
+  $BillOccurrencesTableTable get billOccurrencesTable =>
+      attachedDatabase.billOccurrencesTable;
+  $InsurancePremiumBillsTableTable get insurancePremiumBillsTable =>
+      attachedDatabase.insurancePremiumBillsTable;
   UserInsurancePolicyDaoManager get managers =>
       UserInsurancePolicyDaoManager(this);
 }
@@ -49,5 +63,41 @@ class UserInsurancePolicyDaoManager {
       $$UserInsuranceBenefitsTableTableTableManager(
         _db.attachedDatabase,
         _db.userInsuranceBenefitsTable,
+      );
+  $$CashflowCategoriesTableTableTableManager get cashflowCategoriesTable =>
+      $$CashflowCategoriesTableTableTableManager(
+        _db.attachedDatabase,
+        _db.cashflowCategoriesTable,
+      );
+  $$AccountsTableTableTableManager get accountsTable =>
+      $$AccountsTableTableTableManager(_db.attachedDatabase, _db.accountsTable);
+  $$CreditCardBillingPeriodsTableTableTableManager
+  get creditCardBillingPeriodsTable =>
+      $$CreditCardBillingPeriodsTableTableTableManager(
+        _db.attachedDatabase,
+        _db.creditCardBillingPeriodsTable,
+      );
+  $$CreditCardStatementsTableTableTableManager get creditCardStatementsTable =>
+      $$CreditCardStatementsTableTableTableManager(
+        _db.attachedDatabase,
+        _db.creditCardStatementsTable,
+      );
+  $$BillsTableTableTableManager get billsTable =>
+      $$BillsTableTableTableManager(_db.attachedDatabase, _db.billsTable);
+  $$TransactionsTableTableTableManager get transactionsTable =>
+      $$TransactionsTableTableTableManager(
+        _db.attachedDatabase,
+        _db.transactionsTable,
+      );
+  $$BillOccurrencesTableTableTableManager get billOccurrencesTable =>
+      $$BillOccurrencesTableTableTableManager(
+        _db.attachedDatabase,
+        _db.billOccurrencesTable,
+      );
+  $$InsurancePremiumBillsTableTableTableManager
+  get insurancePremiumBillsTable =>
+      $$InsurancePremiumBillsTableTableTableManager(
+        _db.attachedDatabase,
+        _db.insurancePremiumBillsTable,
       );
 }

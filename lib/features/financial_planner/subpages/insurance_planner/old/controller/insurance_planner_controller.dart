@@ -396,21 +396,20 @@ class InsurancePlannerController extends GetxController {
 
   /// Severity of the critical illness protection gap.
   ProtectionGapSeverity get criticalIllnessSeverity {
-    debugPrint(
-      'CI Need: ${criticalIllnessNeed.value}, '
-      'CI Covered: ${criticalIllnessCovered.value}',
-    );
+    final need = protectionNeedsTotals[ProtectionType.criticalIllness] ?? 0.0;
+
+    debugPrint('CI Need: $need, CI Covered: ${criticalIllnessCovered.value}');
 
     return getProtectionGapSeverity(
       amountCovered: criticalIllnessCovered.value,
-      amountNeed: criticalIllnessNeed.value,
+      amountNeed: need,
     );
   }
 
   /// Severity of the disability protection gap.
   ProtectionGapSeverity get disabilitySeverity => getProtectionGapSeverity(
     amountCovered: disabilityCovered.value,
-    amountNeed: disabilityNeed.value,
+    amountNeed: protectionNeedsTotals[ProtectionType.disability] ?? 0.0,
   );
 
   /// Overall protection profile derived from all gap severities.
@@ -423,11 +422,30 @@ class InsurancePlannerController extends GetxController {
   }
 
   /// Number of protection types that are not fully covered.
+
   int get unmetProtectionGoals {
-    return [
-      deathBenefitSeverity,
-      criticalIllnessSeverity,
-      disabilitySeverity,
-    ].where((severity) => severity != ProtectionGapSeverity.covered).length;
+    final severities = [
+      getProtectionGapSeverity(
+        amountCovered: deathBenefitCovered.value,
+        amountNeed: protectionNeedsTotals[ProtectionType.death] ?? 0.0,
+      ),
+      getProtectionGapSeverity(
+        amountCovered: criticalIllnessCovered.value,
+        amountNeed:
+            protectionNeedsTotals[ProtectionType.criticalIllness] ?? 0.0,
+      ),
+      getProtectionGapSeverity(
+        amountCovered: disabilityCovered.value,
+        amountNeed: protectionNeedsTotals[ProtectionType.disability] ?? 0.0,
+      ),
+    ];
+
+    return severities
+        .where(
+          (severity) =>
+              severity != ProtectionGapSeverity.covered &&
+              severity != ProtectionGapSeverity.almost,
+        )
+        .length;
   }
 }

@@ -1,4 +1,5 @@
-import 'package:flutter/animation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/enums/protection_gap_severity_enum.dart';
 
 enum ProtectionProfile {
@@ -23,38 +24,66 @@ ProtectionProfile getProtectionProfile(List<ProtectionGapSeverity> severities) {
       .where((s) => s == ProtectionGapSeverity.partial)
       .length;
 
+  final almostCount = severities
+      .where((s) => s == ProtectionGapSeverity.almost)
+      .length;
+
   final coveredCount = severities
       .where((s) => s == ProtectionGapSeverity.covered)
       .length;
 
+  // All three protection areas are fully covered.
   if (coveredCount == 3) {
     return ProtectionProfile.financiallySecured;
   }
 
+  // All three protection areas have critical gaps.
   if (criticalCount == 3) {
     return ProtectionProfile.financiallyExposed;
   }
 
+  // All three protection areas have partial gaps.
   if (partialCount == 3) {
     return ProtectionProfile.moderatelyProtected;
   }
 
+  // No critical gaps, and all areas are almost or fully covered.
+  if (criticalCount == 0 &&
+      partialCount == 0 &&
+      almostCount + coveredCount == 3) {
+    return ProtectionProfile.almostSecured;
+  }
+
+  // A mixture of critical gaps, partial gaps, and fully covered areas.
   if (criticalCount > 0 && partialCount > 0 && coveredCount > 0) {
     return ProtectionProfile.unevenProtection;
   }
 
+  // At least one critical gap and one partial gap.
   if (criticalCount > 0 && partialCount > 0) {
     return ProtectionProfile.vulnerableCoverage;
   }
 
-  if (coveredCount > 0 && partialCount > 0) {
-    return ProtectionProfile.almostSecured;
-  }
-
-  if (criticalCount > 0 && coveredCount > 0) {
+  // Critical gaps exist alongside almost or fully covered areas.
+  if (criticalCount > 0 &&
+      partialCount == 0 &&
+      (almostCount > 0 || coveredCount > 0)) {
     return ProtectionProfile.unevenProtection;
   }
 
+  // Partial gaps exist alongside almost or fully covered areas.
+  if (partialCount > 0 &&
+      criticalCount == 0 &&
+      (almostCount > 0 || coveredCount > 0)) {
+    return ProtectionProfile.almostSecured;
+  }
+
+  // All three areas are almost covered.
+  if (almostCount == 3) {
+    return ProtectionProfile.almostSecured;
+  }
+
+  // Remaining combinations include mixed protection levels.
   return ProtectionProfile.moderatelyProtected;
 }
 
@@ -103,21 +132,22 @@ extension ProtectionProfileX on ProtectionProfile {
     }
   }
 
-  Color get color {
+  Color color(BuildContext context) {
+    final colorScheme = context.colors;
     switch (this) {
       case ProtectionProfile.financiallySecured:
-        return const Color(0xFF16A34A);
+        return colorScheme.appInflowInverse;
 
       case ProtectionProfile.almostSecured:
       case ProtectionProfile.moderatelyProtected:
-        return const Color(0xFFCA8A04);
+        return colorScheme.appAccent;
 
       case ProtectionProfile.unevenProtection:
       case ProtectionProfile.vulnerableCoverage:
-        return const Color(0xFFF97316);
+        return colorScheme.appNeutral;
 
       case ProtectionProfile.financiallyExposed:
-        return const Color(0xFFDC2626);
+        return colorScheme.appOutflowInversed;
     }
   }
 }

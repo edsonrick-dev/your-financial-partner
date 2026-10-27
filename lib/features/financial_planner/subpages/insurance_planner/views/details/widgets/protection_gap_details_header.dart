@@ -35,10 +35,17 @@ class ProtectionGapDetailsHeader extends StatelessWidget {
   }
 
   ProtectionGapSeverity get effectiveSeverity {
-    if (protectionNeed > 0 && protectionSource >= protectionNeed) {
+    // No protection need means there is no protection gap.
+    if (protectionNeed <= 0) {
       return ProtectionGapSeverity.covered;
     }
 
+    // Existing sources fully cover the assessed need.
+    if (protectionSource >= protectionNeed) {
+      return ProtectionGapSeverity.covered;
+    }
+
+    // Otherwise, preserve the calculated severity.
     return severity;
   }
 

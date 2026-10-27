@@ -41,6 +41,27 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
     )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 
+  Future<CashflowCategoriesTableData> getOrCreateInsuranceCategory() async {
+    final expenseCategories = await getCategoriesByType('spend');
+    for (final category in expenseCategories) {
+      if (category.name.trim().toLowerCase() == 'insurances' ||
+          category.name.trim().toLowerCase() == 'insurance') {
+        return category;
+      }
+    }
+
+    final id = await createCategory(
+      CashflowCategoriesTableCompanion.insert(
+        name: 'Insurances',
+        icon: 'shieldPlus',
+        type: 'spend',
+        isDefault: const Value(true),
+      ),
+    );
+
+    return (await getCategoryById(id))!;
+  }
+
   /// Create category.
   Future<int> createCategory(CashflowCategoriesTableCompanion entry) {
     return into(cashflowCategoriesTable).insert(entry);

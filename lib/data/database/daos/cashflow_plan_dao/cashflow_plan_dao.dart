@@ -349,6 +349,57 @@ class CashflowPlanDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  Future<void> syncInsurancePremiumBudget({
+    required int categoryId,
+    required double annualPremiumTotal,
+  }) async {
+    if (!annualPremiumTotal.isFinite || annualPremiumTotal < 0) return;
+
+    final plans = await getExpensePlansForCategory(categoryId);
+    final existingPlan = plans.isEmpty ? null : plans.first;
+    if (existingPlan == null && annualPremiumTotal == 0) return;
+
+    final now = DateTime.now();
+    await transaction(() async {
+      if (existingPlan == null) {
+        await into(cashFlowPlans).insert(
+          CashFlowPlansCompanion.insert(
+            categoryId: Value<int?>(categoryId),
+            loanId: const Value<int?>(null),
+            planType: 'expense',
+            amount: annualPremiumTotal,
+            period: BudgetPeriod.yearly.name,
+            distributionType: CashFlowDistribution.defaultDistribution.name,
+            startDate: now,
+            endDate: const Value<DateTime?>(null),
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
+      } else {
+        await (update(cashFlowPlans)..where(
+              (tbl) => tbl.id.equals(existingPlan.plan.id),
+            ))
+            .write(
+              CashFlowPlansCompanion(
+                amount: Value(annualPremiumTotal),
+                period: Value(BudgetPeriod.yearly.name),
+                distributionType: Value(
+                  CashFlowDistribution.defaultDistribution.name,
+                ),
+                updatedAt: Value(now),
+              ),
+            );
+
+        await (delete(
+          cashFlowPlanAllocations,
+        )..where((tbl) => tbl.planId.equals(existingPlan.plan.id))).go();
+      }
+
+      await _incrementCashflowRevision();
+    });
+  }
+
   Future<void> deletePlan(int planId) async {
     await attachedDatabase.transaction(() async {
       await (delete(

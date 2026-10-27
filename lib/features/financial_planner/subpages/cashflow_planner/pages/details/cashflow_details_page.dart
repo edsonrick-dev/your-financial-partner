@@ -173,14 +173,6 @@ class CashflowDetailsPage extends GetView<CashflowController> {
                 ).whenComplete(() {
                   controller.resetBudgetPlan();
                 });
-                // Get.bottomSheet(
-                //   SelectBudgetTypeSheet(),
-                //   backgroundColor: Colors.transparent,
-                //   isScrollControlled: true,
-                // ).whenComplete(() {
-                //   controller.resetBudgetPlan();
-                //   controller.resetIncomePlan();
-                // });
               }
             },
           ),

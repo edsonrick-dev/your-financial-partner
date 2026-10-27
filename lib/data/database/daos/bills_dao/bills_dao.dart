@@ -328,6 +328,14 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
     final query =
         select(billsTable).join([
             leftOuterJoin(
+              db.insurancePremiumBillsTable,
+              db.insurancePremiumBillsTable.billId.equalsExp(billsTable.id),
+            ),
+            leftOuterJoin(
+              billOccurrencesTable,
+              billOccurrencesTable.billId.equalsExp(billsTable.id),
+            ),
+            leftOuterJoin(
               cashflowCategoriesTable,
               cashflowCategoriesTable.id.equalsExp(billsTable.categoryId),
             ),
@@ -336,17 +344,40 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
               accountsTable.id.equalsExp(billsTable.accountId),
             ),
           ])
-          ..where(billsTable.isActive.equals(true))
-          ..orderBy([OrderingTerm.desc(billsTable.updatedAt)]);
+          ..where(
+            billsTable.isActive.equals(true) &
+                (billOccurrencesTable.id.isNull() |
+                    billOccurrencesTable.isPaid.equals(false)),
+          )
+          ..orderBy([
+            OrderingTerm.asc(billOccurrencesTable.dueDate),
+            OrderingTerm.desc(billsTable.updatedAt),
+          ]);
 
     return query.watch().map((rows) {
-      return rows.map((row) {
-        return BillWithCategory(
-          bill: row.readTable(billsTable),
-          category: row.readTableOrNull(cashflowCategoriesTable),
-          loanAccount: row.readTableOrNull(accountsTable),
+      final seenBillIds = <int>{};
+      final result = <BillWithCategory>[];
+
+      for (final row in rows) {
+        final bill = row.readTable(billsTable);
+        if (!seenBillIds.add(bill.id)) continue;
+
+        result.add(
+          BillWithCategory(
+            bill: bill,
+            category: row.readTableOrNull(cashflowCategoriesTable),
+            loanAccount: row.readTableOrNull(accountsTable),
+            nextDueDate: row
+                .readTableOrNull(billOccurrencesTable)
+                ?.dueDate,
+            isInsurancePremium: row
+                .readTableOrNull(db.insurancePremiumBillsTable) !=
+                null,
+          ),
         );
-      }).toList();
+      }
+
+      return result;
     });
   }
 

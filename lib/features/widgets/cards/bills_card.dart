@@ -6,6 +6,7 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_category.dart';
+import 'package:intl/intl.dart';
 
 class BillsCard extends StatelessWidget {
   final BillWithCategory bill;
@@ -23,6 +24,9 @@ class BillsCard extends StatelessWidget {
     final colorScheme = context.colors;
 
     final amountDue = bill.bill.expectedAmount;
+    final iconKey = bill.isInsurancePremium
+        ? 'shieldPlus'
+        : bill.loanAccount?.icon ?? bill.category?.icon ?? AppIcons.fallbackKey;
     final frequency = BillsFrequency.values.firstWhere(
       (e) => e.name == bill.bill.frequency,
     );
@@ -35,6 +39,11 @@ class BillsCard extends StatelessWidget {
 
       if (frequency == BillsFrequency.monthly) {
         return 'Every $day${_ordinalSuffix(day)} of the month';
+      }
+
+      if (frequency == BillsFrequency.annual && bill.nextDueDate != null) {
+        final month = DateFormat('MMMM').format(bill.nextDueDate!);
+        return 'Every $month $day';
       }
 
       return 'Every $day${_ordinalSuffix(day)}';
@@ -89,14 +98,7 @@ class BillsCard extends StatelessWidget {
                     width: 44,
                   ),
                 ),
-                Icon(
-                  AppIcons.categories.resolve(
-                    bill.isLoanPayment
-                        ? bill.loanAccount!.icon
-                        : bill.category!.icon,
-                  ),
-                  size: 20,
-                ),
+                Icon(AppIcons.categories.resolve(iconKey), size: 20),
               ],
             ),
             SizedBox(width: 12),

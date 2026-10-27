@@ -10,6 +10,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/models/insurance_company_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/benefit_draft.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/benefit_type.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/models/insurance_policy_list_item.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_products/models/payment_terms_sync_service.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_products/repository/insurance_product_repository.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_products/models/insurance_product.dart';
@@ -20,6 +21,28 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 enum AddPolicyStep { selectProduct, fillPolicyDetails }
 
 class InsurancePolicyController extends GetxController {
+  final policies = <InsurancePolicyListItem>[].obs;
+  StreamSubscription<List<InsurancePolicyListItem>>? _subscription;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    _subscription = database.userInsurancePolicyDao.watchPolicyList().listen(
+      policies.assignAll,
+      onError: (Object error, StackTrace stackTrace) {
+        Get.log('Failed to watch insurance policies: $error');
+      },
+    );
+  }
+
+  @override
+  void onClose() {
+    _policySubscription?.cancel();
+    _subscription?.cancel();
+    super.onClose();
+  }
+
   void resetCreateProductForm() {
     productNameTextController.clear();
 
@@ -33,6 +56,40 @@ class InsurancePolicyController extends GetxController {
 
     collapseButton();
   }
+
+  Future<void> deletePolicy(int policyId) async {
+    try {
+      final deleted = await database.userInsurancePolicyDao.deleteById(
+        policyId,
+      );
+      if (deleted == 0) return;
+
+      final insuranceCategory = await database.categoryDao
+          .getOrCreateInsuranceCategory();
+      final annualPremiumTotal = await database.userInsurancePolicyDao
+          .getActiveInsurancePremiumAnnualTotal();
+
+      await database.cashflowPlanDao.syncInsurancePremiumBudget(
+        categoryId: insuranceCategory.id,
+        annualPremiumTotal: annualPremiumTotal,
+      );
+
+      AppSnackbar.show(
+        title: 'Policy deleted',
+        message: 'The insurance policy and its premium bill were deleted.',
+        type: AppSnackType.success,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Failed to delete insurance policy: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      AppSnackbar.show(
+        title: 'Unable to delete policy',
+        message: 'Please try again.',
+        type: AppSnackType.error,
+      );
+    }
+  }
+
   // Future<void> saveInsuranceProduct() async {
   //   final name = productNameTextController.text.trim();
   //   final insurer = selectedInsurer.value;
@@ -172,17 +229,17 @@ class InsurancePolicyController extends GetxController {
       _localProducts.add(product);
       _updateAvailableProducts();
 
+      debugPrint(
+        'Saved custom product: local ID ${product.id}, '
+        'insurer ID ${product.companyId}, name "${product.name}", '
+        'benefits ${savedBenefits.length}',
+      );
+
       productNameTextController.clear();
       collapseButton();
 
       // Return the product to the sheet that opened this form.
       Get.back<InsuranceProduct>(result: product);
-
-      AppSnackbar.show(
-        title: 'Success',
-        message: 'Insurance product saved.',
-        type: AppSnackType.success,
-      );
     } catch (error, stackTrace) {
       debugPrint('Failed to save insurance product: $error');
       debugPrintStack(stackTrace: stackTrace);
@@ -448,12 +505,6 @@ class InsurancePolicyController extends GetxController {
 
   void collapseButton() {
     createProductButtonState.value = AddButtonState.collapsed;
-  }
-
-  @override
-  void onClose() {
-    _policySubscription?.cancel();
-    super.onClose();
   }
 
   Future<void> setInsurer(InsuranceCompany insurer) async {

@@ -75,6 +75,8 @@ class ProtectionScoreContainerSection extends StatelessWidget {
   }
 
   Widget _buildProtectionScore(BuildContext context) {
+    final allGoalsMet = unmetGoals == 0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 12,
@@ -93,13 +95,15 @@ class ProtectionScoreContainerSection extends StatelessWidget {
               child: Text(
                 profile.title,
                 style: AppTextStyle.displayL.copyWith(
-                  color: context.colors.appInversedtext,
+                  color: profile.color(context),
                 ),
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              '$unmetGoals of 3 protection goals are not yet met.',
+              allGoalsMet
+                  ? 'All 3 protection goals are met. You have no identified protection gaps.'
+                  : '$unmetGoals of 3 protection goals remain unmet.',
               style: AppTextStyle.labelM.copyWith(
                 color: context.colors.appInversedtext,
               ),

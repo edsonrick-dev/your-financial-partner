@@ -110,6 +110,10 @@ class SelectProductStep extends GetView<InsurancePolicyController> {
 
                   if (product == null) return;
 
+                  debugPrint(
+                    'Add policy received product: local ID ${product.id}, '
+                    'insurer ID ${product.companyId}',
+                  );
                   await controller.setInsuranceProduct(product);
                   controller.goToPolicyDetails();
                 },

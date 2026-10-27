@@ -4,6 +4,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/categories/categories_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/categories/category_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/details/cashflow_details_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/binding/insurance_policy_binding.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/beneficiaries/views/beneficiaries_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/2_critical_illness_benefit/details_view/critical_illness_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/1_death_benefit/details_view/death_benefit_details_view.dart';
@@ -214,7 +215,7 @@ class AppPages {
     GetPage(
       name: Routes.INSURANCEPOLICIES,
       page: () => const InsurancePoliciesView(),
-      // binding: TransactionBinding(),
+      binding: InsurancePolicyBinding(),
     ),
     GetPage(
       name: Routes.BENEFICIARIES,

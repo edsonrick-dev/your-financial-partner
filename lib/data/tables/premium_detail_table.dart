@@ -5,8 +5,11 @@ import 'package:getx_drift_app/data/tables/user_insurance_policy_table.dart';
 class PremiumDetailsTable extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  IntColumn get userPolicyId =>
-      integer().nullable().references(UserInsurancePolicyTable, #id)();
+  IntColumn get userPolicyId => integer().nullable().references(
+    UserInsurancePolicyTable,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
 
   IntColumn get offerPolicyId => integer().nullable()();
 

@@ -16909,6 +16909,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $UserInsuranceBenefitsTableTable(this);
   late final $InsurancePremiumBillsTableTable insurancePremiumBillsTable =
       $InsurancePremiumBillsTableTable(this);
+  late final Index uniqueProductPolicyNumber = Index(
+    'unique_product_policy_number',
+    'CREATE UNIQUE INDEX unique_product_policy_number ON user_insurance_policy (product_id, policy_number)',
+  );
   late final TransactionsDao transactionsDao = TransactionsDao(
     this as AppDatabase,
   );
@@ -16989,6 +16993,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     premiumDetailsTable,
     userInsuranceBenefitsTable,
     insurancePremiumBillsTable,
+    uniqueProductPolicyNumber,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([

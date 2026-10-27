@@ -1,26 +1,28 @@
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 
-enum ProtectionGapSeverity { critical, partial, covered }
+enum ProtectionGapSeverity { critical, partial, almost, covered }
 
 ProtectionGapSeverity getProtectionGapSeverity({
   required double amountCovered,
   required double amountNeed,
 }) {
+  // No assessed protection need means there is no protection gap.
   if (amountNeed <= 0) {
-    return ProtectionGapSeverity.critical;
+    return ProtectionGapSeverity.covered;
   }
 
-  // Fully covered when coverage meets or exceeds the need.
+  // Fully covered when available sources meet or exceed the need.
   if (amountCovered >= amountNeed) {
     return ProtectionGapSeverity.covered;
   }
 
   final coverage = amountCovered / amountNeed * 100;
-
-  if (coverage >= 95) {
+  if (coverage == 100) {
     return ProtectionGapSeverity.covered;
+  }
+  if (coverage >= 95) {
+    return ProtectionGapSeverity.almost;
   }
 
   if (coverage >= 50) {
@@ -39,6 +41,7 @@ extension ProtectionGapSeverityX on ProtectionGapSeverity {
       case ProtectionGapSeverity.partial:
         return context.colors.appAccent;
 
+      case ProtectionGapSeverity.almost:
       case ProtectionGapSeverity.covered:
         return context.colors.appInflow;
     }
@@ -53,6 +56,7 @@ extension ProtectionGapSeverityX on ProtectionGapSeverity {
         return context.colors.appAccent;
 
       case ProtectionGapSeverity.covered:
+      case ProtectionGapSeverity.almost:
         return context.colors.appInflowInverse;
     }
   }
@@ -69,6 +73,8 @@ extension ProtectionGapSeverityX on ProtectionGapSeverity {
       case ProtectionGapSeverity.partial:
         return 'Partially Covered';
 
+      case ProtectionGapSeverity.almost:
+        return 'Almost Covered';
       case ProtectionGapSeverity.covered:
         return 'Fully Covered';
     }
