@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/adaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient_card.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
-import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/domain/enums/app_month.dart';
+import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
+
+class InsurancePolicySummaryContent {
+  final String insurerName;
+  final String productName;
+  final String policyNumber;
+  final BillsFrequency paymentFrequency;
+  final DateTime? nextDue;
+
+  const InsurancePolicySummaryContent({
+    required this.insurerName,
+    required this.productName,
+    required this.policyNumber,
+    required this.nextDue,
+    required this.paymentFrequency,
+  });
+}
 
 class InsurancePolicySummarySection extends StatelessWidget {
-  const InsurancePolicySummarySection({
-    super.key,
-    required this.issuer,
-    required this.name,
-    required this.faceValue,
-    required this.paymentTerm,
-    required this.nextDueDate,
-  });
-
-  final String issuer;
-  final String name;
-  final double faceValue;
-  final String paymentTerm;
-  final DateTime? nextDueDate;
-  String get formattedNextDueDate {
-    final date = nextDueDate;
-    if (date == null) return 'No upcoming payment';
-
-    return '${date.appMonth.fullName} ${date.day}, ${date.year}';
-  }
+  const InsurancePolicySummarySection({super.key, required this.content});
+  final InsurancePolicySummaryContent content;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +37,9 @@ class InsurancePolicySummarySection extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  issuer,
-                  style: AppTextStyle.titleM.copyWith(
-                    color: colorScheme.appInversedtextMuted,
+                  content.insurerName,
+                  style: AppTextStyle.bodyS.copyWith(
+                    color: colorScheme.appInversedtext,
                   ),
                 ),
               ),
@@ -58,18 +55,25 @@ class InsurancePolicySummarySection extends StatelessWidget {
               ),
             ],
           ),
-          Text(
-            name,
-            style: AppTextStyle.headlineM.copyWith(
-              color: colorScheme.appInversedtextMuted,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  content.productName,
+                  style: AppTextStyle.titleL.copyWith(
+                    color: colorScheme.appInversedtext,
+                  ),
+                ),
+              ),
+              Text(
+                content.policyNumber,
+                style: AppTextStyle.amountL.copyWith(
+                  color: colorScheme.appInversedtext,
+                ),
+              ),
+            ],
           ),
-          Text(
-            faceValue.toCurrency(),
-            style: AppTextStyle.amountL.copyWith(
-              color: colorScheme.appInversedtextMuted,
-            ),
-          ),
+
           const SizedBox(height: 8),
           Row(
             spacing: 16,
@@ -80,34 +84,8 @@ class InsurancePolicySummarySection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Payment Term',
+                      content.paymentFrequency.billsLabel,
                       style: AppTextStyle.labelS.copyWith(
-                        color: colorScheme.appInversedtext,
-                      ),
-                    ),
-                    Text(
-                      paymentTerm,
-                      style: AppTextStyle.bodyS.copyWith(
-                        color: colorScheme.appInversedtext,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  spacing: 4,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Next Due',
-                      style: AppTextStyle.labelS.copyWith(
-                        color: colorScheme.appInversedtext,
-                      ),
-                    ),
-                    Text(
-                      formattedNextDueDate,
-                      style: AppTextStyle.bodyS.copyWith(
                         color: colorScheme.appInversedtext,
                       ),
                     ),

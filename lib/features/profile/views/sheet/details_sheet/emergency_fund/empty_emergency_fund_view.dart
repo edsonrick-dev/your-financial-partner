@@ -47,11 +47,6 @@ class EmptyEmergencyFundView extends StatelessWidget {
                       label: 'Cash or bank account',
                       isComplete: controller.hasLiquidFunds,
                     ),
-                    const SizedBox(height: 10),
-                    RequirementRow(
-                      label: 'Average daily balance',
-                      isComplete: controller.averageDailyBalance != null,
-                    ),
                   ],
                 ),
               ),

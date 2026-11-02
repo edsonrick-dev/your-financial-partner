@@ -4,7 +4,7 @@ import 'package:getx_drift_app/core/design_system/app_gradient.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
-import 'package:getx_drift_app/features/profile/widgets/financial_stability_guage.dart';
+import 'package:getx_drift_app/features/profile/widgets/financial_stability_gauge.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 

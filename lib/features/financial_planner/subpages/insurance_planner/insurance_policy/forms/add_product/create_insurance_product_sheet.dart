@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/adaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_gradient_card.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
@@ -96,7 +96,41 @@ class CreateInsuranceProductSheet extends GetView<InsurancePolicyController> {
                         children: [
                           if (controller.benefitDrafts.isEmpty &&
                               !controller.isAddingBenefit.value)
-                            const Text('No benefits added yet.')
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 24,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.appInfoSoft,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    PhosphorIconsRegular.shieldPlus,
+                                    size: 40,
+                                    color: colorScheme.appAccent,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    'Add your policy benefits',
+                                    style: AppTextStyle.titleL,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'List the benefits included in this plan and enter the coverage amount for each one.',
+                                    style: AppTextStyle.bodyM.copyWith(
+                                      color: colorScheme.appTextMuted,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            )
                           else
                             Column(
                               spacing: 12,

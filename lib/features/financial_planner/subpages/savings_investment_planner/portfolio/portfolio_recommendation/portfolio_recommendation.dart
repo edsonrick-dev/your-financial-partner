@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investory_profile_model.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investor_profile_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/asset_class/asset_class_correlation.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_allocation.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_horizon_model.dart';

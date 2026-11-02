@@ -68,7 +68,7 @@ class CashflowPlannerEmptyView extends GetView<CashflowController> {
                       final emptyCasfhlowPlan =
                           emptyBudgetPlan && emptyIncomePlan;
                       String ctaText = emptyCasfhlowPlan
-                          ? 'Build your cashflow plan'
+                          ? 'Plan your cashflow'
                           : emptyIncomePlan
                           ? 'Add your income sources'
                           : 'Set your budget';

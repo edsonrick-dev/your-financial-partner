@@ -4,7 +4,7 @@ import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
-import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
+import 'package:getx_drift_app/features/profile/enum/financial_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/debt_load_ratio_scoring.dart';
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/details_sheet/ratio_scale_painter.dart';

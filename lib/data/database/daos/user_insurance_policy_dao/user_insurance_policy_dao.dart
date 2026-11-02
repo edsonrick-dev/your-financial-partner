@@ -426,6 +426,22 @@ class UserInsurancePolicyDao extends DatabaseAccessor<AppDatabase>
     return query.get();
   }
 
+  Future<bool> updatePolicyBenefitAmount({
+    required int userBenefitId,
+    required double amount,
+  }) async {
+    final updated = await (update(
+      userInsuranceBenefitsTable,
+    )..where((tbl) => tbl.id.equals(userBenefitId))).write(
+      UserInsuranceBenefitsTableCompanion(
+        amount: Value(amount),
+        isSynced: const Value(false),
+      ),
+    );
+
+    return updated > 0;
+  }
+
   Future<PremiumDetail?> getPremiumDetails(int policyId) {
     return (select(premiumDetailsTable)
           ..where((tbl) => tbl.userPolicyId.equals(policyId))

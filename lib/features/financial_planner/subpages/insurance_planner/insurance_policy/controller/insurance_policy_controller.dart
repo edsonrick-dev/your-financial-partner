@@ -15,6 +15,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_products/repository/insurance_product_repository.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_products/models/insurance_product.dart';
 import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
+import 'package:getx_drift_app/core/network/internet_connection_checker.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -522,6 +523,18 @@ class InsurancePolicyController extends GetxController {
 
     // Local Drift uses the local insurer ID.
     loadLocalProducts(insurer.id);
+
+    final isOnline = await InternetConnectionChecker.isOnline();
+    if (!isOnline) {
+      isLoadingProducts.value = false;
+      productErrorMessage.value = _localProducts.isEmpty
+          ? 'No saved products are available offline. Connect to the internet to load the catalog.'
+          : null;
+      debugPrint(
+        'Offline: showing ${_localProducts.length} cached products for insurer ${insurer.id}; skipping Supabase.',
+      );
+      return;
+    }
 
     // Supabase uses the remote insurer ID.
     final supabaseInsurerId = insurer.supabaseId;

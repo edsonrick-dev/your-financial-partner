@@ -153,6 +153,8 @@ class ExpenseContinuityPage extends GetView<ProtectionQuestionnaireController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: Text(

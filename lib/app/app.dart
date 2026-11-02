@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/routes/app_pages.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
+import 'package:getx_drift_app/core/theme/app_appearance.dart';
 import 'package:getx_drift_app/core/theme/theme_data.dart';
 
 class App extends StatelessWidget {
@@ -16,7 +17,7 @@ class App extends StatelessWidget {
       getPages: AppPages.pages,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: AppAppearance.themeMode.value,
       // initialBinding: AppBinding(),
     );
   }

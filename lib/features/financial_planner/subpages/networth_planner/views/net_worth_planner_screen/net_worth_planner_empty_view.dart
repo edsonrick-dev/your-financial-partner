@@ -39,7 +39,7 @@ class NetWorthEmptyView extends GetView<NetWorthController> {
                       size: 60,
                       color: colorScheme.appAccent,
                     ),
-                  Text(
+                    Text(
                       "Ascend's Networth Planner",
                       style: AppTextStyle.headlineL,
                     ),
@@ -77,7 +77,7 @@ class NetWorthEmptyView extends GetView<NetWorthController> {
                     // ),
                     SizedBox(height: 20),
                     AppButton(
-                      text: 'Build your net worth plan',
+                      text: 'Track your net worth',
                       onTap: () {
                         controller.seletectedDetailsTabIndex.value = 0;
                         Get.toNamed(Routes.NETWORTHDETAILS);
@@ -121,7 +121,7 @@ class NetWorthEmptyView extends GetView<NetWorthController> {
                               ),
                               SizedBox(height: 8),
                               Text(
-                                'Your net worth is the difference between what you own (assets) and what you owe (liabilities)',
+                                'Your net worth is the difference between what you own (assets) and what you owe (liabilities).',
                               ),
                             ],
                           ),

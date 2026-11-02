@@ -19,18 +19,20 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
     return select(cashflowCategoriesTable).watch();
   }
 
-  /// Get categories by type.
+  /// Get active categories by type for category selection flows.
   Future<List<CashflowCategoriesTableData>> getCategoriesByType(String type) {
     return (select(
-      cashflowCategoriesTable,
-    )..where((tbl) => tbl.type.equals(type))).get();
+          cashflowCategoriesTable,
+        )..where((tbl) => tbl.type.equals(type) & tbl.isArchived.equals(false)))
+        .get();
   }
 
-  /// Watch categories by type.
+  /// Watch active categories by type for category selection flows.
   Stream<List<CashflowCategoriesTableData>> watchCategoriesByType(String type) {
     return (select(
-      cashflowCategoriesTable,
-    )..where((tbl) => tbl.type.equals(type))).watch();
+          cashflowCategoriesTable,
+        )..where((tbl) => tbl.type.equals(type) & tbl.isArchived.equals(false)))
+        .watch();
   }
 
   /// Get one category.
@@ -42,11 +44,36 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<CashflowCategoriesTableData> getOrCreateInsuranceCategory() async {
-    final expenseCategories = await getCategoriesByType('spend');
+    final expenseCategories = await (select(
+      cashflowCategoriesTable,
+    )..where((tbl) => tbl.type.equals('spend'))).get();
+
+    for (final category in expenseCategories) {
+      if (!category.isSystem) continue;
+
+      if (category.isArchived) {
+        await (update(
+          cashflowCategoriesTable,
+        )..where((tbl) => tbl.id.equals(category.id))).write(
+          const CashflowCategoriesTableCompanion(isArchived: Value(false)),
+        );
+        return (await getCategoryById(category.id))!;
+      }
+      return category;
+    }
+
     for (final category in expenseCategories) {
       if (category.name.trim().toLowerCase() == 'insurances' ||
           category.name.trim().toLowerCase() == 'insurance') {
-        return category;
+        await (update(
+          cashflowCategoriesTable,
+        )..where((tbl) => tbl.id.equals(category.id))).write(
+          const CashflowCategoriesTableCompanion(
+            isArchived: Value(false),
+            isSystem: Value(true),
+          ),
+        );
+        return (await getCategoryById(category.id))!;
       }
     }
 
@@ -56,6 +83,7 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
         icon: 'shieldPlus',
         type: 'spend',
         isDefault: const Value(true),
+        isSystem: const Value(true),
       ),
     );
 
@@ -68,14 +96,23 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
   }
 
   /// Update category.
-  Future<bool> updateCategory(CashflowCategoriesTableData category) {
+  Future<bool> updateCategory(CashflowCategoriesTableData category) async {
+    final existing = await getCategoryById(category.id);
+    if (existing == null || existing.isSystem) return false;
+
     return update(cashflowCategoriesTable).replace(category);
   }
 
-  /// Delete category.
-  Future<int> deleteCategory(int id) {
-    return (delete(
-      cashflowCategoriesTable,
-    )..where((tbl) => tbl.id.equals(id))).go();
+  /// Archive or restore a category while preserving its historical records.
+  Future<int> setCategoryArchived(int id, {required bool isArchived}) {
+    final query = update(cashflowCategoriesTable)
+      ..where((tbl) {
+        final matchesId = tbl.id.equals(id);
+        return isArchived ? matchesId & tbl.isSystem.equals(false) : matchesId;
+      });
+
+    return query.write(
+      CashflowCategoriesTableCompanion(isArchived: Value(isArchived)),
+    );
   }
 }

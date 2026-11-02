@@ -3,7 +3,7 @@ import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_thumbnail.dart';
-import 'package:getx_drift_app/features/profile/widgets/financial_stability_guage.dart';
+import 'package:getx_drift_app/features/profile/widgets/financial_stability_gauge.dart';
 
 class LearnIntroPageOne extends StatelessWidget {
   const LearnIntroPageOne({super.key});

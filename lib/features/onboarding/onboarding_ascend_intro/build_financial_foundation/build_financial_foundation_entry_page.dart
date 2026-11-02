@@ -7,8 +7,8 @@ import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_plan
 import 'package:getx_drift_app/features/onboarding/onboarding_controller.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
-class BuiildFinancialFoundationEntryPage extends GetView<OnboardingController> {
-  const BuiildFinancialFoundationEntryPage({super.key});
+class BuildFinancialFoundationEntryPage extends GetView<OnboardingController> {
+  const BuildFinancialFoundationEntryPage({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/savings_inves
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_horizon_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/portfolio/portfolio_recommendation/portfolio_recommendation_engine.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/risk_profile/risk_tolerance_controller.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/goal_type.dart';
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
 import 'package:getx_drift_app/features/profile/models/financial_stability_score_model.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_debt_load_extension.dart';
@@ -874,6 +876,7 @@ class FinancialProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _watchEmergencyFundReservations();
     loadBirthday();
     hasCompletedAssessment.value =
         _storage.read<bool>(_assessmentCompletedKey) ?? false;
@@ -893,6 +896,50 @@ class FinancialProfileController extends GetxController {
 
   final hasCompletedAssessment = false.obs;
   final hasRevealedProfile = false.obs;
+
+  final emergencyFundGoalExists = false.obs;
+  final emergencyFundReservedAmount = 0.0.obs;
+  StreamSubscription? _emergencyFundGoalSubscription;
+  StreamSubscription? _emergencyFundReservationSubscription;
+
+  void _watchEmergencyFundReservations() {
+    _emergencyFundGoalSubscription = database.goalsDao
+        .watchGoalByType(GoalType.emergencyFund)
+        .listen(
+          (goal) {
+            final previousSubscription = _emergencyFundReservationSubscription;
+            if (previousSubscription != null) {
+              unawaited(previousSubscription.cancel());
+            }
+
+            emergencyFundGoalExists.value = goal != null;
+            emergencyFundReservedAmount.value = 0;
+            if (goal == null) return;
+
+            _emergencyFundReservationSubscription = database.goalReservationsDao
+                .watchReservationsForGoal(goal.id)
+                .listen(
+                  (reservations) {
+                    emergencyFundReservedAmount.value = reservations.fold(
+                      0.0,
+                      (total, reservation) => total + reservation.amount,
+                    );
+                  },
+                  onError: (Object error, StackTrace stackTrace) {
+                    debugPrint(
+                      'Failed to watch emergency fund reservations: $error',
+                    );
+                    debugPrintStack(stackTrace: stackTrace);
+                  },
+                );
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            debugPrint('Failed to watch emergency fund goal: $error');
+            debugPrintStack(stackTrace: stackTrace);
+          },
+        );
+  }
+
   Future<void> markAssessmentCompleted() async {
     hasCompletedAssessment.value = true;
 
@@ -1025,15 +1072,11 @@ class FinancialProfileController extends GetxController {
   bool get hasLiquidFunds => netWorthController.hasLiquidFundAccounts;
   double get liquidFunds => netWorthController.liquidFunds;
   bool get hasNetWorth => netWorthController.hasAccounts;
-  double? get averageDailyBalance =>
-      null; // netWorthController.averageDailyBalance;
+  bool get hasEmergencyFundGoal => emergencyFundGoalExists.value;
 
   double? get emergencyFundAvailable {
-    final adb = averageDailyBalance;
-
-    if (adb == null) return liquidFunds;
-
-    return min(liquidFunds, adb);
+    if (!hasEmergencyFundGoal) return null;
+    return emergencyFundReservedAmount.value;
   }
 
   // ---------------------------------------------------------------------------
@@ -1052,6 +1095,12 @@ class FinancialProfileController extends GetxController {
   @override
   void onClose() {
     detailsScrollController.dispose();
+    final goalSubscription = _emergencyFundGoalSubscription;
+    if (goalSubscription != null) unawaited(goalSubscription.cancel());
+    final reservationSubscription = _emergencyFundReservationSubscription;
+    if (reservationSubscription != null) {
+      unawaited(reservationSubscription.cancel());
+    }
     super.onClose();
   }
 

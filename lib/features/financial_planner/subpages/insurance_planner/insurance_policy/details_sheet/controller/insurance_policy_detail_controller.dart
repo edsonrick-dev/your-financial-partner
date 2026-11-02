@@ -20,7 +20,7 @@ class InsurancePolicyDetailController extends GetxController {
 
   final faceValue = 0.0.obs;
   final paymentTerm = ''.obs;
-  final paymentFrequency = ''.obs;
+  final paymentFrequency = BillsFrequency.annual.obs;
   final premiumAmount = RxnDouble();
   final nextDueDate = Rxn<DateTime>();
 
@@ -54,6 +54,7 @@ class InsurancePolicyDetailController extends GetxController {
       policyNumber.value = policy.policyNumber;
       dateIssued.value = policy.dateIssued;
 
+      paymentFrequency.value = policy.paymentSchedule;
       paymentTerm.value = _frequencyLabel(policy.paymentSchedule);
 
       final premium = await database.userInsurancePolicyDao.getPremiumDetails(
@@ -77,6 +78,32 @@ class InsurancePolicyDetailController extends GetxController {
       debugPrint('Error loading policy details: $e\n$stackTrace');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> updatePolicyBenefitAmount({
+    required int userBenefitId,
+    required double amount,
+  }) async {
+    try {
+      final updated = await database.userInsurancePolicyDao
+          .updatePolicyBenefitAmount(
+            userBenefitId: userBenefitId,
+            amount: amount,
+          );
+      if (!updated) {
+        debugPrint('No policy benefit found for local ID $userBenefitId.');
+        return;
+      }
+
+      policyBenefits.assignAll(
+        await database.userInsurancePolicyDao.getPolicyBenefits(policyId),
+      );
+      debugPrint(
+        'Updated policy benefit $userBenefitId to $amount for policy $policyId.',
+      );
+    } catch (e, stackTrace) {
+      debugPrint('Error updating policy benefit $userBenefitId: $e\n$stackTrace');
     }
   }
 

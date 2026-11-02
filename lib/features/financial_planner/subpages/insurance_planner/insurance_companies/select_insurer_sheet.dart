@@ -62,7 +62,7 @@ class SelectInsurerSheet extends StatelessWidget {
                 children: [
                   Text(controller.errorMessage.value!),
                   AppButton(
-                    text: 'Retry',
+                    text: 'Check connection and retry',
                     onTap: controller.refreshCatalogInBackground,
                     type: ButtonType.outline,
                   ),

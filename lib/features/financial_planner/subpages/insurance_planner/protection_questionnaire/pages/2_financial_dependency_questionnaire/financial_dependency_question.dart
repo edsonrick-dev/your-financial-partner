@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/adaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
@@ -17,7 +17,7 @@ class FinancialDependencyQuestion
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Beneficary Questionnaire', style: AppTextStyle.headlineL),
+        title: Text('Beneficiary Questionnaire', style: AppTextStyle.headlineL),
         surfaceTintColor: Colors.transparent,
       ),
       body: Padding(

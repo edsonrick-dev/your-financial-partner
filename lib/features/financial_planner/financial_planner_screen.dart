@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/adaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/controller/financial_planner_controller.dart';
@@ -35,7 +35,7 @@ class FinancialPlannerScreen extends GetView<FinancialPlannerController> {
                           children: [
                             Icon(PhosphorIconsRegular.bookOpenText, size: 60),
                             Text(
-                              'This sheet will house future contents of Ascend that beset suit your profile.',
+                              'This sheet will house future contents of Ascend that best fit your profile.',
                               style: AppTextStyle.bodyL,
                               textAlign: TextAlign.center,
                             ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/adaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
-import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
+import 'package:getx_drift_app/features/profile/enum/financial_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
 
 class FinancialRatioCard extends StatelessWidget {

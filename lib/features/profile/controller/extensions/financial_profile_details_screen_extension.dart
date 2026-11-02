@@ -4,7 +4,7 @@ import 'package:getx_drift_app/features/profile/controller/extensions/financial_
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_lifestyle_coverage_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/extensions/financial_profile_wealth_building_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
-import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
+import 'package:getx_drift_app/features/profile/enum/financial_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/models/financial_stability_detail.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/details_sheet/debt_load/debt_load_details.dart';
 import 'package:getx_drift_app/features/profile/views/sheet/details_sheet/emergency_fund/emergency_fund_details.dart';

@@ -6,4 +6,6 @@ class CashflowCategoriesTable extends Table {
   TextColumn get icon => text()();
   TextColumn get type => text()();
   BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
+  BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
+  BoolColumn get isSystem => boolean().withDefault(const Constant(false))();
 }

@@ -1,6 +1,6 @@
 import 'package:getx_drift_app/features/financial_insights/financial_profile_cashflow_controller_extension.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
-import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
+import 'package:getx_drift_app/features/profile/enum/financial_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/financial_ratios/lifestyle_coverage_ratio.dart';
 import 'package:getx_drift_app/features/profile/models/financial_ratio_model.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/adaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
@@ -18,8 +18,8 @@ import 'package:getx_drift_app/features/widgets/fields/app_dropdown_field.dart';
 import 'package:getx_drift_app/features/widgets/fields/text_field.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
-class OnboaringAddIncomePlan extends GetView<OnboardingController> {
-  const OnboaringAddIncomePlan({super.key});
+class OnboardingAddIncomePlan extends GetView<OnboardingController> {
+  const OnboardingAddIncomePlan({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/adaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -52,13 +53,16 @@ class SettingsTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(height: 20 / 15, fontSize: 15)),
+                  Text(
+                    title,
+                    style: AppTextStyle.titleL.copyWith(
+                      color: colorScheme.appText,
+                    ),
+                  ),
                   Text(
                     subtitle,
-                    style: TextStyle(
+                    style: AppTextStyle.bodyS.copyWith(
                       color: colorScheme.appTextMuted,
-                      height: 16 / 12,
-                      fontSize: 12,
                     ),
                   ),
                 ],

@@ -93,13 +93,18 @@ class CreateCategoryController extends GetxController {
       }
 
       // UPDATE
+      if (category!.isSystem) return null;
+
       final updatedCategory = category!.copyWith(
         name: name,
         icon: selectedIconKey.value,
         type: _categoryType.value.name,
       );
 
-      await database.categoryDao.updateCategory(updatedCategory);
+      final updated = await database.categoryDao.updateCategory(
+        updatedCategory,
+      );
+      if (!updated) return null;
 
       return await database.categoryDao.getCategoryById(category!.id);
     } finally {

@@ -20,6 +20,7 @@ class LoanPaymentScheduleSection extends GetView<LoanController> {
   static const mvpFrequencies = [
     BillsFrequency.monthly,
     BillsFrequency.quarterly,
+    BillsFrequency.fortnightly,
     BillsFrequency.semiAnnual,
     BillsFrequency.annual,
   ];

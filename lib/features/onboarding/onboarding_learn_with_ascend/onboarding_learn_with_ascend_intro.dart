@@ -7,7 +7,7 @@ import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_controller.dart';
-import 'package:getx_drift_app/features/profile/widgets/financial_stability_guage.dart';
+import 'package:getx_drift_app/features/profile/widgets/financial_stability_gauge.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
 
 class OnboardingLearnWithAscendIntro extends GetView<OnboardingController> {

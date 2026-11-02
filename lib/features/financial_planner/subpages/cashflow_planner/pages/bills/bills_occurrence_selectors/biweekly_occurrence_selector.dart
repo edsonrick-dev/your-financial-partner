@@ -15,7 +15,7 @@
 //       children: [
 //         Obx(
 //           () => AppDropdownField(
-//             label: 'First Occurence',
+//             label: 'First Occurrence',
 //             value: controller.selectedWeekday.value?.fullName,
 //             hint: 'Select day',
 //             onTap: () {
@@ -25,7 +25,7 @@
 //         ),
 //         Obx(
 //           () => AppDropdownField(
-//             label: 'Second Occurence',
+//             label: 'Second Occurrence',
 //             value: controller.selectedWeekday.value?.fullName,
 //             hint: 'Select day',
 //             onTap: () {

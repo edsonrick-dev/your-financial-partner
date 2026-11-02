@@ -64,8 +64,46 @@ class $CashflowCategoriesTableTable extends CashflowCategoriesTable
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _isArchivedMeta = const VerificationMeta(
+    'isArchived',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, name, icon, type, isDefault];
+  late final GeneratedColumn<bool> isArchived = GeneratedColumn<bool>(
+    'is_archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isSystemMeta = const VerificationMeta(
+    'isSystem',
+  );
+  @override
+  late final GeneratedColumn<bool> isSystem = GeneratedColumn<bool>(
+    'is_system',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_system" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    icon,
+    type,
+    isDefault,
+    isArchived,
+    isSystem,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -111,6 +149,18 @@ class $CashflowCategoriesTableTable extends CashflowCategoriesTable
         isDefault.isAcceptableOrUnknown(data['is_default']!, _isDefaultMeta),
       );
     }
+    if (data.containsKey('is_archived')) {
+      context.handle(
+        _isArchivedMeta,
+        isArchived.isAcceptableOrUnknown(data['is_archived']!, _isArchivedMeta),
+      );
+    }
+    if (data.containsKey('is_system')) {
+      context.handle(
+        _isSystemMeta,
+        isSystem.isAcceptableOrUnknown(data['is_system']!, _isSystemMeta),
+      );
+    }
     return context;
   }
 
@@ -143,6 +193,14 @@ class $CashflowCategoriesTableTable extends CashflowCategoriesTable
         DriftSqlType.bool,
         data['${effectivePrefix}is_default'],
       )!,
+      isArchived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_archived'],
+      )!,
+      isSystem: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_system'],
+      )!,
     );
   }
 
@@ -159,12 +217,16 @@ class CashflowCategoriesTableData extends DataClass
   final String icon;
   final String type;
   final bool isDefault;
+  final bool isArchived;
+  final bool isSystem;
   const CashflowCategoriesTableData({
     required this.id,
     required this.name,
     required this.icon,
     required this.type,
     required this.isDefault,
+    required this.isArchived,
+    required this.isSystem,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -174,6 +236,8 @@ class CashflowCategoriesTableData extends DataClass
     map['icon'] = Variable<String>(icon);
     map['type'] = Variable<String>(type);
     map['is_default'] = Variable<bool>(isDefault);
+    map['is_archived'] = Variable<bool>(isArchived);
+    map['is_system'] = Variable<bool>(isSystem);
     return map;
   }
 
@@ -184,6 +248,8 @@ class CashflowCategoriesTableData extends DataClass
       icon: Value(icon),
       type: Value(type),
       isDefault: Value(isDefault),
+      isArchived: Value(isArchived),
+      isSystem: Value(isSystem),
     );
   }
 
@@ -198,6 +264,8 @@ class CashflowCategoriesTableData extends DataClass
       icon: serializer.fromJson<String>(json['icon']),
       type: serializer.fromJson<String>(json['type']),
       isDefault: serializer.fromJson<bool>(json['isDefault']),
+      isArchived: serializer.fromJson<bool>(json['isArchived']),
+      isSystem: serializer.fromJson<bool>(json['isSystem']),
     );
   }
   @override
@@ -209,6 +277,8 @@ class CashflowCategoriesTableData extends DataClass
       'icon': serializer.toJson<String>(icon),
       'type': serializer.toJson<String>(type),
       'isDefault': serializer.toJson<bool>(isDefault),
+      'isArchived': serializer.toJson<bool>(isArchived),
+      'isSystem': serializer.toJson<bool>(isSystem),
     };
   }
 
@@ -218,12 +288,16 @@ class CashflowCategoriesTableData extends DataClass
     String? icon,
     String? type,
     bool? isDefault,
+    bool? isArchived,
+    bool? isSystem,
   }) => CashflowCategoriesTableData(
     id: id ?? this.id,
     name: name ?? this.name,
     icon: icon ?? this.icon,
     type: type ?? this.type,
     isDefault: isDefault ?? this.isDefault,
+    isArchived: isArchived ?? this.isArchived,
+    isSystem: isSystem ?? this.isSystem,
   );
   CashflowCategoriesTableData copyWithCompanion(
     CashflowCategoriesTableCompanion data,
@@ -234,6 +308,10 @@ class CashflowCategoriesTableData extends DataClass
       icon: data.icon.present ? data.icon.value : this.icon,
       type: data.type.present ? data.type.value : this.type,
       isDefault: data.isDefault.present ? data.isDefault.value : this.isDefault,
+      isArchived: data.isArchived.present
+          ? data.isArchived.value
+          : this.isArchived,
+      isSystem: data.isSystem.present ? data.isSystem.value : this.isSystem,
     );
   }
 
@@ -244,13 +322,16 @@ class CashflowCategoriesTableData extends DataClass
           ..write('name: $name, ')
           ..write('icon: $icon, ')
           ..write('type: $type, ')
-          ..write('isDefault: $isDefault')
+          ..write('isDefault: $isDefault, ')
+          ..write('isArchived: $isArchived, ')
+          ..write('isSystem: $isSystem')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, icon, type, isDefault);
+  int get hashCode =>
+      Object.hash(id, name, icon, type, isDefault, isArchived, isSystem);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -259,7 +340,9 @@ class CashflowCategoriesTableData extends DataClass
           other.name == this.name &&
           other.icon == this.icon &&
           other.type == this.type &&
-          other.isDefault == this.isDefault);
+          other.isDefault == this.isDefault &&
+          other.isArchived == this.isArchived &&
+          other.isSystem == this.isSystem);
 }
 
 class CashflowCategoriesTableCompanion
@@ -269,12 +352,16 @@ class CashflowCategoriesTableCompanion
   final Value<String> icon;
   final Value<String> type;
   final Value<bool> isDefault;
+  final Value<bool> isArchived;
+  final Value<bool> isSystem;
   const CashflowCategoriesTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.icon = const Value.absent(),
     this.type = const Value.absent(),
     this.isDefault = const Value.absent(),
+    this.isArchived = const Value.absent(),
+    this.isSystem = const Value.absent(),
   });
   CashflowCategoriesTableCompanion.insert({
     this.id = const Value.absent(),
@@ -282,6 +369,8 @@ class CashflowCategoriesTableCompanion
     required String icon,
     required String type,
     this.isDefault = const Value.absent(),
+    this.isArchived = const Value.absent(),
+    this.isSystem = const Value.absent(),
   }) : name = Value(name),
        icon = Value(icon),
        type = Value(type);
@@ -291,6 +380,8 @@ class CashflowCategoriesTableCompanion
     Expression<String>? icon,
     Expression<String>? type,
     Expression<bool>? isDefault,
+    Expression<bool>? isArchived,
+    Expression<bool>? isSystem,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -298,6 +389,8 @@ class CashflowCategoriesTableCompanion
       if (icon != null) 'icon': icon,
       if (type != null) 'type': type,
       if (isDefault != null) 'is_default': isDefault,
+      if (isArchived != null) 'is_archived': isArchived,
+      if (isSystem != null) 'is_system': isSystem,
     });
   }
 
@@ -307,6 +400,8 @@ class CashflowCategoriesTableCompanion
     Value<String>? icon,
     Value<String>? type,
     Value<bool>? isDefault,
+    Value<bool>? isArchived,
+    Value<bool>? isSystem,
   }) {
     return CashflowCategoriesTableCompanion(
       id: id ?? this.id,
@@ -314,6 +409,8 @@ class CashflowCategoriesTableCompanion
       icon: icon ?? this.icon,
       type: type ?? this.type,
       isDefault: isDefault ?? this.isDefault,
+      isArchived: isArchived ?? this.isArchived,
+      isSystem: isSystem ?? this.isSystem,
     );
   }
 
@@ -335,6 +432,12 @@ class CashflowCategoriesTableCompanion
     if (isDefault.present) {
       map['is_default'] = Variable<bool>(isDefault.value);
     }
+    if (isArchived.present) {
+      map['is_archived'] = Variable<bool>(isArchived.value);
+    }
+    if (isSystem.present) {
+      map['is_system'] = Variable<bool>(isSystem.value);
+    }
     return map;
   }
 
@@ -345,7 +448,9 @@ class CashflowCategoriesTableCompanion
           ..write('name: $name, ')
           ..write('icon: $icon, ')
           ..write('type: $type, ')
-          ..write('isDefault: $isDefault')
+          ..write('isDefault: $isDefault, ')
+          ..write('isArchived: $isArchived, ')
+          ..write('isSystem: $isSystem')
           ..write(')'))
         .toString();
   }
@@ -15558,7 +15663,7 @@ class $PremiumDetailsTableTable extends PremiumDetailsTable
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES user_insurance_policy (id)',
+      'REFERENCES user_insurance_policy (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _offerPolicyIdMeta = const VerificationMeta(
@@ -16106,7 +16211,7 @@ class $UserInsuranceBenefitsTableTable extends UserInsuranceBenefitsTable
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES user_insurance_policy (id)',
+      'REFERENCES user_insurance_policy (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
@@ -17158,6 +17263,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         'user_insurance_policy',
         limitUpdateKind: UpdateKind.delete,
       ),
+      result: [TableUpdate('premium_details', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'user_insurance_policy',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('user_insurance_benefits', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'user_insurance_policy',
+        limitUpdateKind: UpdateKind.delete,
+      ),
       result: [TableUpdate('insurance_premium_bills', kind: UpdateKind.delete)],
     ),
     WritePropagation(
@@ -17177,6 +17296,8 @@ typedef $$CashflowCategoriesTableTableCreateCompanionBuilder =
       required String icon,
       required String type,
       Value<bool> isDefault,
+      Value<bool> isArchived,
+      Value<bool> isSystem,
     });
 typedef $$CashflowCategoriesTableTableUpdateCompanionBuilder =
     CashflowCategoriesTableCompanion Function({
@@ -17185,6 +17306,8 @@ typedef $$CashflowCategoriesTableTableUpdateCompanionBuilder =
       Value<String> icon,
       Value<String> type,
       Value<bool> isDefault,
+      Value<bool> isArchived,
+      Value<bool> isSystem,
     });
 
 final class $$CashflowCategoriesTableTableReferences
@@ -17293,6 +17416,16 @@ class $$CashflowCategoriesTableTableFilterComposer
 
   ColumnFilters<bool> get isDefault => $composableBuilder(
     column: $table.isDefault,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSystem => $composableBuilder(
+    column: $table.isSystem,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17405,6 +17538,16 @@ class $$CashflowCategoriesTableTableOrderingComposer
     column: $table.isDefault,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSystem => $composableBuilder(
+    column: $table.isSystem,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CashflowCategoriesTableTableAnnotationComposer
@@ -17430,6 +17573,14 @@ class $$CashflowCategoriesTableTableAnnotationComposer
 
   GeneratedColumn<bool> get isDefault =>
       $composableBuilder(column: $table.isDefault, builder: (column) => column);
+
+  GeneratedColumn<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isSystem =>
+      $composableBuilder(column: $table.isSystem, builder: (column) => column);
 
   Expression<T> transactionsTableRefs<T extends Object>(
     Expression<T> Function($$TransactionsTableTableAnnotationComposer a) f,
@@ -17559,12 +17710,16 @@ class $$CashflowCategoriesTableTableTableManager
                 Value<String> icon = const Value.absent(),
                 Value<String> type = const Value.absent(),
                 Value<bool> isDefault = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
+                Value<bool> isSystem = const Value.absent(),
               }) => CashflowCategoriesTableCompanion(
                 id: id,
                 name: name,
                 icon: icon,
                 type: type,
                 isDefault: isDefault,
+                isArchived: isArchived,
+                isSystem: isSystem,
               ),
           createCompanionCallback:
               ({
@@ -17573,12 +17728,16 @@ class $$CashflowCategoriesTableTableTableManager
                 required String icon,
                 required String type,
                 Value<bool> isDefault = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
+                Value<bool> isSystem = const Value.absent(),
               }) => CashflowCategoriesTableCompanion.insert(
                 id: id,
                 name: name,
                 icon: icon,
                 type: type,
                 isDefault: isDefault,
+                isArchived: isArchived,
+                isSystem: isSystem,
               ),
           withReferenceMapper: (p0) => p0
               .map(

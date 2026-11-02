@@ -1,4 +1,4 @@
-import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
+import 'package:getx_drift_app/features/profile/enum/financial_ratio_type_enum.dart';
 import 'package:getx_drift_app/features/profile/models/ratio_score_band.dart';
 
 class FinancialRatio {

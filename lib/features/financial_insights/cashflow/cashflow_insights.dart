@@ -20,7 +20,7 @@ final cashflowInsights = <CashflowInsightType, CashflowInsight>{
   CashflowInsightType.onlyIncome: CashflowInsight(
     type: CashflowInsightType.onlyIncome,
     title:
-        'Incomeplete cashflow plan:\n Your income is set, but no budget planned.',
+        'Incomplete cashflow plan:\n Your income is set, but no budget planned.',
     interpretation: (controller) {
       return 'You have an income plan, but without a budget Ascend cannot determine how much of your income is being allocated to your lifestyle.';
     },

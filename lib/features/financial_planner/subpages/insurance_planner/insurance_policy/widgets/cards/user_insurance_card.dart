@@ -35,27 +35,39 @@ class InsurancePolicyCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.insurerName,
-                      style: AppTextStyle.bodyS.copyWith(
-                        color: colors.appTextMuted,
-                      ),
-                    ),
-
-                    Text(
                       item.productName,
                       style: AppTextStyle.titleL,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    Text(
+                      item.insurerName,
+                      style: AppTextStyle.bodyS.copyWith(
+                        color: colors.appTextMuted,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right),
+              SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    item.amountDue.toCurrency(),
+                    style: AppTextStyle.amountL,
+                  ),
+                  Text(
+                    'Every ${item.paymentFrequency.period}',
+                    style: AppTextStyle.bodyS,
+                  ),
+                ],
+              ),
+              // const Icon(Icons.chevron_right),
             ],
           ),
           const SizedBox(height: 16),
-          const Divider(height: 1),
-          const SizedBox(height: 12),
+
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -71,31 +83,10 @@ class InsurancePolicyCard extends StatelessWidget {
               Expanded(
                 child: _PolicyDetail(
                   isLeft: false,
-                  label: 'Payment Frequency',
-                  value: item.paymentFrequency.label,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: _PolicyDetail(
                   label: 'Next Due',
                   value: item.nextDue == null
                       ? 'No upcoming payment'
                       : DateFormat('MMM d, yyyy').format(item.nextDue!),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: _PolicyDetail(
-                  isLeft: false,
-                  label: 'Amount Due',
-                  value: item.amountDue.toCurrency(),
                 ),
               ),
             ],
@@ -127,7 +118,7 @@ class _PolicyDetail extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTextStyle.bodyS.copyWith(color: colors.appTextMuted),
+          style: AppTextStyle.titleS.copyWith(color: colors.appTextMuted),
         ),
         const SizedBox(width: 12),
         FittedBox(

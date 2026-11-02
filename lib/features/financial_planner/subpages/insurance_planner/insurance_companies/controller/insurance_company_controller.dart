@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/data/database/daos/entities_dao/entities_dao.dart';
+import 'package:getx_drift_app/core/network/internet_connection_checker.dart';
 
 import '../models/insurance_company_model.dart';
 import '../repositories/insurance_company_repository.dart';
@@ -16,6 +17,7 @@ class InsuranceCompanyController extends GetxController {
   final companies = <InsuranceCompany>[].obs;
   final isLoading = false.obs;
   final errorMessage = RxnString();
+  final isOnline = false.obs;
   StreamSubscription? _subscription;
 
   // Future<void> loadCompanies() async {
@@ -53,6 +55,16 @@ class InsuranceCompanyController extends GetxController {
     errorMessage.value = null;
 
     try {
+      isOnline.value = await InternetConnectionChecker.isOnline();
+      if (!isOnline.value) {
+        debugPrint('Offline: skipping Supabase insurer catalog request.');
+        if (companies.isEmpty) {
+          errorMessage.value =
+              'Connect to the internet to load available insurers.';
+        }
+        return;
+      }
+
       final result = await _repository.fetchCompanies();
 
       await _entitiesDao.syncSystemInsuranceCompanies(

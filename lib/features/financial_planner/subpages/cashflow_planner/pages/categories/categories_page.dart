@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/core/constants/icons/app_icons.dart';
-import 'package:getx_drift_app/core/design_system/addaptive_pressable.dart';
+import 'package:getx_drift_app/core/design_system/adaptive_pressable.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/categories/category_controller.dart';
@@ -69,28 +69,43 @@ class CategoriesPage extends GetView<CategoryController> {
               final categories = showIncome
                   ? controller.incomeCategories
                   : controller.expenseCategories;
+              final archivedCategories = showIncome
+                  ? controller.archivedIncomeCategories
+                  : controller.archivedExpenseCategories;
 
-              if (categories.isEmpty) {
+              if (categories.isEmpty && archivedCategories.isEmpty) {
                 return const Center(child: Text('No categories yet'));
               }
 
               return ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  _CategorySection(
-                    categories: categories,
-                    onEdit: (category) {
-                      final type = category.type == 'earn'
-                          ? TransactionType.earn
-                          : TransactionType.spend;
-
-                      Get.bottomSheet(
-                        CreateCategorySheet(type: type, category: category),
-                        isScrollControlled: true,
-                      );
-                    },
-                    onDelete: controller.confirmDeleteCategory,
-                  ),
+                  if (categories.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: Center(child: Text('No active categories')),
+                    )
+                  else
+                    _CategorySection(
+                      categories: categories,
+                      onEdit: _editCategory,
+                      onArchive: controller.confirmArchiveCategory,
+                      isArchived: false,
+                    ),
+                  if (archivedCategories.isNotEmpty) ...[
+                    const SizedBox(height: 24),
+                    Text(
+                      'Archived',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 12),
+                    _CategorySection(
+                      categories: archivedCategories,
+                      onEdit: _editCategory,
+                      onArchive: controller.restoreCategory,
+                      isArchived: true,
+                    ),
+                  ],
                 ],
               );
             }),
@@ -99,18 +114,31 @@ class CategoriesPage extends GetView<CategoryController> {
       ),
     );
   }
+
+  void _editCategory(CashflowCategoriesTableData category) {
+    final type = category.type == 'earn'
+        ? TransactionType.earn
+        : TransactionType.spend;
+
+    Get.bottomSheet(
+      CreateCategorySheet(type: type, category: category),
+      isScrollControlled: true,
+    );
+  }
 }
 
 class _CategorySection extends StatelessWidget {
   const _CategorySection({
     required this.categories,
     required this.onEdit,
-    required this.onDelete,
+    required this.onArchive,
+    required this.isArchived,
   });
 
   final List<CashflowCategoriesTableData> categories;
   final void Function(CashflowCategoriesTableData category) onEdit;
-  final void Function(CashflowCategoriesTableData category) onDelete;
+  final void Function(CashflowCategoriesTableData category) onArchive;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
@@ -122,17 +150,47 @@ class _CategorySection extends StatelessWidget {
         // const SizedBox(height: 8),
         ...categories.map((category) {
           return AppCard(
-            onLongPressed: () {
-              onDelete(category);
-            },
-            onTap: () {
-              onEdit(category);
-            },
+            onTap: category.isSystem ? null : () => onEdit(category),
             child: Row(
               children: [
-                Icon(AppIcons.categories.resolve(category.icon)),
+                Opacity(
+                  opacity: isArchived ? 0.55 : 1,
+                  child: Icon(AppIcons.categories.resolve(category.icon)),
+                ),
                 const SizedBox(width: 16),
-                Text(category.name),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(category.name),
+                      if (category.isSystem)
+                        Text(
+                          'System category',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        )
+                      else if (isArchived)
+                        Text(
+                          'Archived',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                    ],
+                  ),
+                ),
+                if (category.isSystem)
+                  const Tooltip(
+                    message: 'Required for insurance premium planning',
+                    child: Icon(Icons.lock_outline),
+                  )
+                else
+                  Tooltip(
+                    message: isArchived
+                        ? 'Restore category'
+                        : 'Archive category',
+                    child: IconButton(
+                      onPressed: () => onArchive(category),
+                      icon: Icon(isArchived ? Icons.unarchive : Icons.archive),
+                    ),
+                  ),
               ],
             ),
           );

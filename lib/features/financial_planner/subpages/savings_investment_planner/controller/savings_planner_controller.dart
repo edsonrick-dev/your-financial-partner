@@ -7,7 +7,7 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_insights/cashflow/models/cashflow_position.dart';
 import 'package:getx_drift_app/features/financial_insights/financial_profile_cashflow_controller_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/goal_type.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investory_profile_model.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investor_profile_model.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 
 class SavingsPlannerController extends GetxController {

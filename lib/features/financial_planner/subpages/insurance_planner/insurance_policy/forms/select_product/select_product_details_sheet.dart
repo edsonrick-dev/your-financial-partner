@@ -5,7 +5,6 @@ import 'package:getx_drift_app/domain/enums/app_snack_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/binding/insurance_company_binding.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/models/insurance_company_model.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_companies/select_insurer_sheet.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/binding/insurance_policy_binding.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/controller/add_policy_controller_extension.dart';
 // ignore: unused_import
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/insurance_policy/forms/add_policy/add_policy_sheet/add_policy_sheet.dart';

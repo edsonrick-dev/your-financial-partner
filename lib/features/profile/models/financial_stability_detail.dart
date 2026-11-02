@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:getx_drift_app/features/profile/enum/finanical_ratio_type_enum.dart';
+import 'package:getx_drift_app/features/profile/enum/financial_ratio_type_enum.dart';
 
 class FinancialStabilityDetail {
   final String title;

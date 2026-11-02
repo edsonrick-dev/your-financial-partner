@@ -9,6 +9,7 @@ import 'package:getx_drift_app/features/financial_insights/financial_profile_cas
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/protection_questionnaire/pages/1_protection_horizon_questionnaire/protection_horizon_questionnaire_page.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/protection_need/expense_continuity/inputs/protection_continuity/protection_continuity_questionnaire.dart';
 import 'package:getx_drift_app/features/home/bindings/protection_questionnaire_binding.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/profile/user_profile_sheet.dart';
@@ -81,7 +82,7 @@ class InsurancePlannerEmptyView extends GetView<InsurancePlannerController> {
                             AppSnackbar.show(
                               title: 'Cashflow not planned',
                               message:
-                                  'Go to cashflow planner first, and set you cashflow plan',
+                                  'Go to cashflow planner first, and set your cashflow plan',
                             );
                             return;
                           }
@@ -100,8 +101,15 @@ class InsurancePlannerEmptyView extends GetView<InsurancePlannerController> {
                           }
 
                           // The birthday exists. Continue to the protection questionnaire.
-                          Get.to(
+                          final horizonsSaved = await Get.to<bool>(
                             () => const ProtectionHorizonQuestionnaire(),
+                            binding: ProtectionQuestionnaireBinding(),
+                          );
+
+                          if (horizonsSaved != true) return;
+
+                          await Get.to(
+                            () => const ProtectionContinuityQuestionnaire(),
                             binding: ProtectionQuestionnaireBinding(),
                           );
                         },

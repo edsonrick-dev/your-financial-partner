@@ -172,6 +172,24 @@ class AppDatabase extends _$AppDatabase {
       if (from < 11) {
         await m.createTable(insuranceProductsTable);
       }
+      if (from < 13) {
+        await m.addColumn(
+          cashflowCategoriesTable,
+          cashflowCategoriesTable.isArchived,
+        );
+      }
+      if (from < 14) {
+        await m.addColumn(
+          cashflowCategoriesTable,
+          cashflowCategoriesTable.isSystem,
+        );
+        await customStatement('''
+          UPDATE cashflow_categories_table
+          SET is_system = 1, is_archived = 0
+          WHERE type = 'spend'
+            AND LOWER(TRIM(name)) IN ('insurance', 'insurances')
+        ''');
+      }
       // if (from < 6) {
       //   await m.deleteTable('financial_obligations_table');
       //   await m.deleteTable('transaction_participants_table');
@@ -185,7 +203,7 @@ class AppDatabase extends _$AppDatabase {
     },
   );
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 14;
 
   Future<double> getTotalAccountValue() async {
     final accounts = await select(accountsTable).get();
@@ -222,6 +240,7 @@ class AppDatabase extends _$AppDatabase {
             name: category.name,
             icon: category.iconKey,
             type: category.type,
+            isSystem: Value(category.isSystem),
           ),
         )
         .toList();

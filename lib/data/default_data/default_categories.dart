@@ -4,11 +4,13 @@ class DefaultCategory {
   final String name;
   final String iconKey;
   final String type;
+  final bool isSystem;
 
   const DefaultCategory({
     required this.name,
     required this.iconKey,
     required this.type,
+    this.isSystem = false,
   });
 }
 
@@ -76,6 +78,7 @@ class DefaultCategories {
       name: 'Insurances',
       iconKey: 'shieldPlus',
       type: TransactionType.spend.name,
+      isSystem: true,
     ),
     DefaultCategory(
       name: 'Healthcare',

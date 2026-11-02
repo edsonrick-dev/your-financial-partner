@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
+import 'package:getx_drift_app/core/utils/age_calculator.dart';
 import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/domain/enums/app_snack_type.dart';
 import 'package:getx_drift_app/domain/enums/cashflow_planner_enums/budget_period_enum.dart';
@@ -112,6 +113,7 @@ class ProtectionQuestionnaireController extends GetxController {
     required int planValidityYears,
     required double inflationRate,
     required double portfolioReturn,
+    bool showSuccessSnackbar = true,
   }) async {
     if (isComputingExpenseContinuity.value) return false;
 
@@ -161,12 +163,14 @@ class ProtectionQuestionnaireController extends GetxController {
 
       insuranceController.refreshProtectionNeeds();
 
-      AppSnackbar.show(
-        type: AppSnackType.success,
-        title: 'Plan computed',
-        message:
-            'Your ${protectionType.shortLabel.toLowerCase()} expense continuity fund has been calculated.',
-      );
+      if (showSuccessSnackbar) {
+        AppSnackbar.show(
+          type: AppSnackType.success,
+          title: 'Plan computed',
+          message:
+              'Your ${protectionType.shortLabel.toLowerCase()} expense continuity fund has been calculated.',
+        );
+      }
       return true;
     } catch (error, stackTrace) {
       debugPrint('Expense continuity computation failed: $error');
@@ -179,6 +183,67 @@ class ProtectionQuestionnaireController extends GetxController {
       return false;
     } finally {
       isComputingExpenseContinuity.value = false;
+    }
+  }
+
+  final isComputingAllExpenseContinuity = false.obs;
+
+  Future<bool> computeAllExpenseContinuity() async {
+    if (isComputingAllExpenseContinuity.value) return false;
+
+    isComputingAllExpenseContinuity.value = true;
+    try {
+      await loadProtectionHorizons();
+
+      final protectionPlan = await database.protectionDao
+          .getActiveProtectionPlan();
+      if (protectionPlan == null) {
+        AppSnackbar.show(
+          title: 'Protection plan unavailable',
+          message: 'Unable to find the active protection plan.',
+        );
+        return false;
+      }
+
+      final profile = await database.userProfileDao.getProfile();
+      final birthday = profile?.birthday;
+      if (birthday == null) {
+        AppSnackbar.show(
+          title: 'Birthday required',
+          message: 'Add your birthday before calculating your protection needs.',
+        );
+        return false;
+      }
+
+      final currentAge = calculateAge(birthday);
+      for (final type in ProtectionType.values) {
+        final computed = await computeExpenseContinuity(
+          protectionPlanId: protectionPlan.id,
+          protectionType: type,
+          currentAge: currentAge,
+          retirementAge: 60,
+          planValidityYears: 5,
+          inflationRate: 0.03,
+          portfolioReturn: 0.06,
+          showSuccessSnackbar: false,
+        );
+        if (!computed) return false;
+      }
+
+      final insuranceController = Get.find<InsurancePlannerController>();
+      await insuranceController.refreshProtectionNeedsTotals();
+      debugPrint('Computed all three lifestyle continuity needs.');
+      return true;
+    } catch (error, stackTrace) {
+      debugPrint('Failed to compute all lifestyle continuity needs: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      AppSnackbar.show(
+        title: 'Computation failed',
+        message: 'Unable to calculate all lifestyle continuity needs.',
+      );
+      return false;
+    } finally {
+      isComputingAllExpenseContinuity.value = false;
     }
   }
 
@@ -448,6 +513,17 @@ class ProtectionQuestionnaireController extends GetxController {
     isSavingContinuityShares.value = true;
 
     try {
+      final plans = await cashflowController.watchSavedBudgetPlans().first;
+      if (plans.isEmpty) {
+        AppSnackbar.show(
+          title: 'No budget plans found',
+          message: 'Add a budget plan before setting continuity shares.',
+        );
+        return false;
+      }
+
+      await loadContinuitySharesForPlans1(plans.map((plan) => plan.planId));
+
       for (final planEntry in continuityShares.entries) {
         for (final type in ProtectionType.values) {
           await database.protectionDao.saveContinuityShare(
@@ -458,6 +534,17 @@ class ProtectionQuestionnaireController extends GetxController {
           );
         }
       }
+
+      for (final type in ProtectionType.values) {
+        continuityMonthlyTotals[type] =
+            await calculateTotalMonthlyContinuityExpense(
+              plans: plans,
+              type: type,
+            );
+      }
+
+      await Get.find<InsurancePlannerController>()
+          .checkInsuranceQuestionnaireCompletion();
 
       return true;
     } catch (error) {
@@ -542,7 +629,7 @@ class ProtectionQuestionnaireController extends GetxController {
 
     await insuranceController.checkInsuranceQuestionnaireCompletion();
 
-    Get.back();
+    Get.back(result: true);
   }
 
   Future<void> saveSingleProtectionHorizon(ProtectionType type) async {
