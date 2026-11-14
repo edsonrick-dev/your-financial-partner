@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/controller/cashflow_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/bills_page.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/controller/bill_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/categories/categories_page.dart';
@@ -10,6 +11,7 @@ import 'package:getx_drift_app/features/financial_planner/subpages/insurance_pla
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/1_death_benefit/details_view/death_benefit_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/3_disability_benefit/disability_details_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/subpages/insurance_policies/views/insurance_policies_view.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/controller/networth_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/accounts/views/details_page/net_worth_details_page.dart';
 import 'package:getx_drift_app/features/balances/views/people_balances_view.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/networth_planner/subpages/charts/views/networth_charts_view.dart';
@@ -39,6 +41,7 @@ import 'package:getx_drift_app/features/onboarding/onboarding_questions/onboardi
 import 'package:getx_drift_app/features/onboarding/onboarding_questions/onboarding_third_question.dart';
 import 'package:getx_drift_app/features/onboarding/onboarding_view.dart';
 import 'package:getx_drift_app/features/paywall/paywall_page.dart';
+import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/settings/pages/notifications_page.dart';
 import 'package:getx_drift_app/features/settings/pages/preferences_page.dart';
 import '../../features/home/bindings/home_binding.dart';
@@ -58,9 +61,15 @@ class AppPages {
     // ),
     GetPage(
       name: Routes.ONBOARDING,
-      page: () => const OnboardingView(),
+      page: () => OnboardingAscendIntroView(),
+      // page: () => const OnboardingView(),
       binding: BindingsBuilder(() {
         Get.lazyPut<OnboardingController>(() => OnboardingController());
+        Get.lazyPut<FinancialProfileController>(
+          () => FinancialProfileController(),
+        );
+        Get.lazyPut<CashflowController>(() => CashflowController());
+        Get.lazyPut<NetWorthController>(() => NetWorthController());
       }),
       // binding: HomeBinding(),
     ),

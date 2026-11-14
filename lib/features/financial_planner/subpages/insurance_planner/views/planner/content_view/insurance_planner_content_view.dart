@@ -10,9 +10,9 @@ import 'package:getx_drift_app/domain/enums/app_snack_type.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/controller/insurance_planner_controller.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/old/sections/protection_score_container_section.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/planner/content_view/sections/financial_consultation_section.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/planner/content_view/widgets/protection_gap_card.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/insurance_planner/views/details/protection_types/protection_types.dart';
+import 'package:getx_drift_app/features/pdf/pdf_screen.dart';
 import 'package:getx_drift_app/features/widgets/cards/account_cards/app_card.dart';
 import 'package:getx_drift_app/features/widgets/cards/others_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -90,13 +90,14 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
             ),
           ),
 
-          SizedBox(height: 20),
-          FinancialConsultationSection(),
-          SizedBox(height: 20),
-          AppSection(
-            sectionTitle: 'Insurance Offers',
-            child: _InsuranceOfferWaiting(),
-          ),
+          // SizedBox(height: 20),
+          // // FinancialConsultationSection(),
+          // SizedBox(height: 20),
+          // AppSection(
+          //   sectionTitle: 'Insurance Offers',
+          //   child: _InsuranceOfferWaiting(),
+          // ),
+
           // SizedBox(height: 20),
           // AppSection(
           //   sectionTitle: 'Recommended Policies',
@@ -128,6 +129,13 @@ class InsurancePlannerContentView extends GetView<InsurancePlannerController> {
                   title: 'My Policies',
                   onTap: () {
                     Get.toNamed(Routes.INSURANCEPOLICIES);
+                  },
+                ),
+                OthersCard(
+                  icon: PhosphorIconsRegular.book,
+                  title: 'Generated Protection Need Report',
+                  onTap: () {
+                    Get.to(PdfScreen());
                   },
                 ),
                 OthersCard(

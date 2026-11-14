@@ -31,9 +31,16 @@ class SelectInsuranceProductSheet extends GetView<InsurancePolicyController> {
       title: "Select ${insurer.displayName}'s Product",
       child: Obx(() {
         if (controller.isLoadingProducts.value) {
-          return const Padding(
+          return Padding(
             padding: EdgeInsets.all(32),
-            child: Center(child: CircularProgressIndicator()),
+            child: Center(
+              child: Column(
+                children: [
+                  CircularProgressIndicator(),
+                  Text('Loading ${insurer.displayName} products...'),
+                ],
+              ),
+            ),
           );
         }
         //Check if Online
@@ -75,8 +82,8 @@ class SelectInsuranceProductSheet extends GetView<InsurancePolicyController> {
                                 ),
                                 child: Icon(
                                   PhosphorIconsRegular.shieldCheck,
-                                  size: 32,
-                                  color: colorScheme.appTextMuted,
+                                  size: 60,
+                                  color: colorScheme.appAccent,
                                 ),
                               ),
                               const SizedBox(height: 16),

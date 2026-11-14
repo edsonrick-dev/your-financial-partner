@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/core/notifications/bill_notification_service.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/pages/bills/model/bill_with_next_occurrence.dart';
@@ -102,6 +103,7 @@ class LoanController extends GetxController {
       reminderEnabled: reminderEnabled.value,
       reminderDaysBefore: reminderDaysBefore.value,
     );
+    await _syncLoanBillReminder(loanAccountId);
   }
 
   Future<void> initializeLoanEdit(AccountsTableData account) async {
@@ -208,7 +210,33 @@ class LoanController extends GetxController {
       reminderEnabled: reminderEnabled.value,
       reminderDaysBefore: reminderDaysBefore.value,
     );
+    await _syncLoanBillReminder(loanAccountId);
     resetForm();
+  }
+
+  Future<void> _syncLoanBillReminder(int loanAccountId) async {
+    final bill = await database.billsDao.getLoanBillForAccount(loanAccountId);
+    if (bill == null) return;
+
+    final notificationService = BillNotificationService.instance;
+    if (!bill.reminderEnabled || !notificationService.billRemindersEnabled) {
+      await notificationService.cancelBillReminders(bill.id);
+      return;
+    }
+
+    final permissionGranted = await notificationService.requestPermission();
+    if (!permissionGranted) return;
+
+    final occurrences = await database.billsDao.getOccurrencesForBill(bill.id);
+    final nextOccurrence = occurrences
+        .where((item) => !item.isPaid)
+        .firstOrNull;
+    if (nextOccurrence == null) return;
+
+    await notificationService.scheduleOccurrenceReminders(
+      bill: bill,
+      occurrence: nextOccurrence,
+    );
   }
 
   void resetForm() {

@@ -37,7 +37,7 @@ class AppSnackbar {
       snackPosition: SnackPosition.TOP,
       backgroundColor: Colors.transparent,
       padding: const EdgeInsets.all(16),
-      duration: const Duration(seconds: 4),
+      duration: const Duration(seconds: 2),
       messageText: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

@@ -29,8 +29,8 @@ class AccountFormRegistry {
       case AccountType.creditCard:
         return const CreditCardAccountForm();
 
-      case AccountType.creditInstallment:
-        return const CreditCardInstallmentForm();
+      // case AccountType.creditInstallment:
+      //   return const CreditCardInstallmentForm();
 
       case AccountType.loan:
         return const LoanAccountForm();

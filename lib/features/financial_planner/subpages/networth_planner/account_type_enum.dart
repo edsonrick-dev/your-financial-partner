@@ -50,12 +50,12 @@ enum AccountType {
     iconKey: 'creditCard',
   ),
 
-  creditInstallment(
-    id: 'creditInstallment',
-    label: 'Credit Card Installment',
-    group: AccountGroup.loan,
-    iconKey: 'creditCard',
-  ),
+  // creditInstallment(
+  //   id: 'creditInstallment',
+  //   label: 'Credit Card Installment',
+  //   group: AccountGroup.loan,
+  //   iconKey: 'creditCard',
+  // ),
 
   loan(id: 'loan', label: 'Loan', group: AccountGroup.loan, iconKey: 'bank');
 

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:getx_drift_app/core/constants/sheet_height.dart';
+import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
+import 'package:getx_drift_app/core/notifications/bill_notification_service.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/features/settings/widgets/settings_section.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_sheet.dart';
@@ -10,105 +14,104 @@ class NotificationsPage extends GetView<SettingsController> {
   @override
   Widget build(BuildContext context) {
     return AppSheet(
+      height: AppSheetHeight.full,
       title: 'Notifications',
       // appBar: AppBar(title: Text('Notifications')),
-      child: Column(
-        spacing: 24,
-        children: [
-          SettingsSection(
-            title: 'General',
-            children: [
-              Obx(
-                () => ToggleTile(
-                  title: 'Budget Reminders',
-                  subtitle: 'Get reminder about budget limits',
-                  toggleValue: controller.budgetReminders.value,
-                  onToggleChanged: (value) {
-                    controller.budgetReminders.value = value;
-                  },
-                  onTap: () {
-                    controller.budgetReminders.toggle();
-                  },
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(bottom: context.bottomPaddingSub),
+        child: Column(
+          spacing: 24,
+          children: [
+            SettingsSection(
+              title: 'General',
+              children: [
+                Obx(
+                  () => ToggleTile(
+                    title: 'Budget Reminders',
+                    subtitle: 'Get reminder about budget limits',
+                    toggleValue: controller.budgetReminders.value,
+                    onToggleChanged: (value) {
+                      controller.budgetReminders.value = value;
+                    },
+                    onTap: () {
+                      controller.budgetReminders.toggle();
+                    },
+                  ),
                 ),
-              ),
-              Obx(
-                () => ToggleTile(
-                  title: 'Bill Reminders',
-                  subtitle: 'Never miss a due date',
-                  toggleValue: controller.billReminders.value,
-                  onToggleChanged: (value) {
-                    controller.billReminders.value = value;
-                  },
-                  onTap: () {
-                    controller.billReminders.toggle();
-                  },
+                Obx(
+                  () => ToggleTile(
+                    title: 'Bill Reminders',
+                    subtitle: 'Get alerts before and on bill due dates',
+                    toggleValue: controller.billReminders.value,
+                    onToggleChanged: controller.setBillReminders,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SettingsSection(
-            title: 'Reports & Insights',
-            children: [
-              Obx(
-                () => ToggleTile(
-                  title: 'Weekly Summary',
-                  subtitle: 'Your weekly financial overview',
-                  toggleValue: controller.weeklySummaryReminders.value,
-                  onToggleChanged: (value) {
-                    controller.weeklySummaryReminders.value = value;
-                  },
-                  onTap: () {
-                    controller.weeklySummaryReminders.toggle();
-                  },
+              ],
+            ),
+            SettingsSection(
+              title: 'Reports & Insights',
+              children: [
+                Obx(
+                  () => ToggleTile(
+                    title: 'Weekly Summary',
+                    subtitle: 'Your weekly financial overview',
+                    toggleValue: controller.weeklySummaryReminders.value,
+                    onToggleChanged: (value) {
+                      controller.weeklySummaryReminders.value = value;
+                    },
+                    onTap: () {
+                      controller.weeklySummaryReminders.toggle();
+                    },
+                  ),
                 ),
-              ),
-              Obx(
-                () => ToggleTile(
-                  title: 'Monthly Report',
-                  subtitle: 'Detailed monthly report',
-                  toggleValue: controller.monthlySummaryReminders.value,
-                  onToggleChanged: (value) {
-                    controller.monthlySummaryReminders.value = value;
-                  },
-                  onTap: () {
-                    controller.monthlySummaryReminders.toggle();
-                  },
+                Obx(
+                  () => ToggleTile(
+                    title: 'Monthly Report',
+                    subtitle: 'Detailed monthly report',
+                    toggleValue: controller.monthlySummaryReminders.value,
+                    onToggleChanged: (value) {
+                      controller.monthlySummaryReminders.value = value;
+                    },
+                    onTap: () {
+                      controller.monthlySummaryReminders.toggle();
+                    },
+                  ),
                 ),
-              ),
-              Obx(
-                () => ToggleTile(
-                  title: 'Achievement Notifications',
-                  subtitle: 'Celebrate your milestones',
-                  toggleValue: controller.achievementNotifications.value,
-                  onToggleChanged: (value) {
-                    controller.achievementNotifications.value = value;
-                  },
-                  onTap: () {
-                    controller.achievementNotifications.toggle();
-                  },
+                Obx(
+                  () => ToggleTile(
+                    title: 'Achievement Notifications',
+                    subtitle: 'Celebrate your milestones',
+                    toggleValue: controller.achievementNotifications.value,
+                    onToggleChanged: (value) {
+                      controller.achievementNotifications.value = value;
+                    },
+                    onTap: () {
+                      controller.achievementNotifications.toggle();
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SettingsSection(
-            title: 'Other',
-            children: [
-              Obx(
-                () => ToggleTile(
-                  title: 'Marketing & Updates>',
-                  subtitle: 'Tips, new features, and others',
-                  toggleValue: controller.marketingUpdates.value,
-                  onToggleChanged: (value) {
-                    controller.marketingUpdates.value = value;
-                  },
-                  onTap: () {
-                    controller.marketingUpdates.toggle();
-                  },
+              ],
+            ),
+            SettingsSection(
+              title: 'Other',
+              children: [
+                Obx(
+                  () => ToggleTile(
+                    title: 'Marketing & Updates>',
+                    subtitle: 'Tips, new features, and others',
+                    toggleValue: controller.marketingUpdates.value,
+                    onToggleChanged: (value) {
+                      controller.marketingUpdates.value = value;
+                    },
+                    onTap: () {
+                      controller.marketingUpdates.toggle();
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -141,18 +144,20 @@ class ToggleTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextStyle(fontWeight: FontWeight.w600)),
-              if (subtitle != null)
-                Text(
-                  subtitle!,
-                  style: TextStyle(color: colorScheme.appTextMuted),
-                ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyle(fontWeight: FontWeight.w600)),
+                if (subtitle != null)
+                  Text(
+                    subtitle!,
+                    style: TextStyle(color: colorScheme.appTextMuted),
+                  ),
+              ],
+            ),
           ),
-          Spacer(),
+          SizedBox(width: 16),
           Switch.adaptive(value: toggleValue, onChanged: onToggleChanged),
         ],
       ),
@@ -167,4 +172,16 @@ class SettingsController extends GetxController {
   final monthlySummaryReminders = false.obs;
   final achievementNotifications = false.obs;
   final marketingUpdates = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    billReminders.value =
+        GetStorage().read<bool>('bill_reminders_enabled') ?? false;
+  }
+
+  Future<void> setBillReminders(bool value) async {
+    billReminders.value = value;
+    await BillNotificationService.instance.setBillRemindersEnabled(value);
+  }
 }

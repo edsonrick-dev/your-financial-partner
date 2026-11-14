@@ -27,6 +27,7 @@ class CategoryIcons {
 
     ///SHOPPING ICONS
     AppCategoryIcon(key: 'stack', icon: PhosphorIconsRegular.stack),
+    AppCategoryIcon(key: 'handDeposit', icon: PhosphorIconsRegular.handDeposit),
 
     AppCategoryIcon(key: 'handCoins', icon: PhosphorIconsRegular.handCoins),
     AppCategoryIcon(key: 'coins', icon: PhosphorIconsRegular.coins),

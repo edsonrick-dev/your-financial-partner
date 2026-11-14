@@ -176,6 +176,52 @@ class BillForm extends GetView<BillController> {
                     ),
                   ),
 
+                  AppSection(
+                    sectionTitle: 'Bill reminders',
+                    child: Obx(
+                      () => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SwitchListTile.adaptive(
+                            contentPadding: EdgeInsets.zero,
+                            value: controller.billRemindersEnabled.value,
+                            title: const Text('Remind me about this bill'),
+                            subtitle: const Text(
+                              'Get a reminder before and on the due date.',
+                            ),
+                            onChanged: (value) {
+                              controller.billRemindersEnabled.value = value;
+                            },
+                          ),
+                          if (controller.billRemindersEnabled.value) ...[
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<int>(
+                              initialValue: controller.reminderDaysBefore.value,
+                              decoration: const InputDecoration(
+                                labelText: 'Remind me before the due date',
+                              ),
+                              items: const [1, 3, 7]
+                                  .map(
+                                    (days) => DropdownMenuItem<int>(
+                                      value: days,
+                                      child: Text(
+                                        '$days ${days == 1 ? 'day' : 'days'} before',
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (days) {
+                                if (days != null) {
+                                  controller.reminderDaysBefore.value = days;
+                                }
+                              },
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+
                   // BillScheduleSummary(),
                   Obx(() {
                     if (controller.isBillValid.value) {

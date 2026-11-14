@@ -38,11 +38,18 @@ class GoalSettingSheet extends StatelessWidget {
           }
 
           final goals = snapshot.data!;
+          final hasEmergencyFund = goals.any(
+            (goal) => goal.type == GoalType.emergencyFund.name,
+          );
+          final availableGoalTypes = GoalType.values.where(
+            (goalType) =>
+                goalType != GoalType.emergencyFund || !hasEmergencyFund,
+          );
 
           return AppSection(
             child: Column(
               spacing: 12,
-              children: GoalType.values.map((goalType) {
+              children: availableGoalTypes.map((goalType) {
                 final isSingleton = _isSingletonGoal(goalType);
 
                 final exists =

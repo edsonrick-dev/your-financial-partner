@@ -19,7 +19,7 @@ class CategoryIconContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconKey = switch (item.transaction.type) {
       TransactionType.give => 'handDeposit',
-      TransactionType.receive => 'handWithdraw',
+      TransactionType.receive => 'handCoins',
       TransactionType.transfer => 'sync_alt_sharp',
       _ => item.category?.icon ?? 'fallback',
     };

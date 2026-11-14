@@ -511,12 +511,12 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
     return select(billOccurrencesTable).get();
   }
 
-  Future<void> insertBillWithFirstOccurrence({
+  Future<int> insertBillWithFirstOccurrence({
     required BillsTableCompanion bill,
     required DateTime dueDate,
     required double expectedAmount,
   }) async {
-    await attachedDatabase.transaction(() async {
+    return attachedDatabase.transaction(() async {
       final billId = await into(billsTable).insert(bill);
 
       await into(billOccurrencesTable).insert(
@@ -526,6 +526,8 @@ class BillsDao extends DatabaseAccessor<AppDatabase> with _$BillsDaoMixin {
           expectedAmount: Value(expectedAmount),
         ),
       );
+
+      return billId;
     });
   }
 

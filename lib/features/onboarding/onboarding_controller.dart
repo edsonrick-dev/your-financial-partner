@@ -4,6 +4,7 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/main_tab.dart';
 import 'package:getx_drift_app/app/routes/app_routes.dart';
 import 'package:getx_drift_app/features/main_shell/controller/main_shell_controller.dart';
+import 'package:getx_drift_app/features/onboarding/onboarding_preference.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 
 class OnboardingController extends GetxController {
@@ -244,16 +245,27 @@ class OnboardingController extends GetxController {
   }
 
   void nextIntroPage() {
-    if (introPageIndex.value < 2) {
+    if (introPageIndex.value < 3) {
       introPageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
     } else {
-      Get.toNamed(Routes.ONBOARDING_BUILD_FINANCIAL_FOUNDATION);
+      onGetStarted();
+      // Get.toNamed(Routes.ONBOARDING_BUILD_FINANCIAL_FOUNDATION);
       // Go to Q5
       // Get.toNamed('/onboarding-question-5');
     }
+  }
+
+  Future<void> onGetStarted() async {
+    await OnboardingPreference.complete();
+
+    Get.offAllNamed(Routes.MAINVIEW);
+  }
+
+  void skipIntro() {
+    onGetStarted();
   }
 
   final RxnString currentManagement = RxnString();

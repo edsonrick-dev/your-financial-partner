@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/app/routes/app_sheets/app_sheets.dart';
+import 'package:getx_drift_app/core/notifications/bill_notification_service.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/database/daos/cashflow_plan_dao/cashflow_plan_dao.dart';
 import 'package:getx_drift_app/data/enums/bills_frequency_enum.dart';
@@ -32,6 +33,8 @@ class BillController extends GetxController {
   final isBillValid = false.obs;
 
   final Rxn<DateTime> nextPaymentDate = Rxn<DateTime>();
+  final billRemindersEnabled = true.obs;
+  final reminderDaysBefore = 1.obs;
   String? get formattedNextPaymentDate {
     final date = nextPaymentDate.value;
 
@@ -159,6 +162,7 @@ class BillController extends GetxController {
       return;
     }
 
+    await BillNotificationService.instance.cancelBillReminders(item.bill.id);
     await database.billsDao.deleteBill(item.bill.id);
   }
 
@@ -446,7 +450,13 @@ class BillController extends GetxController {
       return;
     }
 
-    await database.billsDao.insertBillWithFirstOccurrence(
+    final notificationService = BillNotificationService.instance;
+    final notificationsAllowed =
+        !billRemindersEnabled.value ||
+        !notificationService.billRemindersEnabled ||
+        await notificationService.requestPermission();
+
+    final billId = await database.billsDao.insertBillWithFirstOccurrence(
       bill: BillsTableCompanion.insert(
         name: name,
         categoryId: drift.Value(category.id),
@@ -454,13 +464,27 @@ class BillController extends GetxController {
         expectedAmount: drift.Value(amount),
         frequency: frequency.name,
         dayOfMonth: drift.Value(dueDate.day),
-        // monthMask: const drift.Value(null),
-        // reminderEnabled: drift.Value(reminderEnabled.value),
-        // reminderDaysBefore: drift.Value(reminderDaysBefore.value),
+        reminderEnabled: drift.Value(billRemindersEnabled.value),
+        reminderDaysBefore: drift.Value(reminderDaysBefore.value),
       ),
       dueDate: dueDate,
       expectedAmount: amount,
     );
+
+    if (billRemindersEnabled.value &&
+        notificationService.billRemindersEnabled &&
+        notificationsAllowed) {
+      final savedBill = await database.billsDao.getBillById(billId);
+      final occurrence = (await database.billsDao.getOccurrencesForBill(
+        billId,
+      )).firstOrNull;
+      if (savedBill != null && occurrence != null) {
+        await notificationService.scheduleOccurrenceReminders(
+          bill: savedBill,
+          occurrence: occurrence,
+        );
+      }
+    }
 
     Get.back();
   }
@@ -472,6 +496,8 @@ class BillController extends GetxController {
     nextPaymentDate.value = null;
     selectedPeriod.value = BillsFrequency.monthly;
     isBillValid.value = false;
+    billRemindersEnabled.value = true;
+    reminderDaysBefore.value = 1;
   }
 
   double get selectedCategoryAnnualBudget {

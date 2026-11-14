@@ -3,6 +3,7 @@ import 'package:drift/drift.dart' as d;
 import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/design_system/app_snackbar.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
+import 'package:getx_drift_app/core/notifications/bill_notification_service.dart';
 import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/data/enums/split_mode_enum.dart';
 import 'package:getx_drift_app/data/models/participant_model.dart';
@@ -200,6 +201,25 @@ extension SaveSpendTransaction on TransactionController {
         await database.accountsDao.rebuildAccountBalance(accountId);
       }
     });
+
+    if (bill != null) {
+      final notificationService = BillNotificationService.instance;
+      await notificationService.cancelOccurrenceReminders(bill.occurrence.id);
+
+      final updatedBill = await database.billsDao.getBillById(bill.bill.id);
+      final occurrences = await database.billsDao.getOccurrencesForBill(
+        bill.bill.id,
+      );
+      final nextOccurrence = occurrences
+          .where((item) => !item.isPaid)
+          .firstOrNull;
+      if (updatedBill != null && nextOccurrence != null) {
+        await notificationService.scheduleOccurrenceReminders(
+          bill: updatedBill,
+          occurrence: nextOccurrence,
+        );
+      }
+    }
 
     resetForm();
 

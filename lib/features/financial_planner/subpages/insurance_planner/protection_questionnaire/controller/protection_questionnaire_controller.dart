@@ -426,6 +426,7 @@ class ProtectionQuestionnaireController extends GetxController {
   final isSavingContinuityShares = false.obs;
 
   final Set<int> _loadedContinuityPlanIds = {};
+  final Map<int, Future<void>> _continuityPlanLoads = {};
 
   /// Load saved values once per plan ID.
   /// Missing protection types use their product-specific default share.
@@ -461,27 +462,38 @@ class ProtectionQuestionnaireController extends GetxController {
   // }
   Future<void> loadContinuitySharesForPlans1(Iterable<int> planIds) async {
     for (final planId in planIds) {
-      if (_loadedContinuityPlanIds.contains(planId) ||
-          !_loadingContinuityPlanIds.add(planId)) {
+      if (_loadedContinuityPlanIds.contains(planId)) continue;
+
+      final existingLoad = _continuityPlanLoads[planId];
+      if (existingLoad != null) {
+        await existingLoad;
         continue;
       }
 
+      final load = _loadContinuitySharesForPlan(planId);
+      _continuityPlanLoads[planId] = load;
       try {
-        final saved = await database.protectionDao.getContinuitySharesForPlan(
-          planId,
-        );
-
-        continuityShares[planId] = {
-          for (final type in ProtectionType.values)
-            type: saved[type] ?? _defaultContinuityShare(type),
-        };
-
-        _loadedContinuityPlanIds.add(planId);
-      } catch (_) {
-        rethrow;
+        await load;
       } finally {
-        _loadingContinuityPlanIds.remove(planId);
+        _continuityPlanLoads.remove(planId);
       }
+    }
+  }
+
+  Future<void> _loadContinuitySharesForPlan(int planId) async {
+    _loadingContinuityPlanIds.add(planId);
+    try {
+      final saved = await database.protectionDao.getContinuitySharesForPlan(
+        planId,
+      );
+
+      continuityShares[planId] = {
+        for (final type in ProtectionType.values)
+          type: saved[type] ?? _defaultContinuityShare(type),
+      };
+      _loadedContinuityPlanIds.add(planId);
+    } finally {
+      _loadingContinuityPlanIds.remove(planId);
     }
   }
   // Future<void> loadContinuitySharesForPlans(Iterable<int> planIds) async {

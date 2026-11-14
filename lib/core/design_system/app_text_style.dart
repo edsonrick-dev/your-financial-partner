@@ -18,29 +18,29 @@ class AppTextStyle {
   );
   static const TextStyle displayS = TextStyle(
     fontSize: 24,
-    fontWeight: FontWeight.w700,
     height: 32 / 24,
     letterSpacing: 0,
+    fontWeight: FontWeight.w700,
   );
 
   //Headline
   static const TextStyle headlineL = TextStyle(
     fontSize: 22,
-    fontWeight: FontWeight.w600,
     height: 28 / 22,
     letterSpacing: -0.2,
+    fontWeight: FontWeight.w600,
   );
   static const TextStyle headlineM = TextStyle(
     fontSize: 20,
-    fontWeight: FontWeight.w600,
     height: 28 / 20,
     letterSpacing: -0.2,
+    fontWeight: FontWeight.w600,
   );
   static const TextStyle headlineS = TextStyle(
     fontSize: 17,
-    fontWeight: FontWeight.w600,
     height: 24 / 17,
     letterSpacing: 0,
+    fontWeight: FontWeight.w600,
   );
 
   //Title
