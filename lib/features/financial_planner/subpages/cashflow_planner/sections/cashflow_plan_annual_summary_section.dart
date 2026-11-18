@@ -94,11 +94,14 @@ class CashflowPlanAnnualSummarySection extends GetView<CashflowController> {
 
             // Annual result
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Expected Annual $sumarryLabel',
-                  style: AppTextStyle.titleM,
+                Expanded(
+                  child: Text(
+                    'Expected Annual $sumarryLabel',
+                    style: AppTextStyle.titleM,
+                  ),
                 ),
                 Text(
                   controller.annualizedAmount.toCurrency(),

@@ -36,7 +36,9 @@ class BudgetProgressIndicator extends StatelessWidget {
               backgroundColor: backgroundColor,
             ),
           ),
-          child,
+          FittedBox(
+            child: Padding(padding: EdgeInsets.all(size / 3), child: child),
+          ),
         ],
       ),
     );

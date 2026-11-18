@@ -15,22 +15,26 @@ class GoalDetails {
   final String? name;
   final String? iconKey;
   final double target;
+  final double? suggestedTarget;
   final double current;
   final double requiredMonthlyContribution;
   final double currentMonthlyAllocation;
   final DateTime? dueDate;
   final VoidCallback? onTap;
+  final VoidCallback? onUpdate;
 
   GoalDetails({
     this.type = GoalType.general,
     this.name,
     this.iconKey,
     this.target = 0,
+    this.suggestedTarget,
     this.current = 0,
     this.requiredMonthlyContribution = 0,
     this.currentMonthlyAllocation = 0,
     this.dueDate,
     this.onTap,
+    this.onUpdate,
   });
 
   double get completionRate {
@@ -67,7 +71,7 @@ class GoalDetails {
     }
 
     if (isFullyFunded) {
-      return 'Fully Funded';
+      return 'W/ Allocation';
     }
 
     if (isPartiallyFunded) {
@@ -102,6 +106,9 @@ class GoalTargetCard extends GetView<SavingsPlannerController> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+    final hasSuggestedTarget =
+        goal.suggestedTarget != null &&
+        (goal.suggestedTarget! - goal.target).abs() > 0.01;
 
     return AppCard(
       onTap: goal.onTap,
@@ -138,6 +145,51 @@ class GoalTargetCard extends GetView<SavingsPlannerController> {
               ),
             ],
           ),
+
+          if (hasSuggestedTarget) ...[
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colorScheme.appAccent.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    PhosphorIconsRegular.info,
+                    size: 18,
+                    color: colorScheme.appAccent,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Your budget changed',
+                          style: AppTextStyle.titleS,
+                        ),
+                        Text(
+                          'New 12-month target: '
+                          '${goal.suggestedTarget!.toCurrency()}',
+                          style: AppTextStyle.bodyS.copyWith(
+                            color: colorScheme.appTextMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: goal.onUpdate,
+                    child: const Text('Update'),
+                  ),
+                ],
+              ),
+            ),
+          ],
 
           const SizedBox(height: 16),
 

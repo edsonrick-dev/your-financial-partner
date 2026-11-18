@@ -7,6 +7,7 @@ import 'package:getx_drift_app/data/app_database.dart';
 import 'package:getx_drift_app/features/financial_insights/cashflow/models/cashflow_position.dart';
 import 'package:getx_drift_app/features/financial_insights/financial_profile_cashflow_controller_extension.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/model/goal_type.dart';
+import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/goals/emergency_fund_goal/calculator/emergency_fund_calculator.dart';
 import 'package:getx_drift_app/features/financial_planner/subpages/savings_investment_planner/investor_profile/investor_profile_model.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 
@@ -81,6 +82,24 @@ class SavingsPlannerController extends GetxController {
 
   double get emergencyFundMonthlyContribution {
     return emergencyFundGoal.value?.monthlyContribution ?? 0.0;
+  }
+
+  Future<void> updateEmergencyFundPlan() async {
+    final goal = emergencyFundGoal.value;
+    if (goal == null) return;
+
+    final calculator = EmergencyFundCalculator(
+      currentAmount: emergencyFundReservedAmount.value,
+      monthlyBudget: financialProfileController.monthlyBudget,
+      netMonthlyCashFlow: financialProfileController.monthlyNetCashflow,
+    );
+
+    await database.goalsDao.updateGoal(
+      goal.copyWith(
+        targetAmount: calculator.targetAmount,
+        monthlyContribution: calculator.monthlyEmergencyFundContribution,
+      ),
+    );
   }
 
   double get otherGoalsMonthlyContribution {

@@ -162,7 +162,7 @@ class FilledView extends GetView<CashflowController> {
           child: Padding(
             padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 12,
               children: [
                 BudgetProgressIndicator(
@@ -225,7 +225,11 @@ class FilledView extends GetView<CashflowController> {
                       SizedBox(height: 4),
 
                       if (items.isNotEmpty)
-                        Row(
+                        Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 16,
+                          runSpacing: 4,
                           children: [
                             Row(
                               spacing: 4,
@@ -241,7 +245,7 @@ class FilledView extends GetView<CashflowController> {
                                 Text(statusText, style: AppTextStyle.labelM),
                               ],
                             ),
-                            const Spacer(),
+                            // const Spacer(),
                             if (isCurrentMonth)
                               Text(
                                 '$daysLeft days left',

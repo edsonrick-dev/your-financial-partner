@@ -36,10 +36,13 @@ class FundSummaryCard extends GetView<HomeController> {
       spacing: 12,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Available Funds',
-          style: AppTextStyle.titleL.copyWith(
-            color: colorScheme.appInversedtextMuted,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'Available Funds',
+            style: AppTextStyle.titleL.copyWith(
+              color: colorScheme.appInversedtextMuted,
+            ),
           ),
         ),
 
@@ -51,13 +54,13 @@ class FundSummaryCard extends GetView<HomeController> {
             return Row(
               children: [
                 Expanded(
-                  child: FittedBox(
-                    alignment: AlignmentGeometry.centerLeft,
-                    fit: BoxFit.scaleDown,
-                    child: Obx(
-                      () => SizedBox(
-                        height: 40,
-                        child: Stack(
+                  child: SizedBox(
+                    height: 40,
+                    child: FittedBox(
+                      alignment: AlignmentGeometry.centerLeft,
+                      fit: BoxFit.scaleDown,
+                      child: Obx(
+                        () => Stack(
                           alignment: Alignment.centerLeft,
                           children: [
                             AnimatedOpacity(

@@ -123,7 +123,15 @@ class CashFlowSummaryCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTextStyle.labelM.copyWith(color: color)),
+                SizedBox(
+                  height: 20,
+                  child: FittedBox(
+                    child: Text(
+                      title,
+                      style: AppTextStyle.labelM.copyWith(color: color),
+                    ),
+                  ),
+                ),
                 SizedBox(height: 4),
                 FittedBox(
                   fit: BoxFit.scaleDown,

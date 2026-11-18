@@ -104,6 +104,7 @@ class GoalsSlide extends GetView<SavingsPlannerController> {
             goal: GoalDetails(
               type: GoalType.emergencyFund,
               target: goal.targetAmount,
+              suggestedTarget: controller.emergencyFundTarget,
               current: controller.emergencyFundReservedAmount.value,
               requiredMonthlyContribution: goal.monthlyContribution,
               currentMonthlyAllocation:
@@ -112,6 +113,7 @@ class GoalsSlide extends GetView<SavingsPlannerController> {
               onTap: () {
                 Get.to(EmergencyFundGoalDetailsPage(goal: goal));
               },
+              onUpdate: controller.updateEmergencyFundPlan,
             ),
           ),
         );

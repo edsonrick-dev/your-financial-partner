@@ -74,10 +74,13 @@ class _MonthShifter extends StatelessWidget {
             child: SizedBox(
               height: 44,
               child: Center(
-                child: Text(
-                  'Today',
-                  style: AppTextStyle.titleM.copyWith(
-                    decoration: TextDecoration.underline,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Today',
+                    style: AppTextStyle.titleM.copyWith(
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
               ),

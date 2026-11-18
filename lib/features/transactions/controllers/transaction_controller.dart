@@ -21,6 +21,7 @@ class TransactionController extends GetxController {
   final selectedTransactionFilter = Rx<TransactionFilter>(
     const AllTransactionFilter(),
   );
+  final selectedTransactionGrouping = 0.obs;
 
   Future<CreditCardStatementsTableData?> getCreditCardStatement(
     AccountsTableData account,

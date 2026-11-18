@@ -4,7 +4,6 @@ import 'package:getx_drift_app/core/constants/app_border_radius.dart';
 import 'package:getx_drift_app/core/constants/app_scale.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
-import 'package:getx_drift_app/features/financial_planner/subpages/cashflow_planner/subpages/details_page/app_button.dart';
 import 'package:getx_drift_app/features/financial_state/financial_state.dart';
 import 'package:getx_drift_app/features/home/controllers/home_controller.dart';
 import 'package:getx_drift_app/features/home/views/section_views/finance_home_view/finance_home_view.dart';
@@ -14,8 +13,6 @@ import 'package:getx_drift_app/features/learn_with_ascend/learn_context.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_engine.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learn_thumbnail.dart';
 import 'package:getx_drift_app/features/learn_with_ascend/learning_section_shell.dart';
-import 'package:getx_drift_app/features/onboarding/onboarding_ascend_intro/onboarding_ascend_intro_view.dart';
-import 'package:getx_drift_app/features/onboarding/onboarding_controller.dart';
 import 'package:getx_drift_app/features/profile/controller/financial_profile_controller.dart';
 import 'package:getx_drift_app/features/widgets/cards/fund_summary_card.dart';
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section.dart';
@@ -49,19 +46,7 @@ class HomeView extends GetView<HomeController> {
               children: [
                 // HEADER
                 _greetingSection(colorScheme),
-                // AppButton(
-                //   text: 'Open Onboarding',
-                //   onTap: () {
-                //     Get.to(
-                //       OnboardingAscendIntroView(),
-                //       binding: BindingsBuilder(() {
-                //         Get.lazyPut<OnboardingController>(
-                //           () => OnboardingController(),
-                //         );
-                //       }),
-                //     );
-                //   },
-                // ),
+
                 SizedBox(height: AppSpacing.sectionSpacing),
                 AppSection(child: Column(children: [FundSummaryCard()])),
                 SizedBox(height: AppSpacing.sectionSpacing),
@@ -120,19 +105,25 @@ class HomeView extends GetView<HomeController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(
-            () => Text(
-              controller.userName.value.isEmpty
-                  ? '${controller.timeBasedGreeting}!'
-                  : '${controller.timeBasedGreeting}, '
-                        '${controller.userName.value}!',
-              style: AppTextStyle.headlineL,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Obx(
+              () => Text(
+                controller.userName.value.isEmpty
+                    ? '${controller.timeBasedGreeting}!'
+                    : '${controller.timeBasedGreeting}, '
+                          '${controller.userName.value}!',
+                style: AppTextStyle.headlineL,
+              ),
             ),
           ),
-          Text(
-            'Let’s make today a great financial day.',
-            style: AppTextStyle.labelM.copyWith(
-              color: colorScheme.appTextMuted,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              'Let’s make today a great financial day.',
+              style: AppTextStyle.labelM.copyWith(
+                color: colorScheme.appTextMuted,
+              ),
             ),
           ),
         ],

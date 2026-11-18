@@ -110,7 +110,7 @@ class BillsReminderSection extends GetView<CashflowController> {
                                       ),
                                     ),
                                   ),
-                                  if (bills.isNotEmpty)
+                                  if (bills.isNotEmpty) ...[
                                     RichText(
                                       text: TextSpan(
                                         style: AppTextStyle.labelM.copyWith(
@@ -134,38 +134,41 @@ class BillsReminderSection extends GetView<CashflowController> {
                                         ],
                                       ),
                                     ),
-                                ],
-                              ),
-                              Row(
-                                spacing: 16,
-                                children: [
-                                  Expanded(
-                                    child: _BillSummaryColumn(
-                                      label: 'Remaining',
-                                      amount: unpaidAmount,
-                                      count: unpaidBillCount,
-                                      color: colorScheme.appOutflow,
-                                    ),
-                                  ),
-                                  // SizedBox(width: 16),
-                                  // const Divider(),
-                                  Container(
-                                    height: 32,
+                                    Row(
+                                      spacing: 16,
+                                      children: [
+                                        Expanded(
+                                          child: _BillSummaryColumn(
+                                            label: 'Remaining',
+                                            amount: unpaidAmount,
+                                            count: unpaidBillCount,
+                                            color: colorScheme.appOutflow,
+                                          ),
+                                        ),
+                                        // SizedBox(width: 16),
+                                        // const Divider(),
+                                        Container(
+                                          height: 32,
 
-                                    width: 1,
-                                    decoration: BoxDecoration(
-                                      color: colorScheme.appBorder,
-                                      borderRadius: BorderRadius.circular(9),
+                                          width: 1,
+                                          decoration: BoxDecoration(
+                                            color: colorScheme.appBorder,
+                                            borderRadius: BorderRadius.circular(
+                                              9,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: _BillSummaryColumn(
+                                            label: 'Paid',
+                                            amount: paidAmount,
+                                            count: paidBillCount,
+                                            color: colorScheme.appSuccess,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: _BillSummaryColumn(
-                                      label: 'Paid',
-                                      amount: paidAmount,
-                                      count: paidBillCount,
-                                      color: colorScheme.appSuccess,
-                                    ),
-                                  ),
+                                  ],
                                 ],
                               ),
                             ],

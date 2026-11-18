@@ -55,6 +55,7 @@ class BudgetListView extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         constraints: BoxConstraints(minHeight: 60),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,

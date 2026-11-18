@@ -4,6 +4,7 @@ import 'package:getx_drift_app/app/globals/app_globals.dart';
 import 'package:getx_drift_app/core/constants/sheet_height.dart';
 import 'package:getx_drift_app/core/design_system/adaptive_pressable.dart';
 import 'package:getx_drift_app/core/design_system/app_text_style.dart';
+import 'package:getx_drift_app/core/design_system/shifters/segment_shifter/app_segmented_selector.dart';
 import 'package:getx_drift_app/core/extensions/build_context_extension.dart';
 import 'package:getx_drift_app/core/theme/app_color_scheme.dart';
 import 'package:getx_drift_app/data/app_database.dart';
@@ -16,10 +17,67 @@ import 'package:getx_drift_app/features/transactions/transaction_types/transacti
 import 'package:getx_drift_app/features/widgets/miscellaneous/app_section_body.dart';
 import 'package:getx_drift_app/core/num_extension.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:intl/intl.dart';
 import '../controllers/transaction_controller.dart';
 
 class TransactionView extends GetView<TransactionController> {
   const TransactionView({super.key});
+
+  Map<String, List<TransactionWithDetails>> _groupTransactions(
+    List<TransactionWithDetails> transactions,
+    int grouping,
+  ) {
+    final grouped = <DateTime, List<TransactionWithDetails>>{};
+
+    for (final item in transactions) {
+      final date = item.transaction.date;
+      final day = DateTime(date.year, date.month, date.day);
+      final groupDate = switch (grouping) {
+        1 => DateTime(day.year, day.month, ((day.day - 1) ~/ 7) * 7 + 1),
+        2 => DateTime(day.year, day.month),
+        _ => day,
+      };
+      grouped.putIfAbsent(groupDate, () => []).add(item);
+    }
+
+    final entries = grouped.entries.toList()
+      ..sort((a, b) => b.key.compareTo(a.key));
+    final result = <String, List<TransactionWithDetails>>{};
+
+    for (final entry in entries) {
+      final weekEnd = DateTime(
+        entry.key.year,
+        entry.key.month,
+        entry.key.day + 6,
+      );
+      final lastDayOfMonth = DateTime(entry.key.year, entry.key.month + 1, 0);
+      final displayedWeekEnd = weekEnd.isAfter(lastDayOfMonth)
+          ? lastDayOfMonth
+          : weekEnd;
+      final label = switch (grouping) {
+        1 =>
+          'Week ${((entry.key.day - 1) ~/ 7) + 1} · '
+              '${DateFormat('MMM d').format(entry.key)} - '
+              '${DateFormat('MMM d').format(displayedWeekEnd)}',
+        2 => DateFormat('MMMM yyyy').format(entry.key),
+        _ => database.transactionsDao.groupLabel(entry.key),
+      };
+      result[label] = entry.value;
+    }
+
+    return result;
+  }
+
+  String _dayLabel(DateTime day) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+
+    if (day == today) return 'Today';
+    if (day == yesterday) return 'Yesterday';
+    return DateFormat('EEEE, MMM d, yyyy').format(day);
+  }
+
   double calculateGroupTotal(List<TransactionWithDetails> transactions) {
     return transactions.fold<double>(0, (total, item) {
       switch (item.transaction.type) {
@@ -63,6 +121,23 @@ class TransactionView extends GetView<TransactionController> {
       appBar: AppBar(
         title: Text('Transactions', style: AppTextStyle.headlineL),
         centerTitle: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: SizedBox(
+              width: 132,
+              child: Obx(
+                () => AppSegmentedSelector(
+                  items: const ['D', 'W', 'M'],
+                  selectedIndex: controller.selectedTransactionGrouping.value,
+                  onChanged: (index) =>
+                      controller.selectedTransactionGrouping.value = index,
+                  style: AppTextStyle.labelS,
+                ),
+              ),
+            ),
+          ),
+        ],
         surfaceTintColor: Colors.transparent,
       ),
       body: Column(
@@ -73,6 +148,7 @@ class TransactionView extends GetView<TransactionController> {
           Expanded(
             child: Obx(() {
               final filter = controller.selectedTransactionFilter.value;
+              final grouping = controller.selectedTransactionGrouping.value;
 
               return StreamBuilder<Map<String, List<TransactionWithDetails>>>(
                 stream: database.transactionsDao.watchGroupedTransactions(
@@ -87,22 +163,18 @@ class TransactionView extends GetView<TransactionController> {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  final groupedTransactions =
-                      <String, List<TransactionWithDetails>>{};
-
-                  for (final entry in snapshot.data!.entries) {
-                    final filtered = entry.value
-                        .where(
-                          (item) =>
-                              item.transaction.type !=
-                              TransactionType.balanceUpdate,
-                        )
-                        .toList();
-
-                    if (filtered.isNotEmpty) {
-                      groupedTransactions[entry.key] = filtered;
-                    }
-                  }
+                  final transactions = snapshot.data!.values
+                      .expand((items) => items)
+                      .where(
+                        (item) =>
+                            item.transaction.type !=
+                            TransactionType.balanceUpdate,
+                      )
+                      .toList();
+                  final groupedTransactions = _groupTransactions(
+                    transactions,
+                    grouping,
+                  );
 
                   if (groupedTransactions.isEmpty) {
                     return Center(
@@ -151,6 +223,17 @@ class TransactionView extends GetView<TransactionController> {
                       final sectionTitle = entry.key;
                       final transactions = entry.value;
                       final groupTotal = calculateGroupTotal(transactions);
+                      final transactionsByDay =
+                          <DateTime, List<TransactionWithDetails>>{};
+                      for (final transaction in transactions) {
+                        final date = transaction.transaction.date;
+                        final day = DateTime(date.year, date.month, date.day);
+                        transactionsByDay
+                            .putIfAbsent(day, () => [])
+                            .add(transaction);
+                      }
+                      final days = transactionsByDay.keys.toList()
+                        ..sort((a, b) => b.compareTo(a));
 
                       return Column(
                         spacing: cardsSpacing,
@@ -172,9 +255,42 @@ class TransactionView extends GetView<TransactionController> {
                             child: AppSectionBody(
                               child: Column(
                                 spacing: cardsSpacing,
-                                children: transactions
-                                    .map((item) => TransactionCard(item: item))
-                                    .toList(),
+                                children: grouping == 0
+                                    ? transactions
+                                          .map(
+                                            (item) =>
+                                                TransactionCard(item: item),
+                                          )
+                                          .toList()
+                                    : days.map((day) {
+                                        final dayTransactions =
+                                            transactionsByDay[day]!;
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          spacing: cardsSpacing,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 8.0,
+                                                top: 8,
+                                              ),
+                                              child: Text(
+                                                _dayLabel(day),
+                                                style: AppTextStyle.labelS
+                                                    .copyWith(
+                                                      color: colorScheme
+                                                          .appTextMuted,
+                                                    ),
+                                              ),
+                                            ),
+                                            ...dayTransactions.map(
+                                              (item) =>
+                                                  TransactionCard(item: item),
+                                            ),
+                                          ],
+                                        );
+                                      }).toList(),
                               ),
                             ),
                           ),
